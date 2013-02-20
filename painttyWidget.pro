@@ -5,8 +5,7 @@
 #-------------------------------------------------
 
 
-#DEFINES += DEBUG
-#DEFINES += QT_NO_DEBUG
+DEFINES += DEBUG
 
 QT       += core gui network widgets
 
@@ -15,17 +14,6 @@ win32 {
 }
 
 CONFIG += c++11
-
-CONFIG+=static
-static{
-    QTPLUGIN+=qwindows
-    DEFINES+=QT_PLUGIN_STATIC_LINK
-    LIBS+=-L"$(QTDIR)/plugins/platforms"
-    LIBS+=-L"$(QTDIR)/plugins/imageformats"
-    message("Staticbuild.")
-}
-
-#QMAKE_CXXFLAGS += -std=c++0x
 
 TARGET = painttyWidget
 TEMPLATE = app
