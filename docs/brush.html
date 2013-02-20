@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- brush.cpp -->
+  <title>painttyWidget Project : Brush Class</title>
+</head>
+<body>
+<li>Modules</li>
+<li>painttyWidget Project</li>
+<li>Brush</li>
+<div class="toc">
+<h3><a name="toc">Contents</a></h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#protected-functions">Protected Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<h1 class="title">Brush Class</h1>
+<!-- $$$Brush-brief -->
+<p>Brush class for painting on <a href="canvas.html">Canvas</a> <a href="#details">More...</a></p>
+<!-- @@@Brush -->
+<pre class="cpp"><span class="preprocessor">#include &lt;Brush&gt;</span></pre><p><b>Inherited by: </b></p>
+<ul>
+<li><a href="brush-members.html">List of all members, including inherited members</a></li>
+</ul>
+<a name="public-functions"></a>
+<h2>Public Functions</h2>
+<table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="brush.html#Brush">Brush</a></b>(QObject *<i> parent</i> = 0)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="brush.html#dtor.Brush">~Brush</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual QVariantMap </td><td class="memItemRight bottomAlign"><b><a href="brush.html#brushInfo">brushInfo</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual QColor </td><td class="memItemRight bottomAlign"><b><a href="brush.html#color">color</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual QVariantMap </td><td class="memItemRight bottomAlign"><b><a href="brush.html#defaultInfo">defaultInfo</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="brush.html#end">end</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="brush.html#isDirectDraw">isDirectDraw</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="brush.html#lineTo">lineTo</a></b>(const QPointF &amp;<i> st</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual bool </td><td class="memItemRight bottomAlign"><b><a href="brush.html#loadStencil">loadStencil</a></b>(const QString &amp;<i> fileName</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> QPixmap </td><td class="memItemRight bottomAlign"><b><a href="brush.html#pixmap">pixmap</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="brush.html#setColor">setColor</a></b>(const QColor &amp;<i> color</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="brush.html#setDirectDraw">setDirectDraw</a></b>(bool<i> enable</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="brush.html#setSize">setSize</a></b>(const QSize &amp;<i> s</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="brush.html#setSurface">setSurface</a></b>(QPixmap *<i> p</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="brush.html#setWidth">setWidth</a></b>(int<i> w</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="brush.html#start">start</a></b>(const QPointF &amp;<i> st</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> QPixmap * </td><td class="memItemRight bottomAlign"><b><a href="brush.html#surface">surface</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual int </td><td class="memItemRight bottomAlign"><b><a href="brush.html#width">width</a></b>()</td></tr>
+</table>
+<a name="protected-functions"></a>
+<h2>Protected Functions</h2>
+<table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="brush.html#clear">clear</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="brush.html#drawLine">drawLine</a></b>(const QPointF &amp;<i> st</i>, const QPointF &amp;<i> end</i>, qreal &amp;<i> left</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="brush.html#drawPoint">drawPoint</a></b>(const QPointF &amp;<i> st</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="brush.html#effect">effect</a></b>()</td></tr>
+</table>
+<a name="details"></a>
+<!-- $$$Brush-description -->
+<div class="descr">
+<h2>Detailed Description</h2>
+<p>Brush class for painting on <a href="canvas.html">Canvas</a></p>
+<p>Brush is base class for all painting brush. However, it also can be directly used.</p>
+<p>Painting for a brush can be treated as several steps:</p>
+<ul>
+<li><a href="brush.html#loadStencil">loadStencil</a>(). This will load a stencil file in 8bit gray format</li>
+<li><a href="brush.html#setDirectDraw">setDirectDraw</a>(). Set true if we don't need more effect after drawing. This will make brush direct draw on a surface provided by user, usually from a layer via Canvas. If you need more steps after drawing, set to false. Then a QPixmap will be buffer.</li>
+<li><a href="brush.html#start">start</a>(). In default, this function directly calls <a href="brush.html#drawPoint">drawPoint</a>() to draw a single point. For some special brushs, such as SketchBrush, this step do nothing.</li>
+<li><a href="brush.html#lineTo">lineTo</a>(). In default, this function directly calls <a href="brush.html#drawLine">drawLine</a>().</li>
+<li><a href="brush.html#end">end</a>(). In default, this function will calls <a href="brush.html#clear">clear</a>() to clear QPixmap buffer if not direct draw on surface.</li>
+</ul>
+<p>Function <a href="brush.html#setWidth">setWidth</a>() and <a href="brush.html#setColor">setColor</a>() should be used when change width and color. However, since change width and color depends on a stencil, you must load stencil before change these settings.</p>
+<p>In default, <a href="brush.html#effect">effect</a>() has no effect. If you need some special effect after drawing, using <a href="brush.html#effect">effect</a>() is a good way when sub-class.</p>
+<p>Most functions are virtual functions, this may help a lot when wirting new brush.</p>
+</div>
+<p><b>See also </b><a href="canvas.html">Canvas</a>.</p>
+<!-- @@@Brush -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$Brush[overload1]$$$BrushQObject* -->
+<h3 class="fn"><a name="Brush"></a>Brush::<span class="name">Brush</span>(<span class="type">QObject</span> *<i> parent</i> = 0)</h3>
+<p>Constructs a brush.</p>
+<!-- @@@Brush -->
+<!-- $$$~Brush[overload1]$$$~Brush -->
+<h3 class="fn"><a name="dtor.Brush"></a>Brush::<span class="name">~Brush</span>()</h3>
+<p>Destructs brush.</p>
+<!-- @@@~Brush -->
+<!-- $$$brushInfo[overload1]$$$brushInfo -->
+<h3 class="fn"><a name="brushInfo"></a><span class="type">QVariantMap</span> Brush::<span class="name">brushInfo</span>()<tt> [virtual]</tt></h3>
+<p>Returns the basic info of current brush. These infos will be transfered to network.</p>
+<p><b>See also </b><a href="brush.html#defaultInfo">defaultInfo</a>().</p>
+<!-- @@@brushInfo -->
+<!-- $$$clear[overload1]$$$clear -->
+<h3 class="fn"><a name="clear"></a><span class="type">void</span> Brush::<span class="name">clear</span>()<tt> [protected]</tt></h3>
+<p>Clears the buffer.</p>
+<p><b>See also </b><a href="brush.html#end">end</a>().</p>
+<!-- @@@clear -->
+<!-- $$$color[overload1]$$$color -->
+<h3 class="fn"><a name="color"></a><span class="type">QColor</span> Brush::<span class="name">color</span>()<tt> [virtual]</tt></h3>
+<p>Returns current color of brush.</p>
+<p><b>See also </b><a href="brush.html#setColor">setColor</a>().</p>
+<!-- @@@color -->
+<!-- $$$defaultInfo[overload1]$$$defaultInfo -->
+<h3 class="fn"><a name="defaultInfo"></a><span class="type">QVariantMap</span> Brush::<span class="name">defaultInfo</span>()<tt> [virtual]</tt></h3>
+<p>Return default info of brush. After load a new brush, Canvas will set its brush settings to these default info.</p>
+<p><b>See also </b><a href="brush.html#brushInfo">brushInfo</a>().</p>
+<!-- @@@defaultInfo -->
+<!-- $$$drawLine[overload1]$$$drawLineconstQPointF&constQPointF&qreal& -->
+<h3 class="fn"><a name="drawLine"></a><span class="type">void</span> Brush::<span class="name">drawLine</span>(const <span class="type">QPointF</span> &amp;<i> st</i>, const <span class="type">QPointF</span> &amp;<i> end</i>, <span class="type">qreal</span> &amp;<i> left</i>)<tt> [virtual protected]</tt></h3>
+<p>Draws a line from <i>st</i> to <i>end</i> and record distance that left over after drawing to <i>left</i>.</p>
+<p><b>See also </b><a href="brush.html#drawPoint">drawPoint</a>() and <a href="brush.html#lineTo">lineTo</a>().</p>
+<!-- @@@drawLine -->
+<!-- $$$drawPoint[overload1]$$$drawPointconstQPointF& -->
+<h3 class="fn"><a name="drawPoint"></a><span class="type">void</span> Brush::<span class="name">drawPoint</span>(const <span class="type">QPointF</span> &amp;<i> st</i>)<tt> [virtual protected]</tt></h3>
+<p>Draws a point at <i>st</i>.</p>
+<p><b>See also </b><a href="brush.html#start">start</a>() and <a href="brush.html#drawLine">drawLine</a>().</p>
+<!-- @@@drawPoint -->
+<!-- $$$effect[overload1]$$$effect -->
+<h3 class="fn"><a name="effect"></a><span class="type">void</span> Brush::<span class="name">effect</span>()<tt> [virtual protected]</tt></h3>
+<p>Virtual function for make effect in sub-class. This function will be called in every <a href="brush.html#drawPoint">drawPoint</a>() and <a href="brush.html#drawLine">drawLine</a>().</p>
+<p><b>See also </b><a href="brush.html#setDirectDraw">setDirectDraw</a>().</p>
+<!-- @@@effect -->
+<!-- $$$end[overload1]$$$end -->
+<h3 class="fn"><a name="end"></a><span class="type">void</span> Brush::<span class="name">end</span>()<tt> [virtual]</tt></h3>
+<p>Ends up the drawing. This will automaticlly clear the buffer. Internally, this function calls <a href="brush.html#clear">clear</a>().</p>
+<p><b>See also </b><a href="brush.html#start">start</a>() and <a href="brush.html#lineTo">lineTo</a>().</p>
+<!-- @@@end -->
+<!-- $$$isDirectDraw[overload1]$$$isDirectDraw -->
+<h3 class="fn"><a name="isDirectDraw"></a><span class="type">bool</span> Brush::<span class="name">isDirectDraw</span>()</h3>
+<p>Returns whether draws directly on surface</p>
+<p><b>See also </b><a href="brush.html#setSurface">setSurface</a>() and <a href="brush.html#setDirectDraw">setDirectDraw</a>().</p>
+<!-- @@@isDirectDraw -->
+<!-- $$$lineTo[overload1]$$$lineToconstQPointF& -->
+<h3 class="fn"><a name="lineTo"></a><span class="type">void</span> Brush::<span class="name">lineTo</span>(const <span class="type">QPointF</span> &amp;<i> st</i>)<tt> [virtual]</tt></h3>
+<p>Draws a line from last point to <i>st</i>. And <i>st</i> will be the last point at next time. This function usually used with <a href="brush.html#start">start</a>(). Internally, this function calls <a href="brush.html#drawLine">drawLine</a>().</p>
+<p><b>See also </b><a href="brush.html#start">start</a>() and <a href="brush.html#end">end</a>().</p>
+<!-- @@@lineTo -->
+<!-- $$$loadStencil[overload1]$$$loadStencilconstQString& -->
+<h3 class="fn"><a name="loadStencil"></a><span class="type">bool</span> Brush::<span class="name">loadStencil</span>(const <span class="type">QString</span> &amp;<i> fileName</i>)<tt> [virtual]</tt></h3>
+<p>Loads <i>fileName</i> as stencil used by brush. Returns true if succeed.</p>
+<p><b>Note: </b>The <i>fileName</i> must be a 8bit 100*100 grayscale raw image file.</p><p><b>See also </b><a href="brush.html#setSurface">setSurface</a>() and <a href="brush.html#setDirectDraw">setDirectDraw</a>().</p>
+<!-- @@@loadStencil -->
+<!-- $$$pixmap[overload1]$$$pixmap -->
+<h3 class="fn"><a name="pixmap"></a><span class="type">QPixmap</span> Brush::<span class="name">pixmap</span>()</h3>
+<p>Returns the drawing result in buffer.</p>
+<p><b>See also </b><a href="brush.html#setDirectDraw">setDirectDraw</a>().</p>
+<!-- @@@pixmap -->
+<!-- $$$setColor[overload1]$$$setColorconstQColor& -->
+<h3 class="fn"><a name="setColor"></a><span class="type">void</span> Brush::<span class="name">setColor</span>(const <span class="type">QColor</span> &amp;<i> color</i>)<tt> [virtual]</tt></h3>
+<p>Sets the color of brush.</p>
+<p><b>See also </b><a href="brush.html#color">color</a>().</p>
+<!-- @@@setColor -->
+<!-- $$$setDirectDraw[overload1]$$$setDirectDrawbool -->
+<h3 class="fn"><a name="setDirectDraw"></a><span class="type">void</span> Brush::<span class="name">setDirectDraw</span>(<span class="type">bool</span><i> enable</i>)</h3>
+<p>Sets whether draws on a buffer determined by <i>enable</i>.</p>
+<p>When <i>enable</i> is true, brush directly draws everthing into a surface provided by <a href="brush.html#setSurface">setSurface</a>().</p>
+<p><b>See also </b><a href="brush.html#setSurface">setSurface</a>() and <a href="brush.html#isDirectDraw">isDirectDraw</a>().</p>
+<!-- @@@setDirectDraw -->
+<!-- $$$setSize[overload1]$$$setSizeconstQSize& -->
+<h3 class="fn"><a name="setSize"></a><span class="type">void</span> Brush::<span class="name">setSize</span>(const <span class="type">QSize</span> &amp;<i> s</i>)</h3>
+<p>Sets image size of buffer QPixmap. This only takes effect when not using direct draw.</p>
+<p><b>See also </b><a href="brush.html#setDirectDraw">setDirectDraw</a>().</p>
+<!-- @@@setSize -->
+<!-- $$$setSurface[overload1]$$$setSurfaceQPixmap* -->
+<h3 class="fn"><a name="setSurface"></a><span class="type">void</span> Brush::<span class="name">setSurface</span>(<span class="type">QPixmap</span> *<i> p</i>)</h3>
+<p>Sets the destnation of painting result to <i>p</i>.</p>
+<p><b>Note: </b>This only takes effect when direct draw is using.</p><p><b>See also </b><a href="brush.html#surface">surface</a>() and <a href="brush.html#setDirectDraw">setDirectDraw</a>().</p>
+<!-- @@@setSurface -->
+<!-- $$$setWidth[overload1]$$$setWidthint -->
+<h3 class="fn"><a name="setWidth"></a><span class="type">void</span> Brush::<span class="name">setWidth</span>(<span class="type">int</span><i> w</i>)<tt> [virtual]</tt></h3>
+<p>Sets the width of brush to <i>w</i>.</p>
+<p><b>See also </b><a href="brush.html#width">width</a>().</p>
+<!-- @@@setWidth -->
+<!-- $$$start[overload1]$$$startconstQPointF& -->
+<h3 class="fn"><a name="start"></a><span class="type">void</span> Brush::<span class="name">start</span>(const <span class="type">QPointF</span> &amp;<i> st</i>)<tt> [virtual]</tt></h3>
+<p>Starts a new drawing action at <i>st</i>. Internally, this function calls <a href="brush.html#drawPoint">drawPoint</a>().</p>
+<p><b>See also </b><a href="brush.html#lineTo">lineTo</a>() and <a href="brush.html#end">end</a>().</p>
+<!-- @@@start -->
+<!-- $$$surface[overload1]$$$surface -->
+<h3 class="fn"><a name="surface"></a><span class="type">QPixmap</span> * Brush::<span class="name">surface</span>()</h3>
+<p>Returns the surface pointer.</p>
+<p><b>Note: </b>If there's no surface set, 0 will returned.</p><p><b>See also </b><a href="brush.html#setSurface">setSurface</a>() and <a href="brush.html#setDirectDraw">setDirectDraw</a>().</p>
+<!-- @@@surface -->
+<!-- $$$width[overload1]$$$width -->
+<h3 class="fn"><a name="width"></a><span class="type">int</span> Brush::<span class="name">width</span>()<tt> [virtual]</tt></h3>
+<p>Returns width of current brush</p>
+<p><b>See also </b><a href="brush.html#setWidth">setWidth</a>().</p>
+<!-- @@@width -->
+</div>
+</body>
+</html>

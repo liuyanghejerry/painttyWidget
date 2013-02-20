@@ -1,0 +1,81 @@
+* {
+	color: hsl(358, 74%, 34%);
+	selection-background-color: hsl(358, 74%, 34%);
+	selection-color: palette(window);
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+}
+
+QScrollArea, QTableWidget, QTextEdit, QPushButton, QLineEdit, QGroupBox, QSpinBox {
+	border: 2px solid hsl(358, 74%, 34%);
+	border-radius: 10px;
+}
+
+QLabel {
+	border: none;
+	text-transform: uppercase;
+}
+
+QDockWidget::title {
+	background: gray;
+}
+
+QPushButton {
+	color: palette(window);
+	padding: 0 5px;
+	background: hsl(217, 106, 127);
+}
+
+QPushButton:pressed, QPushButton:hover, QPushButton:checked {
+	background: hsl(358, 74%, 34%);
+}
+
+QLineEdit {
+     padding: 0 8px;
+     background: hsl(54, 56%, 80%);
+     selection-background-color: gray;
+}
+
+QTextEdit {
+	background: hsl(54, 56%, 80%);
+}
+
+QSpinBox {
+	padding-right: 20px;
+	background: hsl(54, 56%, 80%);
+	selection-background-color: gray;
+}
+
+QSpinBox::up-button {
+     subcontrol-origin: border;
+     subcontrol-position: top right; /* position at the top right corner */
+     width: 16px; /* 16 + 2*1px border-width = 15px padding + 3px parent border */
+     border-image: url(./iconset/spinup.png) 1;
+	 margin:2px;
+     border-width: 1px;
+}
+
+QSpinBox::down-button {
+     subcontrol-origin: border;
+     subcontrol-position: bottom right;
+     width: 16px;
+     border-image: url(./iconset/spindown.png) 1;
+	 margin:2px;
+     border-width: 1px;
+}
+
+QMainWindow::separator {
+	background-color: hsl(240, 20%, 50%);
+}
+QMainWindow::separator:hover {
+	background-color: hsl(0, 50%, 60%);
+	opacity: 0.7;
+}
+
+QMainWindow::separator:vertical {
+	width: 3px;	
+}
+
+QMainWindow::separator:horizontal {
+	height: 0px;
+}

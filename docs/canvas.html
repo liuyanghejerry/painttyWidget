@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- canvas.cpp -->
+  <title>painttyWidget Project : Canvas Class</title>
+</head>
+<body>
+<li>Modules</li>
+<li>painttyWidget Project</li>
+<li>Canvas</li>
+<div class="toc">
+<h3><a name="toc">Contents</a></h3>
+<ul>
+<li class="level1"><a href="#public-functions">Public Functions</a></li>
+<li class="level1"><a href="#public-slots">Public Slots</a></li>
+<li class="level1"><a href="#signals">Signals</a></li>
+<li class="level1"><a href="#protected-functions">Protected Functions</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+</ul>
+</div>
+<h1 class="title">Canvas Class</h1>
+<!-- $$$Canvas-brief -->
+<p>The widget that used for rendering painting results. <a href="#details">More...</a></p>
+<!-- @@@Canvas -->
+<pre class="cpp"><span class="preprocessor">#include &lt;Canvas&gt;</span></pre><ul>
+<li><a href="canvas-members.html">List of all members, including inherited members</a></li>
+</ul>
+<a name="public-functions"></a>
+<h2>Public Functions</h2>
+<table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#Canvas">Canvas</a></b>(QWidget *<i> parent</i> = 0)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#dtor.Canvas">~Canvas</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> QVariantMap </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#brushInfo">brushInfo</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#count">count</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> QString </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#currentLayer">currentLayer</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#layerNum">layerNum</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual QSize </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#minimumSizeHint">minimumSizeHint</a></b>() const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#remoteDrawLine">remoteDrawLine</a></b>(const QPoint &amp;<i> start</i>, const QPoint &amp;<i> end</i>, const QVariantMap &amp;<i> brushInfo</i>, const QString &amp;<i> layer</i>, const quint64<i> userid</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#remoteDrawPoint">remoteDrawPoint</a></b>(const QPoint &amp;<i> point</i>, const QVariantMap &amp;<i> brushInfo</i>, const QString &amp;<i> layer</i>, const quint64<i> userid</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#setBrushColor">setBrushColor</a></b>(const QColor &amp;<i> newColor</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#setBrushWidth">setBrushWidth</a></b>(int<i> newWidth</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> virtual QSize </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#sizeHint">sizeHint</a></b>() const</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> quint64 </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#userId">userId</a></b>()</td></tr>
+</table>
+<a name="public-slots"></a>
+<h2>Public Slots</h2>
+<table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#addLayer">addLayer</a></b>(const QString &amp;<i> name</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#changeBrush">changeBrush</a></b>(const QString &amp;<i> name</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#deleteLayer">deleteLayer</a></b>(const QString &amp;<i> name</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#hideLayer">hideLayer</a></b>(const QString &amp;<i> name</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#layerSelected">layerSelected</a></b>(const QString &amp;<i> name</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#lockLayer">lockLayer</a></b>(const QString &amp;<i> name</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#moveLayerDown">moveLayerDown</a></b>(const QString &amp;<i> name</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#moveLayerUp">moveLayerUp</a></b>(const QString &amp;<i> name</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#showLayer">showLayer</a></b>(const QString &amp;<i> name</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#unlockLayer">unlockLayer</a></b>(const QString &amp;<i> name</i>)</td></tr>
+</table>
+<a name="signals"></a>
+<h2>Signals</h2>
+<table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#linePainted">linePainted</a></b>(const QPoint &amp;<i> start</i>, const QPoint &amp;<i> end</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#newBrushSettings">newBrushSettings</a></b>(const QVariantMap &amp;<i> map</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#pointPainted">pointPainted</a></b>(const QPoint &amp;<i> point</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#sendPaintData">sendPaintData</a></b>(const QByteArray &amp;<i> data</i>)</td></tr>
+</table>
+<a name="protected-functions"></a>
+<h2>Protected Functions</h2>
+<table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#keyPressEvent">keyPressEvent</a></b>(QKeyEvent *<i> ev</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#mouseMoveEvent">mouseMoveEvent</a></b>(QMouseEvent *<i> event</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#mousePressEvent">mousePressEvent</a></b>(QMouseEvent *<i> event</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#mouseReleaseEvent">mouseReleaseEvent</a></b>(QMouseEvent *<i> event</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#paintEvent">paintEvent</a></b>(QPaintEvent *<i> event</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#resizeEvent">resizeEvent</a></b>(QResizeEvent *<i> event</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="canvas.html#tabletEvent">tabletEvent</a></b>(QTabletEvent *<i> ev</i>)</td></tr>
+</table>
+<a name="details"></a>
+<!-- $$$Canvas-description -->
+<div class="descr">
+<h2>Detailed Description</h2>
+<p>The widget that used for rendering painting results.</p>
+<p>Canvas uses several QPixmap to render contents. Each layer opaque one QPixmap and painted together when paintEvent happens.</p>
+<p>Canvas can be used for mouse painting, tablet painting and remote painting via json messages from network.</p>
+<p><a href="brush.html">Brush</a> is used for painting. There're 4 kind of brush currently and will be more. When changing color of a <a href="brush.html">Brush</a> using on Canvas now, you can use either <a href="canvas.html#setBrushColor">setBrushColor</a>() or <a href="brush.html#setColor">setColor()</a> .</p>
+</div>
+<p><b>See also </b><a href="brush.html">Brush</a>.</p>
+<!-- @@@Canvas -->
+<div class="func">
+<h2>Member Function Documentation</h2>
+<!-- $$$Canvas[overload1]$$$CanvasQWidget* -->
+<h3 class="fn"><a name="Canvas"></a>Canvas::<span class="name">Canvas</span>(<span class="type">QWidget</span> *<i> parent</i> = 0)</h3>
+<p>Construct a canvas with width of 720px, height of 480px and a <i>parent</i>.</p>
+<!-- @@@Canvas -->
+<!-- $$$~Canvas[overload1]$$$~Canvas -->
+<h3 class="fn"><a name="dtor.Canvas"></a>Canvas::<span class="name">~Canvas</span>()</h3>
+<p>Destroys the canvas. The internal <a href="brush.html">Brush</a> will also be deleted.</p>
+<!-- @@@~Canvas -->
+<!-- $$$addLayer[overload1]$$$addLayerconstQString& -->
+<h3 class="fn"><a name="addLayer"></a><span class="type">void</span> Canvas::<span class="name">addLayer</span>(const <span class="type">QString</span> &amp;<i> name</i>)<tt> [slot]</tt></h3>
+<p>Adds a new layer named <i>name</i>. The layer will append on the top.</p>
+<p><b>See also </b><a href="canvas.html#deleteLayer">deleteLayer</a>().</p>
+<!-- @@@addLayer -->
+<!-- $$$brushInfo[overload1]$$$brushInfo -->
+<h3 class="fn"><a name="brushInfo"></a><span class="type">QVariantMap</span> Canvas::<span class="name">brushInfo</span>()</h3>
+<p>Returns the brush info painting now.</p>
+<p><b>See also </b><a href="brush.html#brushInfo">Brush::brushInfo</a>().</p>
+<!-- @@@brushInfo -->
+<!-- $$$changeBrush[overload1]$$$changeBrushconstQString& -->
+<h3 class="fn"><a name="changeBrush"></a><span class="type">void</span> Canvas::<span class="name">changeBrush</span>(const <span class="type">QString</span> &amp;<i> name</i>)<tt> [slot]</tt></h3>
+<p>Changes current brush to <i>name</i> . At this time, we have only brushButton for Brush, pencilButton for Pencil, sketchButton for Sketch, and eraserButton for Eraser.</p>
+<p><b>See also </b><a href="brush.html">Brush</a>, SketchBrush, Pencil, and Eraser.</p>
+<!-- @@@changeBrush -->
+<!-- $$$count[overload1]$$$count -->
+<h3 class="fn"><a name="count"></a><span class="type">int</span> Canvas::<span class="name">count</span>()</h3>
+<!-- @@@count -->
+<!-- $$$currentLayer[overload1]$$$currentLayer -->
+<h3 class="fn"><a name="currentLayer"></a><span class="type">QString</span> Canvas::<span class="name">currentLayer</span>()</h3>
+<p>Returns current drawing layer. In detail, it always returns the layer selected by user, even it is hided or locked.</p>
+<!-- @@@currentLayer -->
+<!-- $$$deleteLayer[overload1]$$$deleteLayerconstQString& -->
+<h3 class="fn"><a name="deleteLayer"></a><span class="type">bool</span> Canvas::<span class="name">deleteLayer</span>(const <span class="type">QString</span> &amp;<i> name</i>)<tt> [slot]</tt></h3>
+<p>Deletes the layer named <i>name</i>. Returns false if failed. A locked layer cannot be deleted, while a hided one can.</p>
+<p><b>See also </b><a href="canvas.html#addLayer">addLayer</a>().</p>
+<!-- @@@deleteLayer -->
+<!-- $$$hideLayer[overload1]$$$hideLayerconstQString& -->
+<h3 class="fn"><a name="hideLayer"></a><span class="type">void</span> Canvas::<span class="name">hideLayer</span>(const <span class="type">QString</span> &amp;<i> name</i>)<tt> [slot]</tt></h3>
+<p>Hides one layer named <i>name</i>.</p>
+<p><b>See also </b><a href="canvas.html#showLayer">showLayer</a>().</p>
+<!-- @@@hideLayer -->
+<!-- $$$keyPressEvent[overload1]$$$keyPressEventQKeyEvent* -->
+<h3 class="fn"><a name="keyPressEvent"></a><span class="type">void</span> Canvas::<span class="name">keyPressEvent</span>(<span class="type">QKeyEvent</span> *<i> ev</i>)<tt> [protected]</tt></h3>
+<!-- @@@keyPressEvent -->
+<!-- $$$layerNum[overload1]$$$layerNum -->
+<h3 class="fn"><a name="layerNum"></a><span class="type">int</span> Canvas::<span class="name">layerNum</span>()</h3>
+<!-- @@@layerNum -->
+<!-- $$$layerSelected[overload1]$$$layerSelectedconstQString& -->
+<h3 class="fn"><a name="layerSelected"></a><span class="type">void</span> Canvas::<span class="name">layerSelected</span>(const <span class="type">QString</span> &amp;<i> name</i>)<tt> [slot]</tt></h3>
+<p>Selects the layer named <i>name</i>.</p>
+<p>This function is used when render on the screen.</p>
+<!-- @@@layerSelected -->
+<!-- $$$linePainted[overload1]$$$linePaintedconstQPoint&constQPoint& -->
+<h3 class="fn"><a name="linePainted"></a><span class="type">void</span> Canvas::<span class="name">linePainted</span>(const <span class="type">QPoint</span> &amp;<i> start</i>, const <span class="type">QPoint</span> &amp;<i> end</i>)<tt> [signal]</tt></h3>
+<!-- @@@linePainted -->
+<!-- $$$lockLayer[overload1]$$$lockLayerconstQString& -->
+<h3 class="fn"><a name="lockLayer"></a><span class="type">void</span> Canvas::<span class="name">lockLayer</span>(const <span class="type">QString</span> &amp;<i> name</i>)<tt> [slot]</tt></h3>
+<p>Locks one layer named <i>name</i>.</p>
+<p><b>See also </b><a href="canvas.html#unlockLayer">unlockLayer</a>().</p>
+<!-- @@@lockLayer -->
+<!-- $$$minimumSizeHint[overload1]$$$minimumSizeHint -->
+<h3 class="fn"><a name="minimumSizeHint"></a><span class="type">QSize</span> Canvas::<span class="name">minimumSizeHint</span>() const<tt> [virtual]</tt></h3>
+<p>Returns a pre-defined minimal size for canvas.</p>
+<p><b>See also </b><a href="canvas.html#sizeHint">sizeHint</a>().</p>
+<!-- @@@minimumSizeHint -->
+<!-- $$$mouseMoveEvent[overload1]$$$mouseMoveEventQMouseEvent* -->
+<h3 class="fn"><a name="mouseMoveEvent"></a><span class="type">void</span> Canvas::<span class="name">mouseMoveEvent</span>(<span class="type">QMouseEvent</span> *<i> event</i>)<tt> [protected]</tt></h3>
+<!-- @@@mouseMoveEvent -->
+<!-- $$$mousePressEvent[overload1]$$$mousePressEventQMouseEvent* -->
+<h3 class="fn"><a name="mousePressEvent"></a><span class="type">void</span> Canvas::<span class="name">mousePressEvent</span>(<span class="type">QMouseEvent</span> *<i> event</i>)<tt> [protected]</tt></h3>
+<!-- @@@mousePressEvent -->
+<!-- $$$mouseReleaseEvent[overload1]$$$mouseReleaseEventQMouseEvent* -->
+<h3 class="fn"><a name="mouseReleaseEvent"></a><span class="type">void</span> Canvas::<span class="name">mouseReleaseEvent</span>(<span class="type">QMouseEvent</span> *<i> event</i>)<tt> [protected]</tt></h3>
+<!-- @@@mouseReleaseEvent -->
+<!-- $$$moveLayerDown[overload1]$$$moveLayerDownconstQString& -->
+<h3 class="fn"><a name="moveLayerDown"></a><span class="type">void</span> Canvas::<span class="name">moveLayerDown</span>(const <span class="type">QString</span> &amp;<i> name</i>)<tt> [slot]</tt></h3>
+<!-- @@@moveLayerDown -->
+<!-- $$$moveLayerUp[overload1]$$$moveLayerUpconstQString& -->
+<h3 class="fn"><a name="moveLayerUp"></a><span class="type">void</span> Canvas::<span class="name">moveLayerUp</span>(const <span class="type">QString</span> &amp;<i> name</i>)<tt> [slot]</tt></h3>
+<!-- @@@moveLayerUp -->
+<!-- $$$newBrushSettings[overload1]$$$newBrushSettingsconstQVariantMap& -->
+<h3 class="fn"><a name="newBrushSettings"></a><span class="type">void</span> Canvas::<span class="name">newBrushSettings</span>(const <span class="type">QVariantMap</span> &amp;<i> map</i>)<tt> [signal]</tt></h3>
+<!-- @@@newBrushSettings -->
+<!-- $$$paintEvent[overload1]$$$paintEventQPaintEvent* -->
+<h3 class="fn"><a name="paintEvent"></a><span class="type">void</span> Canvas::<span class="name">paintEvent</span>(<span class="type">QPaintEvent</span> *<i> event</i>)<tt> [protected]</tt></h3>
+<!-- @@@paintEvent -->
+<!-- $$$pointPainted[overload1]$$$pointPaintedconstQPoint& -->
+<h3 class="fn"><a name="pointPainted"></a><span class="type">void</span> Canvas::<span class="name">pointPainted</span>(const <span class="type">QPoint</span> &amp;<i> point</i>)<tt> [signal]</tt></h3>
+<!-- @@@pointPainted -->
+<!-- $$$remoteDrawLine[overload1]$$$remoteDrawLineconstQPoint&constQPoint&constQVariantMap&constQString&constquint64 -->
+<h3 class="fn"><a name="remoteDrawLine"></a><span class="type">void</span> Canvas::<span class="name">remoteDrawLine</span>(const <span class="type">QPoint</span> &amp;<i> start</i>, const <span class="type">QPoint</span> &amp;<i> end</i>, const <span class="type">QVariantMap</span> &amp;<i> brushInfo</i>, const <span class="type">QString</span> &amp;<i> layer</i>, const <span class="type">quint64</span><i> userid</i>)</h3>
+<p>Draws a remote line from <i>start</i> to <i>end</i> at <i>layer</i> with <i>brushInfo</i> . To identical user, <i>userid</i> must provided.</p>
+<p><b>See also </b>Canvas::remoteDrawLine().</p>
+<!-- @@@remoteDrawLine -->
+<!-- $$$remoteDrawPoint[overload1]$$$remoteDrawPointconstQPoint&constQVariantMap&constQString&constquint64 -->
+<h3 class="fn"><a name="remoteDrawPoint"></a><span class="type">void</span> Canvas::<span class="name">remoteDrawPoint</span>(const <span class="type">QPoint</span> &amp;<i> point</i>, const <span class="type">QVariantMap</span> &amp;<i> brushInfo</i>, const <span class="type">QString</span> &amp;<i> layer</i>, const <span class="type">quint64</span><i> userid</i>)</h3>
+<p>Draws a remote point at <i>point</i> at <i>layer</i> with <i>brushInfo</i>. To identical user, <i>userid</i> must provided.</p>
+<p><b>See also </b><a href="canvas.html#remoteDrawLine">Canvas::remoteDrawLine</a>().</p>
+<!-- @@@remoteDrawPoint -->
+<!-- $$$resizeEvent[overload1]$$$resizeEventQResizeEvent* -->
+<h3 class="fn"><a name="resizeEvent"></a><span class="type">void</span> Canvas::<span class="name">resizeEvent</span>(<span class="type">QResizeEvent</span> *<i> event</i>)<tt> [protected]</tt></h3>
+<!-- @@@resizeEvent -->
+<!-- $$$sendPaintData[overload1]$$$sendPaintDataconstQByteArray& -->
+<h3 class="fn"><a name="sendPaintData"></a><span class="type">void</span> Canvas::<span class="name">sendPaintData</span>(const <span class="type">QByteArray</span> &amp;<i> data</i>)<tt> [signal]</tt></h3>
+<!-- @@@sendPaintData -->
+<!-- $$$setBrushColor[overload1]$$$setBrushColorconstQColor& -->
+<h3 class="fn"><a name="setBrushColor"></a><span class="type">void</span> Canvas::<span class="name">setBrushColor</span>(const <span class="type">QColor</span> &amp;<i> newColor</i>)</h3>
+<p>Sets a <i>newColor</i> to current brush.</p>
+<p><b>See also </b><a href="brush.html#setColor">Brush::setColor</a>().</p>
+<!-- @@@setBrushColor -->
+<!-- $$$setBrushWidth[overload1]$$$setBrushWidthint -->
+<h3 class="fn"><a name="setBrushWidth"></a><span class="type">void</span> Canvas::<span class="name">setBrushWidth</span>(<span class="type">int</span><i> newWidth</i>)</h3>
+<p>Sets a <i>newWidth</i> to current brush.</p>
+<p><b>See also </b><a href="brush.html#setWidth">Brush::setWidth</a>().</p>
+<!-- @@@setBrushWidth -->
+<!-- $$$showLayer[overload1]$$$showLayerconstQString& -->
+<h3 class="fn"><a name="showLayer"></a><span class="type">void</span> Canvas::<span class="name">showLayer</span>(const <span class="type">QString</span> &amp;<i> name</i>)<tt> [slot]</tt></h3>
+<p>Show one layer named <i>name</i>.</p>
+<p><b>See also </b><a href="canvas.html#hideLayer">hideLayer</a>().</p>
+<!-- @@@showLayer -->
+<!-- $$$sizeHint[overload1]$$$sizeHint -->
+<h3 class="fn"><a name="sizeHint"></a><span class="type">QSize</span> Canvas::<span class="name">sizeHint</span>() const<tt> [virtual]</tt></h3>
+<p>Returns a pre-defined size for canvas.</p>
+<p><b>See also </b>QWidget::minimumSizeHint().</p>
+<!-- @@@sizeHint -->
+<!-- $$$tabletEvent[overload1]$$$tabletEventQTabletEvent* -->
+<h3 class="fn"><a name="tabletEvent"></a><span class="type">void</span> Canvas::<span class="name">tabletEvent</span>(<span class="type">QTabletEvent</span> *<i> ev</i>)<tt> [protected]</tt></h3>
+<!-- @@@tabletEvent -->
+<!-- $$$unlockLayer[overload1]$$$unlockLayerconstQString& -->
+<h3 class="fn"><a name="unlockLayer"></a><span class="type">void</span> Canvas::<span class="name">unlockLayer</span>(const <span class="type">QString</span> &amp;<i> name</i>)<tt> [slot]</tt></h3>
+<p>Unlocks one layer named <i>name</i>.</p>
+<p><b>See also </b><a href="canvas.html#lockLayer">lockLayer</a>().</p>
+<!-- @@@unlockLayer -->
+<!-- $$$userId[overload1]$$$userId -->
+<h3 class="fn"><a name="userId"></a><span class="type">quint64</span> Canvas::<span class="name">userId</span>()</h3>
+<p>Returns the user id generated when constructed.</p>
+<!-- @@@userId -->
+</div>
+</body>
+</html>

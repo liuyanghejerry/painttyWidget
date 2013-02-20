@@ -1,0 +1,22 @@
+h3.fn, span.fn { 
+	margin-left: 1cm; 
+	text-indent: -1cm; 
+}
+a:link { 
+	color: #004faf; 
+	text-decoration: none;
+}
+a:visited { 
+	color: #672967; 
+	text-decoration: none;
+}
+td.postheader { 
+	font-family: sans-serif;
+}
+tr.address { 
+	font-family: sans-serif;
+}
+body { 
+	background: #ffffff; 
+	color: black; 
+}

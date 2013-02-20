@@ -1,0 +1,9 @@
+debug/*
+release/*
+color.pal
+layout.view
+*.user.*
+*.user
+object_script.painttyWidget.*
+/painttywidget_plugin_import.cpp
+/nick.name

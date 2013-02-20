@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="paintty project" version="">
+    <namespace access="public" threadsafety="unspecified" status="commendable" name="" href="" location="">
+        <class access="public" threadsafety="unspecified" status="commendable" name="Brush" href="brush.html" location="brush.h" bases="" module="painttyWidget Project">
+            <function access="public" threadsafety="unspecified" status="commendable" name="Brush" fullname="Brush::Brush" href="brush.html#Brush" location="brush.cpp" virtual="non" meta="constructor" const="false" static="false" overload="false" type="" signature="Brush(QObject * parent)">
+                <parameter left="QObject *" right="" name="parent" default="0"/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="brushInfo" fullname="Brush::brushInfo" href="brush.html#brushInfo" location="brush.cpp" virtual="impure" meta="plain" const="false" static="false" overload="false" type="QVariantMap" signature="brushInfo()"/>
+            <function access="protected" threadsafety="unspecified" status="commendable" name="clear" fullname="Brush::clear" href="brush.html#clear" location="brush.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="clear()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="color" fullname="Brush::color" href="brush.html#color" location="brush.cpp" virtual="impure" meta="plain" const="false" static="false" overload="false" type="QColor" signature="color()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="defaultInfo" fullname="Brush::defaultInfo" href="brush.html#defaultInfo" location="brush.cpp" virtual="impure" meta="plain" const="false" static="false" overload="false" type="QVariantMap" signature="defaultInfo()"/>
+            <function access="protected" threadsafety="unspecified" status="commendable" name="drawLine" fullname="Brush::drawLine" href="brush.html#drawLine" location="brush.cpp" virtual="impure" meta="plain" const="false" static="false" overload="false" type="void" signature="drawLine(const QPointF &amp; st, const QPointF &amp; end, qreal &amp; left)">
+                <parameter left="const QPointF &amp;" right="" name="st" default=""/>
+                <parameter left="const QPointF &amp;" right="" name="end" default=""/>
+                <parameter left="qreal &amp;" right="" name="left" default=""/>
+            </function>
+            <function access="protected" threadsafety="unspecified" status="commendable" name="drawPoint" fullname="Brush::drawPoint" href="brush.html#drawPoint" location="brush.cpp" virtual="impure" meta="plain" const="false" static="false" overload="false" type="void" signature="drawPoint(const QPointF &amp; st)">
+                <parameter left="const QPointF &amp;" right="" name="st" default=""/>
+            </function>
+            <function access="protected" threadsafety="unspecified" status="commendable" name="effect" fullname="Brush::effect" href="brush.html#effect" location="brush.cpp" virtual="impure" meta="plain" const="false" static="false" overload="false" type="void" signature="effect()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="end" fullname="Brush::end" href="brush.html#end" location="brush.cpp" virtual="impure" meta="plain" const="false" static="false" overload="false" type="void" signature="end()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="isDirectDraw" fullname="Brush::isDirectDraw" href="brush.html#isDirectDraw" location="brush.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="bool" signature="isDirectDraw()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="lineTo" fullname="Brush::lineTo" href="brush.html#lineTo" location="brush.cpp" virtual="impure" meta="plain" const="false" static="false" overload="false" type="void" signature="lineTo(const QPointF &amp; st)">
+                <parameter left="const QPointF &amp;" right="" name="st" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="loadStencil" fullname="Brush::loadStencil" href="brush.html#loadStencil" location="brush.cpp" virtual="impure" meta="plain" const="false" static="false" overload="false" type="bool" signature="loadStencil(const QString &amp; fileName)">
+                <parameter left="const QString &amp;" right="" name="fileName" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="pixmap" fullname="Brush::pixmap" href="brush.html#pixmap" location="brush.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="QPixmap" signature="pixmap()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="setColor" fullname="Brush::setColor" href="brush.html#setColor" location="brush.cpp" virtual="impure" meta="plain" const="false" static="false" overload="false" type="void" signature="setColor(const QColor &amp; color)">
+                <parameter left="const QColor &amp;" right="" name="color" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="setDirectDraw" fullname="Brush::setDirectDraw" href="brush.html#setDirectDraw" location="brush.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="setDirectDraw(bool enable)">
+                <parameter left="bool" right="" name="enable" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="setSize" fullname="Brush::setSize" href="brush.html#setSize" location="brush.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="setSize(const QSize &amp; s)">
+                <parameter left="const QSize &amp;" right="" name="s" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="setSurface" fullname="Brush::setSurface" href="brush.html#setSurface" location="brush.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="setSurface(QPixmap * p)">
+                <parameter left="QPixmap *" right="" name="p" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="setWidth" fullname="Brush::setWidth" href="brush.html#setWidth" location="brush.cpp" virtual="impure" meta="plain" const="false" static="false" overload="false" type="void" signature="setWidth(int w)">
+                <parameter left="int" right="" name="w" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="start" fullname="Brush::start" href="brush.html#start" location="brush.cpp" virtual="impure" meta="plain" const="false" static="false" overload="false" type="void" signature="start(const QPointF &amp; st)">
+                <parameter left="const QPointF &amp;" right="" name="st" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="surface" fullname="Brush::surface" href="brush.html#surface" location="brush.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="QPixmap *" signature="surface()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="width" fullname="Brush::width" href="brush.html#width" location="brush.cpp" virtual="impure" meta="plain" const="false" static="false" overload="false" type="int" signature="width()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="~Brush" fullname="Brush::~Brush" href="brush.html#dtor.Brush" location="brush.cpp" virtual="non" meta="destructor" const="false" static="false" overload="false" type="" signature="~Brush()"/>
+            <variable access="protected" threadsafety="unspecified" status="commendable" name="brushData" fullname="Brush::brushData" href="brush.html#brushData-var" location="brush.h" type="uchar *" static="false"/>
+            <variable access="protected" threadsafety="unspecified" status="commendable" name="directDraw_" fullname="Brush::directDraw_" href="brush.html#directDraw_-var" location="brush.h" type="bool" static="false"/>
+            <variable access="protected" threadsafety="unspecified" status="commendable" name="lastPoint_" fullname="Brush::lastPoint_" href="brush.html#lastPoint_-var" location="brush.h" type="QPointF" static="false"/>
+            <variable access="protected" threadsafety="unspecified" status="commendable" name="leftOverDistance" fullname="Brush::leftOverDistance" href="brush.html#leftOverDistance-var" location="brush.h" type="qreal" static="false"/>
+            <variable access="protected" threadsafety="unspecified" status="commendable" name="mainColor" fullname="Brush::mainColor" href="brush.html#mainColor-var" location="brush.h" type="QColor" static="false"/>
+            <variable access="protected" threadsafety="unspecified" status="commendable" name="originalStencil" fullname="Brush::originalStencil" href="brush.html#originalStencil-var" location="brush.h" type="QImage" static="false"/>
+            <variable access="protected" threadsafety="unspecified" status="commendable" name="result" fullname="Brush::result" href="brush.html#result-var" location="brush.h" type="QPixmap" static="false"/>
+            <variable access="protected" threadsafety="unspecified" status="commendable" name="startPoint_" fullname="Brush::startPoint_" href="brush.html#startPoint_-var" location="brush.h" type="QPointF" static="false"/>
+            <variable access="protected" threadsafety="unspecified" status="commendable" name="stencil" fullname="Brush::stencil" href="brush.html#stencil-var" location="brush.h" type="QPixmap" static="false"/>
+            <variable access="protected" threadsafety="unspecified" status="commendable" name="stencilFile" fullname="Brush::stencilFile" href="brush.html#stencilFile-var" location="brush.h" type="QFile" static="false"/>
+            <variable access="protected" threadsafety="unspecified" status="commendable" name="surface_" fullname="Brush::surface_" href="brush.html#surface_-var" location="brush.h" type="QPixmap *" static="false"/>
+        </class>
+        <class access="public" threadsafety="unspecified" status="commendable" name="Canvas" href="canvas.html" location="canvas.h" bases="" module="painttyWidget Project">
+            <function access="public" threadsafety="unspecified" status="commendable" name="Canvas" fullname="Canvas::Canvas" href="canvas.html#Canvas" location="canvas.cpp" virtual="non" meta="constructor" const="false" static="false" overload="false" type="" signature="Canvas(QWidget * parent)">
+                <parameter left="QWidget *" right="" name="parent" default="0"/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="addLayer" fullname="Canvas::addLayer" href="canvas.html#addLayer" location="canvas.cpp" virtual="non" meta="slot" const="false" static="false" overload="false" type="void" signature="addLayer(const QString &amp; name)">
+                <parameter left="const QString &amp;" right="" name="name" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="brushInfo" fullname="Canvas::brushInfo" href="canvas.html#brushInfo" location="canvas.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="QVariantMap" signature="brushInfo()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="changeBrush" fullname="Canvas::changeBrush" href="canvas.html#changeBrush" location="canvas.cpp" virtual="non" meta="slot" const="false" static="false" overload="false" type="void" signature="changeBrush(const QString &amp; name)">
+                <parameter left="const QString &amp;" right="" name="name" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="currentLayer" fullname="Canvas::currentLayer" href="canvas.html#currentLayer" location="canvas.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="QString" signature="currentLayer()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="deleteLayer" fullname="Canvas::deleteLayer" href="canvas.html#deleteLayer" location="canvas.cpp" virtual="non" meta="slot" const="false" static="false" overload="false" type="bool" signature="deleteLayer(const QString &amp; name)">
+                <parameter left="const QString &amp;" right="" name="name" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="hideLayer" fullname="Canvas::hideLayer" href="canvas.html#hideLayer" location="canvas.cpp" virtual="non" meta="slot" const="false" static="false" overload="false" type="void" signature="hideLayer(const QString &amp; name)">
+                <parameter left="const QString &amp;" right="" name="name" default=""/>
+            </function>
+            <function access="protected" threadsafety="unspecified" status="commendable" name="keyPressEvent" fullname="Canvas::keyPressEvent" href="canvas.html#keyPressEvent" location="canvas.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="keyPressEvent(QKeyEvent * ev)">
+                <parameter left="QKeyEvent *" right="" name="ev" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="layerSelected" fullname="Canvas::layerSelected" href="canvas.html#layerSelected" location="canvas.cpp" virtual="non" meta="slot" const="false" static="false" overload="false" type="void" signature="layerSelected(const QString &amp; name)">
+                <parameter left="const QString &amp;" right="" name="name" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="lockLayer" fullname="Canvas::lockLayer" href="canvas.html#lockLayer" location="canvas.cpp" virtual="non" meta="slot" const="false" static="false" overload="false" type="void" signature="lockLayer(const QString &amp; name)">
+                <parameter left="const QString &amp;" right="" name="name" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="minimumSizeHint" fullname="Canvas::minimumSizeHint" href="canvas.html#minimumSizeHint" location="canvas.cpp" virtual="impure" meta="plain" const="true" static="false" overload="false" type="QSize" signature="minimumSizeHint() const"/>
+            <function access="protected" threadsafety="unspecified" status="commendable" name="mouseMoveEvent" fullname="Canvas::mouseMoveEvent" href="canvas.html#mouseMoveEvent" location="canvas.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="mouseMoveEvent(QMouseEvent * event)">
+                <parameter left="QMouseEvent *" right="" name="event" default=""/>
+            </function>
+            <function access="protected" threadsafety="unspecified" status="commendable" name="mousePressEvent" fullname="Canvas::mousePressEvent" href="canvas.html#mousePressEvent" location="canvas.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="mousePressEvent(QMouseEvent * event)">
+                <parameter left="QMouseEvent *" right="" name="event" default=""/>
+            </function>
+            <function access="protected" threadsafety="unspecified" status="commendable" name="mouseReleaseEvent" fullname="Canvas::mouseReleaseEvent" href="canvas.html#mouseReleaseEvent" location="canvas.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="mouseReleaseEvent(QMouseEvent * event)">
+                <parameter left="QMouseEvent *" right="" name="event" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="moveLayerDown" fullname="Canvas::moveLayerDown" href="canvas.html#moveLayerDown" location="canvas.cpp" virtual="non" meta="slot" const="false" static="false" overload="false" type="void" signature="moveLayerDown(const QString &amp; name)">
+                <parameter left="const QString &amp;" right="" name="name" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="moveLayerUp" fullname="Canvas::moveLayerUp" href="canvas.html#moveLayerUp" location="canvas.cpp" virtual="non" meta="slot" const="false" static="false" overload="false" type="void" signature="moveLayerUp(const QString &amp; name)">
+                <parameter left="const QString &amp;" right="" name="name" default=""/>
+            </function>
+            <function access="protected" threadsafety="unspecified" status="commendable" name="paintEvent" fullname="Canvas::paintEvent" href="canvas.html#paintEvent" location="canvas.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="paintEvent(QPaintEvent * event)">
+                <parameter left="QPaintEvent *" right="" name="event" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="remoteDrawLine" fullname="Canvas::remoteDrawLine" href="canvas.html#remoteDrawLine" location="canvas.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="remoteDrawLine(const QPoint &amp; start, const QPoint &amp; end, const QVariantMap &amp; brushInfo, const QString &amp; layer, const quint64 userid)">
+                <parameter left="const QPoint &amp;" right="" name="start" default=""/>
+                <parameter left="const QPoint &amp;" right="" name="end" default=""/>
+                <parameter left="const QVariantMap &amp;" right="" name="brushInfo" default=""/>
+                <parameter left="const QString &amp;" right="" name="layer" default=""/>
+                <parameter left="const quint64" right="" name="userid" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="remoteDrawPoint" fullname="Canvas::remoteDrawPoint" href="canvas.html#remoteDrawPoint" location="canvas.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="remoteDrawPoint(const QPoint &amp; point, const QVariantMap &amp; brushInfo, const QString &amp; layer, const quint64 userid)">
+                <parameter left="const QPoint &amp;" right="" name="point" default=""/>
+                <parameter left="const QVariantMap &amp;" right="" name="brushInfo" default=""/>
+                <parameter left="const QString &amp;" right="" name="layer" default=""/>
+                <parameter left="const quint64" right="" name="userid" default=""/>
+            </function>
+            <function access="protected" threadsafety="unspecified" status="commendable" name="resizeEvent" fullname="Canvas::resizeEvent" href="canvas.html#resizeEvent" location="canvas.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="resizeEvent(QResizeEvent * event)">
+                <parameter left="QResizeEvent *" right="" name="event" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="setBrushColor" fullname="Canvas::setBrushColor" href="canvas.html#setBrushColor" location="canvas.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="setBrushColor(const QColor &amp; newColor)">
+                <parameter left="const QColor &amp;" right="" name="newColor" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="setBrushWidth" fullname="Canvas::setBrushWidth" href="canvas.html#setBrushWidth" location="canvas.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="setBrushWidth(int newWidth)">
+                <parameter left="int" right="" name="newWidth" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="showLayer" fullname="Canvas::showLayer" href="canvas.html#showLayer" location="canvas.cpp" virtual="non" meta="slot" const="false" static="false" overload="false" type="void" signature="showLayer(const QString &amp; name)">
+                <parameter left="const QString &amp;" right="" name="name" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="sizeHint" fullname="Canvas::sizeHint" href="canvas.html#sizeHint" location="canvas.cpp" virtual="impure" meta="plain" const="true" static="false" overload="false" type="QSize" signature="sizeHint() const"/>
+            <function access="protected" threadsafety="unspecified" status="commendable" name="tabletEvent" fullname="Canvas::tabletEvent" href="canvas.html#tabletEvent" location="canvas.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="void" signature="tabletEvent(QTabletEvent * ev)">
+                <parameter left="QTabletEvent *" right="" name="ev" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="unlockLayer" fullname="Canvas::unlockLayer" href="canvas.html#unlockLayer" location="canvas.cpp" virtual="non" meta="slot" const="false" static="false" overload="false" type="void" signature="unlockLayer(const QString &amp; name)">
+                <parameter left="const QString &amp;" right="" name="name" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="userId" fullname="Canvas::userId" href="canvas.html#userId" location="canvas.cpp" virtual="non" meta="plain" const="false" static="false" overload="false" type="quint64" signature="userId()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="~Canvas" fullname="Canvas::~Canvas" href="canvas.html#dtor.Canvas" location="canvas.cpp" virtual="non" meta="destructor" const="false" static="false" overload="false" type="" signature="~Canvas()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="count" fullname="Canvas::count" href="canvas.html#count" location="canvas.h" virtual="non" meta="plain" const="false" static="false" overload="false" type="int" signature="count()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="layerNum" fullname="Canvas::layerNum" href="canvas.html#layerNum" location="canvas.h" virtual="non" meta="plain" const="false" static="false" overload="false" type="int" signature="layerNum()"/>
+            <function access="public" threadsafety="unspecified" status="commendable" name="linePainted" fullname="Canvas::linePainted" href="canvas.html#linePainted" location="canvas.h" virtual="non" meta="signal" const="false" static="false" overload="false" type="void" signature="linePainted(const QPoint &amp; start, const QPoint &amp; end)">
+                <parameter left="const QPoint &amp;" right="" name="start" default=""/>
+                <parameter left="const QPoint &amp;" right="" name="end" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="newBrushSettings" fullname="Canvas::newBrushSettings" href="canvas.html#newBrushSettings" location="canvas.h" virtual="non" meta="signal" const="false" static="false" overload="false" type="void" signature="newBrushSettings(const QVariantMap &amp; map)">
+                <parameter left="const QVariantMap &amp;" right="" name="map" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="pointPainted" fullname="Canvas::pointPainted" href="canvas.html#pointPainted" location="canvas.h" virtual="non" meta="signal" const="false" static="false" overload="false" type="void" signature="pointPainted(const QPoint &amp; point)">
+                <parameter left="const QPoint &amp;" right="" name="point" default=""/>
+            </function>
+            <function access="public" threadsafety="unspecified" status="commendable" name="sendPaintData" fullname="Canvas::sendPaintData" href="canvas.html#sendPaintData" location="canvas.h" virtual="non" meta="signal" const="false" static="false" overload="false" type="void" signature="sendPaintData(const QByteArray &amp; data)">
+                <parameter left="const QByteArray &amp;" right="" name="data" default=""/>
+            </function>
+        </class>
+    </namespace>
+</INDEX>
