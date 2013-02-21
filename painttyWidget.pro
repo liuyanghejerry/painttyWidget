@@ -5,8 +5,6 @@
 #-------------------------------------------------
 
 
-DEFINES += DEBUG
-
 QT       += core gui network widgets
 
 win32 {

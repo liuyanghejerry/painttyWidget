@@ -100,9 +100,13 @@ void Socket::onReceipt()
             QByteArray info = socket->read(dataSize);
             bool isCompressed = info[0] & 0x1;
             if(isCompressed){
-                emit newData(
-                            qUncompress(
-                                info.right(info.length()-1)));
+                auto tmp = qUncompress(
+                    info.right(info.length()-1));
+                if(!tmp.isEmpty()){
+                    emit newData(tmp);
+                }else{
+                    qDebug()<<"bad input";
+                }
             }else{
                 emit newData(info.right(info.length()-1));
             }
