@@ -25,12 +25,12 @@ NewRoomWindow::~NewRoomWindow()
 
 void NewRoomWindow::onServerResponse(const QVariantMap &m)
 {
-    qDebug()<<"server: response"<<m;
     if(m["response"] != "newroom"
             || !m.contains("result"))
         return;
     if(m["result"].toBool()){
         // TODO
+        ui->progressBar->setValue(100);
         QString msg = tr("Succeed!");
         QMessageBox::information(this, tr("Go get your room!"),
                                  msg,
@@ -109,8 +109,7 @@ void NewRoomWindow::onOk()
     map.insert("maxload", ui->spinBox->value());
     map.insert("password", pw);
     map.insert("emptyclose", ui->checkBox_2->isChecked());
-    // TODO: send to server
-    qDebug()<<"client: request"<<map;
+
     ui->progressBar->setValue(30);
     emit newRoom(map);
 }
