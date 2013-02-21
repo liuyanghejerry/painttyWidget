@@ -28,11 +28,11 @@ int main(int argc, char *argv[])
     p.setColor(QPalette::HighlightedText, QColor::fromRgb(54, 86, 60));
     QApplication::setPalette(p);
     QTranslator qtTranslator;
-    qtTranslator.load("translation/qt_" + QLocale::system().name());
+    qtTranslator.load(":/translation/qt_" + QLocale::system().name());
     a.installTranslator(&qtTranslator);
 
     QTranslator myappTranslator;
-    myappTranslator.load("translation/paintty_" + QLocale::system().name());
+    myappTranslator.load(":/translation/paintty_" + QLocale::system().name());
     a.installTranslator(&myappTranslator);
 
     RoomListDialog *dialog = new RoomListDialog;

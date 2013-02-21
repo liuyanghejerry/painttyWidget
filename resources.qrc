@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+<qresource>
+    <file>translation/paintty_zh_CN.qm</file>
+    <file>translation/qt_zh_CN.qm</file>
+</qresource>
+</RCC>
