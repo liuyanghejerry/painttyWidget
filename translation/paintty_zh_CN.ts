@@ -4,14 +4,18 @@
 <context>
     <name>AboutDialog</name>
     <message>
-        <location filename="../widgets/aboutdialog.ui" line="6"/>
+        <location filename="../widgets/aboutdialog.ui" line="14"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../widgets/aboutdialog.ui" line="18"/>
+        <location filename="../widgets/aboutdialog.ui" line="26"/>
+        <source>&lt;p&gt;Mr.Paint is a free software for paint-chat. However, it&apos;s in alpha state.&lt;/p&gt;&lt;p&gt;If you have any questions about Mr.Paint, please visit &lt;a href=&quot;http://mrspaint.com&quot;&gt;our site&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Copyright Information:&lt;/p&gt;&lt;p&gt;painttyWidget : The client of Mr.Paint built with Qt&lt;/p&gt;&lt;p&gt;Copyright (C) 2013 Project Paintty&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.&lt;/p&gt;&lt;p&gt;This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.&lt;/p&gt;&lt;p&gt;You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA&lt;/p&gt;</source>
+        <translation>&lt;p&gt;茶绘君是一个免费的茶绘软件。但它还处于构思阶段。&lt;/p&gt;&lt;p&gt;如果您有任何问题，请访问&lt;a href=&quot;http://mrspaint.com&quot;&gt;我们的网站&lt;/a&gt;&lt;/p&gt;&lt;p&gt;版权信息：&lt;/p&gt;&lt;p&gt;painttyWidget : The client of Mr.Paint built with Qt&lt;/p&gt;&lt;p&gt;Copyright (C) 2013 Project Paintty&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.&lt;/p&gt;&lt;p&gt;This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.&lt;/p&gt;&lt;p&gt;You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA&lt;/p&gt;</translation>
+    </message>
+    <message>
         <source>&lt;p&gt;Mr.Paint is a free software for paint-chat. However, it&apos;s in alpha state.&lt;/p&gt;&lt;p&gt;If you have any questions about Mr.Paint, please visit &lt;a href=&quot;http://mrspaint.com&quot;&gt;our site&lt;/a&gt;.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;茶绘君是一个免费的茶绘软件。但它还处于构思阶段。&lt;/p&gt;&lt;p&gt;如果您有任何问题，请访问&lt;a href=&quot;http://mrspaint.com&quot;&gt;我们的网站&lt;/a&gt;&lt;/p&gt;</translation>
+        <translation type="obsolete">&lt;p&gt;茶绘君是一个免费的茶绘软件。但它还处于构思阶段。&lt;/p&gt;&lt;p&gt;如果您有任何问题，请访问&lt;a href=&quot;http://mrspaint.com&quot;&gt;我们的网站&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -411,12 +415,12 @@ Do you want to retry?</source>
         <translation>您的欢迎辞太长了！</translation>
     </message>
     <message>
-        <location filename="../widgets/newroomwindow.cpp" line="121"/>
+        <location filename="../widgets/newroomwindow.cpp" line="120"/>
         <source>Do you really want to cancel?</source>
         <translation>您真的想要取消吗？</translation>
     </message>
     <message>
-        <location filename="../widgets/newroomwindow.cpp" line="122"/>
+        <location filename="../widgets/newroomwindow.cpp" line="121"/>
         <source>Cancel?</source>
         <translation>取消？</translation>
     </message>
