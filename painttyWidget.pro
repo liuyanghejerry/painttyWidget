@@ -84,6 +84,6 @@ FORMS    += widgets/mainwindow.ui \
     widgets/aboutdialog.ui
 UI_DIR = widgets/
 
-TRANSLATIONS += translations/paintty_zh_CN.ts
+TRANSLATIONS += translation/paintty_zh_CN.ts
 
 RESOURCES += resources.qrc
