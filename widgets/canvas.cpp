@@ -427,16 +427,19 @@ void Canvas::remoteDrawLine(const QPoint &start, const QPoint &end,
 
 void Canvas::onNewData(const QByteArray & array)
 {
-    static quint64 h_size = 0;
-    if(historySize_) {
-        h_size += array.size();
-        if(h_size < quint64(historySize_)){
-            this->setDisabled(true);
-        }else{
-            historySize_ = 0;
-            this->setEnabled(true);
-        }
-    }
+//    static quint64 h_size = 0;
+//    if(historySize_) {
+//        h_size += array.size();
+//        qDebug()<<h_size<<historySize_;
+//        if(h_size < quint64(historySize_)){
+//            this->setDisabled(true);
+//        }else{
+//            historySize_ = 0;
+//            h_size = 0;
+//            this->setEnabled(true);
+//            qDebug()<<"enable!";
+//        }
+//    }
     QVariantMap m = fromJson(array).toMap();
     QString action = m["action"].toString().toLower();
 

@@ -77,11 +77,9 @@ void RoomListDialog::socketInit()
     connect(socket,&Socket::disconnected,
             this,&RoomListDialog::onServerClosed);
 #ifdef DEBUG
-    //    socket->connectToHost(QHostAddress::LocalHost, 3030);
-    socket->connectToHost("192.168.1.104", 3030);
+    socket->connectToHost("192.168.1.104", 7070);
 #else
-    //    socket->connectToHost("42.121.85.47", 3030);
-    socket->connectToHost("42.121.85.47", 3030);
+    socket->connectToHost("42.121.85.47", 7070);
 #endif
 }
 
@@ -249,10 +247,16 @@ void RoomListDialog::onCmdServerConnected()
     bool isPrivate = roomsInfo[roomName_].value("private").toBool();
     QString passwd;
     if(isPrivate){
+        bool isOk = false;
         passwd = QInputDialog::getText(this,
                                        tr("Password"),
                                        tr("This is a private room, please input password:"),
-                                       QLineEdit::PasswordEchoOnEdit);
+                                       QLineEdit::PasswordEchoOnEdit,
+                                       QString(),
+                                       &isOk);
+        if(!isOk) {
+            return;
+        }
         passwd.truncate(16);
     }
 
