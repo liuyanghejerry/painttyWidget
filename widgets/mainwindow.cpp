@@ -430,6 +430,9 @@ void MainWindow::exportAllToFile()
                                          QDir::currentPath(),
                                          tr("Images (*.png)"));
     fileName = fileName.trimmed();
+    if(fileName.isEmpty()){
+        return;
+    }
     if(!fileName.endsWith(".png", Qt::CaseInsensitive)){
         fileName = fileName + ".png";
     }
@@ -445,6 +448,9 @@ void MainWindow::exportVisibleToFile()
                                          QDir::currentPath(),
                                          tr("Images (*.png)"));
     fileName = fileName.trimmed();
+    if(fileName.isEmpty()){
+        return;
+    }
     if(!fileName.endsWith(".png", Qt::CaseInsensitive)){
         fileName = fileName + ".png";
     }
