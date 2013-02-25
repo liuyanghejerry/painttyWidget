@@ -82,10 +82,7 @@ FORMS    += widgets/mainwindow.ui \
     widgets/colorbox.ui \
     widgets/newroomwindow.ui \
     widgets/aboutdialog.ui
-
-UI_DIR = widgets/
-
-INCLUDEPATH += widgets/
+UI_DIR = $${PWD}/widgets/
 
 TRANSLATIONS += translation/paintty_zh_CN.ts
 
