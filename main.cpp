@@ -90,15 +90,15 @@ void initTranslation()
         return;
     }
 
-    QTranslator qtTranslator;
-    qtTranslator.load(":/translation/qt_"
+    QTranslator *qtTranslator = new QTranslator(qApp);
+    qtTranslator->load(":/translation/qt_"
                       + locale);
-    QCoreApplication::installTranslator(&qtTranslator);
+    QCoreApplication::installTranslator(qtTranslator);
 
-    QTranslator myappTranslator;
-    myappTranslator.load(":/translation/paintty_"
+    QTranslator *myappTranslator = new QTranslator(qApp);
+    myappTranslator->load(":/translation/paintty_"
                          + locale);
-    QCoreApplication::installTranslator(&myappTranslator);
+    QCoreApplication::installTranslator(myappTranslator);
 }
 
 }
