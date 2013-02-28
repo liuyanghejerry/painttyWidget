@@ -54,8 +54,6 @@ RoomListDialog::~RoomListDialog()
 void RoomListDialog::tableInit()
 {
     ui->tableWidget->setColumnCount(4);
-    //    ui->tableWidget->setColumnHidden(3, true);
-    //    ui->tableWidget->setColumnHidden(4, true);
     QStringList list;
     list << QString(tr("Room Name"))
          << QString(tr("Privacy"))
@@ -76,11 +74,7 @@ void RoomListDialog::socketInit()
             this,&RoomListDialog::requestRoomList);
     connect(socket,&Socket::disconnected,
             this,&RoomListDialog::onServerClosed);
-#ifdef DEBUG
-    socket->connectToHost("192.168.1.104", 7070);
-#else
-    socket->connectToHost("42.121.85.47", 7070);
-#endif
+    socket->connectToHost(GlobalDef::HOST_ADDR, GlobalDef::HOST_MGR_PORT);
 }
 
 void RoomListDialog::requestJoin()
@@ -125,9 +119,6 @@ void RoomListDialog::requestRoomList()
     map.insert("request", QString("roomlist"));
     QVariant data(map);
 
-    //    QJson::Serializer serializer;
-    //    serializer.setIndentMode(QJson::IndentCompact);
-    //    array = serializer.serialize(data);
     array = QJsonDocument::fromVariant(data).toJson();
 
     socket->sendData(array);
@@ -140,9 +131,7 @@ void RoomListDialog::requestNewRoom(const QVariantMap &m)
     map["request"] = "newroom";
     map["info"] = m;
     // TODO: add owner info
-    //    QJson::Serializer serializer;
-    //    serializer.setIndentMode(QJson::IndentCompact);
-    //    QByteArray array = serializer.serialize(QVariant(map));
+
     auto array = QJsonDocument::fromVariant(
                 QVariant(map)).toJson();
 
@@ -153,8 +142,6 @@ void RoomListDialog::requestNewRoom(const QVariantMap &m)
 
 void RoomListDialog::onRoomListUpdate(const QByteArray &array)
 {
-    //    static QJson::Parser par;
-    //    QVariant var = par.parse(array);
     auto var = QJsonDocument::fromJson(array).toVariant();
     QVariantMap map = var.toMap();
     QString response = map["response"].toString();
@@ -266,9 +253,6 @@ void RoomListDialog::onCmdServerConnected()
     map.insert("name", nickName_);
     map.insert("password", passwd);
 
-    //    static QJson::Serializer serializer;
-    //    serializer.setIndentMode(QJson::IndentCompact);
-    //    QByteArray array = serializer.serialize(QVariant(map));
     auto array = QJsonDocument::fromVariant(QVariant(map)).toJson();
 
     CommandSocket::cmdSocket()->sendData(array);
@@ -277,8 +261,6 @@ void RoomListDialog::onCmdServerConnected()
 
 void RoomListDialog::onCmdServerData(const QByteArray &array)
 {
-    //    static QJson::Parser par;
-    //    QVariant var = par.parse(array);
     auto var  = QJsonDocument::fromJson(array).toVariant();
     QVariantMap map = var.toMap();
     QString response = map["response"].toString();
@@ -337,32 +319,37 @@ int RoomListDialog::historySize()
 
 void RoomListDialog::loadNick()
 {
-    QFile file("nick.name");
-    if(file.exists()){
-        file.open(QIODevice::ReadWrite);
-        QString name = QString::fromUtf8(file.readAll());
-        if(!name.isEmpty()
-                && name.length() < 16){
-            ui->lineEdit->setText(name);
-        }
-    }else{
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    QByteArray data = settings.value("global/personal/nick")
+            .toByteArray();
+    QString name = QString::fromUtf8(data);
+    if(name.isEmpty()
+            || name.length() > 16){
         QMessageBox::information(this,
                                  tr("Notice"),
-                                 tr("We're still in alpha test. " \
-                                    "This means the program may crash at any time " \
-                                    "in any condition.\nUse this software " \
+                                 tr("We're still in alpha test. "
+                                    "This means the program may crash at any time "
+                                    "in any condition.\nUse this software "
                                     "only when you accept it."));
+    }else{
+        ui->lineEdit->setText(name);
     }
 }
 
 void RoomListDialog::saveNick()
 {
     QString name = ui->lineEdit->text();
-    QFile file("nick.name");
-    file.open(QIODevice::ReadWrite);
-    file.resize(0);
-    file.write(name.toUtf8());
-    file.close();
+    if(name.length() > 16){
+        return;
+    }
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    settings.setValue("global/personal/nick",
+                      name.toUtf8());
+    settings.sync();
 }
 
 void RoomListDialog::hideEvent( QHideEvent * )

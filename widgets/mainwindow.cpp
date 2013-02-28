@@ -15,9 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     msgSocket.close();
-    //    msgSocket.deleteLater();
     dataSocket.close();
-    //    dataSocket.deleteLater();
     cmdSocket.close();
     delete ui;
 }
@@ -161,27 +159,29 @@ void MainWindow::layerWidgetInit()
 
 void MainWindow::colorGridInit()
 {
-    QFile file("color.pal");
-    file.open(QIODevice::ReadOnly);
-    QByteArray array = file.readAll();
-    file.close();
-    if(array.isEmpty()){
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    QByteArray data = settings.value("colorgrid/pal")
+            .toByteArray();
+    if(data.isEmpty()){
         return;
     }else{
-        ui->colorGrid->dataImport(array);
+        ui->colorGrid->dataImport(data);
     }
 }
 
 void MainWindow::viewInit()
 {
-    QFile file("layout.view");
-    file.open(QIODevice::ReadOnly);
-    QByteArray array = file.readAll();
-    file.close();
-    if(array.isEmpty()){
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    QByteArray data = settings.value("mainwindow/view")
+            .toByteArray();
+    if(data.isEmpty()){
         return;
     }else{
-        restoreState(array);
+        restoreState(data);
     }
 }
 
@@ -194,17 +194,8 @@ void MainWindow::socketInit(int dataPort, int msgPort)
 {
     ui->canvas->setHistorySize(historySize_);
     ui->textEdit->insertPlainText(tr("Connecting to server...\n"));
-#ifdef DEBUG
-    //    msgSocket.connectToHost(QHostAddress::LocalHost,msgPort);
-    //    dataSocket.connectToHost(QHostAddress::LocalHost,dataPort);
-    msgSocket.connectToHost("192.168.1.104",msgPort);
-    dataSocket.connectToHost("192.168.1.104",dataPort);
-    //    cmdSocket.connectToHost("192.168.1.104",cmdPort);
-#else
-    msgSocket.connectToHost(QHostAddress("42.121.85.47"),msgPort);
-    dataSocket.connectToHost(QHostAddress("42.121.85.47"),dataPort);
-    //    cmdSocket.connectToHost(QHostAddress("42.121.85.47"),cmdPort);
-#endif
+    msgSocket.connectToHost(QHostAddress(GlobalDef::HOST_ADDR),msgPort);
+    dataSocket.connectToHost(QHostAddress(GlobalDef::HOST_ADDR),dataPort);
 }
 
 void MainWindow::setNickName(const QString &name)
@@ -308,29 +299,10 @@ void MainWindow::onColorGridPicked(int, const QColor &c)
     ui->colorBox->setColor(c);
 }
 
-//void MainWindow::brushColorWheelChanged()
-//{
-//    if(noUpdateBrush) return;
-//    brushColor = ui->colorWheel->color();
-//    pressBrushApply();
-//    emit brushColorChange(brushColor);
-//}
-
 void MainWindow::onBrushTypeChange()
 {
     ui->canvas->changeBrush(sender()->objectName());
 }
-
-//void MainWindow::brushColorEditChanged()
-//{
-//    if(noUpdateBrush) return;
-//    noUpdateBrush = true;
-//    QColor color = ui->colorSpinBoxGroup->color();
-//    ui->colorWheel->setColor(color);
-//    brushColor = color;
-//    noUpdateBrush = false;
-//    pressBrushApply();
-//}
 
 void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
 {
@@ -415,18 +387,14 @@ void MainWindow::deleteLayer(const QString &name)
 
 void MainWindow::closeEvent ( QCloseEvent * event )
 {
-    QFile file("color.pal");
-    file.open(QIODevice::ReadWrite);
-    file.resize(0);
-    file.write(ui->colorGrid->dataExport());
-    file.close();
-
-    QFile file2("layout.view");
-    file2.open(QIODevice::ReadWrite);
-    file2.resize(0);
-    file2.write(saveState());
-    file2.close();
-
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    settings.setValue("colorgrid/pal",
+                      ui->colorGrid->dataExport());
+    settings.setValue("mainwindow/view",
+                      saveState());
+    settings.sync();
     event->accept();
 }
 

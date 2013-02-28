@@ -1,19 +1,15 @@
 #include <QApplication>
 #include <QTranslator>
+#include <QSettings>
+#include <QJsonDocument>
+#include <QVariant>
+#include "common.h"
 #include "widgets/mainwindow.h"
 #include "widgets/roomlistdialog.h"
 
-#ifdef QT_PLUGIN_STATIC_LINK
-#include<QtCore/QtPlugin>
-Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
-//Q_IMPORT_PLUGIN(QICOPlugin)
-#endif
-
-int main(int argc, char *argv[])
+namespace mainOnly {
+QPalette& rePalette(QPalette &p)
 {
-    QApplication a(argc, argv);
-    QApplication::setStyle("Fusion");
-    auto p = QApplication::palette();
     //    p.setColor(QPalette::Window, QColor::fromRgb(54, 86, 60));
     //    p.setColor(QPalette::WindowText, QColor::fromRgb(168, 216, 185));
     //    p.setColor(QPalette::Base, QColor::fromRgb(34, 125, 81));
@@ -26,14 +22,94 @@ int main(int argc, char *argv[])
     p.setColor(QPalette::BrightText, QColor::fromRgb(168, 216, 185));
     p.setColor(QPalette::Highlight, QColor::fromRgb(168, 216, 185));
     p.setColor(QPalette::HighlightedText, QColor::fromRgb(54, 86, 60));
+    return p;
+}
+
+bool readJsConf(QIODevice &device, QSettings::SettingsMap &map)
+{
+    auto jsContent = device.readAll();
+    if(jsContent.isEmpty()){
+        return false;
+    }
+    QJsonParseError isOk;
+    auto doc = QJsonDocument::fromJson(jsContent, &isOk);
+    if(isOk.error != QJsonParseError::NoError) {
+        return false;
+    }
+    map = doc.toVariant().toMap();
+    return true;
+}
+
+bool writeJsConf(QIODevice &device, const QSettings::SettingsMap &map)
+{
+    auto jsContent = QJsonDocument::fromVariant(QVariant(map));
+    auto buffer = jsContent.toJson();
+    if(buffer.isEmpty()){
+        return false;
+    }
+    return device.write(buffer) > 0;
+}
+
+void initStyle()
+{
+    QApplication::setStyle("Fusion");
+    auto p = QApplication::palette();
+    p = mainOnly::rePalette(p);
     QApplication::setPalette(p);
+}
+
+void initSettings()
+{
+//    const QSettings::Format JsFormat =
+//            QSettings::registerFormat("jsconf",
+//                                      mainOnly::readJsConf,
+//                                      mainOnly::writeJsConf);
+//    QSettings::setPath(JsFormat, QSettings::UserScope,
+//                       QDir::currentPath());
+//    QSettings::setDefaultFormat(JsFormat);
+
+    QSettings::setDefaultFormat(QSettings::IniFormat);
+
+    QSettings settings(GlobalDef::SETTINGS_NAME, QSettings::defaultFormat(), qApp);
+    QString clientVersion = settings.value("global/version/client", QString("0.1"))
+            .toString();
+    settings.setValue("global/version/client", clientVersion);
+    settings.sync();
+}
+
+void initTranslation()
+{
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    QString locale = settings.value("global/language",
+                                    QLocale::system().name())
+            .toString();
+    if(locale.isEmpty()){
+        qWarning()<<"Empty locale!";
+        return;
+    }
+
     QTranslator qtTranslator;
-    qtTranslator.load(":/translation/qt_" + QLocale::system().name());
-    a.installTranslator(&qtTranslator);
+    qtTranslator.load(":/translation/qt_"
+                      + locale);
+    QCoreApplication::installTranslator(&qtTranslator);
 
     QTranslator myappTranslator;
-    myappTranslator.load(":/translation/paintty_" + QLocale::system().name());
-    a.installTranslator(&myappTranslator);
+    myappTranslator.load(":/translation/paintty_"
+                         + locale);
+    QCoreApplication::installTranslator(&myappTranslator);
+}
+
+}
+
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+
+    mainOnly::initStyle();
+    mainOnly::initSettings();
+    mainOnly::initTranslation();
 
     RoomListDialog *dialog = new RoomListDialog;
     while(dialog->exec()) {
@@ -43,7 +119,7 @@ int main(int argc, char *argv[])
         w.setNickName(dialog->nick());
         w.setRoomName(dialog->roomName());
         w.setHistorySize(dialog->historySize());
-        w.socketInit(dialog->dataPort(),dialog->msgPort());
+        w.socketInit(dialog->dataPort(), dialog->msgPort());
         w.show();
         w.showMaximized();
         a.exec();

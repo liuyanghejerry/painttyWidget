@@ -11,6 +11,9 @@
 #include <QJsonDocument>
 #include <QFile>
 #include <QCloseEvent>
+#include <QSettings>
+
+#include "../common.h"
 #include "../network/commandsocket.h"
 #include "newroomwindow.h"
 

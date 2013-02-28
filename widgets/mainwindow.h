@@ -17,7 +17,9 @@
 #include <QFile>
 #include <QClipboard>
 #include <QJsonDocument>
+#include <QSettings>
 
+#include "common.h"
 #include "layerwidget.h"
 #include "colorgrid.h"
 #include "developerconsole.h"

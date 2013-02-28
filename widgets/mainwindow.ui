@@ -24,6 +24,14 @@
        <bool>false</bool>
       </property>
       <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>38</width>
+         <height>74</height>
+        </rect>
+       </property>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
          <widget class="Canvas" name="canvas" native="true">
@@ -340,9 +348,21 @@
     </property>
     <addaction name="actionReset_View"/>
    </widget>
+   <widget class="QMenu" name="menu_Language">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="title">
+     <string>&amp;Language</string>
+    </property>
+    <addaction name="actionEnglish"/>
+    <addaction name="actionSimplified_Chinese"/>
+    <addaction name="actionTraditional_Chinese"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
    <addaction name="menu_View"/>
+   <addaction name="menu_Language"/>
    <addaction name="menu_About"/>
   </widget>
   <action name="actionExport_All">
@@ -388,6 +408,30 @@
   <action name="actionNothing_Here">
    <property name="text">
     <string>Nothing Here</string>
+   </property>
+  </action>
+  <action name="actionEnglish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>English</string>
+   </property>
+  </action>
+  <action name="actionSimplified_Chinese">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Simplified Chinese</string>
+   </property>
+  </action>
+  <action name="actionTraditional_Chinese">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Traditional Chinese</string>
    </property>
   </action>
  </widget>
