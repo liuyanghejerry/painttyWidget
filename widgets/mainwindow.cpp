@@ -357,11 +357,19 @@ void MainWindow::onCanvasMoveBy(const QPoint &p)
 void MainWindow::onColorPickerPressed(bool c)
 {
     ui->canvas->onColorPicker(c);
+    ui->pencilButton->setEnabled(!c);
+    ui->brushButton->setEnabled(!c);
+    ui->sketchButton->setEnabled(!c);
+    ui->eraserButton->setEnabled(!c);
 }
 
 void MainWindow::onPickColorComplete()
 {
     ui->colorPicker->setChecked(false);
+    ui->pencilButton->setEnabled(true);
+    ui->brushButton->setEnabled(true);
+    ui->sketchButton->setEnabled(true);
+    ui->eraserButton->setEnabled(true);
 }
 
 void MainWindow::remoteAddLayer(const QString &layerName)
