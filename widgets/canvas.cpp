@@ -701,9 +701,6 @@ void Canvas::mousePressEvent(QMouseEvent *event)
             drawing = true;
             drawPoint(lastPoint);
         }
-    }else if(event->button() == Qt::RightButton){
-        lastRightPoint = event->pos();
-        setCursor(Qt::SizeAllCursor);
     }
 }
 
@@ -718,8 +715,6 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
                 lastPoint = event->pos();
             }
         }
-    }else if((event->buttons() & Qt::RightButton)){
-        emit moveCanvasBy(lastRightPoint - event->pos());
     }
 }
 
@@ -735,8 +730,6 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
                 updateCursor(brush_->width());
             }
         }
-    }else if(event->button() == Qt::RightButton){
-        updateCursor(brush_->width());
     }
 }
 

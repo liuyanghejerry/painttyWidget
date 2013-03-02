@@ -6,7 +6,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     msgSocket(this),
     dataSocket(this),
-    historySize_(0)
+    historySize_(0),
+    lastBrushButton(nullptr)
 {
     ui->setupUi(this);
     defaultView = saveState();
@@ -33,7 +34,8 @@ void MainWindow::stylize()
 
 void MainWindow::init()
 {
-    ui->scrollArea->setBackgroundRole(QPalette::Dark);
+    ui->centralWidget->setBackgroundRole(QPalette::Dark);
+    ui->centralWidget->setCanvas(ui->canvas);
     ui->canvas->setDisabled(true);
     ui->layerWidget->setDisabled(true);
     ui->lineEdit->setDisabled(true);
@@ -100,9 +102,6 @@ void MainWindow::init()
     connect(ui->canvas, SIGNAL(pickColorComplete()),
             this, SLOT(onPickColorComplete()));
 
-    connect(ui->canvas, SIGNAL(moveCanvasBy(QPoint)),
-            this, SLOT(onCanvasMoveBy(QPoint)));
-
     connect(ui->colorGrid, SIGNAL(colorDroped(int)),
             this, SLOT(onColorGridDroped(int)));
     connect(ui->colorGrid, SIGNAL(colorPicked(int,QColor)),
@@ -123,31 +122,7 @@ void MainWindow::init()
     connect(devConsoleShortCut, SIGNAL(activated()),
             console, SLOT(show()));
 
-    QShortcut* widthActionSub = new QShortcut(this);
-    widthActionSub->setKey(Qt::Key_Q);
-    connect(widthActionSub, SIGNAL(activated()),
-            ui->spinBox, SLOT(stepDown()));
-    QShortcut* widthActionAdd = new QShortcut(this);
-    widthActionAdd->setKey(Qt::Key_W);
-    connect(widthActionAdd, SIGNAL(activated()),
-            ui->spinBox, SLOT(stepUp()));
-
-    connect(ui->action_Quit, SIGNAL(triggered()),
-            this, SLOT(close()));
-    connect(ui->actionExport_All, SIGNAL(triggered()),
-            this, SLOT(exportAllToFile()));
-    connect(ui->actionExport_Visiable, SIGNAL(triggered()),
-            this, SLOT(exportVisibleToFile()));
-    connect(ui->actionExport_All_To_Clipboard, SIGNAL(triggered()),
-            this, SLOT(exportAllToClipboard()));
-    connect(ui->actionExport_Visible_To_ClipBorad, SIGNAL(triggered()),
-            this, SLOT(exportVisibleToClipboard()));
-    connect(ui->actionReset_View, SIGNAL(triggered()),
-            this, SLOT(resetView()));
-    connect(ui->action_About_Mr_Paint, SIGNAL(triggered()),
-            this, SLOT(about()));
-    connect(ui->actionAbout_Qt, SIGNAL(triggered()),
-            qApp, SLOT(aboutQt()));
+    shortcutInit();
     //    stylize();
 }
 
@@ -185,6 +160,99 @@ void MainWindow::viewInit()
     }else{
         restoreState(data);
     }
+}
+
+void MainWindow::shortcutInit()
+{
+    QShortcut* widthActionSub = new QShortcut(this);
+    widthActionSub->setKey(Qt::Key_Q);
+    connect(widthActionSub, SIGNAL(activated()),
+            ui->spinBox, SLOT(stepDown()));
+    QShortcut* widthActionAdd = new QShortcut(this);
+    widthActionAdd->setKey(Qt::Key_W);
+    connect(widthActionAdd, SIGNAL(activated()),
+            ui->spinBox, SLOT(stepUp()));
+
+    SingleShortcut *pencilShort = new SingleShortcut(this);
+    pencilShort->setKey(Qt::Key_Z);
+    connect(pencilShort, &SingleShortcut::activated,
+            [&](){
+        lastBrushButton =
+                qobject_cast<QPushButton *>(
+                    ui->buttonGroup->checkedButton());
+        if(lastBrushButton)
+            ui->pencilButton->click();
+    });
+    connect(pencilShort, &SingleShortcut::inactivated,
+            [&](){
+        if(lastBrushButton)
+            lastBrushButton->click();
+    });
+
+    SingleShortcut *brushShort = new SingleShortcut(this);
+    brushShort->setKey(Qt::Key_A);
+    connect(brushShort, &SingleShortcut::activated,
+            [&](){
+        lastBrushButton =
+                qobject_cast<QPushButton *>(
+                    ui->buttonGroup->checkedButton());
+        if(lastBrushButton)
+            ui->brushButton->click();
+    });
+    connect(brushShort, &SingleShortcut::inactivated,
+            [&](){
+        if(lastBrushButton)
+            lastBrushButton->click();
+    });
+
+    SingleShortcut *sketchShort = new SingleShortcut(this);
+    sketchShort->setKey(Qt::Key_S);
+    connect(sketchShort, &SingleShortcut::activated,
+            [&](){
+        lastBrushButton =
+                qobject_cast<QPushButton *>(
+                    ui->buttonGroup->checkedButton());
+        if(lastBrushButton)
+            ui->brushButton->click();
+    });
+    connect(sketchShort, &SingleShortcut::inactivated,
+            [&](){
+        if(lastBrushButton)
+            lastBrushButton->click();
+    });
+
+    SingleShortcut *eraserShort = new SingleShortcut(this);
+    eraserShort->setKey(Qt::Key_E);
+    connect(eraserShort, &SingleShortcut::activated,
+            [&](){
+        lastBrushButton =
+                qobject_cast<QPushButton *>(
+                    ui->buttonGroup->checkedButton());
+        if(lastBrushButton)
+            ui->eraserButton->click();
+    });
+    connect(eraserShort, &SingleShortcut::inactivated,
+            [&](){
+        if(lastBrushButton)
+            lastBrushButton->click();
+    });
+
+    connect(ui->action_Quit, SIGNAL(triggered()),
+            this, SLOT(close()));
+    connect(ui->actionExport_All, SIGNAL(triggered()),
+            this, SLOT(exportAllToFile()));
+    connect(ui->actionExport_Visiable, SIGNAL(triggered()),
+            this, SLOT(exportVisibleToFile()));
+    connect(ui->actionExport_All_To_Clipboard, SIGNAL(triggered()),
+            this, SLOT(exportAllToClipboard()));
+    connect(ui->actionExport_Visible_To_ClipBorad, SIGNAL(triggered()),
+            this, SLOT(exportVisibleToClipboard()));
+    connect(ui->actionReset_View, SIGNAL(triggered()),
+            this, SLOT(resetView()));
+    connect(ui->action_About_Mr_Paint, SIGNAL(triggered()),
+            this, SLOT(about()));
+    connect(ui->actionAbout_Qt, SIGNAL(triggered()),
+            qApp, SLOT(aboutQt()));
 }
 
 void MainWindow::cmdSocketInit(const QHostAddress &add, int port)
@@ -324,17 +392,11 @@ void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
 
 }
 
-void MainWindow::onCanvasMoveBy(const QPoint &p)
-{
-    QScrollBar * bar = ui->scrollArea->horizontalScrollBar();
-    bar->setValue(bar->value()+p.x());
-    bar = ui->scrollArea->verticalScrollBar();
-    bar->setValue(bar->value()+p.y());
-}
-
 void MainWindow::onPanoramaRefresh()
 {
-    ui->panorama->onImageChange(ui->canvas->grab());
+    ui->panorama->onImageChange(ui->canvas->grab(),
+                                ui->centralWidget->viewport()->visibleRegion()
+                                .translated(ui->centralWidget->mapToScene(0, 0).toPoint()));
 }
 
 void MainWindow::onColorPickerPressed(bool c)

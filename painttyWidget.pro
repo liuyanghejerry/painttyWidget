@@ -44,7 +44,10 @@ SOURCES += main.cpp\
     widgets/colorbox.cpp \
     widgets/newroomwindow.cpp \
     network/commandsocket.cpp \
-    widgets/aboutdialog.cpp
+    widgets/aboutdialog.cpp \
+    widgets/panoramawidget.cpp \
+    singleshortcut.cpp \
+    widgets/canvascontainer.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -73,7 +76,11 @@ HEADERS  += widgets/mainwindow.h \
     widgets/colorbox.h \
     widgets/newroomwindow.h \
     network/commandsocket.h \
-    widgets/aboutdialog.h
+    widgets/aboutdialog.h \
+    common.h \
+    widgets/panoramawidget.h \
+    singleshortcut.h \
+    widgets/canvascontainer.h
 
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \

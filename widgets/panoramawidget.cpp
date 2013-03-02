@@ -20,9 +20,24 @@ QSize PanoramaWidget::sizeHint() const
     return image_.size() + QSize(10, 10);
 }
 
-void PanoramaWidget::onImageChange(const QPixmap &p)
+void PanoramaWidget::onImageChange(QPixmap p,
+                                   const QRegion &r)
 {
+    QPainter painter(&p);
+    QPen pen;
+    pen.setColor(this->palette().color(QPalette::Text));
+    pen.setWidth(30);
+    painter.setPen(pen);
+    painter.drawRect(r.boundingRect());
     image_ = p.scaledToWidth(preferSize_.width());
+//    if(p.width() >= p.height()){
+//        int delta = p.width()/preferSize_.width();
+
+//    }else{
+//        //
+//    }
+
+
     update();
 }
 

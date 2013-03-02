@@ -6,53 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>982</width>
-    <height>684</height>
+    <width>693</width>
+    <height>455</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Mr.Paint</string>
   </property>
-  <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_6">
-    <item>
-     <widget class="QScrollArea" name="scrollArea">
-      <property name="autoFillBackground">
-       <bool>true</bool>
-      </property>
-      <property name="widgetResizable">
-       <bool>false</bool>
-      </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents">
-       <layout class="QVBoxLayout" name="verticalLayout_5">
-        <item>
-         <widget class="Canvas" name="canvas" native="true">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-    </item>
-   </layout>
+  <widget class="CanvasContainer" name="centralWidget">
+   <widget class="Canvas" name="canvas" native="true"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="features">
@@ -106,9 +68,6 @@
          <property name="text">
           <string>Pencil (Z)</string>
          </property>
-         <property name="shortcut">
-          <string>Z</string>
-         </property>
          <property name="checkable">
           <bool>true</bool>
          </property>
@@ -127,9 +86,6 @@
         <widget class="QPushButton" name="brushButton">
          <property name="text">
           <string>Brush (A)</string>
-         </property>
-         <property name="shortcut">
-          <string>A</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -150,9 +106,6 @@
          <property name="text">
           <string>Sketch (S)</string>
          </property>
-         <property name="shortcut">
-          <string>S</string>
-         </property>
          <property name="checkable">
           <bool>true</bool>
          </property>
@@ -168,9 +121,6 @@
         <widget class="QPushButton" name="eraserButton">
          <property name="text">
           <string>Eraser (E)</string>
-         </property>
-         <property name="shortcut">
-          <string>E</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -200,6 +150,9 @@
      </item>
      <item>
       <widget class="QCheckBox" name="checkBox">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Share Brush Settings</string>
        </property>
@@ -308,7 +261,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>982</width>
+     <width>693</width>
      <height>23</height>
     </rect>
    </property>
@@ -468,6 +421,11 @@
    <extends>QWidget</extends>
    <header>panoramawidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CanvasContainer</class>
+   <extends>QGraphicsView</extends>
+   <header>canvascontainer.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

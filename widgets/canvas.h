@@ -57,7 +57,6 @@ signals:
     void sendData(const QByteArray &);
     void pickColorComplete();
     void newBrushSettings(const QVariantMap &map);
-    void moveCanvasBy(const QPoint &);
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
@@ -101,7 +100,6 @@ private:
     QPixmap image;
     QPixmap *currentImage;
     QPoint lastPoint;
-    QPoint lastRightPoint; // for canvas moving
     qreal opacity;
     int layerNameCounter;
     BrushPointer brush_;

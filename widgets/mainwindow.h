@@ -19,7 +19,8 @@
 #include <QJsonDocument>
 #include <QSettings>
 
-#include "common.h"
+#include "../common.h"
+#include "../singleshortcut.h"
 #include "layerwidget.h"
 #include "colorgrid.h"
 #include "developerconsole.h"
@@ -69,6 +70,7 @@ private:
     void layerWidgetInit();
     void colorGridInit();
     void viewInit();
+    void shortcutInit();
     QByteArray toJson(const QVariant &m);
     QVariant fromJson(const QByteArray &d);
 
@@ -82,6 +84,7 @@ private:
     quint64 historySize_;
     QShortcut *devConsoleShortCut;
     QByteArray defaultView;
+    QPushButton *lastBrushButton;
 private slots:
     void onServerConnected();
     void onServerDisconnected();
@@ -94,7 +97,6 @@ private slots:
     void onColorPickerPressed(bool c);
     void onCmdServerConnected();
     void onCmdServerDisconnected();
-    void onCanvasMoveBy(const QPoint &p);
     void onPanoramaRefresh();
 
 };

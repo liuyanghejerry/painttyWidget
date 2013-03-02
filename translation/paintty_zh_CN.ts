@@ -283,7 +283,7 @@
     <message>
         <location filename="../widgets/mainwindow.ui" line="377"/>
         <source>Export Visible To File</source>
-        <translation>导出可见部分至文件</translation>
+        <translation>导出可见图层至文件</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="382"/>
@@ -303,7 +303,7 @@
     <message>
         <location filename="../widgets/mainwindow.ui" line="397"/>
         <source>Export Visible To ClipBorad</source>
-        <translation>导出可见部分至剪贴板</translation>
+        <translation>导出可见图层至剪贴板</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="402"/>
@@ -379,7 +379,7 @@
     <message>
         <location filename="../widgets/mainwindow.cpp" line="434"/>
         <source>Export visible part to file</source>
-        <translation>导出可见部分至文件</translation>
+        <translation>导出可见图层至文件</translation>
     </message>
 </context>
 <context>

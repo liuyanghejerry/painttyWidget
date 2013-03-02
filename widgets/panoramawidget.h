@@ -5,6 +5,7 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QTimer>
+#include <QDebug>
 
 class PanoramaWidget : public QWidget
 {
@@ -15,7 +16,7 @@ public:
 signals:
     void refresh();
 public slots:
-    void onImageChange(const QPixmap &p);
+    void onImageChange(QPixmap p, const QRegion &r);
 protected:
     void paintEvent(QPaintEvent *);
 private:
