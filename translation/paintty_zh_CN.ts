@@ -44,9 +44,13 @@
         <translation>取色</translation>
     </message>
     <message>
-        <location filename="../widgets/colorgriditem.cpp" line="20"/>
         <source>Drop From Wheel</source>
-        <translation>从色环取色</translation>
+        <translation type="obsolete">着色</translation>
+    </message>
+    <message>
+        <location filename="../widgets/colorgriditem.cpp" line="20"/>
+        <source>Tint</source>
+        <translation>着色</translation>
     </message>
     <message>
         <location filename="../widgets/colorgriditem.cpp" line="21"/>
@@ -62,45 +66,55 @@
 <context>
     <name>ColorSpinBoxGroup</name>
     <message>
-        <location filename="../widgets/colorspinboxgroup.ui" line="26"/>
+        <location filename="../widgets/colorspinboxgroup.ui" line="20"/>
         <source>HSV</source>
         <translation>HSV</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.ui" line="33"/>
+        <location filename="../widgets/colorspinboxgroup.ui" line="27"/>
         <source>RGB</source>
         <translation>RGB</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.ui" line="54"/>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="86"/>
+        <location filename="../widgets/colorspinboxgroup.ui" line="41"/>
+        <source>Opacity</source>
+        <translation>可见度</translation>
+    </message>
+    <message>
+        <location filename="../widgets/colorspinboxgroup.ui" line="48"/>
+        <source>%</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../widgets/colorspinboxgroup.ui" line="93"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="90"/>
         <source>Blue</source>
         <translation>蓝</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.ui" line="68"/>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="85"/>
+        <location filename="../widgets/colorspinboxgroup.ui" line="79"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="89"/>
         <source>Green</source>
         <translation>绿</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.ui" line="75"/>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="84"/>
+        <location filename="../widgets/colorspinboxgroup.ui" line="65"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="88"/>
         <source>Red</source>
         <translation>红</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="64"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="68"/>
         <source>Hue</source>
         <translation>色调</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="65"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="69"/>
         <source>Saturation</source>
         <translation>饱和度</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="66"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="70"/>
         <source>Value</source>
         <translation>亮度</translation>
     </message>
@@ -212,111 +226,136 @@
         <translation>C</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="231"/>
+        <location filename="../widgets/mainwindow.ui" line="204"/>
+        <source>Share Brush Settings</source>
+        <translation>笔设置共通</translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwindow.ui" line="238"/>
         <source>Chat</source>
         <translation>聊天</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="263"/>
+        <location filename="../widgets/mainwindow.ui" line="270"/>
         <source>Send</source>
         <translation>发送</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="286"/>
+        <location filename="../widgets/mainwindow.ui" line="293"/>
         <source>Layers</source>
         <translation>图层</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="310"/>
+        <location filename="../widgets/mainwindow.ui" line="317"/>
         <source>&amp;File</source>
         <translation>文件(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="314"/>
+        <location filename="../widgets/mainwindow.ui" line="321"/>
         <source>Export...</source>
         <translation>导出...</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="326"/>
+        <location filename="../widgets/mainwindow.ui" line="333"/>
         <source>&amp;Edit</source>
         <translation>编辑(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="332"/>
+        <location filename="../widgets/mainwindow.ui" line="339"/>
         <source>&amp;About</source>
         <translation>关于(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="339"/>
+        <location filename="../widgets/mainwindow.ui" line="346"/>
         <source>&amp;View</source>
         <translation>视图(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="350"/>
+        <location filename="../widgets/mainwindow.ui" line="357"/>
+        <source>Panorama</source>
+        <translation>全景图</translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwindow.ui" line="372"/>
         <source>Export All to File</source>
         <translation>导出全部至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="355"/>
+        <location filename="../widgets/mainwindow.ui" line="377"/>
         <source>Export Visible To File</source>
         <translation>导出可见部分至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="360"/>
+        <location filename="../widgets/mainwindow.ui" line="382"/>
         <source>&amp;Quit</source>
         <translation>退出(&amp;Q)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="365"/>
+        <location filename="../widgets/mainwindow.ui" line="387"/>
         <source>About Mr.Paint</source>
         <translation>关于茶绘君</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="370"/>
+        <location filename="../widgets/mainwindow.ui" line="392"/>
         <source>About Qt</source>
         <translation>关于Qt</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="375"/>
+        <location filename="../widgets/mainwindow.ui" line="397"/>
         <source>Export Visible To ClipBorad</source>
         <translation>导出可见部分至剪贴板</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="380"/>
+        <location filename="../widgets/mainwindow.ui" line="402"/>
         <source>Export All To Clipboard</source>
         <translation>导出全部至剪贴板</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="385"/>
+        <location filename="../widgets/mainwindow.ui" line="407"/>
         <source>Reset View</source>
         <translation>重置视图</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="390"/>
+        <location filename="../widgets/mainwindow.ui" line="412"/>
         <source>Nothing Here</source>
         <translation>啥都没</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="196"/>
+        <location filename="../widgets/mainwindow.ui" line="420"/>
+        <source>English</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwindow.ui" line="428"/>
+        <source>Simplified Chinese</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwindow.ui" line="436"/>
+        <source>Traditional Chinese</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwindow.cpp" line="198"/>
         <source>Connecting to server...
 </source>
         <translation>正在连接至服务器...
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="218"/>
+        <location filename="../widgets/mainwindow.cpp" line="211"/>
         <source> - Mr.Paint</source>
         <translation> - 茶绘君</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="229"/>
+        <location filename="../widgets/mainwindow.cpp" line="222"/>
         <source>Server Connected.
 </source>
         <translation>服务器成功连接。
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="240"/>
+        <location filename="../widgets/mainwindow.cpp" line="233"/>
         <source>Server Connection Failed.
 </source>
         <translation>服务器断开了连接。
@@ -327,18 +366,18 @@
         <translation type="obsolete">图层</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="429"/>
+        <location filename="../widgets/mainwindow.cpp" line="416"/>
         <source>Export all to file</source>
         <translation>全部导出至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="431"/>
-        <location filename="../widgets/mainwindow.cpp" line="446"/>
+        <location filename="../widgets/mainwindow.cpp" line="418"/>
+        <location filename="../widgets/mainwindow.cpp" line="436"/>
         <source>Images (*.png)</source>
         <translation>图片 (*.png)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="444"/>
+        <location filename="../widgets/mainwindow.cpp" line="434"/>
         <source>Export visible part to file</source>
         <translation>导出可见部分至文件</translation>
     </message>
@@ -473,100 +512,100 @@ Do you want to retry?</source>
         <translation>注意：我们还在构思阶段，至多提供50个房间。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="60"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="58"/>
         <source>Room Name</source>
         <translation>房间名</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="61"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="59"/>
         <source>Privacy</source>
         <translation>私密性</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="62"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="60"/>
         <source>Current Member</source>
         <translation>在线人数</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="63"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="61"/>
         <source>Max Member</source>
         <translation>最大人数</translation>
     </message>
     <message>
+        <location filename="../widgets/roomlistdialog.cpp" line="87"/>
         <location filename="../widgets/roomlistdialog.cpp" line="95"/>
-        <location filename="../widgets/roomlistdialog.cpp" line="103"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="96"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="88"/>
         <source>You must have a valid nick name.</source>
         <translation>您必须有一个合法的昵称</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="104"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="96"/>
         <source>You didn&apos;t choose any room.</source>
         <translation>您没有选择任何房间。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="202"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="187"/>
         <source>Private</source>
         <translation>私</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="202"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="187"/>
         <source>Public</source>
         <translation>公</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="231"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="216"/>
         <source>Connection</source>
         <translation>连接</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="232"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="217"/>
         <source>Sorry, server has closed.</source>
         <translation>对不起，服务器貌似断开了。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="244"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="229"/>
         <source>Full loaded</source>
         <translation>满载</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="245"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="230"/>
         <source>Cannot join a full loaded room.</source>
         <translation>无法加入一个满房。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="253"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="239"/>
         <source>Password</source>
         <translation>密码</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="254"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="240"/>
         <source>This is a private room, please input password:</source>
         <translation>这是一个私人房间，请你输入密码：</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="292"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="278"/>
         <source>Error</source>
         <translation>出错</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="293"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="279"/>
         <source>Sorry, an error occurred.
 Error:</source>
         <translation>对不起，发生了错误。
 错误：</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="346"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="331"/>
         <source>Notice</source>
         <translation>注意</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="347"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="332"/>
         <source>We&apos;re still in alpha test. This means the program may crash at any time in any condition.
 Use this software only when you accept it.</source>
         <translation>我们仍处于早期内部测试阶段。这意味着程序随时都有可能崩溃。

@@ -17,7 +17,7 @@ ColorGridItem::ColorGridItem(int id, QWidget *parent) :
 void ColorGridItem::initMenu()
 {
     menu.addAction(tr("Pick"), this,SLOT(onColorPicked()));
-    menu.addAction(tr("Drop From Wheel"),this,SLOT(onColorDroped()));
+    menu.addAction(tr("Tint"),this,SLOT(onColorDroped()));
     menu.addAction(tr("Clear"),this,SLOT(onColorCleared()));
     menu.addAction(tr("Cancel"));
 }
