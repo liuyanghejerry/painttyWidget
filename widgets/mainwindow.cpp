@@ -107,6 +107,8 @@ void MainWindow::init()
             this, SLOT(onColorGridDroped(int)));
     connect(ui->colorGrid, SIGNAL(colorPicked(int,QColor)),
             this, SLOT(onColorGridPicked(int,QColor)));
+    connect(ui->panorama, SIGNAL(refresh()),
+            this, SLOT(onPanoramaRefresh()));
 
     layerWidgetInit();
     colorGridInit();
@@ -307,7 +309,11 @@ void MainWindow::onBrushTypeChange()
 void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
 {
     int w = m["width"].toInt();
-    QColor c = m["color"].value<QColor>();
+    QVariantMap colorMap = m["color"].toMap();
+    QColor c(colorMap["red"].toInt(),
+            colorMap["green"].toInt(),
+            colorMap["blue"].toInt(),
+            colorMap["alpha"].toInt());
 
     // INFO: to prevent scaled to 1px, should always
     // change width first
@@ -324,6 +330,11 @@ void MainWindow::onCanvasMoveBy(const QPoint &p)
     bar->setValue(bar->value()+p.x());
     bar = ui->scrollArea->verticalScrollBar();
     bar->setValue(bar->value()+p.y());
+}
+
+void MainWindow::onPanoramaRefresh()
+{
+    ui->panorama->onImageChange(ui->canvas->grab());
 }
 
 void MainWindow::onColorPickerPressed(bool c)

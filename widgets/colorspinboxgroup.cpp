@@ -16,6 +16,8 @@ ColorSpinBoxGroup::ColorSpinBoxGroup(QWidget *parent) :
             this, SLOT(onColorChanged()));
     connect(ui->rgb, SIGNAL(toggled(bool)),
             this, SLOT(onModeChanged()));
+    connect(ui->opacityBox, SIGNAL(valueChanged(int)),
+            this, SLOT(onOpacityChanged()));
 }
 
 ColorSpinBoxGroup::~ColorSpinBoxGroup()
@@ -27,6 +29,7 @@ void ColorSpinBoxGroup::setColor(const QColor &c)
 {
     if(c == color_) return;
     noColorUpdate = true;
+    ui->opacityBox->setValue(c.alphaF()*100.0);
     if(isRgbColors){
         ui->RedspinBox->setValue(c.red());
         ui->GreenspinBox->setValue(c.green());
@@ -43,6 +46,7 @@ void ColorSpinBoxGroup::setColor(const QColor &c)
                     );
     }
     color_ = c;
+
     QPalette p = ui->label->palette();
     p.setColor(QPalette::Background, color_);
     ui->label->setPalette(p);
@@ -108,7 +112,12 @@ void ColorSpinBoxGroup::onColorChanged()
     if(isRgbColors){
         c = QColor::fromRgb(ui->RedspinBox->value(),
                             ui->GreenspinBox->value(),
-                            ui->BluespinBox->value());
+                            ui->BluespinBox->value(),
+                            qBound(0.0,
+                                   (255-255*ui->opacityBox->value())/100.0,
+                                   255.0)
+                            );
+
     }else{
         c = QColor::fromHsvF(qBound(0.0,
                                     ui->RedspinBox->value()/359.0,
@@ -118,9 +127,27 @@ void ColorSpinBoxGroup::onColorChanged()
                                     1.0),
                              qBound(0.0,
                                     ui->BluespinBox->value()/100.0,
-                                    1.0));
+                                    1.0),
+                             qBound(0.0,
+                                    ui->opacityBox->value()/100.0,
+                                    1.0)
+                             );
     }
 
     color_ = c;
     emit colorChange(c);
+}
+
+void ColorSpinBoxGroup::onOpacityChanged()
+{
+    if(noColorUpdate) return;
+
+    color_.setAlphaF(qBound(0.0,
+                            ui->opacityBox->value()/100.0,
+                            1.0));
+    QPalette p = ui->label->palette();
+    p.setColor(QPalette::Background, color_);
+    ui->label->setPalette(p);
+    emit opacityChange(ui->opacityBox->value());
+    emit colorChange(color_);
 }

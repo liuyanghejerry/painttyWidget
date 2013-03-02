@@ -336,7 +336,12 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
 
     QString brushName = brushInfo["name"].toString();
     int width = brushInfo["width"].toInt();
-    QColor color = brushInfo["color"].value<QColor>();
+    QVariantMap colorMap = brushInfo["color"].toMap();
+    QColor color(colorMap["red"].toInt(),
+            colorMap["green"].toInt(),
+            colorMap["blue"].toInt(),
+            colorMap["alpha"].toInt());
+//    QColor color = brushInfo["color"].value<QColor>();
 
     if(remoteBrush.contains(userid)){
         BrushPointer t = remoteBrush[userid];
@@ -392,7 +397,11 @@ void Canvas::remoteDrawLine(const QPoint &start, const QPoint &end,
 
     QString brushName = brushInfo["name"].toString();
     int width = brushInfo["width"].toInt();
-    QColor color = brushInfo["color"].value<QColor>();
+    QVariantMap colorMap = brushInfo["color"].toMap();
+    QColor color(colorMap["red"].toInt(),
+            colorMap["green"].toInt(),
+            colorMap["blue"].toInt(),
+            colorMap["alpha"].toInt());
 
     if(remoteBrush.contains(userid)){
         BrushPointer t = remoteBrush[userid];

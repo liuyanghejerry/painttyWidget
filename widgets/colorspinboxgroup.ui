@@ -7,17 +7,11 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>204</width>
-    <height>128</height>
+    <width>254</width>
+    <height>152</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="spacing">
-    <number>0</number>
-   </property>
-   <property name="margin">
-    <number>0</number>
-   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -40,18 +34,35 @@
     </layout>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="GreenspinBox">
-       <property name="maximum">
-        <number>255</number>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="opacity">
+       <property name="text">
+        <string>Opacity</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="blue">
+     <item>
+      <widget class="QSpinBox" name="opacityBox">
+       <property name="suffix">
+        <string>%</string>
+       </property>
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="value">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="red">
        <property name="text">
-        <string>Blue</string>
+        <string>Red</string>
        </property>
       </widget>
      </item>
@@ -69,10 +80,17 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="red">
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="GreenspinBox">
+       <property name="maximum">
+        <number>255</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="blue">
        <property name="text">
-        <string>Red</string>
+        <string>Blue</string>
        </property>
       </widget>
      </item>

@@ -95,6 +95,7 @@ private slots:
     void onCmdServerConnected();
     void onCmdServerDisconnected();
     void onCanvasMoveBy(const QPoint &p);
+    void onPanoramaRefresh();
 
 };
 

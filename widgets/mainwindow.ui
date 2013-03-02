@@ -199,6 +199,13 @@
       </layout>
      </item>
      <item>
+      <widget class="QCheckBox" name="checkBox">
+       <property name="text">
+        <string>Share Brush Settings</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="verticalSpacer_2">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -340,22 +347,25 @@
     </property>
     <addaction name="actionReset_View"/>
    </widget>
-   <widget class="QMenu" name="menu_Language">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="title">
-     <string>&amp;Language</string>
-    </property>
-    <addaction name="actionEnglish"/>
-    <addaction name="actionSimplified_Chinese"/>
-    <addaction name="actionTraditional_Chinese"/>
-   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
    <addaction name="menu_View"/>
-   <addaction name="menu_Language"/>
    <addaction name="menu_About"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_4">
+   <property name="windowTitle">
+    <string>Panorama</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_5">
+    <layout class="QVBoxLayout" name="verticalLayout_7">
+     <item>
+      <widget class="PanoramaWidget" name="panorama" native="true"/>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <action name="actionExport_All">
    <property name="text">
@@ -451,6 +461,12 @@
    <class>ColorBox</class>
    <extends>QWidget</extends>
    <header>colorbox.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PanoramaWidget</class>
+   <extends>QWidget</extends>
+   <header>panoramawidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

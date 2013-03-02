@@ -31,6 +31,8 @@ protected:
     void paintEvent(QPaintEvent *event);
 private:
     QSize initSize;
+    QImage wheelImage;
+    QImage squareImage;
     QPixmap wheel;
     bool mouseDown;
     QPoint lastPos;
@@ -41,11 +43,13 @@ private:
     QColor current;
     bool inWheel;
     bool inSquare;
+    int opacity_;
     QColor posColor(const QPoint &point);
-    void drawWheel(const QSize &newSize);
+    void drawWheelImage(const QSize &newSize);
     void drawIndicator(const int &hue);
     void drawPicker(const QColor &color);
-    void drawSquare(const int &hue);
+    void drawSquareImage(const int &hue);
+    void composeWheel();
 private slots:
     void hueChanged(const int &hue);
     void svChanged(const QColor &newcolor);
