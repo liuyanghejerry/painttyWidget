@@ -71,7 +71,7 @@ void initSettings()
     QSettings::setDefaultFormat(QSettings::IniFormat);
 
     QSettings settings(GlobalDef::SETTINGS_NAME, QSettings::defaultFormat(), qApp);
-    QString clientVersion = settings.value("global/version/client", QString("0.1"))
+    QString clientVersion = settings.value("global/version/client", GlobalDef::CLIENT_VER)
             .toString();
     settings.setValue("global/version/client", clientVersion);
     settings.sync();

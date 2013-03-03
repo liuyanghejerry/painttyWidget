@@ -2,6 +2,7 @@
 #include "canvascontainer.h"
 #include <QGraphicsProxyWidget>
 #include <QScrollBar>
+#include <QDebug>
 
 CanvasContainer::CanvasContainer(QWidget *parent) :
     QGraphicsView(parent), proxy(0)
@@ -22,12 +23,19 @@ void CanvasContainer::setCanvas(QWidget *canvas)
         canvas->setParent(0);
     }
     proxy = scene->addWidget(canvas);
+    canvas->installEventFilter(this);
 }
 
 qreal CanvasContainer::currentScaleFactor() const
 {
     if (proxy)
         return proxy->scale();
+    return 0;
+}
+
+QRectF CanvasContainer::visualRect() const
+{
+    return proxy->mapFromScene(mapToScene(viewport()->rect())).boundingRect().intersected(proxy->rect());
 }
 
 void CanvasContainer::wheelEvent(QWheelEvent *event)
@@ -37,8 +45,7 @@ void CanvasContainer::wheelEvent(QWheelEvent *event)
         QGraphicsView::wheelEvent(event);
         return;
     }
-    QPointF position = mapToScene(event->pos());
-    position = proxy->mapFromScene(position);
+    QPointF position = proxy->mapFromScene(mapToScene(event->pos()));
     if (!proxy->rect().contains(position))
         return;
     proxy->setTransformOriginPoint(position);
@@ -84,4 +91,11 @@ void CanvasContainer::mouseMoveEvent(QMouseEvent *event)
         moveStartPoint = event->pos();
     }
     QGraphicsView::mouseMoveEvent(event);
+}
+
+bool CanvasContainer::eventFilter(QObject *object, QEvent *event)
+{
+    if (object == proxy->widget() && event->type() == QEvent::CursorChange)
+        proxy->setCursor(proxy->widget()->cursor());
+    return false;
 }

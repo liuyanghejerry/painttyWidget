@@ -16,7 +16,7 @@ public:
 signals:
     void refresh();
 public slots:
-    void onImageChange(QPixmap p, const QRegion &r);
+    void onImageChange(QPixmap p, const QRect &r);
 protected:
     void paintEvent(QPaintEvent *);
 private:

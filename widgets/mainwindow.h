@@ -84,7 +84,7 @@ private:
     quint64 historySize_;
     QShortcut *devConsoleShortCut;
     QByteArray defaultView;
-    QPushButton *lastBrushButton;
+    QAbstractButton *lastBrushButton;
 private slots:
     void onServerConnected();
     void onServerDisconnected();

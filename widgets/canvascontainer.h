@@ -16,6 +16,7 @@ public:
     CanvasContainer(QWidget *parent = 0);
     void setCanvas(QWidget *canvas);
     qreal currentScaleFactor() const;
+    QRectF visualRect() const;
     
 signals:
     void scaled(qreal factor);
@@ -31,6 +32,7 @@ protected:
     void wheelEvent(QWheelEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    bool eventFilter(QObject *object, QEvent *event);
 };
 
 #endif // CANVASCONTAINER_H

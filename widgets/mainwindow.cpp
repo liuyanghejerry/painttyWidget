@@ -178,8 +178,7 @@ void MainWindow::shortcutInit()
     connect(pencilShort, &SingleShortcut::activated,
             [&](){
         lastBrushButton =
-                qobject_cast<QPushButton *>(
-                    ui->buttonGroup->checkedButton());
+                    ui->buttonGroup->checkedButton();
         if(lastBrushButton)
             ui->pencilButton->click();
     });
@@ -194,8 +193,7 @@ void MainWindow::shortcutInit()
     connect(brushShort, &SingleShortcut::activated,
             [&](){
         lastBrushButton =
-                qobject_cast<QPushButton *>(
-                    ui->buttonGroup->checkedButton());
+                    ui->buttonGroup->checkedButton();
         if(lastBrushButton)
             ui->brushButton->click();
     });
@@ -210,10 +208,9 @@ void MainWindow::shortcutInit()
     connect(sketchShort, &SingleShortcut::activated,
             [&](){
         lastBrushButton =
-                qobject_cast<QPushButton *>(
-                    ui->buttonGroup->checkedButton());
+                    ui->buttonGroup->checkedButton();
         if(lastBrushButton)
-            ui->brushButton->click();
+            ui->sketchButton->click();
     });
     connect(sketchShort, &SingleShortcut::inactivated,
             [&](){
@@ -226,8 +223,7 @@ void MainWindow::shortcutInit()
     connect(eraserShort, &SingleShortcut::activated,
             [&](){
         lastBrushButton =
-                qobject_cast<QPushButton *>(
-                    ui->buttonGroup->checkedButton());
+                    ui->buttonGroup->checkedButton();
         if(lastBrushButton)
             ui->eraserButton->click();
     });
@@ -395,8 +391,7 @@ void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
 void MainWindow::onPanoramaRefresh()
 {
     ui->panorama->onImageChange(ui->canvas->grab(),
-                                ui->centralWidget->viewport()->visibleRegion()
-                                .translated(ui->centralWidget->mapToScene(0, 0).toPoint()));
+                                ui->centralWidget->visualRect().toRect());
 }
 
 void MainWindow::onColorPickerPressed(bool c)
