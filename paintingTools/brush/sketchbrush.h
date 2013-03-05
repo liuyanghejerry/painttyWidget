@@ -14,6 +14,7 @@ public:
     void setColor(const QColor &color);
     int width();
     void setWidth(int w);
+    void setLastPoint(const QPointF &p);
     void lineTo(const QPointF &st);
     QVariantMap brushInfo();
     QVariantMap defaultInfo();

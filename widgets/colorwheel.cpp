@@ -14,7 +14,7 @@ ColorWheel::ColorWheel(QWidget *parent) :
 {
     //    resize(initSize);
     current = current.toHsv();
-    setMinimumSize(200,200);
+//    setMinimumSize(200,200);
     setCursor(Qt::CrossCursor);
 }
 
@@ -98,7 +98,7 @@ QSize ColorWheel::sizeHint () const
 }
 QSize ColorWheel::minimumSizeHint () const
 {
-    return QSize(30,30);
+    return initSize;
 }
 
 void ColorWheel::mousePressEvent(QMouseEvent *event)
@@ -160,8 +160,6 @@ void ColorWheel::resizeEvent(QResizeEvent *event)
     wheel.fill(palette().background().color());
     drawWheelImage(event->size());
     drawSquareImage(current.hue());
-    //drawIndicator(current.hue());
-    //drawPicker(current);
     update();
 }
 

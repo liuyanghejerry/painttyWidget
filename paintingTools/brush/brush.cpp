@@ -40,7 +40,12 @@ Brush::Brush(QObject *parent) :
     result.fill(Qt::transparent);
     brushData = new uchar[1];
     loadStencil("iconset/brush/brush.raw");
-    this->setColor(this->defaultInfo()["color"].value<QColor>());
+    QVariantMap colorMap = this->defaultInfo()["color"].toMap();
+    QColor c(colorMap["red"].toInt(),
+            colorMap["green"].toInt(),
+            colorMap["blue"].toInt(),
+            colorMap["alpha"].toInt());
+    this->setColor(c);
     this->setWidth(this->defaultInfo()["width"].toInt());
 }
 
@@ -288,6 +293,10 @@ void Brush::start(const QPointF &st)
 void Brush::lineTo(const QPointF &st)
 {    
     clear();
+    if(lastPoint_.isNull()){
+        start(st);
+        return;
+    }
     this->drawLine(lastPoint_, st, leftOverDistance);
     this->effect();
     lastPoint_ = st;
@@ -402,6 +411,16 @@ QPixmap Brush::pixmap()
     return result;
 }
 
+QPointF Brush::lastPoint()
+{
+    return lastPoint_;
+}
+
+void Brush::setLastPoint(const QPointF &p)
+{
+    lastPoint_ = p;
+}
+
 /*!
     \fn void Brush::effect()
     Virtual function for make effect in sub-class. This function will be called in every drawPoint() and drawLine().
@@ -422,8 +441,13 @@ void Brush::effect()
 QVariantMap Brush::brushInfo()
 {
     QVariantMap map;
+    QVariantMap colorMap;
+    colorMap.insert("red", this->color().red());
+    colorMap.insert("green", this->color().green());
+    colorMap.insert("blue", this->color().blue());
+    colorMap.insert("alpha", this->color().alpha());
     map.insert("width", QVariant(this->width()));
-    map.insert("color", QVariant(this->color()));
+    map.insert("color", colorMap);
     map.insert("name", QVariant("Brush"));
     return map;
 }
@@ -438,6 +462,12 @@ QVariantMap Brush::defaultInfo()
 {
     QVariantMap map;
     map.insert("width", QVariant(10));
-    map.insert("color", QVariant(QColor(254,127,127).toHsv()));
+    QVariantMap colorMap;
+    colorMap.insert("red", 254);
+    colorMap.insert("green", 127);
+    colorMap.insert("blue", 127);
+    colorMap.insert("alpha", 255);
+
+    map.insert("color", colorMap);
     return map;
 }

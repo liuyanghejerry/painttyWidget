@@ -106,7 +106,9 @@ void initTranslation()
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-
+#ifdef Q_OS_MACX
+        QDir::setCurrent(a.applicationDirPath());
+#endif
     mainOnly::initStyle();
     mainOnly::initSettings();
     mainOnly::initTranslation();
@@ -120,8 +122,11 @@ int main(int argc, char *argv[])
         w.setRoomName(dialog->roomName());
         w.setHistorySize(dialog->historySize());
         w.socketInit(dialog->dataPort(), dialog->msgPort());
-        w.show();
+#ifdef Q_OS_MACX
+        w.showFullScreen();
+#else
         w.showMaximized();
+#endif
         a.exec();
     }
 

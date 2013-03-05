@@ -59,8 +59,13 @@ void Pencil::setWidth(int w)
 QVariantMap Pencil::brushInfo()
 {
     QVariantMap map;
+    QVariantMap colorMap;
+    colorMap.insert("red", pencil.color().red());
+    colorMap.insert("green", pencil.color().green());
+    colorMap.insert("blue", pencil.color().blue());
+    colorMap.insert("alpha", pencil.color().alpha());
     map.insert("width", QVariant(pencil.width()));
-    map.insert("color", QVariant(pencil.color()));
+    map.insert("color", colorMap);
     map.insert("name", QVariant("Pencil"));
     return map;
 }
@@ -69,6 +74,11 @@ QVariantMap Pencil::defaultInfo()
 {
     QVariantMap map;
     map.insert("width", QVariant(1));
-    map.insert("color", QVariant(QColor(Qt::black).toHsv()));
+    QVariantMap colorMap;
+    colorMap.insert("red", 0);
+    colorMap.insert("green", 0);
+    colorMap.insert("blue", 0);
+    colorMap.insert("alpha", 255);
+    map.insert("color", colorMap);
     return map;
 }

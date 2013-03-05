@@ -180,6 +180,7 @@ void Canvas::changeBrush(const QString &name)
 {
     QVariantMap currentSettings;
     QPixmap *sur = brush_->surface();
+    QPointF lp = brush_->lastPoint();
 
     QString brushName = name.toLower();
     brushName.chop(6);
@@ -192,6 +193,7 @@ void Canvas::changeBrush(const QString &name)
         currentSettings = brush_->defaultInfo();
     }
 
+    brush_->setLastPoint(lp);
     brush_->setDirectDraw(true);
     brush_->setSurface(sur);
     updateCursor(brush_->width());

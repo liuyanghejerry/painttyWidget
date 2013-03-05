@@ -13,6 +13,14 @@ CanvasContainer::CanvasContainer(QWidget *parent) :
     setResizeAnchor(QGraphicsView::AnchorUnderMouse);
     scene = new QGraphicsScene(this);
     setScene(scene);
+    auto rc = [&](){
+        emit rectChanged(this->visualRect().toRect());
+    };
+
+    connect(horizontalScrollBar(), &QScrollBar::actionTriggered,
+            rc);
+    connect(verticalScrollBar(), &QScrollBar::actionTriggered,
+            rc);
 }
 
 void CanvasContainer::setCanvas(QWidget *canvas)
@@ -35,12 +43,15 @@ qreal CanvasContainer::currentScaleFactor() const
 
 QRectF CanvasContainer::visualRect() const
 {
-    return proxy->mapFromScene(mapToScene(viewport()->rect())).boundingRect().intersected(proxy->rect());
+    return proxy->mapFromScene(
+                mapToScene(viewport()->rect()))
+            .boundingRect().intersected(proxy->rect());
 }
 
 void CanvasContainer::wheelEvent(QWheelEvent *event)
 {
-    if (!event->modifiers().testFlag(Qt::ControlModifier) || !proxy)
+    if (!event->modifiers().testFlag(Qt::ControlModifier)
+            || !proxy)
     {
         QGraphicsView::wheelEvent(event);
         return;
@@ -95,7 +106,8 @@ void CanvasContainer::mouseMoveEvent(QMouseEvent *event)
 
 bool CanvasContainer::eventFilter(QObject *object, QEvent *event)
 {
-    if (object == proxy->widget() && event->type() == QEvent::CursorChange)
+    if (object == proxy->widget()
+            && event->type() == QEvent::CursorChange)
         proxy->setCursor(proxy->widget()->cursor());
     return false;
 }

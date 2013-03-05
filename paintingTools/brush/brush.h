@@ -21,6 +21,8 @@ public:
     virtual void setWidth(int w);
     void setDirectDraw(bool enable);
     bool isDirectDraw();
+    QPointF lastPoint();
+    virtual void setLastPoint(const QPointF &p);
     QPixmap * surface();
     void setSurface(QPixmap *p);
     virtual QColor color();

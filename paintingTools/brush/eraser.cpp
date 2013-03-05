@@ -58,8 +58,13 @@ void Eraser::drawLine(const QPointF &st, const QPointF &end, qreal &left)
 QVariantMap Eraser::brushInfo()
 {
     QVariantMap map;
+    QVariantMap colorMap;
+    colorMap.insert("red", this->color().red());
+    colorMap.insert("green", this->color().green());
+    colorMap.insert("blue", this->color().blue());
+    colorMap.insert("alpha", this->color().alpha());
     map.insert("width", QVariant(this->width()));
-    map.insert("color", QVariant(this->color()));
+    map.insert("color", colorMap);
     map.insert("name", QVariant("Eraser"));
     return map;
 }
@@ -68,6 +73,11 @@ QVariantMap Eraser::defaultInfo()
 {
     QVariantMap map;
     map.insert("width", QVariant(10));
-    map.insert("color", QVariant(QColor(Qt::white).toHsv()));
+    QVariantMap colorMap;
+    colorMap.insert("red", 255);
+    colorMap.insert("green", 255);
+    colorMap.insert("blue", 255);
+    colorMap.insert("alpha", 255);
+    map.insert("color", colorMap);
     return map;
 }

@@ -108,6 +108,8 @@ void MainWindow::init()
             this, SLOT(onColorGridPicked(int,QColor)));
     connect(ui->panorama, SIGNAL(refresh()),
             this, SLOT(onPanoramaRefresh()));
+    connect(ui->centralWidget, SIGNAL(rectChanged(QRect)),
+            ui->panorama, SLOT(onRectChange(QRect)));
 
     layerWidgetInit();
     colorGridInit();
@@ -228,6 +230,21 @@ void MainWindow::shortcutInit()
             ui->eraserButton->click();
     });
     connect(eraserShort, &SingleShortcut::inactivated,
+            [&](){
+        if(lastBrushButton)
+            lastBrushButton->click();
+    });
+
+    SingleShortcut *pickerShort = new SingleShortcut(this);
+    pickerShort->setKey(Qt::Key_C);
+    connect(pickerShort, &SingleShortcut::activated,
+            [&](){
+        lastBrushButton =
+                ui->buttonGroup->checkedButton();
+        if(lastBrushButton)
+            ui->colorPicker->click();
+    });
+    connect(pickerShort, &SingleShortcut::inactivated,
             [&](){
         if(lastBrushButton)
             lastBrushButton->click();

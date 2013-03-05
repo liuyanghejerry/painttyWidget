@@ -138,9 +138,6 @@
          <property name="text">
           <string>Color Picker (C)</string>
          </property>
-         <property name="shortcut">
-          <string>C</string>
-         </property>
          <property name="checkable">
           <bool>true</bool>
          </property>

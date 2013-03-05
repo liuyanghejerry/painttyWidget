@@ -38,7 +38,6 @@ void SketchBrush::start(const QPointF &st)
 
 void SketchBrush::preparePen()
 {
-    //    sketchPen.setWidthF(10);
     QColor subColor = mainColor;
     subColor.setAlphaF(0.07);
     sketchPen.setColor(subColor);
@@ -49,9 +48,19 @@ void SketchBrush::preparePen()
 void SketchBrush::lineTo(const QPointF &st)
 {
     clear();
+    if(lastPoint_.isNull()){
+        start(st);
+        return;
+    }
     points.push_back(st);
     sketch();
     lastPoint_ = st;
+}
+
+void SketchBrush::setLastPoint(const QPointF &p)
+{
+    lastPoint_ = p;
+    points.clear();
 }
 
 void SketchBrush::sketch()
@@ -60,9 +69,7 @@ void SketchBrush::sketch()
         QPainterPath path;
         path.moveTo(points[0]);
         for(int i=0;i<points.count()-10;i+=4){
-            //            path.quadTo(points[i], points[i+6]);
             path.cubicTo(points[i], points[i+2], points[i+9]);
-
         }
         points.pop_front();
 
@@ -80,8 +87,13 @@ void SketchBrush::sketch()
 QVariantMap SketchBrush::brushInfo()
 {
     QVariantMap map;
+    QVariantMap colorMap;
+    colorMap.insert("red", sketchPen.color().red());
+    colorMap.insert("green", sketchPen.color().green());
+    colorMap.insert("blue", sketchPen.color().blue());
+    colorMap.insert("alpha", sketchPen.color().alpha());
     map.insert("width", QVariant(sketchPen.width()));
-    map.insert("color", QVariant(sketchPen.color()));
+    map.insert("color", colorMap);
     map.insert("name", QVariant("Sketch"));
     return map;
 }
@@ -89,7 +101,12 @@ QVariantMap SketchBrush::brushInfo()
 QVariantMap SketchBrush::defaultInfo()
 {
     QVariantMap map;
+    QVariantMap colorMap;
+    colorMap.insert("red", 160);
+    colorMap.insert("green", 160);
+    colorMap.insert("blue", 164);
+    colorMap.insert("alpha", 255);
     map.insert("width", QVariant(1));
-    map.insert("color", QVariant(QColor(Qt::gray).toHsv()));
+    map.insert("color", colorMap);
     return map;
 }

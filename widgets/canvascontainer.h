@@ -20,6 +20,7 @@ public:
     
 signals:
     void scaled(qreal factor);
+    void rectChanged(const QRect&);
 public slots:
 
 private:

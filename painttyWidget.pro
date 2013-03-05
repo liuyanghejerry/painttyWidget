@@ -11,14 +11,20 @@ win32 {
      RC_FILE = app.rc
 }
 
+mac {
+    # maybe you should use makespecs "macx-clang-libc++" rather than "macx-clang"
+    # to build on mac
+    ICON = iconset/icon.icns
+}
+
 CONFIG += c++11
 
-TARGET = painttyWidget
+TARGET = MrPaint
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        widgets/mainwindow.cpp \
+    widgets/mainwindow.cpp \
     widgets/canvas.cpp \
     layermanager.cpp \
     network/messagesocket.cpp \
