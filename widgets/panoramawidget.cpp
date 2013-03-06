@@ -15,6 +15,7 @@ PanoramaWidget::PanoramaWidget(QWidget *parent) :
     connect(&timer_, SIGNAL(timeout()),
             this, SIGNAL(refresh()));
     timer_.start();
+    emit refresh();
 }
 
 QSize PanoramaWidget::sizeHint() const
@@ -27,7 +28,7 @@ QSize PanoramaWidget::minimumSizeHint() const
     return QSize(144, 96);
 }
 
-void PanoramaWidget::onImageChange(QPixmap p,
+void PanoramaWidget::onImageChange(const QPixmap &p,
                                    const QRect &r)
 {
     full_img_ = p;
@@ -47,6 +48,9 @@ void PanoramaWidget::onRectChange(const QRect &r)
 QPixmap PanoramaWidget::drawViewport()
 {
     QPixmap p = sized_img_;
+    if(p.isNull()){
+        return p;
+    }
     const QRect &r = viewport_;
     QPainter painter(&p);
     QPen pen;
@@ -67,6 +71,9 @@ QPixmap PanoramaWidget::drawViewport()
 
 void PanoramaWidget::thumbnail()
 {
+    if(full_img_.isNull()){
+        return;
+    }
     if(preferSize_.width() > preferSize_.height()){
         sized_img_ =
                 full_img_.scaledToHeight(preferSize_.height());
@@ -90,5 +97,12 @@ void PanoramaWidget::paintEvent(QPaintEvent *)
 void PanoramaWidget::resizeEvent(QResizeEvent * event)
 {
     preferSize_ = event->size();
-    emit refresh();
+    if(image_.isNull()){
+        return;
+    }
+    thumbnail();
+    image_ = drawViewport();
+    if(this->isVisible()){
+        update();
+    }
 }
