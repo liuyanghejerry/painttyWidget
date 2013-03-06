@@ -12,8 +12,7 @@ win32 {
 }
 
 mac {
-    # maybe you should use makespecs "macx-clang-libc++" rather than "macx-clang"
-    # to build on mac
+    macx-clang: warning("if you encounter \"fatal error: \'initializer_list\' file not found\", try using makespecs \"macx-clang-libc++\"")
     ICON = iconset/icon.icns
 }
 

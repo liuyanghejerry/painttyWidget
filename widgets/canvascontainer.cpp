@@ -17,9 +17,9 @@ CanvasContainer::CanvasContainer(QWidget *parent) :
         emit rectChanged(this->visualRect().toRect());
     };
 
-    connect(horizontalScrollBar(), &QScrollBar::actionTriggered,
+    connect(horizontalScrollBar(), &QScrollBar::valueChanged,
             rc);
-    connect(verticalScrollBar(), &QScrollBar::actionTriggered,
+    connect(verticalScrollBar(), &QScrollBar::valueChanged,
             rc);
 }
 

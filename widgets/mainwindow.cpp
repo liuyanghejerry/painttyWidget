@@ -110,6 +110,11 @@ void MainWindow::init()
             this, SLOT(onPanoramaRefresh()));
     connect(ui->centralWidget, SIGNAL(rectChanged(QRect)),
             ui->panorama, SLOT(onRectChange(QRect)));
+    // use lambda to avoid that long static_cast :)
+    connect(ui->panorama, &PanoramaWidget::moveTo,
+            [&](const QPointF &p){
+        ui->centralWidget->centerOn(p);
+    });
 
     layerWidgetInit();
     colorGridInit();

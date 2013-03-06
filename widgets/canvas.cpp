@@ -39,7 +39,7 @@ Canvas::Canvas(QWidget *parent) :
     inPicker = false;
     drawing = false;
     opacity = 1.0;
-    brush_ = BrushPointer(new Brush);
+    brush_ = BrushPointer(new Brush(this));
     changeBrush("pencilButton");
     updateCursor(brush_->width());
 
@@ -154,16 +154,16 @@ BrushPointer Canvas::brushFactory(const QString &name)
     BrushPointer b;
     QString n_name = name.toLower();
     if(n_name.compare("brush") == 0){
-        b = BrushPointer(new Brush);
+        b = BrushPointer(new Brush(this));
     }else if(n_name.compare("pencil") == 0){
-        b = BrushPointer(new Pencil);
+        b = BrushPointer(new Pencil(this));
     }else if(n_name.compare("sketch") == 0){
-        b = BrushPointer(new SketchBrush);
+        b = BrushPointer(new SketchBrush(this));
     }else if(n_name.compare("eraser") == 0){
-        b = BrushPointer(new Eraser);
+        b = BrushPointer(new Eraser(this));
     }else{
         qDebug()<<name<<"cannot identify";
-        return BrushPointer(new Brush);
+        return BrushPointer(new Brush(this));
     }
     return b;
 }
@@ -194,7 +194,6 @@ void Canvas::changeBrush(const QString &name)
     }
 
     brush_->setLastPoint(lp);
-    brush_->setDirectDraw(true);
     brush_->setSurface(sur);
     updateCursor(brush_->width());
 
@@ -349,7 +348,6 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
         BrushPointer t = remoteBrush[userid];
         if(brushInfo != t->brushInfo()){
             BrushPointer newOne = brushFactory(brushName);
-            newOne->setDirectDraw(true);
             newOne->setSurface(l->imagePtr());
             newOne->setWidth(width);
             newOne->setColor(color);
@@ -365,7 +363,6 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
         }
     }else{
         BrushPointer newOne = brushFactory(brushName);
-        newOne->setDirectDraw(true);
         newOne->setSurface(l->imagePtr());
         newOne->setWidth(width);
         newOne->setColor(color);
@@ -409,7 +406,6 @@ void Canvas::remoteDrawLine(const QPoint &start, const QPoint &end,
         BrushPointer t = remoteBrush[userid];
         if(brushName != t->brushInfo()["name"].toString()){
             BrushPointer newOne = brushFactory(brushName);
-            newOne->setDirectDraw(true);
             newOne->setSurface(l->imagePtr());
             newOne->setWidth(width);
             newOne->setColor(color);
@@ -425,7 +421,6 @@ void Canvas::remoteDrawLine(const QPoint &start, const QPoint &end,
         }
     }else{
         BrushPointer newOne = brushFactory(brushName);
-        newOne->setDirectDraw(true);
         newOne->setSurface(l->imagePtr());
         newOne->setWidth(width);
         newOne->setColor(color);

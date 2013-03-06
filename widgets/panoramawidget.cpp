@@ -3,7 +3,9 @@
 PanoramaWidget::PanoramaWidget(QWidget *parent) :
     QWidget(parent),
     preferSize_(144, 96),
-    image_( preferSize_ )
+    image_( preferSize_ ),
+    full_img_(preferSize_),
+    sized_img_(preferSize_)
 {
     QPalette p = this->palette();
     p.setColor(QPalette::Background, Qt::gray);
@@ -55,15 +57,14 @@ QPixmap PanoramaWidget::drawViewport()
     QPainter painter(&p);
     QPen pen;
     pen.setColor(this->palette().color(QPalette::Text));
-    pen.setWidth(2);
+    pen.setWidth(1);
     painter.setPen(pen);
     qreal delta = p.width()/qreal(full_img_.width());
-    QPointF topleft(r.topLeft().x() * delta + 1.0,
-                    r.topLeft().y() * delta + 1.0);
-    QSizeF thumbSize(r.width() *delta,
-                     r.height() *delta);
+    QPointF topleft(r.topLeft() * delta);
     QRect thumbRect = QRectF(topleft,
-                             thumbSize).toRect();
+                             r.size() * delta).toRect();
+    thumbRect.setRight(qMin(thumbRect.right(), p.width() - 2));
+    thumbRect.setBottom(qMin(thumbRect.bottom(), p.height() - 2));
 
     painter.drawRect(thumbRect);
     return p;
@@ -74,13 +75,18 @@ void PanoramaWidget::thumbnail()
     if(full_img_.isNull()){
         return;
     }
-    if(preferSize_.width() > preferSize_.height()){
-        sized_img_ =
-                full_img_.scaledToHeight(preferSize_.height());
-    }else{
-        sized_img_ =
-                full_img_.scaledToWidth(preferSize_.width());
-    }
+    qreal delta = qMin(qreal(preferSize_.width()) / full_img_.width(),
+                       qreal(preferSize_.height()) / full_img_.height());
+    sized_img_ = full_img_.scaled(full_img_.width() * delta,
+                                  full_img_.height() * delta,
+                                  Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+//    if(preferSize_.width() > preferSize_.height()){
+//        sized_img_ =
+//                full_img_.scaledToHeight(preferSize_.height());
+//    }else{
+//        sized_img_ =
+//                full_img_.scaledToWidth(preferSize_.width());
+//    }
 }
 
 void PanoramaWidget::paintEvent(QPaintEvent *)
@@ -88,9 +94,9 @@ void PanoramaWidget::paintEvent(QPaintEvent *)
     QPainter painter(this);
     QSize whole = this->size();
     int left = whole.width() - image_.width();
-    left = left/2;
+    left /= 2;
     int top = whole.height() - image_.height();
-    top = top/2;
+    top /= 2;
     painter.drawPixmap(left, top, image_);
 }
 
@@ -105,4 +111,31 @@ void PanoramaWidget::resizeEvent(QResizeEvent * event)
     if(this->isVisible()){
         update();
     }
+}
+
+void PanoramaWidget::navigateTo(const QPoint &p)
+{
+    QSize whole = this->size();
+    int left = whole.width() - image_.width();
+    left /= 2;
+    int top = whole.height() - image_.height();
+    top /= 2;
+
+    qreal delta = qreal(full_img_.width())/sized_img_.width();
+    QPointF miniPoint(p-QPoint(left, top));
+    QPointF realPoint = miniPoint * delta;
+
+    emit moveTo(realPoint);
+}
+
+void PanoramaWidget::mouseMoveEvent(QMouseEvent * event)
+{
+    if(event->buttons()){
+        navigateTo(event->pos());
+    }
+}
+
+void PanoramaWidget::mousePressEvent(QMouseEvent * event)
+{
+    navigateTo(event->pos());
 }
