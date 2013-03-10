@@ -9,7 +9,7 @@ const static char CLIENT_TYPE[] = "alpha";
 const static char SETTINGS_NAME[] = "mrpaint.ini";
 
 #ifdef DEBUG
-const static char HOST_ADDR[] = "192.168.1.115";
+const static char HOST_ADDR[] = "192.168.1.111";
 const static int HOST_MGR_PORT = 7070;
 #else
 const static char HOST_ADDR[] = "42.121.85.47";

@@ -34,7 +34,7 @@
 
 Brush::Brush(QObject *parent) :
     QObject(parent),
-    directDraw_(false)
+    directDraw_(true)
 {
     result = QPixmap(100,100);
     result.fill(Qt::transparent);
