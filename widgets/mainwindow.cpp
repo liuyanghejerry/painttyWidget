@@ -512,8 +512,8 @@ void MainWindow::remoteAddLayer(const QString &layerName)
     }
 
     LayerItem *item = new LayerItem;
-    item->setVisibleIcon(QIcon("iconset/visibility.ico"));
-    item->setLockIcon(QIcon("iconset/lock.ico"));
+    item->setVisibleIcon(QIcon("iconset/visibility.png"));
+    item->setLockIcon(QIcon("iconset/lock.png"));
     item->setLabel(layerName);
     ui->layerWidget->addItem(item);
 }

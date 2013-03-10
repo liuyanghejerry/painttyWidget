@@ -14,15 +14,18 @@
    <string>Mr.Paint</string>
   </property>
   <widget class="CanvasContainer" name="centralWidget">
-   <widget class="Canvas" name="canvas" native="true"/>
+   <widget class="Canvas" name="canvas" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>100</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
-   <property name="features">
-    <set>QDockWidget::AllDockWidgetFeatures</set>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::AllDockWidgetAreas</set>
-   </property>
    <property name="windowTitle">
     <string>Settings</string>
    </property>
@@ -178,12 +181,6 @@
      <height>149</height>
     </size>
    </property>
-   <property name="features">
-    <set>QDockWidget::AllDockWidgetFeatures</set>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::AllDockWidgetAreas</set>
-   </property>
    <property name="windowTitle">
     <string>Chat</string>
    </property>
@@ -232,12 +229,6 @@
      <width>200</width>
      <height>117</height>
     </size>
-   </property>
-   <property name="features">
-    <set>QDockWidget::AllDockWidgetFeatures</set>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::AllDockWidgetAreas</set>
    </property>
    <property name="windowTitle">
     <string>Layers</string>
