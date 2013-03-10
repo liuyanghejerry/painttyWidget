@@ -36,6 +36,8 @@ void MainWindow::init()
     ui->centralWidget->setBackgroundRole(QPalette::Dark);
     ui->centralWidget->setCanvas(ui->canvas);
     ui->panoramaLayout->addWidget(ui->centralWidget->scaleSlider());
+    ui->panoramaLayout->setContentsMargins(8, 8, 8, 8);
+    ui->panoramaLayout->setSpacing(2);
     ui->canvas->setDisabled(true);
     ui->layerWidget->setDisabled(true);
     ui->lineEdit->setDisabled(true);

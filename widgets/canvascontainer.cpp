@@ -101,6 +101,7 @@ QWidget* CanvasContainer::scaleSlider()
         scaleSliderWidget->setLayout(layout);
         layout->addWidget(slider);
         layout->addWidget(label);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         qreal internalFactor = -100 * qLn(MIN_SCALE_FACTOR) / MIN_SCALE_FACTOR / qLn(2);
         slider->setRange(-qCeil(MIN_SCALE_FACTOR * internalFactor),

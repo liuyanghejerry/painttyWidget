@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>693</width>
-    <height>455</height>
+    <height>453</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -259,7 +259,7 @@
      <x>0</x>
      <y>0</y>
      <width>693</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -319,7 +319,14 @@
    <widget class="QWidget" name="panoramaContents">
     <layout class="QVBoxLayout" name="panoramaLayout">
      <item>
-      <widget class="PanoramaWidget" name="panorama" native="true"/>
+      <widget class="PanoramaWidget" name="panorama" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>1</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
