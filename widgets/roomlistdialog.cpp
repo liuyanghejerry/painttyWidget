@@ -67,14 +67,14 @@ void RoomListDialog::socketInit()
 {
     ui->progressBar->setRange(0,0);
     socket = new Socket;
-//    socket->setCompressed(false);
     connect(socket,&Socket::newData,
             this,&RoomListDialog::onRoomListUpdate);
     connect(socket,&Socket::connected,
             this,&RoomListDialog::requestRoomList);
     connect(socket,&Socket::disconnected,
             this,&RoomListDialog::onServerClosed);
-    socket->connectToHost(GlobalDef::HOST_ADDR, GlobalDef::HOST_MGR_PORT);
+    socket->connectToHost(GlobalDef::HOST_ADDR,
+                          GlobalDef::HOST_MGR_PORT);
 }
 
 void RoomListDialog::requestJoin()

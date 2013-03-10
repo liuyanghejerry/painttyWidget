@@ -297,8 +297,15 @@
     </property>
     <addaction name="actionReset_View"/>
    </widget>
+   <widget class="QMenu" name="menu_Room">
+    <property name="title">
+     <string>&amp;Room</string>
+    </property>
+    <addaction name="actionClose_Room"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
+   <addaction name="menu_Room"/>
    <addaction name="menu_View"/>
    <addaction name="menu_About"/>
   </widget>
@@ -309,8 +316,8 @@
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_5">
-    <layout class="QVBoxLayout" name="verticalLayout_7">
+   <widget class="QWidget" name="panoramaContents">
+    <layout class="QVBoxLayout" name="panoramaLayout">
      <item>
       <widget class="PanoramaWidget" name="panorama" native="true"/>
      </item>
@@ -384,6 +391,11 @@
    </property>
    <property name="text">
     <string>Traditional Chinese</string>
+   </property>
+  </action>
+  <action name="actionClose_Room">
+   <property name="text">
+    <string>Close Room</string>
    </property>
   </action>
  </widget>

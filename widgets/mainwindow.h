@@ -14,10 +14,12 @@
 #include <QVariant>
 #include <QVariantList>
 #include <QFileDialog>
+#include <QMessageBox>
 #include <QFile>
 #include <QClipboard>
 #include <QJsonDocument>
 #include <QSettings>
+#include <QCryptographicHash>
 
 #include "../common.h"
 #include "../singleshortcut.h"
@@ -27,6 +29,7 @@
 #include "aboutdialog.h"
 #include "../network/messagesocket.h"
 #include "../network/datasocket.h"
+#include "../network/commandsocket.h"
 
 
 namespace Ui {
@@ -77,7 +80,6 @@ private:
     Ui::MainWindow *ui;
     MessageSocket msgSocket;
     DataSocket dataSocket;
-    DataSocket cmdSocket;
 
     QString nickName_;
     QString roomName_;
@@ -97,6 +99,7 @@ private slots:
     void onColorPickerPressed(bool c);
     void onCmdServerConnected();
     void onCmdServerDisconnected();
+    void onCmdServerData(const QByteArray &data);
     void onPanoramaRefresh();
 
 };

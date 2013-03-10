@@ -16,19 +16,30 @@ public:
     CanvasContainer(QWidget *parent = 0);
     void setCanvas(QWidget *canvas);
     qreal currentScaleFactor() const;
+    bool smoothScale() const;
     QRectF visualRect() const;
+    QWidget* scaleSlider();
+    void centerOn(const QPointF &pos);
+    void centerOn(qreal x, qreal y);
     
 signals:
     void scaled(qreal factor);
     void rectChanged(const QRect&);
+
 public slots:
+    void setScaleFactor(qreal factor);
+    void setSmoothScale(bool smooth);
 
 private:
     QGraphicsScene *scene;
     QGraphicsProxyWidget *proxy;
+    QWidget *scaleSliderWidget;
     QPoint moveStartPoint;
     int horizontalScrollValue;
     int verticalScrollValue;
+    bool smoothScaleFlag;
+    qreal calculateFactor(qreal current, bool zoomIn);
+
 protected:
     void wheelEvent(QWheelEvent *event);
     void mousePressEvent(QMouseEvent *event);

@@ -17,7 +17,6 @@ MainWindow::~MainWindow()
 {
     msgSocket.close();
     dataSocket.close();
-    cmdSocket.close();
     delete ui;
 }
 
@@ -36,6 +35,7 @@ void MainWindow::init()
 {
     ui->centralWidget->setBackgroundRole(QPalette::Dark);
     ui->centralWidget->setCanvas(ui->canvas);
+    ui->panoramaLayout->addWidget(ui->centralWidget->scaleSlider());
     ui->canvas->setDisabled(true);
     ui->layerWidget->setDisabled(true);
     ui->lineEdit->setDisabled(true);
@@ -49,10 +49,6 @@ void MainWindow::init()
     connect(ui->pushButton,SIGNAL(clicked()),
             this,SLOT(onSendPressed()));
 
-    connect(&cmdSocket,SIGNAL(connected()),
-            this, SLOT(onCmdServerConnected()));
-    connect(&cmdSocket,SIGNAL(disconnected()),
-            this, SLOT(onCmdServerDisconnected()));
     connect(&msgSocket,SIGNAL(connected()),
             this,SLOT(onServerConnected()));
     connect(&msgSocket,SIGNAL(disconnected()),
@@ -271,15 +267,41 @@ void MainWindow::shortcutInit()
             this, SLOT(about()));
     connect(ui->actionAbout_Qt, SIGNAL(triggered()),
             qApp, SLOT(aboutQt()));
-}
+    connect(ui->actionClose_Room, &QAction::triggered,
+            [&](){
+        QCryptographicHash hash(QCryptographicHash::Md5);
+        hash.addData(roomName_.toUtf8());
+        QString hashed_name = hash.result().toHex();
+        QSettings settings(GlobalDef::SETTINGS_NAME,
+                           QSettings::defaultFormat(),
+                           qApp);
+        settings.sync();
+        if( !settings.contains("rooms/"+hashed_name) ){
+            // Tell user that he's not owner
+            qDebug()<<"hashed_name"<<hashed_name
+                   <<" key cannot found!";
+            return;
+        }
+        QVariant key = settings.value("rooms/"+hashed_name);
+        if(key.isNull()){
+            // Tell user that he's not owner
+            return;
+        }
 
-void MainWindow::cmdSocketInit(const QHostAddress &add, int port)
-{
-    cmdSocket.connectToHost(add, port);
+        QVariantMap map;
+        map.insert("request", "close");
+        map.insert("key", key);
+        CommandSocket::cmdSocket()
+                ->sendData(toJson(QVariant(map)));
+    });
 }
 
 void MainWindow::socketInit(int dataPort, int msgPort)
 {
+    connect(CommandSocket::cmdSocket(), &CommandSocket::newData,
+            this, &MainWindow::onCmdServerData);
+
+
     ui->canvas->setHistorySize(historySize_);
     ui->textEdit->insertPlainText(tr("Connecting to server...\n"));
     msgSocket.connectToHost(QHostAddress(GlobalDef::HOST_ADDR),msgPort);
@@ -331,6 +353,43 @@ void MainWindow::onCmdServerConnected()
 void MainWindow::onCmdServerDisconnected()
 {
     //
+}
+
+void MainWindow::onCmdServerData(const QByteArray &data)
+{
+    QVariantMap m = fromJson(data).toMap();
+    if(m.contains("action")){
+        QString action = m["action"].toString();
+        if(action == "close"){
+            this->close();
+        }
+    }
+
+    if(m.contains("response")){
+        QString response = m["response"].toString();
+        bool result = m["result"].toBool();
+        if(response == "close"){
+            if(!result){
+                QMessageBox::critical(this,
+                                      tr("Sorry"),
+                                      tr("Sorry, it seems you're not"
+                                         "room owner."));
+            }else{
+                // Since server accepted close request, we can
+                // wait for close now.
+                // of course, delete the key. it's useless.
+                QCryptographicHash hash(QCryptographicHash::Md5);
+                hash.addData(roomName_.toUtf8());
+                QString hashed_name = hash.result().toHex();
+                QSettings settings(GlobalDef::SETTINGS_NAME,
+                                   QSettings::defaultFormat(),
+                                   qApp);
+                settings.remove("rooms/"+hashed_name);
+                settings.sync();
+            }
+
+        }
+    }
 }
 
 void MainWindow::onNewMessage(const QString &content)

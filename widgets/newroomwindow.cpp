@@ -35,6 +35,21 @@ void NewRoomWindow::onServerResponse(const QVariantMap &m)
         QMessageBox::information(this, tr("Go get your room!"),
                                  msg,
                                  QMessageBox::Ok);
+        if(m.contains("info")){
+            QVariantMap info = m.value("info").toMap();
+//            int cmdPort = info.value("cmdPort").toInt();
+//            QString password = info.value("password").toString();
+            QString key = info.value("key").toString();
+
+            QCryptographicHash hash(QCryptographicHash::Md5);
+            hash.addData(ui->lineEdit->text().toUtf8());
+            QString hashed_name = hash.result().toHex();
+            QSettings settings(GlobalDef::SETTINGS_NAME,
+                               QSettings::defaultFormat(),
+                               qApp);
+            settings.setValue("rooms/"+hashed_name, key);
+            settings.sync();
+        }
         this->accept();
     }
 
@@ -54,21 +69,6 @@ void NewRoomWindow::onServerResponse(const QVariantMap &m)
         }else{
             return;
         }
-//        switch (errcode){
-//        // TODO: complete
-//        case 200:
-//        case 201:
-//        case 202:
-//        case 203:
-//        case 204:
-//        case 205:
-//        case 206:
-//        case 207:
-//        case 208:
-//        case 209:
-//        default:
-//            break;
-//        }
     }
 }
 

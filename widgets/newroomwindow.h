@@ -4,9 +4,12 @@
 #include <QDialog>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QCryptographicHash>
+#include <QSettings>
 #include <QVariantMap>
 
 #include <QDebug>
+#include "../common.h"
 namespace Ui {
 class NewRoomWindow;
 }
