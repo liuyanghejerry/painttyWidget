@@ -280,6 +280,11 @@ void MainWindow::shortcutInit()
             // Tell user that he's not owner
             qDebug()<<"hashed_name"<<hashed_name
                    <<" key cannot found!";
+            QMessageBox::warning(this,
+                                 tr("Sorry"),
+                                 tr("Only room owner authorized "
+                                    "to close the room.\n"
+                                    "It seems you're not room manager."));
             return;
         }
         QVariant key = settings.value("rooms/"+hashed_name);
