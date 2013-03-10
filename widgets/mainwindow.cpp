@@ -361,7 +361,12 @@ void MainWindow::onCmdServerData(const QByteArray &data)
     if(m.contains("action")){
         QString action = m["action"].toString();
         if(action == "close"){
-            this->close();
+            QMessageBox::warning(this,
+                                 tr("Closing"),
+                                 tr("Warning, the room owner has "
+                                    "closed the room. This room will close"
+                                    " when everyone leaves.\n"
+                                    "Save your work if you like it!"));
         }
     }
 
