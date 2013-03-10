@@ -98,6 +98,7 @@ void NewRoomWindow::onOk()
         }
     }
 
+    // TODO: due with size
     QString pw;
     if(ui->checkBox->isChecked()){
         pw = ui->lineEdit_2->text();

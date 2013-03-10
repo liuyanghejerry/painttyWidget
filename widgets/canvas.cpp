@@ -29,7 +29,6 @@
 Canvas::Canvas(QWidget *parent) :
     QWidget(parent),
     canvasSize(3240,2160),
-    //    canvasSize(720,480),
     image(canvasSize),
     layerNameCounter(0),
     historySize_(0)
@@ -85,7 +84,6 @@ quint64 Canvas::userId()
 void Canvas::setHistorySize(const quint64 &size)
 {
     historySize_ = size;
-//    qDebug()<<size;
 }
 
 QPixmap Canvas::currentCanvas()
