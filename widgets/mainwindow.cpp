@@ -1,16 +1,17 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QSize canvasSize, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     msgSocket(this),
     dataSocket(this),
     historySize_(0),
-    canvasSize_(3240, 2160),
+    canvasSize_(canvasSize),
     lastBrushButton(nullptr)
 {
     ui->setupUi(this);
+    ui->canvas->resize(canvasSize_);
     defaultView = saveState();
 }
 

@@ -41,7 +41,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QSize canvasSize, QWidget *parent = 0);
     ~MainWindow();
     void init();
     void cmdSocketInit(const QHostAddress &add, int port);

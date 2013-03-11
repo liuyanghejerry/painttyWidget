@@ -116,12 +116,12 @@ int main(int argc, char *argv[])
     RoomListDialog *dialog = new RoomListDialog;
     while(dialog->exec()) {
         dialog->hide();
-        MainWindow w;
+        MainWindow w(dialog->canvasSize());
         w.init();
         w.setNickName(dialog->nick());
         w.setRoomName(dialog->roomName());
         w.setHistorySize(dialog->historySize());
-        w.setCanvasSize(dialog->canvasSize());
+//        w.setCanvasSize(dialog->canvasSize());
         w.socketInit(dialog->dataPort(), dialog->msgPort());
 #ifdef Q_OS_MACX
         w.showFullScreen();
