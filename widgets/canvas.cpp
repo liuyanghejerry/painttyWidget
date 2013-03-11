@@ -775,16 +775,11 @@ void Canvas::resizeEvent(QResizeEvent *event)
 
 void Canvas::resizeImage(QPixmap *image, const QSize &newSize)
 {
-//    if (image->size().height() > newSize.height()
-//            || image->size().width() > newSize.height())
-//        return;
-
     QPixmap newImage(newSize);
-//    newImage.fill(Qt::white);
-//    QPainter painter(&newImage);
-//    painter.drawPixmap(QPoint(0, 0), *image);
+    newImage.fill(Qt::white);
+    QPainter painter(&newImage);
+    painter.drawPixmap(QPoint(0, 0), *image);
     *image = newImage;
-    qDebug()<<"real size"<<this->size();
 }
 
 /*!

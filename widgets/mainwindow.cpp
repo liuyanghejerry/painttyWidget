@@ -336,7 +336,6 @@ void MainWindow::setHistorySize(const quint64 &size)
 void MainWindow::setCanvasSize(const QSize &size)
 {
     canvasSize_ = size;
-    qDebug()<<canvasSize_;
     ui->canvas->resize(canvasSize_);
 }
 
