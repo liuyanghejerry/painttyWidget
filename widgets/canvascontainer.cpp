@@ -32,8 +32,8 @@ void CanvasContainer::setCanvas(QWidget *canvas)
 {
     if (canvas->parent())
     {
-        qDebug("Canvas has parent, try set it to 0");
         canvas->setParent(0);
+        canvas->setWindowFlags(canvas->windowFlags() | Qt::Window);
     }
     proxy = scene->addWidget(canvas);
     canvas->installEventFilter(this);
