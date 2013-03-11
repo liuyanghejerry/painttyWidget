@@ -34,7 +34,7 @@ Canvas::Canvas(QWidget *parent) :
     historySize_(0)
 {
     setAttribute(Qt::WA_StaticContents);
-    setBaseSize(canvasSize);
+//    setBaseSize(canvasSize);
     inPicker = false;
     drawing = false;
     opacity = 1.0;
@@ -760,12 +760,10 @@ void Canvas::paintEvent(QPaintEvent *event)
 void Canvas::resizeEvent(QResizeEvent *event)
 {
     QSize newSize = event->size();
-    if (newSize.height()>image.height()||
-            newSize.width()>image.width()) {
-        layers.resizeLayers(newSize);
-        resizeImage(&image, newSize);
-        update();
-    }
+    canvasSize = newSize;
+    layers.resizeLayers(newSize);
+    resizeImage(&image, newSize);
+    update();
     QWidget::resizeEvent(event);
 }
 
@@ -777,15 +775,16 @@ void Canvas::resizeEvent(QResizeEvent *event)
 
 void Canvas::resizeImage(QPixmap *image, const QSize &newSize)
 {
-    if (image->size().height() > newSize.height()
-            || image->size().width() > newSize.height())
-        return;
+//    if (image->size().height() > newSize.height()
+//            || image->size().width() > newSize.height())
+//        return;
 
     QPixmap newImage(newSize);
-    newImage.fill(Qt::white);
-    QPainter painter(&newImage);
-    painter.drawPixmap(QPoint(0, 0), *image);
+//    newImage.fill(Qt::white);
+//    QPainter painter(&newImage);
+//    painter.drawPixmap(QPoint(0, 0), *image);
     *image = newImage;
+    qDebug()<<"real size"<<this->size();
 }
 
 /*!

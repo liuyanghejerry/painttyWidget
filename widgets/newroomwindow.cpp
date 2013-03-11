@@ -6,6 +6,11 @@ NewRoomWindow::NewRoomWindow(QWidget *parent) :
     ui(new Ui::NewRoomWindow)
 {
     ui->setupUi(this);
+    // set validator for two lineinputs
+    QIntValidator *inva = new QIntValidator(this);
+    inva->setRange(1, 65535);
+    ui->height_input->setValidator(inva);
+    ui->width_input->setValidator(inva);
     ui->buttonBox->
             button(QDialogButtonBox::Ok)->setEnabled(false);
     connect(ui->lineEdit, &QLineEdit::textChanged,
@@ -37,8 +42,8 @@ void NewRoomWindow::onServerResponse(const QVariantMap &m)
                                  QMessageBox::Ok);
         if(m.contains("info")){
             QVariantMap info = m.value("info").toMap();
-//            int cmdPort = info.value("cmdPort").toInt();
-//            QString password = info.value("password").toString();
+            //            int cmdPort = info.value("cmdPort").toInt();
+            //            QString password = info.value("password").toString();
             QString key = info.value("key").toString();
 
             QCryptographicHash hash(QCryptographicHash::Md5);
@@ -99,6 +104,20 @@ void NewRoomWindow::onOk()
     }
 
     // TODO: due with size
+    int width = ui->width_input->text().toInt();
+    int height = ui->height_input->text().toInt();
+    if(width > 3240 || height > 2160){
+        QMessageBox::warning(this,
+                             tr("Large Canvas!"),
+                             tr("You set a large canvas size, "
+                                "which may have high load on "
+                                "low-memory computers."));
+    }
+    QVariantMap sizeMap;
+    sizeMap.insert("width", width);
+    sizeMap.insert("height", height);
+
+
     QString pw;
     if(ui->checkBox->isChecked()){
         pw = ui->lineEdit_2->text();
@@ -110,6 +129,7 @@ void NewRoomWindow::onOk()
     map.insert("maxload", ui->spinBox->value());
     map.insert("password", pw);
     map.insert("emptyclose", ui->checkBox_2->isChecked());
+    map.insert("size", QVariant(sizeMap));
 
     ui->progressBar->setValue(30);
     emit newRoom(map);

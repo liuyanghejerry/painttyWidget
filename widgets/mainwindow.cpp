@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
     msgSocket(this),
     dataSocket(this),
     historySize_(0),
+    canvasSize_(3240, 2160),
     lastBrushButton(nullptr)
 {
     ui->setupUi(this);
@@ -329,6 +330,13 @@ void MainWindow::setRoomName(const QString &name)
 void MainWindow::setHistorySize(const quint64 &size)
 {
     historySize_ = size;
+}
+
+void MainWindow::setCanvasSize(const QSize &size)
+{
+    canvasSize_ = size;
+    qDebug()<<canvasSize_;
+    ui->canvas->resize(canvasSize_);
 }
 
 void MainWindow::onServerConnected()

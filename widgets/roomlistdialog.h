@@ -28,11 +28,12 @@ class RoomListDialog : public QDialog
 public:
     explicit RoomListDialog(QWidget *parent = 0);
     ~RoomListDialog();
-    QString roomName();
-    QString nick();
-    int historySize();
-    int dataPort(){return dataPort_;}
-    int msgPort(){return msgPort_;}
+    QString roomName() const;
+    QString nick() const;
+    int historySize() const;
+    QSize canvasSize() const {return canvasSize_;}
+    int dataPort() const {return dataPort_;}
+    int msgPort() const {return msgPort_;}
 public slots:
     void requestJoin();
     void requestNewRoom(const QVariantMap &m);
@@ -55,6 +56,7 @@ private:
     int dataPort_;
     int msgPort_;
     quint64 historySize_;
+    QSize canvasSize_;
     Socket *socket;
     QString roomName_;
     QString nickName_;

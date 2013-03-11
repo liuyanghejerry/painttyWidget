@@ -290,7 +290,12 @@ void RoomListDialog::onCmdServerData(const QByteArray &array)
             dataPort_ = info["dataport"].toInt();
             msgPort_ = info["msgport"].toInt();
             historySize_ = info["historysize"].toULongLong();
-            //            socket->close();
+            if(info.contains("size")){
+                QVariantMap sizeMap = info["size"].toMap();
+                int width = sizeMap["width"].toInt();
+                int height = sizeMap["height"].toInt();
+                canvasSize_ = QSize(width, height);
+            }
             accept();
         }
     }
@@ -302,17 +307,17 @@ void RoomListDialog::filterRoomList()
     requestRoomList();
 }
 
-QString RoomListDialog::roomName()
+QString RoomListDialog::roomName() const
 {
     return roomName_;
 }
 
-QString RoomListDialog::nick()
+QString RoomListDialog::nick() const
 {
     return nickName_;
 }
 
-int RoomListDialog::historySize()
+int RoomListDialog::historySize() const
 {
     return historySize_;
 }

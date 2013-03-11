@@ -49,6 +49,7 @@ public:
     void setNickName(const QString &name);
     void setRoomName(const QString &name);
     void setHistorySize(const quint64 &size);
+    void setCanvasSize(const QSize &size);
 public slots:
     void exportAllToFile();
     void exportVisibleToFile();
@@ -84,6 +85,7 @@ private:
     QString nickName_;
     QString roomName_;
     quint64 historySize_;
+    QSize canvasSize_;
     QShortcut *devConsoleShortCut;
     QByteArray defaultView;
     QAbstractButton *lastBrushButton;
