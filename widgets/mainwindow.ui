@@ -14,16 +14,7 @@
    <string>Mr.Paint</string>
   </property>
   <widget class="CanvasContainer" name="centralWidget">
-   <widget class="Canvas" name="canvas" native="true">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>100</width>
-      <height>30</height>
-     </rect>
-    </property>
-   </widget>
+   <widget class="Canvas" name="canvas" native="true"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="windowTitle">
