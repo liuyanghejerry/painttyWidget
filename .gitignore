@@ -23,5 +23,3 @@ color.pal
 layout.view
 object_script.painttyWidget.*
 /painttywidget_plugin_import.cpp
-*.lnk
-.gitignore
