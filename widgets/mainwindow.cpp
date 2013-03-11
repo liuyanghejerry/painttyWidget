@@ -285,7 +285,7 @@ void MainWindow::shortcutInit()
                    <<" key cannot found!";
             QMessageBox::warning(this,
                                  tr("Sorry"),
-                                 tr("Only room owner authorized "
+                                 tr("Only room owner is authorized "
                                     "to close the room.\n"
                                     "It seems you're not room manager."));
             return;
