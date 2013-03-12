@@ -20,6 +20,7 @@ public:
     void show();
     void select();
     void deselect();
+    void clear();
     QString name();
     void rename(const QString &new_name);
 private:

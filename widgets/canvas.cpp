@@ -548,6 +548,18 @@ bool Canvas::deleteLayer(const QString &name)
     return true;
 }
 
+void Canvas::clearLayer(const QString &name)
+{
+    layers.clearLayer(name);
+    update();
+}
+
+void Canvas::clearAllLayer()
+{
+    layers.clearAllLayer();
+    update();
+}
+
 /*!
     \fn void Canvas::lockLayer(const QString &name)
 

@@ -60,6 +60,10 @@ void Layer::deselect()
     select_ = false;
 }
 
+void Layer::clear()
+{
+    img_->fill(Qt::transparent);
+}
 
 QPixmap* Layer::imagePtr()
 {

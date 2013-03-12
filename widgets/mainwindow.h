@@ -41,7 +41,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
-    explicit MainWindow(QSize canvasSize, QWidget *parent = 0);
+    explicit MainWindow(const QSize& canvasSize, QWidget *parent = 0);
     ~MainWindow();
     void init();
     void cmdSocketInit(const QHostAddress &add, int port);
@@ -64,6 +64,8 @@ public slots:
     void addLayer(const QString &name = QString());
     void deleteLayer();
     void deleteLayer(const QString &name);
+    void clearLayer(const QString &name);
+    void clearAllLayer();
 signals:
     void sendMessage(QString);
     void brushColorChange(const QColor &color);

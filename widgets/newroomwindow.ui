@@ -103,7 +103,11 @@
     </widget>
    </item>
    <item>
-    <widget class="QPlainTextEdit" name="plainTextEdit"/>
+    <widget class="QPlainTextEdit" name="plainTextEdit">
+     <property name="tabChangesFocus">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QCheckBox" name="checkBox_2">
@@ -133,6 +137,9 @@
  </widget>
  <tabstops>
   <tabstop>lineEdit</tabstop>
+  <tabstop>width_input</tabstop>
+  <tabstop>height_input</tabstop>
+  <tabstop>spinBox</tabstop>
   <tabstop>checkBox</tabstop>
   <tabstop>lineEdit_2</tabstop>
   <tabstop>plainTextEdit</tabstop>

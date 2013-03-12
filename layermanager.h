@@ -27,6 +27,8 @@ public:
                      const QString &name, int pos);
     void appendLayer(LayerPointer image, const QString &name);
     void removeLayer(const QString &name);
+    void clearLayer(const QString &name);
+    void clearAllLayer();
     void moveUp(const QString &name);
     void moveDown(const QString &name);
     void moveTo(const QString &name, int npos);

@@ -14,7 +14,16 @@
    <string>Mr.Paint</string>
   </property>
   <widget class="CanvasContainer" name="centralWidget">
-   <widget class="Canvas" name="canvas" native="true"/>
+   <widget class="Canvas" name="canvas" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>100</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="windowTitle">
@@ -283,6 +292,13 @@
     <property name="title">
      <string>&amp;Room</string>
     </property>
+    <widget class="QMenu" name="menuClear_Canvas">
+     <property name="title">
+      <string>Clear Canvas</string>
+     </property>
+     <addaction name="actionAll_Layers"/>
+    </widget>
+    <addaction name="menuClear_Canvas"/>
     <addaction name="actionClose_Room"/>
    </widget>
    <addaction name="menu_File"/>
@@ -385,6 +401,11 @@
   <action name="actionClose_Room">
    <property name="text">
     <string>Close Room</string>
+   </property>
+  </action>
+  <action name="actionAll_Layers">
+   <property name="text">
+    <string>All Layers</string>
    </property>
   </action>
  </widget>

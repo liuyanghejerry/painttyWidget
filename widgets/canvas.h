@@ -43,6 +43,8 @@ public slots:
     void onNewData(const QByteArray & data);
     void addLayer(const QString &name);
     bool deleteLayer(const QString &name);
+    void clearLayer(const QString &name);
+    void clearAllLayer();
     void lockLayer(const QString &name);
     void unlockLayer(const QString &name);
     void hideLayer(const QString &name);

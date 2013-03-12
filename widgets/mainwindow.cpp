@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QSize canvasSize, QWidget *parent) :
+MainWindow::MainWindow(const QSize& canvasSize, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     msgSocket(this),
@@ -185,7 +185,7 @@ void MainWindow::shortcutInit()
     connect(pencilShort, &SingleShortcut::activated,
             [&](){
         lastBrushButton =
-                    ui->buttonGroup->checkedButton();
+                ui->buttonGroup->checkedButton();
         if(lastBrushButton)
             ui->pencilButton->click();
     });
@@ -200,7 +200,7 @@ void MainWindow::shortcutInit()
     connect(brushShort, &SingleShortcut::activated,
             [&](){
         lastBrushButton =
-                    ui->buttonGroup->checkedButton();
+                ui->buttonGroup->checkedButton();
         if(lastBrushButton)
             ui->brushButton->click();
     });
@@ -215,7 +215,7 @@ void MainWindow::shortcutInit()
     connect(sketchShort, &SingleShortcut::activated,
             [&](){
         lastBrushButton =
-                    ui->buttonGroup->checkedButton();
+                ui->buttonGroup->checkedButton();
         if(lastBrushButton)
             ui->sketchButton->click();
     });
@@ -230,7 +230,7 @@ void MainWindow::shortcutInit()
     connect(eraserShort, &SingleShortcut::activated,
             [&](){
         lastBrushButton =
-                    ui->buttonGroup->checkedButton();
+                ui->buttonGroup->checkedButton();
         if(lastBrushButton)
             ui->eraserButton->click();
     });
@@ -303,6 +303,8 @@ void MainWindow::shortcutInit()
         CommandSocket::cmdSocket()
                 ->sendData(toJson(QVariant(map)));
     });
+    connect(ui->actionAll_Layers, &QAction::triggered,
+            this, &MainWindow::clearAllLayer);
 }
 
 void MainWindow::socketInit(int dataPort, int msgPort)
@@ -538,6 +540,14 @@ void MainWindow::addLayer(const QString &layerName)
     item->setLabel(name);
     ui->layerWidget->addItem(item);
     ui->canvas->addLayer(name);
+    QAction *clearOne = new QAction(this);
+    ui->menuClear_Canvas->insertAction(ui->actionAll_Layers,
+                                       clearOne);
+    clearOne->setText(tr("Layer ")+name);
+    connect(clearOne, &QAction::triggered,
+            [this, name, clearOne](){
+        this->clearLayer(name);
+    });
 }
 
 void MainWindow::deleteLayer()
@@ -546,6 +556,35 @@ void MainWindow::deleteLayer()
     QString text = item->label();
     bool sucess = ui->canvas->deleteLayer(text);
     if(sucess) ui->layerWidget->removeItem(item);
+}
+
+void MainWindow::clearLayer(const QString &name)
+{
+    auto result = QMessageBox::question(this,
+                                        tr("OMG"),
+                                        tr("You're going to clear layer ")
+                                        +name
+                                        +tr(". All the work of that layer"
+                                            "will be deleted and CANNOT be undone.\n"
+                                            "Do you really want to do so?"),
+                                        QMessageBox::Yes|QMessageBox::No);
+    if(result == QMessageBox::Yes){
+        ui->canvas->clearLayer(name);
+    }
+}
+
+void MainWindow::clearAllLayer()
+{
+    auto result = QMessageBox::question(this,
+                                        tr("OMG"),
+                                        tr("You're going to clear ALL LAYERS"
+                                           ". All of work in this room"
+                                           "will be deleted and CANNOT be undone.\n"
+                                           "Do you really want to do so?"),
+                                        QMessageBox::Yes|QMessageBox::No);
+    if(result == QMessageBox::Yes){
+        ui->canvas->clearAllLayer();
+    }
 }
 
 void MainWindow::deleteLayer(const QString &name)

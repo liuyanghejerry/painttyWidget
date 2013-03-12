@@ -102,6 +102,21 @@ void LayerManager::removeLayer(const QString &name)
     qDebug()<<"remove"<<name;
 }
 
+void LayerManager::clearLayer(const QString &name)
+{
+    if(!exists(name)) return;
+    layers[name]->clear();
+    qDebug()<<"clear content of"<<name;
+}
+
+void LayerManager::clearAllLayer()
+{
+    for(auto &item: layers.values()){
+        item->clear();
+    }
+    qDebug()<<"all layers cleared";
+}
+
 void LayerManager::moveUp(const QString &name)
 {
     //TODO

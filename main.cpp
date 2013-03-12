@@ -121,7 +121,6 @@ int main(int argc, char *argv[])
         w.setNickName(dialog->nick());
         w.setRoomName(dialog->roomName());
         w.setHistorySize(dialog->historySize());
-//        w.setCanvasSize(dialog->canvasSize());
         w.socketInit(dialog->dataPort(), dialog->msgPort());
 #ifdef Q_OS_MACX
         w.showFullScreen();
