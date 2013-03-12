@@ -169,6 +169,34 @@ void MainWindow::viewInit()
     }
 }
 
+QVariant MainWindow::getRoomKey()
+{
+    QCryptographicHash hash(QCryptographicHash::Md5);
+    hash.addData(roomName_.toUtf8());
+    QString hashed_name = hash.result().toHex();
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    settings.sync();
+    if( !settings.contains("rooms/"+hashed_name) ){
+        // Tell user that he's not owner
+        qDebug()<<"hashed_name"<<hashed_name
+               <<" key cannot found!";
+        QMessageBox::warning(this,
+                             tr("Sorry"),
+                             tr("Only room owner is authorized "
+                                "to close the room.\n"
+                                "It seems you're not room manager."));
+        return QVariant();
+    }
+    QVariant key = settings.value("rooms/"+hashed_name);
+    if(key.isNull()){
+        // Tell user that he's not owner
+        return QVariant();
+    }
+    return key;
+}
+
 void MainWindow::shortcutInit()
 {
     QShortcut* widthActionSub = new QShortcut(this);
@@ -273,33 +301,9 @@ void MainWindow::shortcutInit()
             qApp, SLOT(aboutQt()));
     connect(ui->actionClose_Room, &QAction::triggered,
             [&](){
-        QCryptographicHash hash(QCryptographicHash::Md5);
-        hash.addData(roomName_.toUtf8());
-        QString hashed_name = hash.result().toHex();
-        QSettings settings(GlobalDef::SETTINGS_NAME,
-                           QSettings::defaultFormat(),
-                           qApp);
-        settings.sync();
-        if( !settings.contains("rooms/"+hashed_name) ){
-            // Tell user that he's not owner
-            qDebug()<<"hashed_name"<<hashed_name
-                   <<" key cannot found!";
-            QMessageBox::warning(this,
-                                 tr("Sorry"),
-                                 tr("Only room owner is authorized "
-                                    "to close the room.\n"
-                                    "It seems you're not room manager."));
-            return;
-        }
-        QVariant key = settings.value("rooms/"+hashed_name);
-        if(key.isNull()){
-            // Tell user that he's not owner
-            return;
-        }
-
         QVariantMap map;
         map.insert("request", "close");
-        map.insert("key", key);
+        map.insert("key", getRoomKey());
         CommandSocket::cmdSocket()
                 ->sendData(toJson(QVariant(map)));
     });
@@ -570,7 +574,14 @@ void MainWindow::clearLayer(const QString &name)
                                         QMessageBox::Yes|QMessageBox::No);
     if(result == QMessageBox::Yes){
         ui->canvas->clearLayer(name);
+        QVariantMap map;
+        map.insert("request", "clear");
+        map.insert("key", getRoomKey());
+        map.insert("layer", name);
+        CommandSocket::cmdSocket()
+                ->sendData(toJson(QVariant(map)));
     }
+
 }
 
 void MainWindow::clearAllLayer()
@@ -584,6 +595,11 @@ void MainWindow::clearAllLayer()
                                         QMessageBox::Yes|QMessageBox::No);
     if(result == QMessageBox::Yes){
         ui->canvas->clearAllLayer();
+        QVariantMap map;
+        map.insert("request", "clearall");
+        map.insert("key", getRoomKey());
+        CommandSocket::cmdSocket()
+                ->sendData(toJson(QVariant(map)));
     }
 }
 

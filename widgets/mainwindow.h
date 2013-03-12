@@ -77,6 +77,7 @@ private:
     void colorGridInit();
     void viewInit();
     void shortcutInit();
+    QVariant getRoomKey();
     QByteArray toJson(const QVariant &m);
     QVariant fromJson(const QByteArray &d);
 
