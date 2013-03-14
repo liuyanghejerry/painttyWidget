@@ -327,8 +327,12 @@ void MainWindow::shortcutInit()
     connect(ui->actionClose_Room, &QAction::triggered,
             [&](){
         QVariantMap map;
+        QVariant r_key = getRoomKey();
         map.insert("request", "close");
-        map.insert("key", getRoomKey());
+        if(r_key.isNull()){
+            return;
+        }
+        map.insert("key", r_key);
         CommandSocket::cmdSocket()
                 ->sendData(toJson(QVariant(map)));
     });
@@ -442,9 +446,7 @@ void MainWindow::onCommandResponseClose(const QJsonObject &m)
 void MainWindow::onCommandResponseClearAll(const QJsonObject &m)
 {
     bool result = m["result"].toBool();
-    if(result){
-        //
-    }else{
+    if(!result){
         QMessageBox::critical(this,
                               tr("Sorry"),
                               tr("Sorry, it seems you're not"
@@ -454,7 +456,7 @@ void MainWindow::onCommandResponseClearAll(const QJsonObject &m)
 
 void MainWindow::onCommandActionClearAll(const QJsonObject &)
 {
-    clearAllLayer();
+    ui->canvas->clearAllLayer();
 }
 
 void MainWindow::onNewMessage(const QString &content)
@@ -583,14 +585,17 @@ void MainWindow::addLayer(const QString &layerName)
     item->setLabel(name);
     ui->layerWidget->addItem(item);
     ui->canvas->addLayer(name);
-    QAction *clearOne = new QAction(this);
-    ui->menuClear_Canvas->insertAction(ui->actionAll_Layers,
-                                       clearOne);
-    clearOne->setText(tr("Layer ")+name);
-    connect(clearOne, &QAction::triggered,
-            [this, name, clearOne](){
-        this->clearLayer(name);
-    });
+
+    // NOTICE: disable single layer clear due to lack of
+    // a way to store this action in server history
+    //    QAction *clearOne = new QAction(this);
+    //    ui->menuClear_Canvas->insertAction(ui->actionAll_Layers,
+    //                                       clearOne);
+    //    clearOne->setText(tr("Layer ")+name);
+    //    connect(clearOne, &QAction::triggered,
+    //            [this, name, clearOne](){
+    //        this->clearLayer(name);
+    //    });
 }
 
 void MainWindow::deleteLayer()
@@ -633,8 +638,11 @@ void MainWindow::clearAllLayer()
                                            "Do you really want to do so?"),
                                         QMessageBox::Yes|QMessageBox::No);
     if(result == QMessageBox::Yes){
-        ui->canvas->clearAllLayer();
         QVariantMap map;
+        QVariant r_key = getRoomKey();
+        if(r_key.isNull()){
+            return;
+        }
         map.insert("request", "clearall");
         map.insert("key", getRoomKey());
         CommandSocket::cmdSocket()

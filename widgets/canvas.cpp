@@ -487,18 +487,11 @@ void Canvas::onNewData(const QByteArray & array)
 QByteArray Canvas::toJson(const QVariant &m)
 {
     return QJsonDocument::fromVariant(m).toJson();
-//    static QJson::Serializer serializer;
-//    serializer.setIndentMode(QJson::IndentCompact);
-//    return serializer.serialize(m);
-
 }
 
 QVariant Canvas::fromJson(const QByteArray &d)
 {
-//    static QJson::Parser parser;
-//    return parser.parse(d);
     return QJsonDocument::fromJson(d).toVariant();
-
 }
 
 /* Layer */
