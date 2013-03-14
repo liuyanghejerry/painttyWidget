@@ -7,14 +7,16 @@
 #include <QTimer>
 #include <QTableWidgetItem>
 #include <QHostAddress>
-#include <QVariant>
 #include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 #include <QFile>
 #include <QCloseEvent>
 #include <QSettings>
 
 #include "../common.h"
 #include "../network/commandsocket.h"
+#include "../misc/router.h"
 #include "newroomwindow.h"
 
 namespace Ui {
@@ -36,9 +38,9 @@ public:
     int msgPort() const {return msgPort_;}
 public slots:
     void requestJoin();
-    void requestNewRoom(const QVariantMap &m);
+    void requestNewRoom(const QJsonObject &m);
     void requestRoomList();
-    void onRoomListUpdate(const QByteArray &array);
+    void onServerData(const QByteArray &array);
     void onServerClosed();
     void filterRoomList();
 private slots:
@@ -62,9 +64,11 @@ private:
     QString nickName_;
     QTimer *timer;
     NewRoomWindow *newRoomWindow;
-    QHash<QString, QVariantMap> roomsInfo;
+    QHash<QString, QJsonObject> roomsInfo;
+    Router<> managerSocketRouter_;
     void tableInit();
     void socketInit();
+    void onManagerResponseRoomlist(const QJsonObject &obj);
 };
 
 #endif // ROOMLISTDIALOG_H

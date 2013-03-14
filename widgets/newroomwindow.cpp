@@ -1,5 +1,6 @@
 #include "newroomwindow.h"
 #include "ui_newroomwindow.h"
+#include <QJsonObject>
 
 NewRoomWindow::NewRoomWindow(QWidget *parent) :
     QDialog(parent),
@@ -28,11 +29,11 @@ NewRoomWindow::~NewRoomWindow()
     delete ui;
 }
 
-void NewRoomWindow::onServerResponse(const QVariantMap &m)
+void NewRoomWindow::onServerResponse(const QJsonObject &m)
 {
-    if(m["response"] != "newroom"
-            || !m.contains("result"))
-        return;
+//    if(m["response"] != "newroom"
+//            || !m.contains("result"))
+//        return;
     if(m["result"].toBool()){
         // TODO
         ui->progressBar->setValue(100);
@@ -41,7 +42,7 @@ void NewRoomWindow::onServerResponse(const QVariantMap &m)
                                  msg,
                                  QMessageBox::Ok);
         if(m.contains("info")){
-            QVariantMap info = m.value("info").toMap();
+            QJsonObject info = m.value("info").toObject();
             //            int cmdPort = info.value("cmdPort").toInt();
             //            QString password = info.value("password").toString();
             QString key = info.value("key").toString();
@@ -61,7 +62,7 @@ void NewRoomWindow::onServerResponse(const QVariantMap &m)
     if(!m.contains("errcode")){
         return;
     }else{
-        int errcode = m["errcode"].toInt();
+        int errcode = m["errcode"].toDouble();
         QString errmsg = tr("Error: ")+QString::number(errcode)+
                 tr("\nDo you want to retry?");
         QMessageBox::StandardButton reply;
@@ -113,7 +114,7 @@ void NewRoomWindow::onOk()
                                 "which may have high load on "
                                 "low-memory computers."));
     }
-    QVariantMap sizeMap;
+    QJsonObject sizeMap;
     sizeMap.insert("width", width);
     sizeMap.insert("height", height);
 
@@ -123,13 +124,13 @@ void NewRoomWindow::onOk()
         pw = ui->lineEdit_2->text();
     }
 
-    QVariantMap map;
+    QJsonObject map;
     map.insert("name", ui->lineEdit->text());
     map.insert("welcomemsg", ui->plainTextEdit->toPlainText());
     map.insert("maxload", ui->spinBox->value());
     map.insert("password", pw);
     map.insert("emptyclose", ui->checkBox_2->isChecked());
-    map.insert("size", QVariant(sizeMap));
+    map.insert("size", sizeMap);
 
     ui->progressBar->setValue(30);
     emit newRoom(map);

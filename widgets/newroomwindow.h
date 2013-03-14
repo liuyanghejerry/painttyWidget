@@ -6,7 +6,7 @@
 #include <QPushButton>
 #include <QCryptographicHash>
 #include <QSettings>
-#include <QVariantMap>
+#include <QJsonObject>
 
 #include <QDebug>
 #include "../common.h"
@@ -22,9 +22,9 @@ public:
     explicit NewRoomWindow(QWidget *parent = 0);
     ~NewRoomWindow();
 signals:
-    void newRoom(const QVariantMap &m);
+    void newRoom(const QJsonObject &m);
 public slots:
-    void onServerResponse(const QVariantMap &m);
+    void onServerResponse(const QJsonObject &m);
 private slots:
     void onOk();
     void onCancel();

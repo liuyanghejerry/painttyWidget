@@ -68,13 +68,23 @@ void RoomListDialog::socketInit()
     ui->progressBar->setRange(0,0);
     socket = new Socket;
     connect(socket,&Socket::newData,
-            this,&RoomListDialog::onRoomListUpdate);
+            this,&RoomListDialog::onServerData);
     connect(socket,&Socket::connected,
             this,&RoomListDialog::requestRoomList);
     connect(socket,&Socket::disconnected,
             this,&RoomListDialog::onServerClosed);
     socket->connectToHost(GlobalDef::HOST_ADDR,
                           GlobalDef::HOST_MGR_PORT);
+    managerSocketRouter_.regHandler("response",
+                                    "roomlist",
+                                    std::bind(&RoomListDialog::onManagerResponseRoomlist,
+                                              this,
+                                              std::placeholders::_1));
+    managerSocketRouter_.regHandler("response",
+                                    "newroom",
+                                    std::bind(&NewRoomWindow::onServerResponse,
+                                              newRoomWindow,
+                                              std::placeholders::_1));
 }
 
 void RoomListDialog::requestJoin()
@@ -106,108 +116,101 @@ void RoomListDialog::requestJoin()
     //    QHostAddress address(
     //                roomsInfo[roomName].value("serverAddress").toString());
     QHostAddress address = socket->address();
-    int cmdPort = roomsInfo[roomName_].value("cmdport").toInt();
+    int cmdPort = roomsInfo[roomName_].value("cmdport").toDouble();
     CommandSocket::cmdSocket()->connectToHost(address, cmdPort);
 
 }
 
 void RoomListDialog::requestRoomList()
 {
-    QByteArray array;
-
-    QVariantMap map;
+    QJsonObject map;
     map.insert("request", QString("roomlist"));
-    QVariant data(map);
 
-    array = QJsonDocument::fromVariant(data).toJson();
-
-    socket->sendData(array);
+    QJsonDocument doc;
+    doc.setObject(map);
+    socket->sendData(doc.toJson());
     ui->progressBar->setRange(0,0);
 }
 
-void RoomListDialog::requestNewRoom(const QVariantMap &m)
+void RoomListDialog::requestNewRoom(const QJsonObject &m)
 {
-    QVariantMap map;
-    map["request"] = "newroom";
+    QJsonObject map;
+    map["request"] = QString("newroom");
     map["info"] = m;
     // TODO: add owner info
 
-    auto array = QJsonDocument::fromVariant(
-                QVariant(map)).toJson();
+    QJsonDocument doc;
+    doc.setObject(map);
 
-    socket->sendData(array);
+    socket->sendData(doc.toJson());
     ui->progressBar->setRange(0,0);
     //TODO: auto connect to room
 }
 
-void RoomListDialog::onRoomListUpdate(const QByteArray &array)
+void RoomListDialog::onServerData(const QByteArray &array)
 {
-    auto var = QJsonDocument::fromJson(array).toVariant();
-    QVariantMap map = var.toMap();
-    QString response = map["response"].toString();
+    managerSocketRouter_.onData(array);
+}
 
-    if(response == "roomlist"){
-        // TODO: add errcode
-        if(!map["result"].toBool())
-            return;
-        QVariantList list;
-        QTableWidgetItem *item = 0;
-        list = map["roomlist"].toList();
-        QVariant info;
-        int row = 0;
-        int column = 0;
-        ui->progressBar->setMaximum(100);
-        ui->tableWidget->clearContents();
-        ui->tableWidget->setRowCount(0);
-        QHash<QString, QVariantMap> tmpRoomsInfo;
-        ui->tableWidget->clearContents();
-        ui->tableWidget->setSortingEnabled(false);
-        foreach(info, list){
-            // TODO: we need more validate!
-            QVariantMap m = info.toMap();
-            QString name = m["name"].toString();
-            tmpRoomsInfo.insert(name, m);
-            if(ui->checkBox->isChecked()){
-                //Don't show it if room is full
-                if(m["maxload"] == m["currentload"]){
-                    continue;
-                }
+void RoomListDialog::onManagerResponseRoomlist(const QJsonObject &obj)
+{
+    // TODO: add errcode
+    if(!obj["result"].toBool())
+        return;
+    QJsonArray list;
+    QTableWidgetItem *item = 0;
+    list = obj["roomlist"].toArray();
+    QJsonValue info;
+    int row = 0;
+    int column = 0;
+    ui->progressBar->setMaximum(100);
+    ui->tableWidget->clearContents();
+    ui->tableWidget->setRowCount(0);
+    QHash<QString, QJsonObject> tmpRoomsInfo;
+    ui->tableWidget->clearContents();
+    ui->tableWidget->setSortingEnabled(false);
+    foreach(info, list){
+        // TODO: we need more validate!
+        QJsonObject m = info.toObject();
+        QString name = m["name"].toString();
+        tmpRoomsInfo.insert(name, m);
+        if(ui->checkBox->isChecked()){
+            //Don't show it if room is full
+            if(m["maxload"] == m["currentload"]){
+                continue;
             }
-
-            if(row >= ui->tableWidget->rowCount())
-                ui->tableWidget->insertRow(0);
-            column = 0;
-
-            item = new QTableWidgetItem(name);
-            item->setTextAlignment(Qt::AlignCenter);
-            ui->tableWidget->setItem(0, column++, item);
-
-            bool isPrivate = m["private"].toBool();
-            item = new QTableWidgetItem(
-                        isPrivate?tr("Private"):tr("Public"));
-            item->setTextAlignment(Qt::AlignCenter);
-            ui->tableWidget->setItem(0, column++, item);
-
-            item = new QTableWidgetItem;
-            item->setTextAlignment(Qt::AlignCenter);
-            item->setData(Qt::DisplayRole, m["currentload"].toInt());
-            ui->tableWidget->setItem(0, column++, item);
-
-            item = new QTableWidgetItem;
-            item->setTextAlignment(Qt::AlignCenter);
-            item->setData(Qt::DisplayRole, m["maxload"].toInt());
-            ui->tableWidget->setItem(0, column++, item);
-
-            row++;
-            ui->progressBar->setValue(100*row/list.count());
         }
-        roomsInfo = tmpRoomsInfo;
-        ui->progressBar->setValue(100);
-        ui->tableWidget->setSortingEnabled(true);
-    }else if(response == "newroom"){
-        newRoomWindow->onServerResponse(map);
-        requestRoomList();
+
+        if(row >= ui->tableWidget->rowCount())
+            ui->tableWidget->insertRow(0);
+        column = 0;
+
+        item = new QTableWidgetItem(name);
+        item->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->setItem(0, column++, item);
+
+        bool isPrivate = m["private"].toBool();
+        item = new QTableWidgetItem(
+                    isPrivate?tr("Private"):tr("Public"));
+        item->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->setItem(0, column++, item);
+
+        item = new QTableWidgetItem;
+        item->setTextAlignment(Qt::AlignCenter);
+        item->setData(Qt::DisplayRole, m["currentload"].toDouble());
+        ui->tableWidget->setItem(0, column++, item);
+
+        item = new QTableWidgetItem;
+        item->setTextAlignment(Qt::AlignCenter);
+        item->setData(Qt::DisplayRole, m["maxload"].toDouble());
+        ui->tableWidget->setItem(0, column++, item);
+
+        row++;
+        ui->progressBar->setValue(100*row/list.count());
     }
+    roomsInfo = tmpRoomsInfo;
+    ui->progressBar->setValue(100);
+    ui->tableWidget->setSortingEnabled(true);
 }
 
 void RoomListDialog::onServerClosed()
@@ -221,8 +224,8 @@ void RoomListDialog::onServerClosed()
 
 void RoomListDialog::onCmdServerConnected()
 {
-    int current = roomsInfo[roomName_].value("currentload").toInt();
-    int max = roomsInfo[roomName_].value("maxload").toInt();
+    int current = roomsInfo[roomName_].value("currentload").toDouble();
+    int max = roomsInfo[roomName_].value("maxload").toDouble();
 
     if(current >= max){
         QMessageBox::critical(this,
@@ -248,12 +251,14 @@ void RoomListDialog::onCmdServerConnected()
     }
 
 
-    QVariantMap map;
-    map.insert("request", "login");
+    QJsonObject map;
+    map.insert("request", QString("login"));
     map.insert("name", nickName_);
     map.insert("password", passwd);
 
-    auto array = QJsonDocument::fromVariant(QVariant(map)).toJson();
+    QJsonDocument doc;
+
+    auto array = doc.toJson();
 
     CommandSocket::cmdSocket()->sendData(array);
     ui->progressBar->setRange(0, 0);
@@ -261,8 +266,7 @@ void RoomListDialog::onCmdServerConnected()
 
 void RoomListDialog::onCmdServerData(const QByteArray &array)
 {
-    auto var  = QJsonDocument::fromJson(array).toVariant();
-    QVariantMap map = var.toMap();
+    QJsonObject map  = QJsonDocument::fromJson(array).object();
     QString response = map["response"].toString();
 
     if(response == "login"){
@@ -272,7 +276,7 @@ void RoomListDialog::onCmdServerData(const QByteArray &array)
         if(!res){
             int errcode = 300;
             if(map.contains("errcode")){
-                errcode = map["errcode"].toInt();
+                errcode = map["errcode"].toDouble();
             }
             QMessageBox::critical(this,
                                   tr("Error"),
@@ -281,19 +285,19 @@ void RoomListDialog::onCmdServerData(const QByteArray &array)
         }else{
             if(!map.contains("info"))
                 return;
-            QVariantMap info = map["info"].toMap();
+            QJsonObject info = map["info"].toObject();
             if(!info.contains("dataport")
                     || !info.contains("msgport")
                     || !info.contains("historysize")){
                 return;
             }
-            dataPort_ = info["dataport"].toInt();
-            msgPort_ = info["msgport"].toInt();
-            historySize_ = info["historysize"].toULongLong();
+            dataPort_ = info["dataport"].toDouble();
+            msgPort_ = info["msgport"].toDouble();
+            historySize_ = info["historysize"].toDouble();
             if(info.contains("size")){
-                QVariantMap sizeMap = info["size"].toMap();
-                int width = sizeMap["width"].toInt();
-                int height = sizeMap["height"].toInt();
+                QJsonObject sizeMap = info["size"].toObject();
+                int width = sizeMap["width"].toDouble();
+                int height = sizeMap["height"].toDouble();
                 canvasSize_ = QSize(width, height);
             }
             accept();
