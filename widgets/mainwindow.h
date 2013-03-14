@@ -30,6 +30,7 @@
 #include "../network/messagesocket.h"
 #include "../network/datasocket.h"
 #include "../network/commandsocket.h"
+#include "../misc/router.h"
 
 
 namespace Ui {
@@ -77,6 +78,7 @@ private:
     void colorGridInit();
     void viewInit();
     void shortcutInit();
+    void cmdSocketRouterInit();
     QVariant getRoomKey();
     QByteArray toJson(const QVariant &m);
     QVariant fromJson(const QByteArray &d);
@@ -92,6 +94,7 @@ private:
     QShortcut *devConsoleShortCut;
     QByteArray defaultView;
     QAbstractButton *lastBrushButton;
+    Router<> cmdRouter_;
 private slots:
     void onServerConnected();
     void onServerDisconnected();
@@ -106,6 +109,10 @@ private slots:
     void onCmdServerDisconnected();
     void onCmdServerData(const QByteArray &data);
     void onPanoramaRefresh();
+    void onCommandActionClose(const QJsonObject &);
+    void onCommandResponseClose(const QJsonObject &m);
+    void onCommandResponseClearAll(const QJsonObject &m);
+    void onCommandActionClearAll(const QJsonObject &);
 
 };
 

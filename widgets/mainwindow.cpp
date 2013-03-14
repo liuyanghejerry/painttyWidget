@@ -131,6 +131,31 @@ void MainWindow::init()
 
     shortcutInit();
     //    stylize();
+    cmdSocketRouterInit();
+}
+
+void MainWindow::cmdSocketRouterInit()
+{
+    cmdRouter_.regHandler("action",
+                          "close",
+                          std::bind(&MainWindow::onCommandActionClose,
+                                    this,
+                                    std::placeholders::_1));
+    cmdRouter_.regHandler("response",
+                          "close",
+                          std::bind(&MainWindow::onCommandResponseClose,
+                                    this,
+                                    std::placeholders::_1));
+    cmdRouter_.regHandler("action",
+                          "clearall",
+                          std::bind(&MainWindow::onCommandActionClearAll,
+                                    this,
+                                    std::placeholders::_1));
+    cmdRouter_.regHandler("response",
+                          "clearall",
+                          std::bind(&MainWindow::onCommandResponseClearAll,
+                                    this,
+                                    std::placeholders::_1));
 }
 
 void MainWindow::layerWidgetInit()
@@ -378,44 +403,58 @@ void MainWindow::onCmdServerDisconnected()
 
 void MainWindow::onCmdServerData(const QByteArray &data)
 {
-    QVariantMap m = fromJson(data).toMap();
-    if(m.contains("action")){
-        QString action = m["action"].toString();
-        if(action == "close"){
-            QMessageBox::warning(this,
-                                 tr("Closing"),
-                                 tr("Warning, the room owner has "
-                                    "closed the room. This room will close"
-                                    " when everyone leaves.\n"
-                                    "Save your work if you like it!"));
-        }
-    }
+    cmdRouter_.onData(data);
+}
 
-    if(m.contains("response")){
-        QString response = m["response"].toString();
-        bool result = m["result"].toBool();
-        if(response == "close"){
-            if(!result){
-                QMessageBox::critical(this,
-                                      tr("Sorry"),
-                                      tr("Sorry, it seems you're not"
-                                         "room owner."));
-            }else{
-                // Since server accepted close request, we can
-                // wait for close now.
-                // of course, delete the key. it's useless.
-                QCryptographicHash hash(QCryptographicHash::Md5);
-                hash.addData(roomName_.toUtf8());
-                QString hashed_name = hash.result().toHex();
-                QSettings settings(GlobalDef::SETTINGS_NAME,
-                                   QSettings::defaultFormat(),
-                                   qApp);
-                settings.remove("rooms/"+hashed_name);
-                settings.sync();
-            }
+void MainWindow::onCommandActionClose(const QJsonObject &)
+{
+    QMessageBox::warning(this,
+                         tr("Closing"),
+                         tr("Warning, the room owner has "
+                            "closed the room. This room will close"
+                            " when everyone leaves.\n"
+                            "Save your work if you like it!"));
+}
 
-        }
+void MainWindow::onCommandResponseClose(const QJsonObject &m)
+{
+    bool result = m["result"].toBool();
+    if(!result){
+        QMessageBox::critical(this,
+                              tr("Sorry"),
+                              tr("Sorry, it seems you're not"
+                                 "room owner."));
+    }else{
+        // Since server accepted close request, we can
+        // wait for close now.
+        // of course, delete the key. it's useless.
+        QCryptographicHash hash(QCryptographicHash::Md5);
+        hash.addData(roomName_.toUtf8());
+        QString hashed_name = hash.result().toHex();
+        QSettings settings(GlobalDef::SETTINGS_NAME,
+                           QSettings::defaultFormat(),
+                           qApp);
+        settings.remove("rooms/"+hashed_name);
+        settings.sync();
     }
+}
+
+void MainWindow::onCommandResponseClearAll(const QJsonObject &m)
+{
+    bool result = m["result"].toBool();
+    if(result){
+        //
+    }else{
+        QMessageBox::critical(this,
+                              tr("Sorry"),
+                              tr("Sorry, it seems you're not"
+                                 "room owner."));
+    }
+}
+
+void MainWindow::onCommandActionClearAll(const QJsonObject &)
+{
+    clearAllLayer();
 }
 
 void MainWindow::onNewMessage(const QString &content)
