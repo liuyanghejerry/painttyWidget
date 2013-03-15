@@ -19,6 +19,7 @@ MainWindow::~MainWindow()
 {
     msgSocket.close();
     dataSocket.close();
+    CommandSocket::cmdSocket()->close();
     delete ui;
 }
 
@@ -132,6 +133,12 @@ void MainWindow::init()
     shortcutInit();
     //    stylize();
     cmdSocketRouterInit();
+
+    QTimer *t = new QTimer(this);
+    t->setInterval(5000);
+    connect(t, &QTimer::timeout,
+            this, &MainWindow::requestOnlinelist);
+    t->start();
 }
 
 void MainWindow::cmdSocketRouterInit()
@@ -154,6 +161,11 @@ void MainWindow::cmdSocketRouterInit()
     cmdRouter_.regHandler("response",
                           "clearall",
                           std::bind(&MainWindow::onCommandResponseClearAll,
+                                    this,
+                                    std::placeholders::_1));
+    cmdRouter_.regHandler("response",
+                          "onlinelist",
+                          std::bind(&MainWindow::onCommandResponseOnlinelist,
                                     this,
                                     std::placeholders::_1));
 }
@@ -220,6 +232,15 @@ QVariant MainWindow::getRoomKey()
         return QVariant();
     }
     return key;
+}
+
+void MainWindow::requestOnlinelist()
+{
+    QJsonDocument doc;
+    QJsonObject obj;
+    obj.insert("request", QString("onlinelist"));
+    doc.setObject(obj);
+    CommandSocket::cmdSocket()->sendData(doc.toJson());
 }
 
 void MainWindow::shortcutInit()
@@ -392,14 +413,6 @@ void MainWindow::onServerDisconnected()
     ui->canvas->setEnabled(false);
 }
 
-void MainWindow::onCmdServerConnected()
-{
-    //    QVariantMap map;
-    //    map.insert("request", "login");
-    //    QVariantMap info;
-    //    info.insert("password");
-}
-
 void MainWindow::onCmdServerDisconnected()
 {
     //
@@ -457,6 +470,11 @@ void MainWindow::onCommandResponseClearAll(const QJsonObject &m)
 void MainWindow::onCommandActionClearAll(const QJsonObject &)
 {
     ui->canvas->clearAllLayer();
+}
+
+void MainWindow::onCommandResponseOnlinelist(const QJsonObject &o)
+{
+    qDebug()<<o;
 }
 
 void MainWindow::onNewMessage(const QString &content)

@@ -45,7 +45,6 @@ public:
     explicit MainWindow(const QSize& canvasSize, QWidget *parent = 0);
     ~MainWindow();
     void init();
-    void cmdSocketInit(const QHostAddress &add, int port);
     void socketInit(int dataPort, int msgPort);
     void setNickName(const QString &name);
     void setRoomName(const QString &name);
@@ -80,6 +79,7 @@ private:
     void shortcutInit();
     void cmdSocketRouterInit();
     QVariant getRoomKey();
+    void requestOnlinelist();
     QByteArray toJson(const QVariant &m);
     QVariant fromJson(const QByteArray &d);
 
@@ -105,7 +105,6 @@ private slots:
     void onBrushTypeChange();
     void onBrushSettingsChanged(const QVariantMap &m);
     void onColorPickerPressed(bool c);
-    void onCmdServerConnected();
     void onCmdServerDisconnected();
     void onCmdServerData(const QByteArray &data);
     void onPanoramaRefresh();
@@ -113,6 +112,7 @@ private slots:
     void onCommandResponseClose(const QJsonObject &m);
     void onCommandResponseClearAll(const QJsonObject &m);
     void onCommandActionClearAll(const QJsonObject &);
+    void onCommandResponseOnlinelist(const QJsonObject &o);
 
 };
 

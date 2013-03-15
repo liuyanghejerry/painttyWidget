@@ -13,6 +13,7 @@
 #include <QFile>
 #include <QCloseEvent>
 #include <QSettings>
+#include <QDateTime>
 
 #include "../common.h"
 #include "../network/commandsocket.h"
@@ -44,7 +45,6 @@ public slots:
     void onServerClosed();
     void filterRoomList();
 private slots:
-//    void onNewRoomButtonPressed();
     void onCmdServerConnected();
     void onCmdServerData(const QByteArray &array);
     void loadNick();
@@ -66,8 +66,10 @@ private:
     NewRoomWindow *newRoomWindow;
     QHash<QString, QJsonObject> roomsInfo;
     Router<> managerSocketRouter_;
+    QByteArray clientId_;
     void tableInit();
     void socketInit();
+    QByteArray loadClientId();
     void onManagerResponseRoomlist(const QJsonObject &obj);
 };
 

@@ -40,6 +40,8 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
             this,&RoomListDialog::requestRoomList);
     timer->start(10000);
     loadNick();
+    clientId_ = loadClientId();
+
 }
 
 RoomListDialog::~RoomListDialog()
@@ -255,8 +257,10 @@ void RoomListDialog::onCmdServerConnected()
     map.insert("request", QString("login"));
     map.insert("name", nickName_);
     map.insert("password", passwd);
+    map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
 
     QJsonDocument doc;
+    doc.setObject(map);
 
     auto array = doc.toJson();
 
@@ -324,6 +328,23 @@ QString RoomListDialog::nick() const
 int RoomListDialog::historySize() const
 {
     return historySize_;
+}
+
+QByteArray RoomListDialog::loadClientId()
+{
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    QString identy = QDateTime::currentDateTimeUtc()
+            .toString(Qt::ISODate)
+            + this->nickName_;
+    QCryptographicHash hashed_identy(QCryptographicHash::Sha1);
+    hashed_identy.addData(identy.toUtf8());
+    QByteArray data = hashed_identy.result();
+    settings.setValue("global/personal/clientid",
+                      data);
+    settings.sync();
+    return data;
 }
 
 void RoomListDialog::loadNick()
