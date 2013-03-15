@@ -628,11 +628,10 @@ void MainWindow::clearLayer(const QString &name)
 {
     auto result = QMessageBox::question(this,
                                         tr("OMG"),
-                                        tr("You're going to clear layer ")
-                                        +name
-                                        +tr(". All the work of that layer"
+                                        tr("You're going to clear layer %1. "
+                                           "All the work of that layer"
                                             "will be deleted and CANNOT be undone.\n"
-                                            "Do you really want to do so?"),
+                                            "Do you really want to do so?").arg(name),
                                         QMessageBox::Yes|QMessageBox::No);
     if(result == QMessageBox::Yes){
         ui->canvas->clearLayer(name);
