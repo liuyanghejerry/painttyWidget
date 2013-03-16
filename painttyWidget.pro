@@ -52,7 +52,8 @@ SOURCES += main.cpp\
     widgets/aboutdialog.cpp \
     widgets/panoramawidget.cpp \
     singleshortcut.cpp \
-    widgets/canvascontainer.cpp
+    widgets/canvascontainer.cpp \
+    widgets/memberlistwidget.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -85,7 +86,8 @@ HEADERS  += widgets/mainwindow.h \
     common.h \
     widgets/panoramawidget.h \
     singleshortcut.h \
-    widgets/canvascontainer.h
+    widgets/canvascontainer.h \
+    widgets/memberlistwidget.h
 
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
@@ -94,6 +96,7 @@ FORMS    += widgets/mainwindow.ui \
     widgets/colorbox.ui \
     widgets/newroomwindow.ui \
     widgets/aboutdialog.ui
+
 UI_DIR = $${PWD}/widgets/
 
 TRANSLATIONS += translation/paintty_zh_CN.ts
