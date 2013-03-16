@@ -2,28 +2,11 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>693</width>
-    <height>455</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Mr.Paint</string>
   </property>
   <widget class="CanvasContainer" name="centralWidget">
-   <widget class="Canvas" name="canvas" native="true">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>100</width>
-      <height>30</height>
-     </rect>
-    </property>
-   </widget>
+   <widget class="Canvas" name="canvas" native="true"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="windowTitle">
@@ -34,6 +17,12 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout_4">
+     <property name="spacing">
+      <number>2</number>
+     </property>
+     <property name="margin">
+      <number>2</number>
+     </property>
      <item>
       <widget class="ColorBox" name="colorBox" native="true"/>
      </item>
@@ -42,6 +31,9 @@
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <property name="spacing">
+        <number>2</number>
+       </property>
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
@@ -65,8 +57,11 @@
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
+      <layout class="QGridLayout" name="gridLayout">
+       <property name="spacing">
+        <number>2</number>
+       </property>
+       <item row="0" column="0">
         <widget class="QPushButton" name="pencilButton">
          <property name="text">
           <string>Pencil (Z)</string>
@@ -85,7 +80,33 @@
          </attribute>
         </widget>
        </item>
-       <item>
+       <item row="4" column="0">
+        <widget class="QPushButton" name="colorPicker">
+         <property name="text">
+          <string>Color Picker (C)</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QPushButton" name="sketchButton">
+         <property name="text">
+          <string>Sketch (S)</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="autoExclusive">
+          <bool>true</bool>
+         </property>
+         <attribute name="buttonGroup">
+          <string notr="true">buttonGroup</string>
+         </attribute>
+        </widget>
+       </item>
+       <item row="0" column="1">
         <widget class="QPushButton" name="brushButton">
          <property name="text">
           <string>Brush (A)</string>
@@ -104,23 +125,7 @@
          </attribute>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="sketchButton">
-         <property name="text">
-          <string>Sketch (S)</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="autoExclusive">
-          <bool>true</bool>
-         </property>
-         <attribute name="buttonGroup">
-          <string notr="true">buttonGroup</string>
-         </attribute>
-        </widget>
-       </item>
-       <item>
+       <item row="2" column="1">
         <widget class="QPushButton" name="eraserButton">
          <property name="text">
           <string>Eraser (E)</string>
@@ -134,16 +139,6 @@
          <attribute name="buttonGroup">
           <string notr="true">buttonGroup</string>
          </attribute>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="colorPicker">
-         <property name="text">
-          <string>Color Picker (C)</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
         </widget>
        </item>
       </layout>
@@ -165,8 +160,8 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>20</width>
-         <height>40</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
       </spacer>
@@ -211,6 +206,9 @@
      </item>
      <item row="1" column="0" colspan="2">
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>2</number>
+       </property>
        <item>
         <widget class="QLineEdit" name="lineEdit">
          <property name="sizePolicy">
@@ -248,6 +246,12 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3">
     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="spacing">
+      <number>2</number>
+     </property>
+     <property name="margin">
+      <number>2</number>
+     </property>
      <item>
       <widget class="LayerWidget" name="layerWidget" native="true"/>
      </item>
@@ -259,8 +263,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>693</width>
-     <height>23</height>
+     <width>705</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -326,6 +330,12 @@
    </attribute>
    <widget class="QWidget" name="panoramaContents">
     <layout class="QVBoxLayout" name="panoramaLayout">
+     <property name="spacing">
+      <number>2</number>
+     </property>
+     <property name="margin">
+      <number>2</number>
+     </property>
      <item>
       <widget class="PanoramaWidget" name="panorama" native="true">
        <property name="sizePolicy">
@@ -343,7 +353,6 @@
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
-   <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">

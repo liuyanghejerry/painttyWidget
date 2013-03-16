@@ -151,13 +151,13 @@ BrushPointer Canvas::brushFactory(const QString &name)
 {
     BrushPointer b;
     QString n_name = name.toLower();
-    if(n_name.compare("brush") == 0){
+    if(n_name == "brush"){
         b = BrushPointer(new Brush(this));
-    }else if(n_name.compare("pencil") == 0){
+    }else if(n_name == "pencil"){
         b = BrushPointer(new Pencil(this));
-    }else if(n_name.compare("sketch") == 0){
+    }else if(n_name == "sketch"){
         b = BrushPointer(new SketchBrush(this));
-    }else if(n_name.compare("eraser") == 0){
+    }else if(n_name == "eraser"){
         b = BrushPointer(new Eraser(this));
     }else{
         qDebug()<<name<<"cannot identify";
