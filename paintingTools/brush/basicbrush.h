@@ -10,6 +10,7 @@ class BasicBrush : public QObject
 public:
     BasicBrush(QObject *parent = 0) : QObject(parent) {}
     virtual ~BasicBrush() = 0;
+    virtual QString brushIdentifer() const = 0;
     virtual QIcon brushIcon() const = 0;
     virtual QKeySequence brushShotcut() const = 0;
     virtual QCursor brushCursor() const = 0;
