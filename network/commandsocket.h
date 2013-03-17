@@ -16,7 +16,7 @@ public slots:
 private:
     CommandSocket(QObject *parent = 0);
     static CommandSocket *socket;
-    static QString clientid_;
+    static QVariantMap info_;
 };
 
 #endif // COMMANDSOCKET_H

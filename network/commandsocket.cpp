@@ -1,11 +1,11 @@
 #include "commandsocket.h"
 
-CommandSocket * CommandSocket::socket = 0;
-QString CommandSocket::clientid_ = QString();
+CommandSocket * CommandSocket::socket = nullptr;
+QVariantMap CommandSocket::info_;
 
 CommandSocket * CommandSocket::cmdSocket()
 {
-    // notice, this is not a thread-safe class.
+    // notice, this is NOT a thread-safe class.
     if(!CommandSocket::socket){
         CommandSocket::socket = new CommandSocket;
     }
@@ -19,10 +19,10 @@ CommandSocket::CommandSocket(QObject *parent) :
 
 void CommandSocket::setClientId(const QString &id)
 {
-    CommandSocket::clientid_ = id;
+    info_.insert("clientid", id);
 }
 
 QString CommandSocket::clientId()
 {
-    return CommandSocket::clientid_;
+    return info_.value("clientid").toString();
 }

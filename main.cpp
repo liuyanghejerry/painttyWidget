@@ -7,7 +7,8 @@
 #include "widgets/mainwindow.h"
 #include "widgets/roomlistdialog.h"
 
-namespace mainOnly {
+namespace mainOnly
+{
 QPalette& rePalette(QPalette &p)
 {
     //    p.setColor(QPalette::Window, QColor::fromRgb(54, 86, 60));
@@ -25,31 +26,6 @@ QPalette& rePalette(QPalette &p)
     return p;
 }
 
-bool readJsConf(QIODevice &device, QSettings::SettingsMap &map)
-{
-    auto jsContent = device.readAll();
-    if(jsContent.isEmpty()){
-        return false;
-    }
-    QJsonParseError isOk;
-    auto doc = QJsonDocument::fromJson(jsContent, &isOk);
-    if(isOk.error != QJsonParseError::NoError) {
-        return false;
-    }
-    map = doc.toVariant().toMap();
-    return true;
-}
-
-bool writeJsConf(QIODevice &device, const QSettings::SettingsMap &map)
-{
-    auto jsContent = QJsonDocument::fromVariant(QVariant(map));
-    auto buffer = jsContent.toJson();
-    if(buffer.isEmpty()){
-        return false;
-    }
-    return device.write(buffer) > 0;
-}
-
 void initStyle()
 {
     QApplication::setStyle("Fusion");
@@ -60,18 +36,13 @@ void initStyle()
 
 void initSettings()
 {
-//    const QSettings::Format JsFormat =
-//            QSettings::registerFormat("jsconf",
-//                                      mainOnly::readJsConf,
-//                                      mainOnly::writeJsConf);
-//    QSettings::setPath(JsFormat, QSettings::UserScope,
-//                       QDir::currentPath());
-//    QSettings::setDefaultFormat(JsFormat);
-
     QSettings::setDefaultFormat(QSettings::IniFormat);
 
-    QSettings settings(GlobalDef::SETTINGS_NAME, QSettings::defaultFormat(), qApp);
-    QString clientVersion = settings.value("global/version/client", GlobalDef::CLIENT_VER)
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    QString clientVersion = settings.value("global/version/client",
+                                           GlobalDef::CLIENT_VER)
             .toString();
     settings.setValue("global/version/client", clientVersion);
     settings.sync();
@@ -92,22 +63,22 @@ void initTranslation()
 
     QTranslator *qtTranslator = new QTranslator(qApp);
     qtTranslator->load(":/translation/qt_"
-                      + locale);
+                       + locale);
     QCoreApplication::installTranslator(qtTranslator);
 
     QTranslator *myappTranslator = new QTranslator(qApp);
     myappTranslator->load(":/translation/paintty_"
-                         + locale);
+                          + locale);
     QCoreApplication::installTranslator(myappTranslator);
 }
 
-}
+} // namespace mainOnly
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 #ifdef Q_OS_MACX
-        QDir::setCurrent(a.applicationDirPath());
+    QDir::setCurrent(a.applicationDirPath());
 #endif
     mainOnly::initStyle();
     mainOnly::initSettings();
