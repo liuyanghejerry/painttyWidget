@@ -478,6 +478,16 @@ void MainWindow::onCommandResponseOnlinelist(const QJsonObject &o)
 {
     QJsonArray list = o.value("onlinelist").toArray();
     qDebug()<<list;
+    MemberList l;
+    for(int i=0;i<list.count();++i){
+        QJsonObject obj = list[i].toObject();
+        QString id = obj.value("clientid").toString();
+        QString nick = obj.value("name").toString();
+        QVariantList vl;
+        vl.append(nick);
+        l.insert(id, vl);
+    }
+    ui->memberList->setMemberList(l);
 }
 
 void MainWindow::onNewMessage(const QString &content)
