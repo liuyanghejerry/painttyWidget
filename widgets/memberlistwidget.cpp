@@ -7,12 +7,19 @@ MemberListWidget::MemberListWidget(QWidget *parent)
 
 void MemberListWidget::setMemberList(const MemberList &memberList)
 {
+    clearMemberList();
     MemberList::const_iterator iterator = memberList.constBegin();
     while (iterator != memberList.constEnd())
     {
         addMember(iterator.key(), iterator.value().at(0).toString());
         iterator++;
     }
+}
+
+void MemberListWidget::clearMemberList()
+{
+    memberItemList.clear();
+    clear();
 }
 
 void MemberListWidget::addMember(const QString &id, const QString &nickName)

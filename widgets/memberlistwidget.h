@@ -13,6 +13,7 @@ class MemberListWidget : public QListWidget
 public:
     MemberListWidget(QWidget *parent = 0);
     void setMemberList(const MemberList &memberList);
+    void clearMemberList();
     void addMember(const QString &id, const QString &nickName);
     void removeMember(const QString &id);
     QString nickName(const QString &id) const;
