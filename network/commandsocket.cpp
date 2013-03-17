@@ -1,6 +1,7 @@
 #include "commandsocket.h"
 
 CommandSocket * CommandSocket::socket = 0;
+QString CommandSocket::clientid_ = QString();
 
 CommandSocket * CommandSocket::cmdSocket()
 {
@@ -14,4 +15,14 @@ CommandSocket * CommandSocket::cmdSocket()
 CommandSocket::CommandSocket(QObject *parent) :
     Socket(parent)
 {
+}
+
+void CommandSocket::setClientId(const QString &id)
+{
+    CommandSocket::clientid_ = id;
+}
+
+QString CommandSocket::clientId()
+{
+    return CommandSocket::clientid_;
 }

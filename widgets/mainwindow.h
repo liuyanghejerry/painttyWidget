@@ -18,6 +18,9 @@
 #include <QFile>
 #include <QClipboard>
 #include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonValue>
 #include <QSettings>
 #include <QCryptographicHash>
 

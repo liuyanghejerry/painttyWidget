@@ -239,7 +239,9 @@ void MainWindow::requestOnlinelist()
     QJsonDocument doc;
     QJsonObject obj;
     obj.insert("request", QString("onlinelist"));
+    obj.insert("clientid", CommandSocket::clientId());
     doc.setObject(obj);
+    qDebug()<<"clientid: "<<CommandSocket::clientId();
     CommandSocket::cmdSocket()->sendData(doc.toJson());
 }
 
@@ -474,7 +476,8 @@ void MainWindow::onCommandActionClearAll(const QJsonObject &)
 
 void MainWindow::onCommandResponseOnlinelist(const QJsonObject &o)
 {
-    qDebug()<<o;
+    QJsonArray list = o.value("onlinelist").toArray();
+    qDebug()<<list;
 }
 
 void MainWindow::onNewMessage(const QString &content)

@@ -304,6 +304,12 @@ void RoomListDialog::onCmdServerData(const QByteArray &array)
                 int height = sizeMap["height"].toDouble();
                 canvasSize_ = QSize(width, height);
             }
+            if(info.contains("clientid")){
+                QString clientid = info["clientid"].toString();
+                CommandSocket::setClientId(clientid);
+                qDebug()<<"clientid assign"
+                       <<CommandSocket::clientId();
+            }
             accept();
         }
     }
