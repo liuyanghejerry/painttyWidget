@@ -53,7 +53,8 @@ SOURCES += main.cpp\
     widgets/panoramawidget.cpp \
     singleshortcut.cpp \
     widgets/canvascontainer.cpp \
-    widgets/memberlistwidget.cpp
+    widgets/memberlistwidget.cpp \
+    misc/errortable.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -87,7 +88,9 @@ HEADERS  += widgets/mainwindow.h \
     widgets/panoramawidget.h \
     singleshortcut.h \
     widgets/canvascontainer.h \
-    widgets/memberlistwidget.h
+    widgets/memberlistwidget.h \
+    misc/router.h \
+    misc/errortable.h
 
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
