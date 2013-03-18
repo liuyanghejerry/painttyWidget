@@ -88,10 +88,8 @@ HEADERS  += widgets/mainwindow.h \
     widgets/panoramawidget.h \
     singleshortcut.h \
     widgets/canvascontainer.h \
-    widgets/memberlistwidget.h \
-    misc/router.h \
+    paintingTools/brush/basicbrush.h    misc/router.h \
     misc/errortable.h
-
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/developerconsole.ui \
