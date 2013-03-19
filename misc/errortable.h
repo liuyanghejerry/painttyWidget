@@ -10,10 +10,10 @@ class ErrorTable
 public:
     static QString toString(int errcode);
 private:
-    ErrorTable() = delete;
-    ~ErrorTable() = delete;
-    ErrorTable(const ErrorTable&) = delete;
-    ErrorTable & operator=(const ErrorTable&) = delete;
+    ErrorTable() Q_DECL_EQ_DELETE;
+    ~ErrorTable() Q_DECL_EQ_DELETE;
+    ErrorTable(const ErrorTable&) Q_DECL_EQ_DELETE;
+    ErrorTable& operator=(const ErrorTable&) Q_DECL_EQ_DELETE;
     const static std::unordered_map<int, QString> errMsg_;
 };
 
