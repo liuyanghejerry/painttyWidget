@@ -9,8 +9,8 @@
 #include <QDebug>
 
 CanvasContainer::CanvasContainer(QWidget *parent) :
-    QGraphicsView(parent), proxy(0), smoothScaleFlag(true),
-    scaleSliderWidget(0)
+    QGraphicsView(parent), proxy(0), scaleSliderWidget(0),
+    smoothScaleFlag(true)
 {
     setCacheMode(QGraphicsView::CacheBackground);
     setAlignment(Qt::AlignTop | Qt::AlignLeft);

@@ -10,6 +10,7 @@
 
 #include <QDebug>
 #include "../common.h"
+#include "../misc/errortable.h"
 namespace Ui {
 class NewRoomWindow;
 }
