@@ -98,6 +98,10 @@ QWidget* CanvasContainer::scaleSlider()
         QHBoxLayout *layout = new QHBoxLayout(scaleSliderWidget);
         QSlider *slider = new QSlider(Qt::Horizontal, scaleSliderWidget);
         QLabel *label = new QLabel("100%", scaleSliderWidget);
+        label->setFixedWidth(label->fontMetrics().width("100.%"));
+        label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+        //label->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed); //not working?
+
         scaleSliderWidget->setLayout(layout);
         layout->addWidget(slider);
         layout->addWidget(label);
