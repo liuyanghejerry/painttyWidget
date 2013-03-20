@@ -619,7 +619,7 @@ void Canvas::combineLayers(const QRect &rec)
 {
     //TODO
     QPainter painter(&image);
-//    image.fill(Qt::white);
+    image.fill(Qt::transparent);
     int count = layers.count();
     QPixmap * im = 0;
     for(int i=0;i<count;++i){
