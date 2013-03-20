@@ -302,7 +302,11 @@ void Canvas::drawPoint(const QPoint &point)
 
 void Canvas::pickColor(const QPoint &point)
 {
-    brush_->setColor(image.toImage().pixel(point));
+    //TODO: mask
+    brush_->setColor(
+                QColor::fromRgba(
+                    image.toImage().pixel(
+                        point)));
     newBrushSettings(brush_->brushInfo());
 }
 
@@ -613,8 +617,9 @@ void Canvas::showLayer(const QString &name)
 
 void Canvas::combineLayers(const QRect &rec)
 {
+    //TODO
     QPainter painter(&image);
-    image.fill(Qt::white);
+//    image.fill(Qt::white);
     int count = layers.count();
     QPixmap * im = 0;
     for(int i=0;i<count;++i){
@@ -629,8 +634,9 @@ void Canvas::combineLayers(const QRect &rec)
 
 QPixmap Canvas::combineLayers()
 {
-    QPainter painter(&image);
-    image.fill(Qt::white);
+    QPixmap pmp = image;
+    QPainter painter(&pmp);
+    pmp.fill(Qt::white);
     int count = layers.count();
     QPixmap * im = 0;
     for(int i=0;i<count;++i){
@@ -641,7 +647,7 @@ QPixmap Canvas::combineLayers()
         im = l->imagePtr();
         painter.drawPixmap(0, 0, *im);
     }
-    return image;
+    return pmp;
 }
 
 void Canvas::moveLayerUp(const QString &name)
@@ -742,6 +748,7 @@ void Canvas::paintEvent(QPaintEvent *event)
     //    painter.setOpacity(opacity);
     combineLayers(dirtyRect);
 
+    painter.fillRect(rect(), Qt::white);
     painter.drawPixmap(dirtyRect, image, dirtyRect);
 
     if(!isEnabled()){
@@ -781,7 +788,7 @@ void Canvas::resizeEvent(QResizeEvent *event)
 void Canvas::resizeImage(QPixmap *image, const QSize &newSize)
 {
     QPixmap newImage(newSize);
-    newImage.fill(Qt::white);
+    newImage.fill(Qt::transparent);
     QPainter painter(&newImage);
     painter.drawPixmap(QPoint(0, 0), *image);
     *image = newImage;
