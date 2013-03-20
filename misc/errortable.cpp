@@ -1,4 +1,5 @@
 #include "errortable.h"
+#include <QObject>
 
 //const std::unordered_map<int, QString> ErrorTable::errMsg_
 //{
@@ -39,48 +40,48 @@ QString ErrorTable::toString(int errorCode)
     switch (errorCode)
     {
     case 200:
-        return QT_TR_NOOP("unknown error.");
+        return QObject::tr("unknown error.");
     case 201:
-        return QT_TR_NOOP("server is busy.");
+        return QObject::tr("server is busy.");
     case 202:
-        return QT_TR_NOOP("name collision.");
+        return QObject::tr("name collision.");
     case 203:
-        return QT_TR_NOOP("invalid name.");
+        return QObject::tr("invalid name.");
     case 204:
-        return QT_TR_NOOP("invalid maxMember.");
+        return QObject::tr("invalid max member.");
     case 205:
-        return QT_TR_NOOP("invalid welcomemsg.");
+        return QObject::tr("invalid welcome words.");
     case 206:
-        return QT_TR_NOOP("invalid emptyclose.");
+        return QObject::tr("invalid auto closing empty room.");
     case 207:
-        return QT_TR_NOOP("invalid password.");
+        return QObject::tr("invalid password.");
     case 208:
-        return QT_TR_NOOP("emptyclose not supported.");
+        return QObject::tr("auto closing empty room not supported.");
     case 209:
-        return QT_TR_NOOP("private room not supported.");
+        return QObject::tr("private room not supported.");
     case 210:
-        return QT_TR_NOOP("too many rooms.");
+        return QObject::tr("too many rooms.");
     case 211:
-        return QT_TR_NOOP("invalid canvasSize.");
+        return QObject::tr("invalid canvas size.");
     case 300:
-        return QT_TR_NOOP("unknown error.");
+        return QObject::tr("unknown error.");
     case 301:
-        return QT_TR_NOOP("invalid name.");
+        return QObject::tr("invalid name.");
     case 302:
-        return QT_TR_NOOP("invalid password or lack of password.");
+        return QObject::tr("invalid password or lack of password.");
     case 303:
-        return QT_TR_NOOP("room is full.");
+        return QObject::tr("room is full.");
     case 304:
-        return QT_TR_NOOP("you're banned.");
+        return QObject::tr("you're banned.");
     case 500:
-        return QT_TR_NOOP("closed by room or room manager.");
+        return QObject::tr("closed by room or room manager.");
     case 501:
-        return QT_TR_NOOP("closed by room owner.");
+        return QObject::tr("closed by room owner.");
     case 600:
-        return QT_TR_NOOP("unknown error.");
+        return QObject::tr("unknown error.");
     case 601:
-        return QT_TR_NOOP("room is closed already.");
+        return QObject::tr("room is closed already.");
     default:
-        return QString(QT_TR_NOOP("Unnamed error: %1.")).arg(errorCode);
+        return QObject::tr("Unnamed error: %1.").arg(errorCode);
     }
 }

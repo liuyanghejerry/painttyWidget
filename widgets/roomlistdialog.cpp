@@ -284,10 +284,8 @@ void RoomListDialog::onCmdServerData(const QByteArray &array)
             }
             QMessageBox::critical(this,
                                   tr("Error"),
-                                  tr("Sorry, an error occurred.\nError:")
-                                  +tr(", ")
-                                  +QString::number(errcode)
-                                  +ErrorTable::toString(errcode));
+                                  tr("Sorry, an error occurred.\n"
+                                     "Error: %1, %2").arg(errcode).arg(ErrorTable::toString(errcode)));
         }else{
             if(!map.contains("info"))
                 return;

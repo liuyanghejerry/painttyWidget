@@ -63,11 +63,9 @@ void NewRoomWindow::onServerResponse(const QJsonObject &m)
         return;
     }else{
         int errcode = m["errcode"].toDouble();
-        QString errmsg = tr("Error: ")
-                +QString::number(errcode)
-                +tr(", ")
-                +ErrorTable::toString(errcode)
-                +tr("\nDo you want to retry?");
+        QString errmsg = tr("Error: %1, %2\n"
+                            "Do you want to retry?")
+                .arg(errcode).arg(ErrorTable::toString(errcode));
         QMessageBox::StandardButton reply;
         reply = QMessageBox::critical(this, tr("Error!"),
                                       errmsg,
