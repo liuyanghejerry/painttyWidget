@@ -302,11 +302,7 @@ void Canvas::drawPoint(const QPoint &point)
 
 void Canvas::pickColor(const QPoint &point)
 {
-    //TODO: mask
-    brush_->setColor(
-                QColor::fromRgba(
-                    image.toImage().pixel(
-                        point)));
+    brush_->setColor(image.toImage().pixel(point));
     newBrushSettings(brush_->brushInfo());
 }
 
@@ -617,9 +613,8 @@ void Canvas::showLayer(const QString &name)
 
 void Canvas::combineLayers(const QRect &rec)
 {
-    //TODO
     QPainter painter(&image);
-    image.fill(Qt::transparent);
+    image.fill(Qt::white);
     int count = layers.count();
     QPixmap * im = 0;
     for(int i=0;i<count;++i){
@@ -748,7 +743,6 @@ void Canvas::paintEvent(QPaintEvent *event)
     //    painter.setOpacity(opacity);
     combineLayers(dirtyRect);
 
-    painter.fillRect(rect(), Qt::white);
     painter.drawPixmap(dirtyRect, image, dirtyRect);
 
     if(!isEnabled()){
