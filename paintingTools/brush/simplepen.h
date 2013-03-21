@@ -19,6 +19,8 @@ public:
     void setBrushWidth(int width);
     QColor brushColor() const;
     void setBrushColor(const QColor &color);
+    int brushSolidity() const;
+    void setBrushSolidity(int solidity);
     QVariantMap brushInfo() const;
     void setBrushInfo(const QVariantMap& brushInfo);
     QPixmap* surface() const;

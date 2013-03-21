@@ -76,13 +76,24 @@ void SimplePen::setBrushWidth(int width)
 //     };
  }
 
+ int SimplePen::brushSolidity() const
+ {
+     return 100;
+ }
+
+ void SimplePen::setBrushSolidity(int solidity)
+ {
+ }
+
  QVariantMap SimplePen::brushInfo() const
  {
      //generate a information map for communicating
+     //you can insert whatever you want, as long as setBrushInfo() needs them
      QVariantMap map;
      map.insert("identifer", brushIdentifer());
      map.insert("width", _brushWidth);
      map.insert("color", _brushColor);
+     map.insert("solidity", brushSolidity());
      return map;
  }
 
@@ -90,10 +101,12 @@ void SimplePen::setBrushWidth(int width)
  {
      //set brush's properties using information map
      //chech identifer first
+     //only recognise what we need
      if (brushInfo.value("identifer").toString() != brushIdentifer())
          return;
      setBrushWidth(brushInfo.value("width", 0).toInt());
      setBrushColor(brushInfo.value("color").value<QColor>());
+     setBrushSolidity(brushInfo.value("solidity", 100).toInt());
  }
 
  void SimplePen::setSurface(QPixmap *surface)

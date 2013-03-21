@@ -18,6 +18,8 @@ public:
     virtual void setBrushWidth(int width) = 0;
     virtual QColor brushColor() const = 0;
     virtual void setBrushColor(const QColor &color) = 0;
+    virtual int brushSolidity() const = 0;
+    virtual void setBrushSolidity(int solidity) = 0;
     virtual QVariantMap brushInfo() const = 0;
     virtual void setBrushInfo(const QVariantMap& brushInfo) = 0;
     virtual QPixmap* surface() const = 0;
