@@ -555,8 +555,7 @@ void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
     QVariantMap colorMap = m["color"].toMap();
     QColor c(colorMap["red"].toInt(),
             colorMap["green"].toInt(),
-            colorMap["blue"].toInt(),
-            colorMap["alpha"].toInt());
+            colorMap["blue"].toInt());
 
     // INFO: to prevent scaled to 1px, should always
     // change width first

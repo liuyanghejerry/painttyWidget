@@ -5,12 +5,11 @@ ColorWheel::ColorWheel(QWidget *parent) :
     QWidget(parent),
     initSize(200,200),
     mouseDown(false),
-    margin(5),
+    margin(0),
     wheelWidth(30),
     current(Qt::red),
     inWheel(false),
-    inSquare(false),
-    opacity_(100)
+    inSquare(false)
 {
     //    resize(initSize);
     current = current.toHsv();
@@ -34,7 +33,6 @@ void ColorWheel::setColor(const QColor &color)
             || color.value() != current.value() ){
         svChanged(color);
     }
-    opacity_ = color.alpha();
 
     update();
     emit colorChange(color);
@@ -68,8 +66,7 @@ QColor ColorWheel::posColor(const QPoint &point)
         hue = hue<0?0:hue;
         return QColor::fromHsv(hue,
                                current.saturation(),
-                               current.value(),
-                               opacity_ );
+                               current.value());
     }
     if(inSquare){
         // region of the widget
@@ -84,10 +81,7 @@ QColor ColorWheel::posColor(const QPoint &point)
         qreal SquareWidth = 2*ir/qSqrt(2);
         return QColor::fromHsvF( current.hueF(),
                                  p.x()/SquareWidth,
-                                 p.y()/SquareWidth,
-                                 qBound(0.0,
-                                        opacity_/100.0,
-                                        1.0));
+                                 p.y()/SquareWidth);
     }
     return QColor();
 }
@@ -317,7 +311,7 @@ void ColorWheel::hueChanged(const int &hue)
     if( hue<0 ||hue>359)return;
     int s = current.saturation();
     int v = current.value();
-    current.setHsv(hue, s, v, opacity_);
+    current.setHsv(hue, s, v);
     if(!isVisible()) return;
     //drawWheel(size());
     drawSquareImage(hue);
@@ -331,7 +325,7 @@ void ColorWheel::svChanged(const QColor &newcolor)
 {
     int hue = current.hue();
     current.setHsv(hue, newcolor.saturation(),
-                   newcolor.value(),opacity_);
+                   newcolor.value());
     if(!isVisible()) return;
     //drawWheel(size());
     //drawSquare(hue);
