@@ -338,8 +338,7 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
     QVariantMap colorMap = brushInfo["color"].toMap();
     QColor color(colorMap["red"].toInt(),
             colorMap["green"].toInt(),
-            colorMap["blue"].toInt(),
-            colorMap["alpha"].toInt());
+            colorMap["blue"].toInt());
 //    QColor color = brushInfo["color"].value<QColor>();
 
     if(remoteBrush.contains(userid)){
@@ -397,8 +396,7 @@ void Canvas::remoteDrawLine(const QPoint &start, const QPoint &end,
     QVariantMap colorMap = brushInfo["color"].toMap();
     QColor color(colorMap["red"].toInt(),
             colorMap["green"].toInt(),
-            colorMap["blue"].toInt(),
-            colorMap["alpha"].toInt());
+            colorMap["blue"].toInt());
 
     if(remoteBrush.contains(userid)){
         BrushPointer t = remoteBrush[userid];
@@ -629,8 +627,9 @@ void Canvas::combineLayers(const QRect &rec)
 
 QPixmap Canvas::combineLayers()
 {
-    QPainter painter(&image);
-    image.fill(Qt::white);
+    QPixmap pmp = image;
+    QPainter painter(&pmp);
+    pmp.fill(Qt::white);
     int count = layers.count();
     QPixmap * im = 0;
     for(int i=0;i<count;++i){
@@ -641,7 +640,7 @@ QPixmap Canvas::combineLayers()
         im = l->imagePtr();
         painter.drawPixmap(0, 0, *im);
     }
-    return image;
+    return pmp;
 }
 
 void Canvas::moveLayerUp(const QString &name)
@@ -781,7 +780,7 @@ void Canvas::resizeEvent(QResizeEvent *event)
 void Canvas::resizeImage(QPixmap *image, const QSize &newSize)
 {
     QPixmap newImage(newSize);
-    newImage.fill(Qt::white);
+    newImage.fill(Qt::transparent);
     QPainter painter(&newImage);
     painter.drawPixmap(QPoint(0, 0), *image);
     *image = newImage;

@@ -43,7 +43,6 @@ private:
     QColor current;
     bool inWheel;
     bool inSquare;
-    int opacity_;
     QColor posColor(const QPoint &point);
     void drawWheelImage(const QSize &newSize);
     void drawIndicator(const int &hue);

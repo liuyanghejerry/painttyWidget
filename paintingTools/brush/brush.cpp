@@ -43,8 +43,7 @@ Brush::Brush(QObject *parent) :
     QVariantMap colorMap = this->defaultInfo()["color"].toMap();
     QColor c(colorMap["red"].toInt(),
             colorMap["green"].toInt(),
-            colorMap["blue"].toInt(),
-            colorMap["alpha"].toInt());
+            colorMap["blue"].toInt());
     this->setColor(c);
     this->setWidth(this->defaultInfo()["width"].toInt());
 }
@@ -445,7 +444,6 @@ QVariantMap Brush::brushInfo()
     colorMap.insert("red", this->color().red());
     colorMap.insert("green", this->color().green());
     colorMap.insert("blue", this->color().blue());
-    colorMap.insert("alpha", this->color().alpha());
     map.insert("width", QVariant(this->width()));
     map.insert("color", colorMap);
     map.insert("name", QVariant("Brush"));
@@ -466,7 +464,6 @@ QVariantMap Brush::defaultInfo()
     colorMap.insert("red", 254);
     colorMap.insert("green", 127);
     colorMap.insert("blue", 127);
-    colorMap.insert("alpha", 255);
 
     map.insert("color", colorMap);
     return map;

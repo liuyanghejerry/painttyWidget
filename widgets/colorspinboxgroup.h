@@ -19,13 +19,11 @@ public:
 signals:
     void colorChange(const QColor &c);
     void modeChange(const bool &isRgb);
-    void opacityChange(const int &o);
 public slots:
     void setColor(const QColor &c);
 private slots:
     void onModeChanged();
     void onColorChanged();
-    void onOpacityChanged();
     
 private:
     Ui::ColorSpinBoxGroup *ui;

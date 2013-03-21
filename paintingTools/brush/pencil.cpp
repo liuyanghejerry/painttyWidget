@@ -63,7 +63,6 @@ QVariantMap Pencil::brushInfo()
     colorMap.insert("red", pencil.color().red());
     colorMap.insert("green", pencil.color().green());
     colorMap.insert("blue", pencil.color().blue());
-    colorMap.insert("alpha", pencil.color().alpha());
     map.insert("width", QVariant(pencil.width()));
     map.insert("color", colorMap);
     map.insert("name", QVariant("Pencil"));
@@ -78,7 +77,6 @@ QVariantMap Pencil::defaultInfo()
     colorMap.insert("red", 0);
     colorMap.insert("green", 0);
     colorMap.insert("blue", 0);
-    colorMap.insert("alpha", 255);
     map.insert("color", colorMap);
     return map;
 }
