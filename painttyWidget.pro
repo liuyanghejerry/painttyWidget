@@ -54,7 +54,8 @@ SOURCES += main.cpp\
     singleshortcut.cpp \
     widgets/canvascontainer.cpp \
     widgets/memberlistwidget.cpp \
-    misc/errortable.cpp
+    misc/errortable.cpp \
+    paintingTools/brush/simplepen.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -91,7 +92,8 @@ HEADERS  += widgets/mainwindow.h \
     widgets/memberlistwidget.h \
     paintingTools/brush/basicbrush.h   \
     misc/router.h \
-    misc/errortable.h
+    misc/errortable.h \
+    paintingTools/brush/simplepen.h
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/developerconsole.ui \
