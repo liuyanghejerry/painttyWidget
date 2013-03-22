@@ -114,21 +114,12 @@ void MainWindow::init()
 
     layerWidgetInit();
     colorGridInit();
+    toolbarInit();
     viewInit();
-    // TODO: change below ugly way to load first brush
-    //    ui->pencilButton->click();
-
-    DeveloperConsole *console = new DeveloperConsole(this);
-
-    devConsoleShortCut = new QShortcut(this);
-    devConsoleShortCut->setKey(QString("F12"));
-    connect(devConsoleShortCut, SIGNAL(activated()),
-            console, SLOT(show()));
 
     shortcutInit();
     //    stylize();
     cmdSocketRouterInit();
-    toolbarInit();
 
     QTimer *t = new QTimer(this);
     t->setInterval(5000);
@@ -279,6 +270,9 @@ void MainWindow::toolbarInit()
                 tr("Shortcut: %1")
                 .arg(pickerShortcut->key()
                      .toString()));
+
+    // for width combobox
+
     //TODO: locking before complete connect
 }
 

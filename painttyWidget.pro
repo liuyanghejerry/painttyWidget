@@ -39,7 +39,6 @@ SOURCES += main.cpp\
     widgets/layeritem.cpp \
     widgets/iconcheckbox.cpp \
     layer.cpp \
-    widgets/developerconsole.cpp \
     paintingTools/brush/sketchbrush.cpp \
     paintingTools/brush/eraser.cpp \
     paintingTools/brush/brush.cpp \
@@ -74,7 +73,6 @@ HEADERS  += widgets/mainwindow.h \
     widgets/layeritem.h \
     widgets/iconcheckbox.h \
     layer.h \
-    widgets/developerconsole.h \
     paintingTools/brush/sketchbrush.h \
     paintingTools/brush/eraser.h \
     paintingTools/brush/brush.h \
@@ -96,7 +94,6 @@ HEADERS  += widgets/mainwindow.h \
     paintingTools/brush/simplepen.h
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
-    widgets/developerconsole.ui \
     widgets/colorspinboxgroup.ui \
     widgets/colorbox.ui \
     widgets/newroomwindow.ui \

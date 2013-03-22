@@ -30,7 +30,6 @@
 #include "../singleshortcut.h"
 #include "layerwidget.h"
 #include "colorgrid.h"
-#include "developerconsole.h"
 #include "aboutdialog.h"
 #include "../network/messagesocket.h"
 #include "../network/datasocket.h"
