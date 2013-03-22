@@ -21,8 +21,6 @@ public slots:
     void sendMessage(const QString &content);
     void newMessage(const QByteArray &array);
 private:
-//    QJson::Serializer serializer;
-//    QJson::Parser parser;
     QByteArray toJson(const QVariant &m);
     QVariant fromJson(const QByteArray &d);
 };

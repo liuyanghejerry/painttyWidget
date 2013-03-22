@@ -8,7 +8,7 @@ MainWindow::MainWindow(const QSize& canvasSize, QWidget *parent) :
     dataSocket(this),
     historySize_(0),
     canvasSize_(canvasSize),
-    lastBrushButton(nullptr)
+    lastBrushAction(nullptr)
 {
     ui->setupUi(this);
     ui->canvas->resize(canvasSize_);
@@ -45,72 +45,67 @@ void MainWindow::init()
     ui->layerWidget->setDisabled(true);
     ui->lineEdit->setDisabled(true);
     ui->pushButton->setDisabled(true);
-    ui->colorPicker->setDisabled(true);
 
-    connect(ui->spinBox,SIGNAL(valueChanged(int)),
-            ui->canvas,SLOT(setBrushWidth(int)));
-    connect(ui->lineEdit,SIGNAL(returnPressed()),
-            this,SLOT(onSendPressed()));
-    connect(ui->pushButton,SIGNAL(clicked()),
-            this,SLOT(onSendPressed()));
 
-    connect(&msgSocket,SIGNAL(connected()),
-            this,SLOT(onServerConnected()));
-    connect(&msgSocket,SIGNAL(disconnected()),
-            this,SLOT(onServerDisconnected()));
-    connect(&msgSocket,SIGNAL(newMessage(QString)),
-            this,SLOT(onNewMessage(const QString &)));
-    connect(this,SIGNAL(sendMessage(QString)),
-            &msgSocket,SLOT(sendMessage(QString)));
-    connect(&dataSocket,SIGNAL(connected()),
-            this,SLOT(onServerConnected()));
-    connect(&dataSocket,SIGNAL(newData(QByteArray)),
-            ui->canvas,SLOT(onNewData(const QByteArray&)));
-    connect(ui->canvas,SIGNAL(sendData(const QByteArray &)),
-            &dataSocket,SLOT(sendData(QByteArray)));
-    connect(&dataSocket,SIGNAL(disconnected()),
-            this,SLOT(onServerDisconnected()));
 
-    connect(ui->canvas, SIGNAL(newBrushSettings(QVariantMap)),
-            this, SLOT(onBrushSettingsChanged(QVariantMap)));
+    connect(ui->spinBox,
+            static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            ui->canvas,&Canvas::setBrushWidth);
+    connect(ui->lineEdit,&QLineEdit::returnPressed,
+            this,&MainWindow::onSendPressed);
+    connect(ui->pushButton,&QPushButton::clicked,
+            this,&MainWindow::onSendPressed);
 
-    connect(ui->layerWidget,SIGNAL(itemHide(QString)),
-            ui->canvas, SLOT(hideLayer(QString)));
-    connect(ui->layerWidget,SIGNAL(itemShow(QString)),
-            ui->canvas, SLOT(showLayer(QString)));
-    connect(ui->layerWidget,SIGNAL(itemLock(QString)),
-            ui->canvas, SLOT(lockLayer(QString)));
-    connect(ui->layerWidget,SIGNAL(itemUnlock(QString)),
-            ui->canvas, SLOT(unlockLayer(QString)));
-    connect(ui->layerWidget,SIGNAL(itemSelected(QString)),
-            ui->canvas, SLOT(layerSelected(QString)));
+    connect(&msgSocket,&MessageSocket::connected,
+            this,&MainWindow::onServerConnected);
+    connect(&msgSocket,&MessageSocket::disconnected,
+            this,&MainWindow::onServerDisconnected);
+    connect(&msgSocket,
+            static_cast<void (MessageSocket::*)(QString)>
+            (&MessageSocket::newMessage),
+            this,&MainWindow::onNewMessage);
+    connect(this,&MainWindow::sendMessage,
+            &msgSocket,&MessageSocket::sendMessage);
+    connect(&dataSocket,&DataSocket::connected,
+            this,&MainWindow::onServerConnected);
+    connect(&dataSocket,&DataSocket::newData,
+            ui->canvas,&Canvas::onNewData);
+    connect(ui->canvas,&Canvas::sendData,
+            &dataSocket,&DataSocket::sendData);
+    connect(&dataSocket,&DataSocket::disconnected,
+            this,&MainWindow::onServerDisconnected);
 
-    connect(ui->brushButton, SIGNAL(clicked()),
-            this, SLOT(onBrushTypeChange()));
-    connect(ui->pencilButton, SIGNAL(clicked()),
-            this, SLOT(onBrushTypeChange()));
-    connect(ui->sketchButton, SIGNAL(clicked()),
-            this, SLOT(onBrushTypeChange()));
-    connect(ui->eraserButton, SIGNAL(clicked()),
-            this, SLOT(onBrushTypeChange()));
+    connect(ui->canvas, &Canvas::newBrushSettings,
+            this, &MainWindow::onBrushSettingsChanged);
 
-    connect(ui->colorPicker, SIGNAL(clicked(bool)),
-            this, SLOT(onColorPickerPressed(bool)));
-    connect(ui->colorBox, SIGNAL(colorChanged(QColor)),
-            this, SIGNAL(brushColorChange(QColor)));
-    connect(this, SIGNAL(brushColorChange(QColor)),
-            ui->canvas, SLOT(setBrushColor(QColor)));
-    connect(ui->canvas, SIGNAL(pickColorComplete()),
-            this, SLOT(onPickColorComplete()));
+    connect(ui->layerWidget,&LayerWidget::itemHide,
+            ui->canvas, &Canvas::hideLayer);
+    connect(ui->layerWidget,&LayerWidget::itemShow,
+            ui->canvas, &Canvas::showLayer);
+    connect(ui->layerWidget,&LayerWidget::itemLock,
+            ui->canvas, &Canvas::lockLayer);
+    connect(ui->layerWidget,&LayerWidget::itemUnlock,
+            ui->canvas,  &Canvas::unlockLayer);
+    connect(ui->layerWidget,&LayerWidget::itemSelected,
+            ui->canvas, &Canvas::layerSelected);
 
-    connect(ui->colorGrid, SIGNAL(colorDroped(int)),
-            this, SLOT(onColorGridDroped(int)));
-    connect(ui->colorGrid, SIGNAL(colorPicked(int,QColor)),
-            this, SLOT(onColorGridPicked(int,QColor)));
-    connect(ui->panorama, SIGNAL(refresh()),
-            this, SLOT(onPanoramaRefresh()));
-    connect(ui->centralWidget, SIGNAL(rectChanged(QRect)),
-            ui->panorama, SLOT(onRectChange(QRect)));
+    connect(ui->colorBox, &ColorBox::colorChanged,
+            this, &MainWindow::brushColorChange);
+    connect(this, &MainWindow::brushColorChange,
+            ui->canvas, &Canvas::setBrushColor);
+    connect(ui->canvas, &Canvas::pickColorComplete,
+            this, &MainWindow::onPickColorComplete);
+
+    connect(ui->colorGrid,
+            static_cast<void (ColorGrid::*)(const int&)>
+            (&ColorGrid::colorDroped),
+            this, &MainWindow::onColorGridDroped);
+    connect(ui->colorGrid, &ColorGrid::colorPicked,
+            this, &MainWindow::onColorGridPicked);
+    connect(ui->panorama, &PanoramaWidget::refresh,
+            this, &MainWindow::onPanoramaRefresh);
+    connect(ui->centralWidget, &CanvasContainer::rectChanged,
+            ui->panorama, &PanoramaWidget::onRectChange);
     // use lambda to avoid that long static_cast :)
     connect(ui->panorama, &PanoramaWidget::moveTo,
             [&](const QPointF &p){
@@ -121,7 +116,7 @@ void MainWindow::init()
     colorGridInit();
     viewInit();
     // TODO: change below ugly way to load first brush
-    ui->pencilButton->click();
+    //    ui->pencilButton->click();
 
     DeveloperConsole *console = new DeveloperConsole(this);
 
@@ -133,6 +128,7 @@ void MainWindow::init()
     shortcutInit();
     //    stylize();
     cmdSocketRouterInit();
+    toolbarInit();
 
     QTimer *t = new QTimer(this);
     t->setInterval(5000);
@@ -206,6 +202,86 @@ void MainWindow::viewInit()
     }
 }
 
+void MainWindow::toolbarInit()
+{
+    // Brush name, action name, shortcut key
+    typedef std::tuple<QString, QString, Qt::Key> BrushCombo;
+    QList<BrushCombo> brushes{
+        std::make_tuple("Pencil", tr("Pencil"), Qt::Key_Z),
+                std::make_tuple("Brush", tr("Brush"), Qt::Key_A),
+                std::make_tuple("Sketch", tr("Sketch"), Qt::Key_S),
+                std::make_tuple("Eraser", tr("Eraser"), Qt::Key_E)
+    };
+
+    QToolBar *bar = new QToolBar("Brushes", this);
+    this->addToolBar(Qt::TopToolBarArea, bar);
+    QActionGroup *brushGroup = new QActionGroup(this);
+
+    // always remember last action
+    auto restoreAction =  [this](){
+        if(lastBrushAction){
+            lastBrushAction->trigger();
+        }
+    };
+
+    for(auto item: brushes){
+        // create action on tool bar
+        QAction * action = bar->addAction(std::get<1>(item));
+        action->setObjectName(std::get<0>(item));
+        connect(action, &QAction::triggered,
+                this, &MainWindow::onBrushTypeChange);
+        action->setCheckable(true);
+        action->setAutoRepeat(false);
+        brushGroup->addAction(action);
+
+        // set shortcut for the brush
+        SingleShortcut *shortcut = new SingleShortcut(this);
+        shortcut->setKey(std::get<2>(item));
+        connect(shortcut, &SingleShortcut::activated,
+                [=](){
+            lastBrushAction = brushGroup->checkedAction();
+            action->trigger();
+        });
+        connect(shortcut, &SingleShortcut::inactivated,
+                restoreAction);
+        action->setToolTip(
+                    tr("Shortcut: %1")
+                    .arg(shortcut->key()
+                         .toString()));
+        if(bar->actions().count() < 2){
+            action->trigger();
+        }
+    }
+
+
+    // doing hacking to color picker
+    QAction *colorpicker = bar->addAction(tr("Color Picker"));
+    colorpicker->setCheckable(true);
+    colorpicker->setAutoRepeat(false);
+    connect(colorpicker, &QAction::triggered,
+            this, &MainWindow::onColorPickerPressed);
+    brushGroup->addAction(colorpicker);
+
+    SingleShortcut *pickerShortcut = new SingleShortcut(this);
+    pickerShortcut->setKey(Qt::Key_C);
+    connect(pickerShortcut, &SingleShortcut::activated,
+            [=](){
+        colorpicker->trigger();
+    });
+    connect(pickerShortcut, &SingleShortcut::inactivated,
+            [=](){
+        if(lastBrushAction){
+            lastBrushAction->trigger();
+        }
+        onColorPickerPressed(false);
+    });
+    colorpicker->setToolTip(
+                tr("Shortcut: %1")
+                .arg(pickerShortcut->key()
+                     .toString()));
+    //TODO: locking before complete connect
+}
+
 QVariant MainWindow::getRoomKey()
 {
     QCryptographicHash hash(QCryptographicHash::Md5);
@@ -256,80 +332,6 @@ void MainWindow::shortcutInit()
     connect(widthActionAdd, SIGNAL(activated()),
             ui->spinBox, SLOT(stepUp()));
 
-    SingleShortcut *pencilShort = new SingleShortcut(this);
-    pencilShort->setKey(Qt::Key_Z);
-    connect(pencilShort, &SingleShortcut::activated,
-            [&](){
-        lastBrushButton =
-                ui->buttonGroup->checkedButton();
-        if(lastBrushButton)
-            ui->pencilButton->click();
-    });
-    connect(pencilShort, &SingleShortcut::inactivated,
-            [&](){
-        if(lastBrushButton)
-            lastBrushButton->click();
-    });
-
-    SingleShortcut *brushShort = new SingleShortcut(this);
-    brushShort->setKey(Qt::Key_A);
-    connect(brushShort, &SingleShortcut::activated,
-            [&](){
-        lastBrushButton =
-                ui->buttonGroup->checkedButton();
-        if(lastBrushButton)
-            ui->brushButton->click();
-    });
-    connect(brushShort, &SingleShortcut::inactivated,
-            [&](){
-        if(lastBrushButton)
-            lastBrushButton->click();
-    });
-
-    SingleShortcut *sketchShort = new SingleShortcut(this);
-    sketchShort->setKey(Qt::Key_S);
-    connect(sketchShort, &SingleShortcut::activated,
-            [&](){
-        lastBrushButton =
-                ui->buttonGroup->checkedButton();
-        if(lastBrushButton)
-            ui->sketchButton->click();
-    });
-    connect(sketchShort, &SingleShortcut::inactivated,
-            [&](){
-        if(lastBrushButton)
-            lastBrushButton->click();
-    });
-
-    SingleShortcut *eraserShort = new SingleShortcut(this);
-    eraserShort->setKey(Qt::Key_E);
-    connect(eraserShort, &SingleShortcut::activated,
-            [&](){
-        lastBrushButton =
-                ui->buttonGroup->checkedButton();
-        if(lastBrushButton)
-            ui->eraserButton->click();
-    });
-    connect(eraserShort, &SingleShortcut::inactivated,
-            [&](){
-        if(lastBrushButton)
-            lastBrushButton->click();
-    });
-
-    SingleShortcut *pickerShort = new SingleShortcut(this);
-    pickerShort->setKey(Qt::Key_C);
-    connect(pickerShort, &SingleShortcut::activated,
-            [&](){
-        lastBrushButton =
-                ui->buttonGroup->checkedButton();
-        if(lastBrushButton)
-            ui->colorPicker->click();
-    });
-    connect(pickerShort, &SingleShortcut::inactivated,
-            [&](){
-        if(lastBrushButton)
-            lastBrushButton->click();
-    });
 
     connect(ui->action_Quit, SIGNAL(triggered()),
             this, SLOT(close()));
@@ -405,7 +407,7 @@ void MainWindow::onServerConnected()
         ui->layerWidget->setEnabled(true);
         ui->lineEdit->setEnabled(true);
         ui->pushButton->setEnabled(true);
-        ui->colorPicker->setEnabled(true);
+        //        ui->colorPicker->setEnabled(true);
     }
 }
 
@@ -575,19 +577,11 @@ void MainWindow::onPanoramaRefresh()
 void MainWindow::onColorPickerPressed(bool c)
 {
     ui->canvas->onColorPicker(c);
-    ui->pencilButton->setEnabled(!c);
-    ui->brushButton->setEnabled(!c);
-    ui->sketchButton->setEnabled(!c);
-    ui->eraserButton->setEnabled(!c);
 }
 
 void MainWindow::onPickColorComplete()
 {
-    ui->colorPicker->setChecked(false);
-    ui->pencilButton->setEnabled(true);
-    ui->brushButton->setEnabled(true);
-    ui->sketchButton->setEnabled(true);
-    ui->eraserButton->setEnabled(true);
+
 }
 
 void MainWindow::remoteAddLayer(const QString &layerName)
@@ -642,8 +636,8 @@ void MainWindow::clearLayer(const QString &name)
                                         tr("OMG"),
                                         tr("You're going to clear layer %1. "
                                            "All the work of that layer"
-                                            "will be deleted and CANNOT be undone.\n"
-                                            "Do you really want to do so?").arg(name),
+                                           "will be deleted and CANNOT be undone.\n"
+                                           "Do you really want to do so?").arg(name),
                                         QMessageBox::Yes|QMessageBox::No);
     if(result == QMessageBox::Yes){
         ui->canvas->clearLayer(name);
@@ -685,7 +679,7 @@ void MainWindow::deleteLayer(const QString &name)
     if(sucess) ui->layerWidget->removeItem(name);
 }
 
-void MainWindow::closeEvent ( QCloseEvent * event )
+void MainWindow::closeEvent( QCloseEvent * event )
 {
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),

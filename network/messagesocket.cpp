@@ -4,7 +4,8 @@ MessageSocket::MessageSocket(QObject *parent) :
     Socket(parent)
 {
 //    serializer.setIndentMode(QJson::IndentCompact);
-    connect(this,SIGNAL(newData(QByteArray)),this,SLOT(newMessage(QByteArray)));
+    connect(this,SIGNAL(newData(QByteArray)),
+            this,SLOT(newMessage(QByteArray)));
 }
 
 MessageSocket::~MessageSocket()
@@ -23,8 +24,6 @@ void MessageSocket::sendMessage(const QString &content)
 
 void MessageSocket::newMessage(const QByteArray &array)
 {
-    //    qDebug() << "thread" << QThread::currentThreadId();
-//    qDebug()<<QString::fromUtf8(array.data(), array.size());
     QVariantMap map = fromJson(array).toMap();
     if(!map.contains("content")) return;
 

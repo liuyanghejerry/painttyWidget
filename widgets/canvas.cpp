@@ -181,7 +181,6 @@ void Canvas::changeBrush(const QString &name)
     QPointF lp = brush_->lastPoint();
 
     QString brushName = name.toLower();
-    brushName.chop(6);
     if(localBrush.contains(brushName)){
         brush_ = localBrush[brushName];
         currentSettings = brush_->brushInfo();

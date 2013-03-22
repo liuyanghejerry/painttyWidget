@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <tuple>
+
 #include <QMainWindow>
 #include <QCloseEvent>
 #include <QScrollBar>
@@ -79,6 +81,7 @@ private:
     void layerWidgetInit();
     void colorGridInit();
     void viewInit();
+    void toolbarInit();
     void shortcutInit();
     void cmdSocketRouterInit();
     QVariant getRoomKey();
@@ -96,7 +99,7 @@ private:
     QSize canvasSize_;
     QShortcut *devConsoleShortCut;
     QByteArray defaultView;
-    QAbstractButton *lastBrushButton;
+    QAction *lastBrushAction;
     Router<> cmdRouter_;
 private slots:
     void onServerConnected();

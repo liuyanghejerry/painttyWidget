@@ -59,9 +59,9 @@ LayerItem* LayerWidget::itemAt(int index)
 void LayerWidget::addItem(LayerItem *item)
 {
     layout_->insertWidget(0,item);
-    connect(item,SIGNAL(selected()),this,SLOT(itemSelected()));
-    connect(item,SIGNAL(hide(bool)),this,SLOT(itemHidden()));
-    connect(item,SIGNAL(lock(bool)),this,SLOT(itemLocked()));
+    connect(item,SIGNAL(selected()),this,SLOT(onItemSelected()));
+    connect(item,SIGNAL(hide(bool)),this,SLOT(onItemHidden()));
+    connect(item,SIGNAL(lock(bool)),this,SLOT(onItemLocked()));
 }
 
 void LayerWidget::removeItem(LayerItem *item)
@@ -81,7 +81,7 @@ void LayerWidget::removeItem(const QString &name)
     }
 }
 
-void LayerWidget::itemSelected()
+void LayerWidget::onItemSelected()
 {
     LayerItem *item = qobject_cast<LayerItem *>(sender());
     if(!item) return;
@@ -93,7 +93,7 @@ void LayerWidget::itemSelected()
     emit itemSelected(item->label());
 }
 
-void LayerWidget::itemHidden()
+void LayerWidget::onItemHidden()
 {
     LayerItem *item = qobject_cast<LayerItem *>(sender());
     if(!item) return;
@@ -107,7 +107,7 @@ void LayerWidget::itemHidden()
     }
 }
 
-void LayerWidget::itemLocked()
+void LayerWidget::onItemLocked()
 {
     LayerItem *item = qobject_cast<LayerItem *>(sender());
     if(!item) return;

@@ -3,14 +3,16 @@
 
 #include <QObject>
 #include <QKeyEvent>
+#include <QKeySequence>
 
 class SingleShortcut : public QObject
 {
     Q_OBJECT
 public:
     explicit SingleShortcut(QObject *parent = 0);
-    bool setKey(int k);
-    int key();
+    void setKey(int k);
+    void setKey(QKeySequence ks);
+    QKeySequence key();
     bool eventFilter(QObject *obj, QEvent *event);
     
 signals:
@@ -20,7 +22,7 @@ signals:
 public slots:
     void setEnabled(bool e);
 private:
-    int key_;
+    QKeySequence key_;
     bool enabled_;
     
 };

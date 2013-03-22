@@ -27,9 +27,9 @@ signals:
     void itemUnlock(QString);
     
 private slots:
-    void itemSelected();
-    void itemHidden();
-    void itemLocked();
+    void onItemSelected();
+    void onItemHidden();
+    void onItemLocked();
 private:
     QScrollArea *scrollArea_;
     LayerWidgetHeader *header_;
