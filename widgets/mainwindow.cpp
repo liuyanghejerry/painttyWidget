@@ -8,7 +8,11 @@ MainWindow::MainWindow(const QSize& canvasSize, QWidget *parent) :
     dataSocket(this),
     historySize_(0),
     canvasSize_(canvasSize),
-    lastBrushAction(nullptr)
+    lastBrushAction(nullptr),
+    widthControl_(nullptr),
+    toolbar_(nullptr),
+    brushActionGroup_(nullptr),
+    colorPickerButton_(nullptr)
 {
     ui->setupUi(this);
     ui->canvas->resize(canvasSize_);
@@ -47,10 +51,6 @@ void MainWindow::init()
     ui->pushButton->setDisabled(true);
 
 
-
-    connect(ui->spinBox,
-            static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
-            ui->canvas,&Canvas::setBrushWidth);
     connect(ui->lineEdit,&QLineEdit::returnPressed,
             this,&MainWindow::onSendPressed);
     connect(ui->pushButton,&QPushButton::clicked,
@@ -204,9 +204,9 @@ void MainWindow::toolbarInit()
                 std::make_tuple("Eraser", tr("Eraser"), Qt::Key_E)
     };
 
-    QToolBar *bar = new QToolBar("Brushes", this);
-    this->addToolBar(Qt::TopToolBarArea, bar);
-    QActionGroup *brushGroup = new QActionGroup(this);
+    toolbar_ = new QToolBar("Brushes", this);
+    this->addToolBar(Qt::TopToolBarArea, toolbar_);
+    brushActionGroup_ = new QActionGroup(this);
 
     // always remember last action
     auto restoreAction =  [this](){
@@ -217,20 +217,20 @@ void MainWindow::toolbarInit()
 
     for(auto item: brushes){
         // create action on tool bar
-        QAction * action = bar->addAction(std::get<1>(item));
+        QAction * action = toolbar_->addAction(std::get<1>(item));
         action->setObjectName(std::get<0>(item));
         connect(action, &QAction::triggered,
                 this, &MainWindow::onBrushTypeChange);
         action->setCheckable(true);
         action->setAutoRepeat(false);
-        brushGroup->addAction(action);
+        brushActionGroup_->addAction(action);
 
         // set shortcut for the brush
         SingleShortcut *shortcut = new SingleShortcut(this);
         shortcut->setKey(std::get<2>(item));
         connect(shortcut, &SingleShortcut::activated,
                 [=](){
-            lastBrushAction = brushGroup->checkedAction();
+            lastBrushAction = brushActionGroup_->checkedAction();
             action->trigger();
         });
         connect(shortcut, &SingleShortcut::inactivated,
@@ -239,39 +239,56 @@ void MainWindow::toolbarInit()
                     tr("Shortcut: %1")
                     .arg(shortcut->key()
                          .toString()));
-        if(bar->actions().count() < 2){
+        if(toolbar_->actions().count() < 2){
             action->trigger();
         }
     }
 
 
     // doing hacking to color picker
-    QAction *colorpicker = bar->addAction(tr("Color Picker"));
+    QAction *colorpicker = toolbar_->addAction(tr("Color Picker"));
     colorpicker->setCheckable(true);
     colorpicker->setAutoRepeat(false);
-    connect(colorpicker, &QAction::triggered,
-            this, &MainWindow::onColorPickerPressed);
-    brushGroup->addAction(colorpicker);
+    // we need a real QToolButton to know weather the picker is
+    // canceled by hand
+    auto l = colorpicker->associatedWidgets();
+    if(l.count() > 1){
+        QToolButton *b = qobject_cast<QToolButton *>(l[1]);
+        if(b){
+            colorPickerButton_ = b;
+            connect(b, &QToolButton::clicked,
+                    this, &MainWindow::onColorPickerPressed);
 
-    SingleShortcut *pickerShortcut = new SingleShortcut(this);
-    pickerShortcut->setKey(Qt::Key_C);
-    connect(pickerShortcut, &SingleShortcut::activated,
-            [=](){
-        colorpicker->trigger();
-    });
-    connect(pickerShortcut, &SingleShortcut::inactivated,
-            [=](){
-        if(lastBrushAction){
-            lastBrushAction->trigger();
+            SingleShortcut *pickerShortcut = new SingleShortcut(this);
+            pickerShortcut->setKey(Qt::Key_C);
+            connect(pickerShortcut, &SingleShortcut::activated,
+                    b, &QToolButton::click);
+            connect(pickerShortcut, &SingleShortcut::inactivated,
+                    b, &QToolButton::click);
+            colorpicker->setToolTip(
+                        tr("Shortcut: %1")
+                        .arg(pickerShortcut->key()
+                             .toString()));
         }
-        onColorPickerPressed(false);
-    });
-    colorpicker->setToolTip(
-                tr("Shortcut: %1")
-                .arg(pickerShortcut->key()
-                     .toString()));
+    }
 
-    // for width combobox
+    // for brush width
+    BrushWidthWidget * widthWidget = new BrushWidthWidget(this);
+    connect(widthWidget, &BrushWidthWidget::valueChanged,
+            ui->canvas, &Canvas::setBrushWidth);
+
+    QShortcut* widthActionSub = new QShortcut(this);
+    widthActionSub->setKey(Qt::Key_Q);
+    connect(widthActionSub, SIGNAL(activated()),
+            widthWidget, SLOT(down()));
+    QShortcut* widthActionAdd = new QShortcut(this);
+    widthActionAdd->setKey(Qt::Key_W);
+    connect(widthActionAdd, SIGNAL(activated()),
+            widthWidget, SLOT(up()));
+    widthControl_ = widthWidget;
+
+    toolbar_->addSeparator();
+    toolbar_->addWidget(widthWidget);
 
     //TODO: locking before complete connect
 }
@@ -317,16 +334,6 @@ void MainWindow::requestOnlinelist()
 
 void MainWindow::shortcutInit()
 {
-    QShortcut* widthActionSub = new QShortcut(this);
-    widthActionSub->setKey(Qt::Key_Q);
-    connect(widthActionSub, SIGNAL(activated()),
-            ui->spinBox, SLOT(stepDown()));
-    QShortcut* widthActionAdd = new QShortcut(this);
-    widthActionAdd->setKey(Qt::Key_W);
-    connect(widthActionAdd, SIGNAL(activated()),
-            ui->spinBox, SLOT(stepUp()));
-
-
     connect(ui->action_Quit, SIGNAL(triggered()),
             this, SLOT(close()));
     connect(ui->actionExport_All, SIGNAL(triggered()),
@@ -555,8 +562,10 @@ void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
 
     // INFO: to prevent scaled to 1px, should always
     // change width first
-    if(ui->spinBox->value() != w)
-        ui->spinBox->setValue(w);
+    if(widthControl_){
+        if(widthControl_->value() != w)
+            widthControl_->setValue(w);
+    }
     if(ui->colorBox->color() != c)
         ui->colorBox->setColor(c);
 
@@ -571,11 +580,19 @@ void MainWindow::onPanoramaRefresh()
 void MainWindow::onColorPickerPressed(bool c)
 {
     ui->canvas->onColorPicker(c);
+    if(brushActionGroup_){
+        brushActionGroup_->setDisabled(c);
+    }
 }
 
 void MainWindow::onPickColorComplete()
 {
-
+    if(brushActionGroup_){
+        brushActionGroup_->setDisabled(false);
+    }
+    if(colorPickerButton_){
+        colorPickerButton_->setChecked(false);
+    }
 }
 
 void MainWindow::remoteAddLayer(const QString &layerName)

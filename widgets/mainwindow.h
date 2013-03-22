@@ -7,6 +7,7 @@
 #include <QCloseEvent>
 #include <QScrollBar>
 #include <QToolBar>
+#include <QToolButton>
 #include <QCheckBox>
 #include <QTableWidgetItem>
 #include <QShortcut>
@@ -31,6 +32,7 @@
 #include "layerwidget.h"
 #include "colorgrid.h"
 #include "aboutdialog.h"
+#include "brushwidthwidget.h"
 #include "../network/messagesocket.h"
 #include "../network/datasocket.h"
 #include "../network/commandsocket.h"
@@ -96,10 +98,13 @@ private:
     QString roomName_;
     quint64 historySize_;
     QSize canvasSize_;
-    QShortcut *devConsoleShortCut;
     QByteArray defaultView;
     QAction *lastBrushAction;
     Router<> cmdRouter_;
+    BrushWidthWidget *widthControl_;
+    QToolBar *toolbar_;
+    QActionGroup *brushActionGroup_;
+    QToolButton *colorPickerButton_;
 private slots:
     void onServerConnected();
     void onServerDisconnected();

@@ -54,7 +54,8 @@ SOURCES += main.cpp\
     widgets/canvascontainer.cpp \
     widgets/memberlistwidget.cpp \
     misc/errortable.cpp \
-    paintingTools/brush/simplepen.cpp
+    paintingTools/brush/simplepen.cpp \
+    widgets/brushwidthwidget.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -91,13 +92,15 @@ HEADERS  += widgets/mainwindow.h \
     paintingTools/brush/basicbrush.h   \
     misc/router.h \
     misc/errortable.h \
-    paintingTools/brush/simplepen.h
+    paintingTools/brush/simplepen.h \
+    widgets/brushwidthwidget.h
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/colorspinboxgroup.ui \
     widgets/colorbox.ui \
     widgets/newroomwindow.ui \
-    widgets/aboutdialog.ui
+    widgets/aboutdialog.ui \
+    widgets/brushwidthwidget.ui
 
 UI_DIR = $${PWD}/widgets/
 
