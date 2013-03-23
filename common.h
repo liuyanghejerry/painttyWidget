@@ -14,7 +14,7 @@ const static char HOST_ADDR[] = "192.168.1.111";
 const static int HOST_MGR_PORT = 7070;
 #else
 const static char HOST_ADDR[] = "42.121.85.47";
-const static int HOST_MGR_PORT = 7070;
+const static int HOST_MGR_PORT = 3030;
 #endif
 } // namespace GlobalDef
 
