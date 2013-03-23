@@ -320,12 +320,12 @@ void Canvas::pickColor(const QPoint &point)
 
 void Canvas::updateCursor(const int &width)
 {
-    int r_width = width+10;
-    QPixmap img(r_width, r_width);
+    int r_width = width;
+    QPixmap img(r_width+1, r_width+1); // +1 for a border padding
     img.fill(Qt::transparent);
     QPainter painter(&img);
-    painter.drawEllipse(0, 0, r_width/2, r_width/2);
-    this->setCursor(QCursor(img, r_width/4, r_width/4));
+    painter.drawEllipse(0, 0, r_width, r_width);
+    this->setCursor(QCursor(img, r_width/2, r_width/2));
 }
 
 /*!
