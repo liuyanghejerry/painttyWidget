@@ -197,12 +197,11 @@ void MainWindow::toolbarInit()
 {
     // Brush name, action name, shortcut key
     typedef std::tuple<QString, QString, Qt::Key> BrushCombo;
-    QList<BrushCombo> brushes{
-        std::make_tuple("Pencil", tr("Pencil"), Qt::Key_Z),
-                std::make_tuple("Brush", tr("Brush"), Qt::Key_A),
-                std::make_tuple("Sketch", tr("Sketch"), Qt::Key_S),
-                std::make_tuple("Eraser", tr("Eraser"), Qt::Key_E)
-    };
+    QList<BrushCombo> brushes;
+    brushes << std::make_tuple("Pencil", tr("Pencil"), Qt::Key_Z)
+            << std::make_tuple("Brush", tr("Brush"), Qt::Key_A)
+            << std::make_tuple("Sketch", tr("Sketch"), Qt::Key_S)
+            << std::make_tuple("Eraser", tr("Eraser"), Qt::Key_E);
 
     toolbar_ = new QToolBar("Brushes", this);
     toolbar_->setObjectName("toolbar");
