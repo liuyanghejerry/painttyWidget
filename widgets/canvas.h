@@ -38,6 +38,7 @@ public:
     virtual QSize minimumSizeHint () const;
 
 public slots:
+    void setShareColor(bool b);
     void setBrushColor(const QColor &newColor);
     void setBrushWidth(int newWidth);
     void onNewData(const QByteArray & data);
@@ -107,6 +108,7 @@ private:
     BrushPointer brush_;
     quint64 userid_; // in room
     int historySize_;
+    bool shareColor_;
     QHash<quint64, BrushPointer> remoteBrush;
     QHash<QString, BrushPointer> localBrush;
     QSharedPointer<ColorPicker> colorPicker;

@@ -31,7 +31,8 @@ Canvas::Canvas(QWidget *parent) :
     canvasSize(3240,2160),
     image(canvasSize),
     layerNameCounter(0),
-    historySize_(0)
+    historySize_(0),
+    shareColor_(true)
 {
     setAttribute(Qt::WA_StaticContents);
 //    setBaseSize(canvasSize);
@@ -39,7 +40,7 @@ Canvas::Canvas(QWidget *parent) :
     drawing = false;
     opacity = 1.0;
     brush_ = BrushPointer(new Brush(this));
-    changeBrush("pencilButton");
+    changeBrush("pencil");
     updateCursor(brush_->width());
 
     setMouseTracking(true);
@@ -65,6 +66,7 @@ Canvas::~Canvas()
     \warning You don't need to call this function manually since it will be called in constructor.
 */
 
+// TODO: use global user id instead
 void Canvas::genUserid()
 {
     userid_ = quint64(&userid_); // treat as ramdom number
@@ -116,6 +118,11 @@ QPixmap Canvas::allCanvas()
 QVariantMap Canvas::brushInfo()
 {
     return brush_->brushInfo();
+}
+
+void Canvas::setShareColor(bool b)
+{
+    shareColor_ = b;
 }
 
 /*!
@@ -179,6 +186,8 @@ void Canvas::changeBrush(const QString &name)
     QVariantMap currentSettings;
     QPixmap *sur = brush_->surface();
     QPointF lp = brush_->lastPoint();
+    QVariantMap colorMap = brush_->brushInfo()
+            .value("color").toMap();
 
     QString brushName = name.toLower();
     if(localBrush.contains(brushName)){
@@ -188,6 +197,10 @@ void Canvas::changeBrush(const QString &name)
         brush_ = brushFactory(brushName);
         localBrush.insert(brushName, brush_);
         currentSettings = brush_->defaultInfo();
+    }
+    // share same color between brushes
+    if(shareColor_){
+        currentSettings["color"] = colorMap;
     }
 
     brush_->setLastPoint(lp);
@@ -338,7 +351,6 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
     QColor color(colorMap["red"].toInt(),
             colorMap["green"].toInt(),
             colorMap["blue"].toInt());
-//    QColor color = brushInfo["color"].value<QColor>();
 
     if(remoteBrush.contains(userid)){
         BrushPointer t = remoteBrush[userid];

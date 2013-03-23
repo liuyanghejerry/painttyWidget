@@ -105,7 +105,6 @@ void NewRoomWindow::onOk()
         }
     }
 
-    // TODO: due with size
     int width = ui->width_input->text().toInt();
     int height = ui->height_input->text().toInt();
     if(width > 3240 || height > 2160){

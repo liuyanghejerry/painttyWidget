@@ -28,7 +28,7 @@
 #include <QCryptographicHash>
 
 #include "../common.h"
-#include "../singleshortcut.h"
+#include "../misc/singleshortcut.h"
 #include "layerwidget.h"
 #include "colorgrid.h"
 #include "aboutdialog.h"

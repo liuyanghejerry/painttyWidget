@@ -51,6 +51,7 @@ private slots:
     void saveNick();
 protected:
     void hideEvent(QHideEvent *);
+    void showEvent(QShowEvent *);
     void closeEvent(QCloseEvent *e);
     
 private:

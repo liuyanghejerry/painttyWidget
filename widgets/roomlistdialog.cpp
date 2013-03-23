@@ -388,13 +388,15 @@ void RoomListDialog::saveNick()
     settings.sync();
 }
 
-void RoomListDialog::hideEvent( QHideEvent * )
+void RoomListDialog::hideEvent(QHideEvent *)
 {
-    if(this->isHidden()){
-        timer->stop();
-    }else{
-        timer->start(10000);
-    }
+    timer->stop();
+}
+
+void RoomListDialog::showEvent(QShowEvent *)
+{
+    requestRoomList();
+    timer->start(10000);
 }
 
 void RoomListDialog::closeEvent(QCloseEvent *e)

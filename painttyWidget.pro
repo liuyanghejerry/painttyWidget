@@ -50,7 +50,7 @@ SOURCES += main.cpp\
     network/commandsocket.cpp \
     widgets/aboutdialog.cpp \
     widgets/panoramawidget.cpp \
-    singleshortcut.cpp \
+    misc/singleshortcut.cpp \
     widgets/canvascontainer.cpp \
     widgets/memberlistwidget.cpp \
     misc/errortable.cpp \
@@ -86,7 +86,7 @@ HEADERS  += widgets/mainwindow.h \
     widgets/aboutdialog.h \
     common.h \
     widgets/panoramawidget.h \
-    singleshortcut.h \
+    misc/singleshortcut.h \
     widgets/canvascontainer.h \
     widgets/memberlistwidget.h \
     paintingTools/brush/basicbrush.h   \

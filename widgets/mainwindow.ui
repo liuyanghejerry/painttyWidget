@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>963</width>
+    <width>856</width>
     <height>346</height>
    </rect>
   </property>
@@ -14,16 +14,7 @@
    <string>Mr.Paint</string>
   </property>
   <widget class="CanvasContainer" name="centralWidget">
-   <widget class="Canvas" name="canvas" native="true">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>100</width>
-      <height>30</height>
-     </rect>
-    </property>
-   </widget>
+   <widget class="Canvas" name="canvas" native="true"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="windowTitle">
@@ -54,16 +45,6 @@
      </item>
      <item>
       <widget class="ColorGrid" name="colorGrid" native="true"/>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="checkBox">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>Share Brush Settings</string>
-       </property>
-      </widget>
      </item>
      <item>
       <spacer name="verticalSpacer_2">
@@ -193,7 +174,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>963</width>
+     <width>856</width>
      <height>23</height>
     </rect>
    </property>

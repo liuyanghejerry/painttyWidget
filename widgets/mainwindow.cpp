@@ -205,6 +205,7 @@ void MainWindow::toolbarInit()
     };
 
     toolbar_ = new QToolBar("Brushes", this);
+    toolbar_->setObjectName("toolbar");
     this->addToolBar(Qt::TopToolBarArea, toolbar_);
     brushActionGroup_ = new QActionGroup(this);
 
