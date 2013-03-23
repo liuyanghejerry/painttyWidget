@@ -156,7 +156,6 @@ void RoomListDialog::onServerData(const QByteArray &array)
 
 void RoomListDialog::onManagerResponseRoomlist(const QJsonObject &obj)
 {
-    // TODO: add errcode
     if(!obj["result"].toBool())
         return;
     QJsonArray list;
