@@ -53,22 +53,21 @@ void initTranslation()
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
                        qApp);
-    QString locale = settings.value("global/language",
-                                    QLocale::system().name())
-            .toString();
-    if(locale.isEmpty()){
-        qWarning()<<"Empty locale!";
-        return;
-    }
 
     QTranslator *qtTranslator = new QTranslator(qApp);
-    qtTranslator->load(":/translation/qt_"
-                       + locale);
-    QCoreApplication::installTranslator(qtTranslator);
-
     QTranslator *myappTranslator = new QTranslator(qApp);
-    myappTranslator->load(":/translation/paintty_"
-                          + locale);
+
+    QString locale = settings.value("global/language", "")
+            .toString();
+    if(locale.isEmpty()) {
+        qtTranslator->load(QLocale::system(), "qt", "_", ":/translation", ".qm");
+        myappTranslator->load(QLocale::system(), "paintty", "_", ":/translation", ".qm");
+    }
+    else {
+        qtTranslator->load(QString("qt_%1").arg(locale), ":/translation", "_", ".qm");
+        myappTranslator->load(QString("paintty_%1").arg(locale), ":/translation", "_", ".qm");
+    }
+    QCoreApplication::installTranslator(qtTranslator);
     QCoreApplication::installTranslator(myappTranslator);
 }
 

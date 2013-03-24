@@ -2,16 +2,12 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>856</width>
-    <height>346</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Mr.Paint</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../resources.qrc">
+    <normaloff>:/iconset/icon.png</normaloff>:/iconset/icon.png</iconset>
   </property>
   <widget class="CanvasContainer" name="centralWidget">
    <widget class="Canvas" name="canvas" native="true"/>
@@ -28,16 +24,7 @@
      <property name="spacing">
       <number>2</number>
      </property>
-     <property name="leftMargin">
-      <number>2</number>
-     </property>
-     <property name="topMargin">
-      <number>2</number>
-     </property>
-     <property name="rightMargin">
-      <number>2</number>
-     </property>
-     <property name="bottomMargin">
+     <property name="margin">
       <number>2</number>
      </property>
      <item>
@@ -71,16 +58,7 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QGridLayout" name="gridLayout">
-     <property name="leftMargin">
-      <number>2</number>
-     </property>
-     <property name="topMargin">
-      <number>2</number>
-     </property>
-     <property name="rightMargin">
-      <number>2</number>
-     </property>
-     <property name="bottomMargin">
+     <property name="margin">
       <number>2</number>
      </property>
      <property name="spacing">
@@ -151,16 +129,7 @@
      <property name="spacing">
       <number>2</number>
      </property>
-     <property name="leftMargin">
-      <number>2</number>
-     </property>
-     <property name="topMargin">
-      <number>2</number>
-     </property>
-     <property name="rightMargin">
-      <number>2</number>
-     </property>
-     <property name="bottomMargin">
+     <property name="margin">
       <number>2</number>
      </property>
      <item>
@@ -175,7 +144,7 @@
      <x>0</x>
      <y>0</y>
      <width>856</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -244,16 +213,7 @@
      <property name="spacing">
       <number>2</number>
      </property>
-     <property name="leftMargin">
-      <number>2</number>
-     </property>
-     <property name="topMargin">
-      <number>2</number>
-     </property>
-     <property name="rightMargin">
-      <number>2</number>
-     </property>
-     <property name="bottomMargin">
+     <property name="margin">
       <number>2</number>
      </property>
      <item>
@@ -392,6 +352,8 @@
    <header>memberlistwidget.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

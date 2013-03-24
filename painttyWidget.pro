@@ -89,7 +89,7 @@ HEADERS  += widgets/mainwindow.h \
     misc/singleshortcut.h \
     widgets/canvascontainer.h \
     widgets/memberlistwidget.h \
-    paintingTools/brush/basicbrush.h   \
+    paintingTools/brush/basicbrush.h \
     misc/router.h \
     misc/errortable.h \
     paintingTools/brush/simplepen.h \
@@ -104,6 +104,10 @@ FORMS    += widgets/mainwindow.ui \
 
 UI_DIR = $${PWD}/widgets/
 
-TRANSLATIONS += translation/paintty_zh_CN.ts
+TRANSLATIONS += translation/paintty_zh_CN.ts \ #Simplified Chinese
+    translation/paintty_zh_TW.ts \ #Traditional Chinese
+#    translation/paintty_zh_HK.ts \
+#    translation/paintty_zh_MO.ts
+    translation/paintty_ja.ts #Japanese
 
 RESOURCES += resources.qrc
