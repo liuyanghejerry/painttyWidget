@@ -11,7 +11,7 @@
 #include <QJsonDocument>
 
 
-#include "../layermanager.h"
+#include "../misc/layermanager.h"
 #include "../paintingTools/brush/abstractbrush.h"
 #include "../paintingTools/brush/brush.h"
 #include "../paintingTools/brush/sketchbrush.h"
