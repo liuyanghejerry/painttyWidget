@@ -39,7 +39,7 @@ Canvas::Canvas(QWidget *parent) :
     inPicker = false;
     drawing = false;
     opacity = 1.0;
-    brush_ = BrushPointer(new Brush(this));
+    brush_ = BrushPointer(new Brush);
     changeBrush("pencil");
     updateCursor(brush_->width());
 
@@ -159,16 +159,16 @@ BrushPointer Canvas::brushFactory(const QString &name)
     BrushPointer b;
     QString n_name = name.toLower();
     if(n_name == "brush"){
-        b = BrushPointer(new Brush(this));
+        b = BrushPointer(new Brush);
     }else if(n_name == "pencil"){
-        b = BrushPointer(new Pencil(this));
+        b = BrushPointer(new Pencil);
     }else if(n_name == "sketch"){
-        b = BrushPointer(new SketchBrush(this));
+        b = BrushPointer(new SketchBrush);
     }else if(n_name == "eraser"){
-        b = BrushPointer(new Eraser(this));
+        b = BrushPointer(new Eraser);
     }else{
         qDebug()<<name<<"cannot identify";
-        return BrushPointer(new Brush(this));
+        return BrushPointer(new Brush);
     }
     return b;
 }

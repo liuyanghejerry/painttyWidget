@@ -1,14 +1,13 @@
 #include "sketchbrush.h"
 
-SketchBrush::SketchBrush(QObject *parent) :
-    Brush(parent)
+SketchBrush::SketchBrush()
 {
 
 }
 
-bool SketchBrush::loadStencil(const QString &)
+SketchBrush::~SketchBrush()
 {
-    return true;
+
 }
 
 void SketchBrush::setColor(const QColor &color)
@@ -28,7 +27,6 @@ void SketchBrush::setWidth(int w)
 
 void SketchBrush::start(const QPointF &st)
 {
-    clear();
     preparePen();
     leftOverDistance = 0;
     points.clear();
@@ -47,7 +45,6 @@ void SketchBrush::preparePen()
 
 void SketchBrush::lineTo(const QPointF &st)
 {
-    clear();
     if(lastPoint_.isNull()){
         start(st);
         return;
@@ -74,11 +71,7 @@ void SketchBrush::sketch()
         points.pop_front();
 
         QPainter painter;
-        if(directDraw_ && surface_){
-            painter.begin(surface_);
-        }else{
-            painter.begin(&result);
-        }
+        painter.begin(surface_);
         painter.setRenderHint(QPainter::Antialiasing);
         painter.strokePath(path, sketchPen);
     }

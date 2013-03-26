@@ -1,15 +1,14 @@
 #include "eraser.h"
 
-Eraser::Eraser(QObject *parent) :
-    Brush(parent),
+Eraser::Eraser() :
     width_(100)
 {
     mainColor = Qt::transparent;
 }
 
-bool Eraser::loadStencil(const QString &)
+Eraser::~Eraser()
 {
-    return true;
+    //
 }
 
 void Eraser::setColor(const QColor &)

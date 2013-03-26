@@ -1,60 +1,37 @@
 #ifndef BRUSH_H
 #define BRUSH_H
 
-#include <QObject>
-#include <QPoint>
-#include <QPainter>
-#include <QFile>
-#include <QImage>
-#include <QVariantMap>
-#include <QtCore/qmath.h>
+#include "abstractbrush.h"
 
-class Brush : public QObject
+class Brush : public AbstractBrush
 {
-    Q_OBJECT
 public:
-    explicit Brush(QObject *parent = 0);
+    Brush();
     ~Brush();
-    virtual bool loadStencil(const QString &fileName);
-    void setSize(const QSize &s);
-    virtual int width();
-    virtual void setWidth(int w);
-    void setDirectDraw(bool enable);
-    bool isDirectDraw();
-    QPointF lastPoint();
-    virtual void setLastPoint(const QPointF &p);
-    QPixmap * surface();
-    void setSurface(QPixmap *p);
-    virtual QColor color();
-    virtual void setColor(const QColor &color);
-    virtual void start(const QPointF &st);
-    virtual void lineTo(const QPointF &st);
-    virtual void end();
-    virtual QVariantMap defaultInfo();
+    QIcon icon();
+    QCursor cursor();
+    QKeySequence shortcut();
+    int width();
+    void setWidth(int w);
+    void setHardness(int h);
+    int hardness();
+    QColor color();
+    void setColor(const QColor &color);
+    void start(const QPointF &st);
+    void lineTo(const QPointF &st);
+    QVariantMap defaultInfo();
+    QVariantMap brushInfo();
 
-    virtual QVariantMap brushInfo();
-    QPixmap pixmap();
-
-signals:
-    
-public slots:
 protected:
-    QPixmap *surface_;
-    QPixmap result;
-    QPointF lastPoint_;
-    QPointF startPoint_;
     QFile stencilFile;
     QPixmap stencil;
     QImage originalStencil;
     uchar *brushData;
     QColor mainColor;
-    qreal leftOverDistance;
-    bool directDraw_;
-    virtual void effect();
-    virtual void drawPoint(const QPointF &st);
-    virtual void drawLine(const QPointF &st, const QPointF &end, qreal &left);
-    void clear();
-
+    int hardness_;
+    void drawPoint(const QPointF &st);
+    void drawLine(const QPointF &st, const QPointF &end, qreal &left);
+    bool loadStencil(const QString &fileName);
 };
 
 #endif // BRUSH_H

@@ -32,12 +32,8 @@
 
 */
 
-Brush::Brush(QObject *parent) :
-    QObject(parent),
-    directDraw_(true)
+Brush::Brush()
 {
-    result = QPixmap(100,100);
-    result.fill(Qt::transparent);
     brushData = new uchar[1];
     loadStencil("iconset/brush/brush.raw");
     QVariantMap colorMap = this->defaultInfo()["color"].toMap();
@@ -59,33 +55,6 @@ Brush::~Brush()
 {
     delete [] brushData;
     stencilFile.close();
-}
-
-/*!
-    \fn void Brush::setDirectDraw(bool enable)
-
-    Sets whether draws on a buffer determined by \a enable.
-
-    When \a enable is true, brush directly draws everthing into a surface provided by setSurface().
-    \sa setSurface(), isDirectDraw()
-*/
-
-void Brush::setDirectDraw(bool enable)
-{
-    directDraw_ = enable;
-}
-
-/*!
-    \fn bool Brush::isDirectDraw()
-
-    Returns whether draws directly on surface
-
-    \sa setSurface(), setDirectDraw()
-*/
-
-bool Brush::isDirectDraw()
-{
-    return directDraw_;
 }
 
 /*!
@@ -221,45 +190,29 @@ void Brush::setColor(const QColor &color)
     stencil = QPixmap::fromImage(img);
 }
 
-/*!
-    \fn void Brush::setSize(const QSize &s)
-
-    Sets image size of buffer QPixmap. This only takes effect when not using direct draw.
-
-    \sa setDirectDraw()
-*/
-
-void Brush::setSize(const QSize &s)
+void Brush::setHardness(int h)
 {
-    result = result.scaled(s);
+    hardness_ = h;
 }
 
-/*!
-    \fn void Brush::setSurface(QPixmap *p)
-
-    Sets the destnation of painting result to \a p.
-    \note This only takes effect when direct draw is using.
-
-    \sa surface(), setDirectDraw()
-*/
-
-void Brush::setSurface(QPixmap *p)
+int Brush::hardness()
 {
-    surface_ = p;
+    return hardness_;
 }
 
-/*!
-    \fn QPixmap * Brush::surface()
-
-    Returns the surface pointer.
-    \note If there's no surface set, 0 will returned.
-
-    \sa setSurface(), setDirectDraw()
-*/
-
-QPixmap * Brush::surface()
+QIcon Brush::icon()
 {
-    return surface_;
+    return icon_;
+}
+
+QCursor Brush::cursor()
+{
+    return cursor_;
+}
+
+QKeySequence Brush::shortcut()
+{
+    return shortcut_;
 }
 
 /*!
@@ -273,11 +226,9 @@ QPixmap * Brush::surface()
 
 void Brush::start(const QPointF &st)
 {
-    clear();
     leftOverDistance = 0;
     drawPoint(st);
     lastPoint_ = st;
-    this->effect();
 }
 
 /*!
@@ -291,13 +242,11 @@ void Brush::start(const QPointF &st)
 
 void Brush::lineTo(const QPointF &st)
 {    
-    clear();
     if(lastPoint_.isNull()){
         start(st);
         return;
     }
     this->drawLine(lastPoint_, st, leftOverDistance);
-    this->effect();
     lastPoint_ = st;
 }
 
@@ -311,11 +260,7 @@ void Brush::lineTo(const QPointF &st)
 void Brush::drawPoint(const QPointF &st)
 {
     QPainter painter;
-    if(directDraw_ && surface_ ){
-        painter.begin(surface_);
-    }else{
-        painter.begin(&result);
-    }
+    painter.begin(surface_);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.drawPixmap(st.x() - stencil.width()/2.0,st.y() - stencil.width()/2.0, stencil);
 }
@@ -330,12 +275,7 @@ void Brush::drawPoint(const QPointF &st)
 void Brush::drawLine(const QPointF &st, const QPointF &end, qreal &left)
 {
     QPainter painter;
-    if(directDraw_ && surface_ ){
-        painter.begin(surface_);
-    }else{
-        painter.begin(&result);
-    }
-
+    painter.begin(surface_);
     painter.setRenderHint(QPainter::Antialiasing);
     qreal spacing = stencil.width()*0.1;
 
@@ -374,61 +314,6 @@ void Brush::drawLine(const QPointF &st, const QPointF &end, qreal &left)
         totalDistance -= spacing;
     }
     left = totalDistance;
-}
-
-/*!
-    \fn void Brush::end()
-    Ends up the drawing. This will automaticlly clear the buffer.
-    Internally, this function calls clear().
-    \sa start(), lineTo()
-*/
-
-void Brush::end()
-{
-    this->clear();
-}
-
-/*!
-    \fn void Brush::clear()
-    Clears the buffer.
-    \sa end()
-*/
-
-void Brush::clear()
-{
-    result.fill(Qt::transparent);
-}
-
-/*!
-    \fn QPixmap Brush::pixmap()
-    Returns the drawing result in buffer.
-    \sa setDirectDraw()
-*/
-
-QPixmap Brush::pixmap()
-{
-    return result;
-}
-
-QPointF Brush::lastPoint()
-{
-    return lastPoint_;
-}
-
-void Brush::setLastPoint(const QPointF &p)
-{
-    lastPoint_ = p;
-}
-
-/*!
-    \fn void Brush::effect()
-    Virtual function for make effect in sub-class. This function will be called in every drawPoint() and drawLine().
-    \sa setDirectDraw()
-*/
-
-void Brush::effect()
-{
-    return;
 }
 
 /*!

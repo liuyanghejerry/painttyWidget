@@ -1,20 +1,19 @@
 #include "pencil.h"
 
-Pencil::Pencil(QObject *parent) :
-    Brush(parent)
+Pencil::Pencil()
 {
     pencil.setCapStyle(Qt::RoundCap);
     pencil.setJoinStyle(Qt::RoundJoin);
 }
 
+Pencil::~Pencil()
+{
+}
+
 void Pencil::drawPoint(const QPointF &st)
 {
     QPainter painter;
-    if(directDraw_ && surface_ ){
-        painter.begin(surface_);
-    }else{
-        painter.begin(&result);
-    }
+    painter.begin(surface_);
     painter.setPen(pencil);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.drawPoint(st);
@@ -25,19 +24,10 @@ void Pencil::drawLine(const QPointF &st,
                       qreal &left)
 {
     QPainter painter;
-    if(directDraw_ && surface_ ){
-        painter.begin(surface_);
-    }else{
-        painter.begin(&result);
-    }
+    painter.begin(surface_);
     painter.setPen(pencil);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.drawLine(st, end);
-}
-
-bool Pencil::loadStencil(const QString &)
-{
-    return true;
 }
 
 void Pencil::setColor(const QColor &color)

@@ -2,15 +2,14 @@
 #define SKETCHBRUSH_H
 
 #include <QVector>
-#include "brush.h"
+#include "abstractbrush.h"
 
-class SketchBrush : public Brush
+class SketchBrush : public AbstractBrush
 {
-    Q_OBJECT
 public:
-    explicit SketchBrush(QObject *parent = 0);
+    SketchBrush();
+    ~SketchBrush();
     void start(const QPointF &st);
-    bool loadStencil(const QString &);
     void setColor(const QColor &color);
     int width();
     void setWidth(int w);
@@ -25,7 +24,6 @@ public slots:
     
 protected:
     QVector<QPointF> points;
-    QPixmap thinStencil;
     QPen sketchPen;
     void sketch();
     void preparePen();

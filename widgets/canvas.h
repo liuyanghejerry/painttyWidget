@@ -12,12 +12,14 @@
 
 
 #include "../layermanager.h"
+#include "../paintingTools/brush/abstractbrush.h"
+#include "../paintingTools/brush/brush.h"
 #include "../paintingTools/brush/sketchbrush.h"
 #include "../paintingTools/brush/eraser.h"
 #include "../paintingTools/brush/pencil.h"
 #include "../paintingTools/colorpicker.h"
 
-typedef QSharedPointer<Brush> BrushPointer;
+typedef QSharedPointer<AbstractBrush> BrushPointer;
 
 class Canvas : public QWidget
 {
