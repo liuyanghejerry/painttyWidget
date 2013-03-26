@@ -25,7 +25,7 @@ TEMPLATE = app
 SOURCES += main.cpp\
     widgets/mainwindow.cpp \
     widgets/canvas.cpp \
-    layermanager.cpp \
+    misc/layermanager.cpp \
     network/messagesocket.cpp \
     widgets/colorwheel.cpp \
     widgets/roomlistdialog.cpp \
@@ -38,7 +38,7 @@ SOURCES += main.cpp\
     widgets/layerlabel.cpp \
     widgets/layeritem.cpp \
     widgets/iconcheckbox.cpp \
-    layer.cpp \
+    misc/layer.cpp \
     paintingTools/brush/sketchbrush.cpp \
     paintingTools/brush/eraser.cpp \
     paintingTools/brush/brush.cpp \
@@ -59,7 +59,7 @@ SOURCES += main.cpp\
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
-    layermanager.h \
+    misc/layermanager.h \
     network/messagesocket.h \
     network/datasocket.h \
     widgets/colorwheel.h \
@@ -73,7 +73,7 @@ HEADERS  += widgets/mainwindow.h \
     widgets/layerlabel.h \
     widgets/layeritem.h \
     widgets/iconcheckbox.h \
-    layer.h \
+    misc/layer.h \
     paintingTools/brush/sketchbrush.h \
     paintingTools/brush/eraser.h \
     paintingTools/brush/brush.h \

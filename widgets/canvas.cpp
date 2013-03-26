@@ -1,4 +1,5 @@
 #include "canvas.h"
+#include "../network/commandsocket.h"
 
 /*!
      \class Canvas
@@ -45,7 +46,6 @@ Canvas::Canvas(QWidget *parent) :
 
     setMouseTracking(true);
     this->resize(canvasSize);
-    genUserid();
 }
 
 /*!
@@ -56,31 +56,6 @@ Canvas::Canvas(QWidget *parent) :
 
 Canvas::~Canvas()
 {
-}
-
-/*!
-    \fn void Canvas::genUserid()
-
-    Generates a pseudo-random number as an id to identical within a room.
-
-    \warning You don't need to call this function manually since it will be called in constructor.
-*/
-
-// TODO: use global user id instead
-void Canvas::genUserid()
-{
-    userid_ = quint64(&userid_); // treat as ramdom number
-}
-
-/*!
-    \fn quint64 Canvas::userId()
-
-    Returns the user id generated when constructed.
-*/
-
-quint64 Canvas::userId()
-{
-    return userid_;
 }
 
 void Canvas::setHistorySize(const quint64 &size)
@@ -260,7 +235,8 @@ void Canvas::drawLineTo(const QPoint &endPoint)
     map.insert("start", QVariant(start_j));
     map.insert("end", QVariant(end_j));
     map.insert("layer", QVariant(currentLayer()));
-    map.insert("userid", QVariant(userId()));
+    map.insert("userid",
+               QVariant(CommandSocket::cmdSocket()->clientId()));
 
     QVariantMap bigMap;
     bigMap.insert("info", map);
@@ -302,7 +278,8 @@ void Canvas::drawPoint(const QPoint &point)
     map.insert("brush", QVariant(brushInfo()));
     map.insert("layer", QVariant(currentLayer()));
     map.insert("point", QVariant(point_j));
-    map.insert("userid", QVariant(userId()));
+    map.insert("userid",
+               QVariant(CommandSocket::cmdSocket()->clientId()));
 
     QVariantMap bigMap;
     bigMap.insert("info", map);

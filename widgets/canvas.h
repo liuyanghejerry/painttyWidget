@@ -28,7 +28,6 @@ public:
     explicit Canvas(QWidget *parent = 0);
     ~Canvas();
     QVariantMap brushInfo();
-    quint64 userId();
     QString currentLayer();
     int count(){return layers.count();}
     int layerNum(){return layerNameCounter;}
@@ -91,8 +90,6 @@ private:
     void combineLayers(const QRect &rec);
     QPixmap combineLayers();
 
-    void genUserid();
-
     BrushPointer brushFactory(const QString &name);
 
     QByteArray toJson(const QVariant &m);
@@ -108,12 +105,11 @@ private:
     qreal opacity;
     int layerNameCounter;
     BrushPointer brush_;
-    quint64 userid_; // in room
     int historySize_;
     bool shareColor_;
     QHash<quint64, BrushPointer> remoteBrush;
     QHash<QString, BrushPointer> localBrush;
-    QSharedPointer<ColorPicker> colorPicker;
+//    QSharedPointer<ColorPicker> colorPicker;
 };
 
 #endif // CANVAS_H
