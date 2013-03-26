@@ -71,7 +71,7 @@ void SketchBrush::sketch()
         points.pop_front();
 
         QPainter painter;
-        painter.begin(surface_);
+        painter.begin(surface_->imagePtr());
         painter.setRenderHint(QPainter::Antialiasing);
         painter.strokePath(path, sketchPen);
     }

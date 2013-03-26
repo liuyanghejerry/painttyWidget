@@ -13,8 +13,8 @@ public:
     QKeySequence shortcut();
     int width();
     void setWidth(int w);
-    void setHardness(int h);
     int hardness();
+    void setHardness(int h);
     QColor color();
     void setColor(const QColor &color);
     void start(const QPointF &st);
@@ -27,8 +27,6 @@ protected:
     QPixmap stencil;
     QImage originalStencil;
     uchar *brushData;
-    QColor mainColor;
-    int hardness_;
     void drawPoint(const QPointF &st);
     void drawLine(const QPointF &st, const QPointF &end, qreal &left);
     bool loadStencil(const QString &fileName);

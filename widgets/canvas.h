@@ -2,9 +2,6 @@
 #define CANVAS_H
 
 #include <QWidget>
-#include <QStyleOption>
-#include <QMouseEvent>
-#include <QTabletEvent>
 #include <QPainter>
 #include <QHash>
 #include <QSharedPointer>
@@ -72,12 +69,12 @@ protected:
     void remoteDrawPoint(const QPoint &point,
                          const QVariantMap &brushInfo,
                          const QString &layer,
-                         const quint64 userid);
+                         const QString clientid);
     void remoteDrawLine(const QPoint &start,
                         const QPoint &end,
                         const QVariantMap &brushInfo,
                         const QString &layer,
-                        const quint64 userid);
+                        const QString clientid);
 
 private:
 
@@ -107,7 +104,7 @@ private:
     BrushPointer brush_;
     int historySize_;
     bool shareColor_;
-    QHash<quint64, BrushPointer> remoteBrush;
+    QHash<QString, BrushPointer> remoteBrush;
     QHash<QString, BrushPointer> localBrush;
 //    QSharedPointer<ColorPicker> colorPicker;
 };

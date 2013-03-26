@@ -12,6 +12,8 @@
 #include <QVariantMap>
 #include <QtCore/qmath.h>
 
+#include "../misc/layer.h"
+
 class AbstractBrush
 {
 public:
@@ -35,14 +37,14 @@ public:
     virtual QVariantMap brushInfo()=0;
     virtual QPointF lastPoint();
     virtual void setLastPoint(const QPointF &p);
-    virtual QPixmap * surface();
-    virtual void setSurface(QPixmap *p);
+    virtual LayerPointer surface();
+    virtual void setSurface(LayerPointer p);
 
 protected:
     QIcon icon_;
     QCursor cursor_;
     QKeySequence shortcut_;
-    QPixmap *surface_;
+    LayerPointer surface_;
     QPointF lastPoint_;
     QPointF startPoint_;
     qreal leftOverDistance;

@@ -1,3 +1,6 @@
+#include <QStyleOption>
+#include <QMouseEvent>
+#include <QTabletEvent>
 #include "canvas.h"
 #include "../network/commandsocket.h"
 
@@ -36,7 +39,6 @@ Canvas::Canvas(QWidget *parent) :
     shareColor_(true)
 {
     setAttribute(Qt::WA_StaticContents);
-//    setBaseSize(canvasSize);
     inPicker = false;
     drawing = false;
     opacity = 1.0;
@@ -159,7 +161,7 @@ BrushPointer Canvas::brushFactory(const QString &name)
 void Canvas::changeBrush(const QString &name)
 {
     QVariantMap currentSettings;
-    QPixmap *sur = brush_->surface();
+    LayerPointer sur = brush_->surface();
     QPointF lp = brush_->lastPoint();
     QVariantMap colorMap = brush_->brushInfo()
             .value("color").toMap();
@@ -218,7 +220,7 @@ void Canvas::drawLineTo(const QPoint &endPoint)
     }
     //    setCursor(Qt::CrossCursor);
     updateCursor(brush_->width());
-    brush_->setSurface(l->imagePtr());
+    brush_->setSurface(l);
     brush_->lineTo(endPoint);
 
     update();
@@ -235,7 +237,7 @@ void Canvas::drawLineTo(const QPoint &endPoint)
     map.insert("start", QVariant(start_j));
     map.insert("end", QVariant(end_j));
     map.insert("layer", QVariant(currentLayer()));
-    map.insert("userid",
+    map.insert("clientid",
                QVariant(CommandSocket::cmdSocket()->clientId()));
 
     QVariantMap bigMap;
@@ -263,7 +265,7 @@ void Canvas::drawPoint(const QPoint &point)
     }
     //    setCursor(Qt::CrossCursor);
     updateCursor(brush_->width());
-    brush_->setSurface(l->imagePtr());
+    brush_->setSurface(l);
     brush_->start(point);
 
     int rad = (brush_->width() / 2) + 2;
@@ -278,7 +280,7 @@ void Canvas::drawPoint(const QPoint &point)
     map.insert("brush", QVariant(brushInfo()));
     map.insert("layer", QVariant(currentLayer()));
     map.insert("point", QVariant(point_j));
-    map.insert("userid",
+    map.insert("clientid",
                QVariant(CommandSocket::cmdSocket()->clientId()));
 
     QVariantMap bigMap;
@@ -317,7 +319,7 @@ void Canvas::updateCursor(const int &width)
 
 void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
                              const QString &layer,
-                             const quint64 userid)
+                             const QString clientid)
 {
     if(!layers.exists(layer)) return;
     LayerPointer l = layers.layerFrom(layer);
@@ -329,30 +331,30 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
             colorMap["green"].toInt(),
             colorMap["blue"].toInt());
 
-    if(remoteBrush.contains(userid)){
-        BrushPointer t = remoteBrush[userid];
+    if(remoteBrush.contains(clientid)){
+        BrushPointer t = remoteBrush[clientid];
         if(brushInfo != t->brushInfo()){
             BrushPointer newOne = brushFactory(brushName);
-            newOne->setSurface(l->imagePtr());
+            newOne->setSurface(l);
             newOne->setWidth(width);
             newOne->setColor(color);
             newOne->start(point);
-            remoteBrush[userid] = newOne;
+            remoteBrush[clientid] = newOne;
             t.clear();
         }else{
-            BrushPointer original = remoteBrush[userid];
-            original->setSurface(l->imagePtr());
+            BrushPointer original = remoteBrush[clientid];
+            original->setSurface(l);
             original->setWidth(width);
             original->setColor(color);
             original->start(point);
         }
     }else{
         BrushPointer newOne = brushFactory(brushName);
-        newOne->setSurface(l->imagePtr());
+        newOne->setSurface(l);
         newOne->setWidth(width);
         newOne->setColor(color);
         newOne->start(point);
-        remoteBrush[userid] = newOne;
+        remoteBrush[clientid] = newOne;
     }
 
     update();
@@ -372,7 +374,7 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
 void Canvas::remoteDrawLine(const QPoint &start, const QPoint &end,
                             const QVariantMap &brushInfo,
                             const QString &layer,
-                            const quint64 userid)
+                            const QString clientid)
 {
     if(!layers.exists(layer)){
         return;
@@ -386,30 +388,30 @@ void Canvas::remoteDrawLine(const QPoint &start, const QPoint &end,
             colorMap["green"].toInt(),
             colorMap["blue"].toInt());
 
-    if(remoteBrush.contains(userid)){
-        BrushPointer t = remoteBrush[userid];
+    if(remoteBrush.contains(clientid)){
+        BrushPointer t = remoteBrush[clientid];
         if(brushName != t->brushInfo()["name"].toString()){
             BrushPointer newOne = brushFactory(brushName);
-            newOne->setSurface(l->imagePtr());
+            newOne->setSurface(l);
             newOne->setWidth(width);
             newOne->setColor(color);
             newOne->lineTo(end);
-            remoteBrush[userid] = newOne;
+            remoteBrush[clientid] = newOne;
             t.clear();
         }else{
-            BrushPointer original = remoteBrush[userid];
-            original->setSurface(l->imagePtr());
+            BrushPointer original = remoteBrush[clientid];
+            original->setSurface(l);
             original->setWidth(width);
             original->setColor(color);
             original->lineTo(end);
         }
     }else{
         BrushPointer newOne = brushFactory(brushName);
-        newOne->setSurface(l->imagePtr());
+        newOne->setSurface(l);
         newOne->setWidth(width);
         newOne->setColor(color);
         newOne->lineTo(end);
-        remoteBrush[userid] = newOne;
+        remoteBrush[clientid] = newOne;
     }
 
     update();
@@ -443,10 +445,10 @@ void Canvas::onNewData(const QByteArray & array)
         point.setY(point_j["y"].toInt());
         layerName = map["layer"].toString();
         QVariantMap brushInfo = map["brush"].toMap();
-        quint64 userid = map["userid"].toLongLong();
+        QString clientid = map["clientid"].toString();
 
         remoteDrawPoint(point, brushInfo,
-                        layerName, userid);
+                        layerName, clientid);
     }else if(action == "drawline"){
         QPoint start;
         QPoint end;
@@ -461,11 +463,11 @@ void Canvas::onNewData(const QByteArray & array)
         end.setY(end_j["y"].toInt());
         layerName = map["layer"].toString();
         QVariantMap brushInfo = map["brush"].toMap();
-        quint64 userid = map["userid"].toLongLong();
+        QString clientid = map["clientid"].toString();
 
         remoteDrawLine(start, end,
                        brushInfo, layerName,
-                       userid);
+                       clientid);
 
     }
 }

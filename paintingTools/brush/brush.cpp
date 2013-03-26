@@ -260,7 +260,7 @@ void Brush::lineTo(const QPointF &st)
 void Brush::drawPoint(const QPointF &st)
 {
     QPainter painter;
-    painter.begin(surface_);
+    painter.begin(surface_->imagePtr());
     painter.setRenderHint(QPainter::Antialiasing);
     painter.drawPixmap(st.x() - stencil.width()/2.0,st.y() - stencil.width()/2.0, stencil);
 }
@@ -275,7 +275,7 @@ void Brush::drawPoint(const QPointF &st)
 void Brush::drawLine(const QPointF &st, const QPointF &end, qreal &left)
 {
     QPainter painter;
-    painter.begin(surface_);
+    painter.begin(surface_->imagePtr());
     painter.setRenderHint(QPainter::Antialiasing);
     qreal spacing = stencil.width()*0.1;
 

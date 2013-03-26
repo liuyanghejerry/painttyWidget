@@ -13,7 +13,7 @@ Pencil::~Pencil()
 void Pencil::drawPoint(const QPointF &st)
 {
     QPainter painter;
-    painter.begin(surface_);
+    painter.begin(surface_->imagePtr());
     painter.setPen(pencil);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.drawPoint(st);
@@ -24,7 +24,7 @@ void Pencil::drawLine(const QPointF &st,
                       qreal &left)
 {
     QPainter painter;
-    painter.begin(surface_);
+    painter.begin(surface_->imagePtr());
     painter.setPen(pencil);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.drawLine(st, end);

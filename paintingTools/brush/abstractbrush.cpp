@@ -63,12 +63,12 @@ void AbstractBrush::setHardness(int h)
     hardness_ = h;
 }
 
-QPixmap * AbstractBrush::surface()
+LayerPointer AbstractBrush::surface()
 {
     return surface_;
 }
 
-void AbstractBrush::setSurface(QPixmap *p)
+void AbstractBrush::setSurface(LayerPointer p)
 {
     surface_ = p;
 }

@@ -31,4 +31,7 @@ private:
     QSharedPointer<QPixmap> img_;
     QString name_;
 };
+
+typedef QSharedPointer<Layer> LayerPointer;
+
 #endif // LAYER_H

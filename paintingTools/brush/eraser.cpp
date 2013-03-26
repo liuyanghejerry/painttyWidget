@@ -28,7 +28,7 @@ void Eraser::setWidth(int w)
 
 void Eraser::drawPoint(const QPointF &st)
 {
-    QPainter painter(surface_);
+    QPainter painter(surface_->imagePtr());
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
     QPen eraser(mainColor);
@@ -42,7 +42,7 @@ void Eraser::drawPoint(const QPointF &st)
 
 void Eraser::drawLine(const QPointF &st, const QPointF &end, qreal &left)
 {
-    QPainter painter(surface_);
+    QPainter painter(surface_->imagePtr());
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
     QPen eraser(mainColor);
