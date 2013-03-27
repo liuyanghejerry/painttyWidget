@@ -371,7 +371,7 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
     \sa Canvas::remoteDrawLine()
 */
 
-void Canvas::remoteDrawLine(const QPoint &start, const QPoint &end,
+void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
                             const QVariantMap &brushInfo,
                             const QString &layer,
                             const QString clientid)

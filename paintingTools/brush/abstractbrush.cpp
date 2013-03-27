@@ -77,14 +77,14 @@ void AbstractBrush::end()
 {
 }
 
-void AbstractBrush::drawPoint(const QPointF &st)
+void AbstractBrush::drawPoint(const QPointF &)
 {
     //
 }
 
-void AbstractBrush::drawLine(const QPointF &st,
-                      const QPointF &end,
-                      qreal &left)
+void AbstractBrush::drawLine(const QPointF &,
+                      const QPointF &,
+                      qreal &)
 {
     //
 }

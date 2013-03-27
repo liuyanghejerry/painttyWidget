@@ -1,16 +1,13 @@
 #ifndef ABSTRACTBRUSH_H
 #define ABSTRACTBRUSH_H
 
-#include <QObject>
 #include <QKeySequence>
 #include <QCursor>
 #include <QPoint>
 #include <QPainter>
-#include <QFile>
 #include <QImage>
 #include <QIcon>
 #include <QVariantMap>
-#include <QtCore/qmath.h>
 
 #include "../misc/layer.h"
 
@@ -19,6 +16,7 @@ class AbstractBrush
 public:
     AbstractBrush();
     virtual ~AbstractBrush();
+    // TODO: icon, cursor and shrotcut
     virtual QIcon icon();
     virtual QCursor cursor();
     virtual QKeySequence shortcut();
@@ -51,9 +49,9 @@ protected:
     QColor mainColor;
     int hardness_;
     virtual void drawPoint(const QPointF &st);
-    virtual void drawLine(const QPointF &st,
-                          const QPointF &end,
-                          qreal &left);
+    virtual void drawLine(const QPointF &,
+                          const QPointF &,
+                          qreal &);
 };
 
 #endif // ABSTRACTBRUSH_H

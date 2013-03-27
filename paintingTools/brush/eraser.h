@@ -13,9 +13,7 @@ public:
     void setWidth(int w);
     QVariantMap brushInfo();
     QVariantMap defaultInfo();
-signals:
-    
-public slots:
+
 protected:
     void drawPoint(const QPointF &st);
     void drawLine(const QPointF &st, const QPointF &end, qreal &left);

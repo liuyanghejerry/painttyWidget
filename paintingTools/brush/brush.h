@@ -2,6 +2,7 @@
 #define BRUSH_H
 
 #include "abstractbrush.h"
+#include <QFile>
 
 class Brush : public AbstractBrush
 {

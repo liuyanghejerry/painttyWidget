@@ -3,6 +3,7 @@
 Eraser::Eraser() :
     width_(100)
 {
+    shortcut_ = Qt::Key_E;
     mainColor = Qt::transparent;
 }
 
@@ -40,7 +41,9 @@ void Eraser::drawPoint(const QPointF &st)
     painter.drawPoint(st.x(), st.y());
 }
 
-void Eraser::drawLine(const QPointF &st, const QPointF &end, qreal &left)
+void Eraser::drawLine(const QPointF &st,
+                      const QPointF &end,
+                      qreal &)
 {
     QPainter painter(surface_->imagePtr());
     painter.setRenderHint(QPainter::Antialiasing);

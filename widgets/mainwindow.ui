@@ -10,7 +10,16 @@
     <normaloff>:/iconset/icon.png</normaloff>:/iconset/icon.png</iconset>
   </property>
   <widget class="CanvasContainer" name="centralWidget">
-   <widget class="Canvas" name="canvas" native="true"/>
+   <widget class="Canvas" name="canvas" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>100</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="windowTitle">
@@ -144,7 +153,7 @@
      <x>0</x>
      <y>0</y>
      <width>856</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">

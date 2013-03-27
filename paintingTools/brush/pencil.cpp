@@ -2,6 +2,7 @@
 
 Pencil::Pencil()
 {
+    shortcut_ = Qt::Key_Z;
     pencil.setCapStyle(Qt::RoundCap);
     pencil.setJoinStyle(Qt::RoundJoin);
 }
@@ -21,7 +22,7 @@ void Pencil::drawPoint(const QPointF &st)
 
 void Pencil::drawLine(const QPointF &st,
                       const QPointF &end,
-                      qreal &left)
+                      qreal &)
 {
     QPainter painter;
     painter.begin(surface_->imagePtr());

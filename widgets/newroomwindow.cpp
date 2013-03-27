@@ -31,11 +31,7 @@ NewRoomWindow::~NewRoomWindow()
 
 void NewRoomWindow::onServerResponse(const QJsonObject &m)
 {
-//    if(m["response"] != "newroom"
-//            || !m.contains("result"))
-//        return;
     if(m["result"].toBool()){
-        // TODO
         ui->progressBar->setValue(100);
         QString msg = tr("Succeed!");
         QMessageBox::information(this, tr("Go get your room!"),

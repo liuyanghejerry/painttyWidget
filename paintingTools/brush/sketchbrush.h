@@ -1,7 +1,7 @@
 #ifndef SKETCHBRUSH_H
 #define SKETCHBRUSH_H
 
-#include <QVector>
+#include <QList>
 #include "abstractbrush.h"
 
 class SketchBrush : public AbstractBrush
@@ -18,12 +18,8 @@ public:
     QVariantMap brushInfo();
     QVariantMap defaultInfo();
     
-signals:
-    
-public slots:
-    
 protected:
-    QVector<QPointF> points;
+    QList<QPointF> points;
     QPen sketchPen;
     void sketch();
     void preparePen();

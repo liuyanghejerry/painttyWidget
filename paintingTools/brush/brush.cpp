@@ -34,6 +34,7 @@
 
 Brush::Brush()
 {
+    shortcut_ = Qt::Key_A;
     brushData = new uchar[1];
     loadStencil("iconset/brush/brush.raw");
     QVariantMap colorMap = this->defaultInfo()["color"].toMap();

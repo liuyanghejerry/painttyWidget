@@ -2,7 +2,7 @@
 
 SketchBrush::SketchBrush()
 {
-
+    shortcut_ = Qt::Key_S;
 }
 
 SketchBrush::~SketchBrush()
