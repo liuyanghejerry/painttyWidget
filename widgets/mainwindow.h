@@ -1,43 +1,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <tuple>
-
 #include <QMainWindow>
-#include <QCloseEvent>
-#include <QScrollBar>
-#include <QToolBar>
-#include <QToolButton>
-#include <QCheckBox>
-#include <QTableWidgetItem>
-#include <QShortcut>
-#include <QTcpSocket>
-#include <QHostAddress>
-#include <QDataStream>
-#include <QVariant>
-#include <QVariantList>
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QFile>
-#include <QClipboard>
-#include <QJsonDocument>
-#include <QJsonArray>
-#include <QJsonObject>
-#include <QJsonValue>
-#include <QSettings>
-#include <QCryptographicHash>
 
-#include "../common.h"
-#include "../misc/singleshortcut.h"
-#include "layerwidget.h"
-#include "colorgrid.h"
-#include "aboutdialog.h"
-#include "brushwidthwidget.h"
 #include "../network/messagesocket.h"
 #include "../network/datasocket.h"
-#include "../network/commandsocket.h"
 #include "../misc/router.h"
 
+class QToolButton;
+class BrushWidthWidget;
+class QActionGroup;
 
 namespace Ui {
 class MainWindow;

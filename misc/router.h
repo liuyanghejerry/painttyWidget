@@ -5,6 +5,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QHash>
+#include <QDebug>
 
 // name space for default handler type
 namespace RouterZone{

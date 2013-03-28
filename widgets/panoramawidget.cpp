@@ -1,5 +1,11 @@
 #include "panoramawidget.h"
 
+#include <QPixmap>
+#include <QResizeEvent>
+#include <QPainter>
+#include <QDebug>
+
+
 PanoramaWidget::PanoramaWidget(QWidget *parent) :
     QWidget(parent),
     preferSize_(144, 96),

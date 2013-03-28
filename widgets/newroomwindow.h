@@ -2,15 +2,9 @@
 #define NEWROOMWINDOW_H
 
 #include <QDialog>
-#include <QMessageBox>
-#include <QPushButton>
-#include <QCryptographicHash>
-#include <QSettings>
-#include <QJsonObject>
 
-#include <QDebug>
-#include "../common.h"
 #include "../misc/errortable.h"
+
 namespace Ui {
 class NewRoomWindow;
 }

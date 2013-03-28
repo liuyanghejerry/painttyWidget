@@ -1,6 +1,34 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QCloseEvent>
+#include <QScrollBar>
+#include <QToolBar>
+#include <QToolButton>
+#include <QCheckBox>
+#include <QTableWidgetItem>
+#include <QShortcut>
+#include <QFile>
+#include <QClipboard>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QSettings>
+#include <QCryptographicHash>
+#include <QHostAddress>
+#include <QVariantList>
+#include <QFileDialog>
+#include <QMessageBox>
+
+#include "../misc/singleshortcut.h"
+#include "layerwidget.h"
+#include "colorgrid.h"
+#include "aboutdialog.h"
+#include "brushwidthwidget.h"
+#include "../network/commandsocket.h"
+#include "../common.h"
+
 MainWindow::MainWindow(const QSize& canvasSize, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),

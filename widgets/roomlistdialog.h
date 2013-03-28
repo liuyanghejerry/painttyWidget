@@ -2,23 +2,11 @@
 #define ROOMLISTDIALOG_H
 
 #include <QDialog>
-#include <QInputDialog>
-#include <QMessageBox>
-#include <QTimer>
-#include <QTableWidgetItem>
-#include <QHostAddress>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QFile>
-#include <QCloseEvent>
-#include <QSettings>
-#include <QDateTime>
 
-#include "../common.h"
-#include "../network/commandsocket.h"
 #include "../misc/router.h"
-#include "newroomwindow.h"
+
+class Socket;
+class NewRoomWindow;
 
 namespace Ui {
 class RoomListDialog;

@@ -1,6 +1,13 @@
 #include "newroomwindow.h"
 #include "ui_newroomwindow.h"
+#include <QMessageBox>
+#include <QPushButton>
+#include <QCryptographicHash>
+#include <QSettings>
 #include <QJsonObject>
+
+#include <QDebug>
+#include "../common.h"
 
 NewRoomWindow::NewRoomWindow(QWidget *parent) :
     QDialog(parent),

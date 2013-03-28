@@ -2,11 +2,7 @@
 #define PANORAMAWIDGET_H
 
 #include <QWidget>
-#include <QPixmap>
-#include <QResizeEvent>
-#include <QPainter>
 #include <QTimer>
-#include <QDebug>
 
 class PanoramaWidget : public QWidget
 {

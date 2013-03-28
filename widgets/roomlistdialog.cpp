@@ -1,6 +1,25 @@
 #include "roomlistdialog.h"
 #include "ui_roomlistdialog.h"
 
+#include <QDialog>
+#include <QInputDialog>
+#include <QMessageBox>
+#include <QTimer>
+#include <QTableWidgetItem>
+#include <QHostAddress>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QFile>
+#include <QCloseEvent>
+#include <QSettings>
+#include <QDateTime>
+#include <QCryptographicHash>
+
+#include "../common.h"
+#include "../network/commandsocket.h"
+#include "newroomwindow.h"
+
 RoomListDialog::RoomListDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::RoomListDialog),
