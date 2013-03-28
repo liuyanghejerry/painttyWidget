@@ -1,7 +1,6 @@
 #include <QApplication>
 #include <QTranslator>
 #include <QSettings>
-#include <QJsonDocument>
 #include <QVariant>
 #include "common.h"
 #include "widgets/mainwindow.h"

@@ -531,12 +531,13 @@ void MainWindow::onNewMessage(const QString &content)
     ui->textEdit->verticalScrollBar()
             ->setValue(ui->textEdit->verticalScrollBar()
                        ->maximum());
+    // BUG: looks it does nothing!?
+    qApp->alert(this, 3000);
 }
 
 QByteArray MainWindow::toJson(const QVariant &m)
 {
-    auto jsonS = QJsonDocument::fromVariant(m);
-    return jsonS.toJson();
+    return QJsonDocument::fromVariant(m).toJson();
 }
 
 QVariant MainWindow::fromJson(const QByteArray &d)

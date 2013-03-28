@@ -59,8 +59,8 @@ private:
     void cmdSocketRouterInit();
     QVariant getRoomKey();
     void requestOnlinelist();
-    QByteArray toJson(const QVariant &m);
-    QVariant fromJson(const QByteArray &d);
+    static QByteArray toJson(const QVariant &m);
+    static QVariant fromJson(const QByteArray &d);
 
     Ui::MainWindow *ui;
     MessageSocket msgSocket;
