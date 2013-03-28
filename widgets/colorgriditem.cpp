@@ -1,5 +1,12 @@
 #include "colorgriditem.h"
 
+#include <QMouseEvent>
+#include <QMenu>
+#include <QCursor>
+#include <QPainter>
+#include <QStyleOptionViewItem>
+#include "colorwheel.h"
+
 ColorGridItem::ColorGridItem(int id, QWidget *parent) :
     QWidget(parent),
     gridId_(id),
@@ -37,7 +44,7 @@ void ColorGridItem::drawTransparent()
     painter.drawRect(k,k,k,k);
 }
 
-void ColorGridItem::paintEvent(QPaintEvent *event)
+void ColorGridItem::paintEvent(QPaintEvent *)
 {
     QPalette pal = this->palette();
     QPen borderPen(pal.color(QPalette::WindowText));

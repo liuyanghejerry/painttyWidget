@@ -1,4 +1,6 @@
 #include "singleshortcut.h"
+#include <QPainter>
+#include <QKeyEvent>
 
 SingleShortcut::SingleShortcut(QObject *parent) :
     QObject(parent),

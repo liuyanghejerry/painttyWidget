@@ -1,7 +1,9 @@
 #ifndef LAYER_H
 #define LAYER_H
-#include <QPixmap>
+
 #include <QSharedPointer>
+
+class QPixmap;
 
 class Layer
 {

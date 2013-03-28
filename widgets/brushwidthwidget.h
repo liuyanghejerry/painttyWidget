@@ -2,8 +2,6 @@
 #define BRUSHWIDTHWIDGET_H
 
 #include <QWidget>
-#include <QShortcut>
-#include <QKeySequence>
 
 namespace Ui {
 class BrushWidthWidget;

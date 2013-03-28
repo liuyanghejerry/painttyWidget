@@ -1,5 +1,7 @@
 #include "layer.h"
 
+#include <QPixmap>
+
 Layer::Layer(const QSize &size)
     :lock_(false),
       hide_(false),

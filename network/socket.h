@@ -2,9 +2,9 @@
 #define SOCKET_H
 
 #include <QObject>
-#include <QTcpSocket>
 #include <QHostAddress>
-#include <QByteArray>
+
+class QTcpSocket;
 
 class Socket : public QObject
 {
@@ -15,8 +15,8 @@ public:
     void connectToHost(const QHostAddress & address, quint16 port);
     void connectToHost(const QString & hostName, quint16 port);
     bool isConnected();
-    QHostAddress address(){return socket->peerAddress();}
-    int port(){return socket->peerPort();}
+    QHostAddress address();
+    int port();
     void setCompressed(bool b);
     bool compressed();
     

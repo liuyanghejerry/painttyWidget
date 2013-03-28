@@ -1,8 +1,20 @@
+#include <QPainter>
+#include <QHash>
+#include <QSharedPointer>
+#include <QJsonDocument>
 #include <QStyleOption>
 #include <QMouseEvent>
 #include <QTabletEvent>
-#include "canvas.h"
+
 #include "../network/commandsocket.h"
+#include "../paintingTools/brush/brush.h"
+#include "../paintingTools/brush/sketchbrush.h"
+#include "../paintingTools/brush/eraser.h"
+#include "../paintingTools/brush/pencil.h"
+#include "../paintingTools/colorpicker.h"
+
+#include "canvas.h"
+
 
 /*!
      \class Canvas

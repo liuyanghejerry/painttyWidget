@@ -1,5 +1,7 @@
 #include "socket.h"
 
+#include <QTcpSocket>
+
 Socket::Socket(QObject *parent) :
     QObject(parent),
     dataSize(0),
@@ -16,6 +18,16 @@ Socket::Socket(QObject *parent) :
 Socket::~Socket()
 {
     socket->close();
+}
+
+QHostAddress Socket::address()
+{
+    return socket->peerAddress();
+}
+
+int Socket::port()
+{
+    return socket->peerPort();
 }
 
 void Socket::setCompressed(bool b)

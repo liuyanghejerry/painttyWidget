@@ -1,6 +1,8 @@
 #include "brushwidthwidget.h"
 #include "ui_brushwidthwidget.h"
 
+#include <QShortcut>
+
 BrushWidthWidget::BrushWidthWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::BrushWidthWidget)

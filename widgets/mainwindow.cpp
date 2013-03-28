@@ -23,6 +23,7 @@
 
 #include "../misc/singleshortcut.h"
 #include "layerwidget.h"
+#include "layeritem.h"
 #include "colorgrid.h"
 #include "aboutdialog.h"
 #include "brushwidthwidget.h"

@@ -1,13 +1,10 @@
 #ifndef COLORGRID_H
 #define COLORGRID_H
 
-#include <QWidget>
-#include <QDataStream>
 #include <QScrollArea>
-#include <QList>
-#include "colorgriditem.h"
-#include "colorwheel.h"
-#include "flowlayout.h"
+
+class FlowLayout;
+class ColorGridItem;
 
 class ColorGrid : public QScrollArea
 {

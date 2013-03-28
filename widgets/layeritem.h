@@ -2,11 +2,9 @@
 #define LAYERITEM_H
 
 #include <QWidget>
-#include <QLabel>
-#include <QHBoxLayout>
-#include <QFocusEvent>
-#include "iconcheckbox.h"
-#include "layerlabel.h"
+
+class IconCheckBox;
+class LayerLabel;
 
 class LayerItem : public QWidget
 {

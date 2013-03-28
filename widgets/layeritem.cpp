@@ -1,5 +1,13 @@
 #include "layeritem.h"
 
+#include <QLabel>
+#include <QHBoxLayout>
+#include <QFocusEvent>
+#include <QPainter>
+#include <QStyleOption>
+#include "iconcheckbox.h"
+#include "layerlabel.h"
+
 LayerItem::LayerItem(QWidget *parent) :
     QWidget(parent)
 {

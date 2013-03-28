@@ -1,8 +1,6 @@
 #ifndef PENCIL_H
 #define PENCIL_H
 
-#include <QPen>
-#include <QPainter>
 #include <QVariant>
 #include "abstractbrush.h"
 

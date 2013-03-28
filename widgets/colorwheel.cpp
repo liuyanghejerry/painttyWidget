@@ -1,4 +1,8 @@
 #include "colorwheel.h"
+#include <QPainter>
+#include <QResizeEvent>
+#include <QStyleOption>
+#include <QtCore/qmath.h>
 #include <QDebug>
 
 ColorWheel::ColorWheel(QWidget *parent) :
@@ -141,7 +145,7 @@ void ColorWheel::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
-void ColorWheel::mouseReleaseEvent(QMouseEvent *event)
+void ColorWheel::mouseReleaseEvent(QMouseEvent *)
 {
     mouseDown = false;
     inWheel = false;
@@ -157,7 +161,7 @@ void ColorWheel::resizeEvent(QResizeEvent *event)
     update();
 }
 
-void ColorWheel::paintEvent(QPaintEvent *event)
+void ColorWheel::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     QStyleOption opt;

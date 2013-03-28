@@ -1,5 +1,10 @@
 #include "layerwidget.h"
 
+#include <QScrollArea>
+#include <QVBoxLayout>
+#include "layeritem.h"
+#include "layerwidgetheader.h"
+
 LayerWidget::LayerWidget(QWidget *parent) :
     QWidget(parent),
     scrollArea_(0),

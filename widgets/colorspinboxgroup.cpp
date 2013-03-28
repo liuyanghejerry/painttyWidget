@@ -1,6 +1,8 @@
 #include "colorspinboxgroup.h"
 #include "ui_colorspinboxgroup.h"
 
+#include <QDebug>
+
 ColorSpinBoxGroup::ColorSpinBoxGroup(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ColorSpinBoxGroup),

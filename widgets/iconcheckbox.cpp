@@ -1,5 +1,9 @@
 #include "iconcheckbox.h"
 
+#include <QPainter>
+#include <QStyleOption>
+#include <QBrush>
+
 IconCheckBox::IconCheckBox(QWidget *parent) :
     QAbstractButton(parent),
     size_(iconSize())
@@ -16,7 +20,7 @@ QSize IconCheckBox::sizeHint () const
     return QSize(size_);
 }
 
-void IconCheckBox::paintEvent ( QPaintEvent * e )
+void IconCheckBox::paintEvent (QPaintEvent *)
 {
     QPainter painter(this);
     QStyleOption option;

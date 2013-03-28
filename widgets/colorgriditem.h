@@ -2,12 +2,7 @@
 #define COLORGRIDITEM_H
 
 #include <QWidget>
-#include <QMouseEvent>
 #include <QMenu>
-#include <QCursor>
-#include <QPainter>
-#include <QStyleOptionViewItem>
-#include "colorwheel.h"
 
 class ColorGridItem : public QWidget
 {
@@ -30,7 +25,7 @@ public slots:
     void onColorCleared();
 protected:
     void drawTransparent();
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *);
     void enterEvent(QEvent *event);
     void leaveEvent(QEvent *event);
     void mousePressEvent(QMouseEvent *event);

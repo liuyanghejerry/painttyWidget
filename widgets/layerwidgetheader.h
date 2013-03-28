@@ -2,9 +2,9 @@
 #define LAYERWIDGETHEADER_H
 
 #include <QWidget>
-#include <QLabel>
-#include <QSpinBox>
-#include <QHBoxLayout>
+
+class QLabel;
+class QSpinBox;
 
 class LayerWidgetHeader : public QWidget
 {

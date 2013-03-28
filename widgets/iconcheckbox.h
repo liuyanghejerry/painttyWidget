@@ -2,9 +2,6 @@
 #define ICONCHECKBOX_H
 
 #include <QAbstractButton>
-#include <QPainter>
-#include <QStyleOption>
-#include <QBrush>
 
 class IconCheckBox : public QAbstractButton
 {
@@ -20,7 +17,7 @@ signals:
 public slots:
     
 protected:
-    void paintEvent ( QPaintEvent * e );
+    void paintEvent (QPaintEvent *);
     void enterEvent(QEvent *);
     void leaveEvent(QEvent *);
     bool hitButton (const QPoint &) const;

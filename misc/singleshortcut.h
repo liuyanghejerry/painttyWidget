@@ -2,7 +2,6 @@
 #define SINGLESHORTCUT_H
 
 #include <QObject>
-#include <QKeyEvent>
 #include <QKeySequence>
 
 class SingleShortcut : public QObject

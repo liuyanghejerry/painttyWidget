@@ -1,5 +1,12 @@
 #include "colorgrid.h"
 
+#include <QDataStream>
+#include <QScrollArea>
+#include <QList>
+#include "colorgriditem.h"
+#include "colorwheel.h"
+#include "flowlayout.h"
+
 ColorGrid::ColorGrid(QWidget *parent) :
     QScrollArea(parent),
     layout_(0)

@@ -39,6 +39,10 @@
 ****************************************************************************/
 
 #include <QtGui>
+#include <QRect>
+#include <QStyle>
+#include <QWidget>
+#include <QWidgetItem>
 
 #include "flowlayout.h"
 FlowLayout::FlowLayout(QWidget *parent, int margin, int hSpacing, int vSpacing)

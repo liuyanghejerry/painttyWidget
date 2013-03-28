@@ -2,9 +2,6 @@
 #define LAYERLABEL_H
 
 #include <QWidget>
-#include <QPainter>
-#include <QMouseEvent>
-#include <QStyleOption>
 #include <QStaticText>
 
 class LayerLabel : public QWidget

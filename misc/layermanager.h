@@ -1,11 +1,8 @@
 #ifndef LAYERMANAGER_H
 #define LAYERMANAGER_H
 
-#include <QVector>
+#include <QList>
 #include <QHash>
-#include <QImage>
-#include <QPainter>
-#include <QDebug>
 #include "layer.h"
 
 class QString;
@@ -31,7 +28,7 @@ public:
     void clearAllLayer();
     void moveUp(const QString &name);
     void moveDown(const QString &name);
-    void moveTo(const QString &name, int npos);
+    void moveTo(const QString &, int);
     bool exists(const QString &name);
     bool exists(int pos);
     void rename(const QString &oname, const QString &nname);
@@ -40,9 +37,9 @@ public:
     void updateSelected();
 
 private:
-    void moveTo(int opos,int npos);
+    void moveTo(int, int);
 
-    QVector<QString> layerLinks;
+    QList<QString> layerLinks;
     QHash<QString, LayerPointer> layers;
     LayerPointer lastSelected;
 

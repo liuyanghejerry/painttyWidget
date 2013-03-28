@@ -1,10 +1,13 @@
 #ifndef LAYERWIDGET_H
 #define LAYERWIDGET_H
 
-#include <QScrollArea>
-#include <QVBoxLayout>
-#include "layeritem.h"
-#include "layerwidgetheader.h"
+#include <QWidget>
+
+class LayerItem;
+class QScrollArea;
+class LayerWidgetHeader;
+class QVBoxLayout;
+
 
 class LayerWidget : public QWidget
 {

@@ -2,19 +2,8 @@
 #define CANVAS_H
 
 #include <QWidget>
-#include <QPainter>
-#include <QHash>
-#include <QSharedPointer>
-#include <QJsonDocument>
-
-
-#include "../misc/layermanager.h"
 #include "../paintingTools/brush/abstractbrush.h"
-#include "../paintingTools/brush/brush.h"
-#include "../paintingTools/brush/sketchbrush.h"
-#include "../paintingTools/brush/eraser.h"
-#include "../paintingTools/brush/pencil.h"
-#include "../paintingTools/colorpicker.h"
+#include "../misc/layermanager.h"
 
 typedef QSharedPointer<AbstractBrush> BrushPointer;
 

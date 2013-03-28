@@ -2,10 +2,6 @@
 #define COLORWHEEL_H
 
 #include <QWidget>
-#include <QPainter>
-#include <QResizeEvent>
-#include <QStyleOption>
-#include <QtCore/qmath.h>
 
 class ColorWheel : public QWidget
 {
@@ -26,9 +22,9 @@ public slots:
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *);
     void resizeEvent(QResizeEvent *event);
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *);
 private:
     QSize initSize;
     QImage wheelImage;

@@ -1,5 +1,8 @@
 #include "pencil.h"
 
+#include <QPen>
+#include <QPainter>
+
 Pencil::Pencil()
 {
     shortcut_ = Qt::Key_Z;

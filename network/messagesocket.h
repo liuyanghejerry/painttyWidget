@@ -1,9 +1,6 @@
 #ifndef SOCKETTHREAD_H
 #define SOCKETTHREAD_H
 
-#include <QTcpSocket>
-#include <QDataStream>
-#include <QJsonDocument>
 #include "socket.h"
 
 
@@ -20,9 +17,6 @@ signals:
 public slots:
     void sendMessage(const QString &content);
     void newMessage(const QByteArray &array);
-private:
-    QByteArray toJson(const QVariant &m);
-    QVariant fromJson(const QByteArray &d);
 };
 
 #endif // SOCKETTHREAD_H

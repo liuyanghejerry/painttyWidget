@@ -1,5 +1,9 @@
 #include "layerlabel.h"
 
+#include <QPainter>
+#include <QMouseEvent>
+#include <QStyleOption>
+
 LayerLabel::LayerLabel(QWidget *parent) :
     QWidget(parent),
     prefix_(tr("layer ")),

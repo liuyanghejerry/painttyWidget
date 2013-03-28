@@ -1,5 +1,9 @@
 #include "layerwidgetheader.h"
 
+#include <QLabel>
+#include <QSpinBox>
+#include <QHBoxLayout>
+
 LayerWidgetHeader::LayerWidgetHeader(QWidget *parent) :
     QWidget(parent)
 {

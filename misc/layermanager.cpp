@@ -1,5 +1,9 @@
 #include "layermanager.h"
 
+#include <QImage>
+#include <QPainter>
+#include <QDebug>
+
 LayerManager::LayerManager()
     :lastSelected(0)
 {
@@ -98,7 +102,7 @@ void LayerManager::removeLayer(const QString &name)
         return;
     }
     layers.remove(name);
-    layerLinks.remove(layerLinks.indexOf(name));
+    layerLinks.removeAll(name);
     qDebug()<<"remove"<<name;
 }
 
@@ -117,22 +121,22 @@ void LayerManager::clearAllLayer()
     qDebug()<<"all layers cleared";
 }
 
-void LayerManager::moveUp(const QString &name)
+void LayerManager::moveUp(const QString &)
 {
     //TODO
 }
 
-void LayerManager::moveDown(const QString &name)
+void LayerManager::moveDown(const QString &)
 {
     //TODO
 }
 
-void LayerManager::moveTo(int opos,int npos)
+void LayerManager::moveTo(int ,int )
 {
     //TODO
 }
 
-void LayerManager::moveTo(const QString &name, int npos)
+void LayerManager::moveTo(const QString &, int )
 {
     //TODO
 }
