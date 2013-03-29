@@ -7,6 +7,7 @@
 #include <QTabletEvent>
 
 #include "../network/commandsocket.h"
+#include "../paintingTools/brush/brushmanager.h"
 #include "../paintingTools/brush/brush.h"
 #include "../paintingTools/brush/sketchbrush.h"
 #include "../paintingTools/brush/eraser.h"
@@ -60,6 +61,15 @@ Canvas::Canvas(QWidget *parent) :
 
     setMouseTracking(true);
     this->resize(canvasSize);
+
+    BrushPointer p1(new Brush);
+    BrushPointer p2(new Pencil);
+    BrushPointer p3(new SketchBrush);
+    BrushPointer p4(new Eraser);
+    BrushManager::addBrush(p1);
+    BrushManager::addBrush(p2);
+    BrushManager::addBrush(p3);
+    BrushManager::addBrush(p4);
 }
 
 /*!
@@ -203,7 +213,7 @@ void Canvas::onColorPicker(bool in)
 {
     if(in){
         inPicker = true;
-        QPixmap icon = QPixmap("iconset/color-picker.png");
+        QPixmap icon = QPixmap("iconset/ui/picker-cursor.png");
         setCursor(QCursor(icon, 0, icon.height()));
     }else{
         inPicker = false;

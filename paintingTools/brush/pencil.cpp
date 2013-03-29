@@ -2,12 +2,26 @@
 
 #include <QPen>
 #include <QPainter>
+#include <QDebug>
 
 Pencil::Pencil()
 {
+    name_ = "Pencil";
+    displayName_ = QObject::tr("Pencil");
     shortcut_ = Qt::Key_Z;
     pencil.setCapStyle(Qt::RoundCap);
     pencil.setJoinStyle(Qt::RoundJoin);
+
+    icon_.addFile("iconset/ui/pencil-1.png",
+                  QSize(), QIcon::Disabled);
+    icon_.addFile("iconset/ui/pencil-2.png",
+                  QSize(), QIcon::Active);
+    icon_.addFile("iconset/ui/pencil-3.png",
+                  QSize(), QIcon::Selected);
+    icon_.addFile("iconset/ui/pencil-3.png",
+                  QSize(), QIcon::Normal, QIcon::On);
+    icon_.addFile("iconset/ui/pencil-4.png",
+                  QSize(), QIcon::Normal);
 }
 
 Pencil::~Pencil()

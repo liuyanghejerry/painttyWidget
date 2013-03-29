@@ -10,6 +10,15 @@ AbstractBrush::~AbstractBrush()
     //
 }
 
+QString AbstractBrush::name()
+{
+    return name_;
+}
+
+QString AbstractBrush::displayName()
+{
+    return displayName_;
+}
 
 QIcon AbstractBrush::icon()
 {

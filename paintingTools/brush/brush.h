@@ -9,9 +9,6 @@ class Brush : public AbstractBrush
 public:
     Brush();
     ~Brush();
-    QIcon icon();
-    QCursor cursor();
-    QKeySequence shortcut();
     int width();
     void setWidth(int w);
     int hardness();

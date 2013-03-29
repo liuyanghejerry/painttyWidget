@@ -34,6 +34,8 @@
 
 Brush::Brush()
 {
+    name_ = "Brush";
+    displayName_ = QObject::tr("Brush");
     shortcut_ = Qt::Key_A;
     brushData = new uchar[1];
     loadStencil("iconset/brush/brush.raw");
@@ -199,21 +201,6 @@ void Brush::setHardness(int h)
 int Brush::hardness()
 {
     return hardness_;
-}
-
-QIcon Brush::icon()
-{
-    return icon_;
-}
-
-QCursor Brush::cursor()
-{
-    return cursor_;
-}
-
-QKeySequence Brush::shortcut()
-{
-    return shortcut_;
 }
 
 /*!

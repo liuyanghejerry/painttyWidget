@@ -3,8 +3,21 @@
 Eraser::Eraser() :
     width_(100)
 {
+    name_ = "Eraser";
+    displayName_ = QObject::tr("Eraser");
     shortcut_ = Qt::Key_E;
     mainColor = Qt::transparent;
+
+    icon_.addFile("iconset/ui/eraser-1.png",
+                  QSize(16, 16), QIcon::Disabled);
+    icon_.addFile("iconset/ui/eraser-2.png",
+                  QSize(16, 16), QIcon::Active);
+    icon_.addFile("iconset/ui/eraser-3.png",
+                  QSize(16, 16), QIcon::Selected);
+    icon_.addFile("iconset/ui/eraser-3.png",
+                  QSize(16, 16), QIcon::Normal, QIcon::On);
+    icon_.addFile("iconset/ui/eraser-4.png",
+                  QSize(16, 16), QIcon::Normal);
 }
 
 Eraser::~Eraser()

@@ -28,6 +28,7 @@
 #include "aboutdialog.h"
 #include "brushwidthwidget.h"
 #include "../network/commandsocket.h"
+#include "../paintingTools/brush/brushmanager.h"
 #include "../common.h"
 
 MainWindow::MainWindow(const QSize& canvasSize, QWidget *parent) :
@@ -224,14 +225,6 @@ void MainWindow::viewInit()
 
 void MainWindow::toolbarInit()
 {
-    // Brush name, action name, shortcut key
-    typedef std::tuple<QString, QString, Qt::Key> BrushCombo;
-    QList<BrushCombo> brushes;
-    brushes << std::make_tuple("Pencil", tr("Pencil"), Qt::Key_Z)
-            << std::make_tuple("Brush", tr("Brush"), Qt::Key_A)
-            << std::make_tuple("Sketch", tr("Sketch"), Qt::Key_S)
-            << std::make_tuple("Eraser", tr("Eraser"), Qt::Key_E);
-
     toolbar_ = new QToolBar("Brushes", this);
     toolbar_->setObjectName("toolbar");
     this->addToolBar(Qt::TopToolBarArea, toolbar_);
@@ -244,10 +237,13 @@ void MainWindow::toolbarInit()
         }
     };
 
+    auto brushes = BrushManager::allBrushes();
+
     for(auto item: brushes){
         // create action on tool bar
-        QAction * action = toolbar_->addAction(std::get<1>(item));
-        action->setObjectName(std::get<0>(item));
+        QAction * action = toolbar_->addAction(item->icon(),
+                                               item->displayName());
+        action->setObjectName(item->name());
         connect(action, &QAction::triggered,
                 this, &MainWindow::onBrushTypeChange);
         action->setCheckable(true);
@@ -256,7 +252,7 @@ void MainWindow::toolbarInit()
 
         // set shortcut for the brush
         SingleShortcut *shortcut = new SingleShortcut(this);
-        shortcut->setKey(std::get<2>(item));
+        shortcut->setKey(item->shortcut());
         connect(shortcut, &SingleShortcut::activated,
                 [=](){
             lastBrushAction = brushActionGroup_->checkedAction();
@@ -275,7 +271,19 @@ void MainWindow::toolbarInit()
 
 
     // doing hacking to color picker
-    QAction *colorpicker = toolbar_->addAction(tr("Color Picker"));
+    QIcon colorpickerIcon;
+    colorpickerIcon.addFile("iconset/ui/picker-1.png",
+                  QSize(), QIcon::Disabled);
+    colorpickerIcon.addFile("iconset/ui/picker-2.png",
+                  QSize(), QIcon::Active);
+    colorpickerIcon.addFile("iconset/ui/picker-3.png",
+                  QSize(), QIcon::Selected);
+    colorpickerIcon.addFile("iconset/ui/picker-3.png",
+                  QSize(), QIcon::Normal, QIcon::On);
+    colorpickerIcon.addFile("iconset/ui/picker-4.png",
+                  QSize(), QIcon::Normal);
+    QAction *colorpicker = toolbar_->addAction(colorpickerIcon,
+                                               tr("Color Picker"));
     colorpicker->setCheckable(true);
     colorpicker->setAutoRepeat(false);
     // we need a real QToolButton to know weather the picker is

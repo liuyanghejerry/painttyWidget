@@ -17,6 +17,8 @@ public:
     AbstractBrush();
     virtual ~AbstractBrush();
     // TODO: icon, cursor and shrotcut
+    virtual QString name();
+    virtual QString displayName();
     virtual QIcon icon();
     virtual QCursor cursor();
     virtual QKeySequence shortcut();
@@ -39,6 +41,8 @@ public:
     virtual void setSurface(LayerPointer p);
 
 protected:
+    QString name_;
+    QString displayName_;
     QIcon icon_;
     QCursor cursor_;
     QKeySequence shortcut_;
