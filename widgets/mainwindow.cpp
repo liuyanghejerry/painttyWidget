@@ -313,6 +313,8 @@ void MainWindow::toolbarInit()
     BrushWidthWidget * widthWidget = new BrushWidthWidget(this);
     connect(widthWidget, &BrushWidthWidget::valueChanged,
             ui->canvas, &Canvas::setBrushWidth);
+    connect(toolbar_, &QToolBar::orientationChanged,
+            widthWidget, &BrushWidthWidget::setOrientation);
 
     QShortcut* widthActionSub = new QShortcut(this);
     widthActionSub->setKey(Qt::Key_Q);

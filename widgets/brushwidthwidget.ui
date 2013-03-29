@@ -6,55 +6,58 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>317</width>
-    <height>20</height>
+    <width>168</width>
+    <height>19</height>
    </rect>
   </property>
   <property name="toolTip">
    <string>Shortcut: Q/W</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
-   <property name="topMargin">
-    <number>0</number>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>0</y>
+     <width>30</width>
+     <height>16</height>
+    </rect>
    </property>
-   <property name="bottomMargin">
-    <number>0</number>
+   <property name="text">
+    <string>Width</string>
    </property>
-   <item>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Width</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QSlider" name="slider">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="width_show">
-     <property name="text">
-      <string>1 px</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>161</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-  </layout>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QSlider" name="slider">
+   <property name="geometry">
+    <rect>
+     <x>45</x>
+     <y>0</y>
+     <width>84</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="width_show">
+   <property name="geometry">
+    <rect>
+     <x>135</x>
+     <y>0</y>
+     <width>24</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>1 px</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+class QBoxLayout;
+
 namespace Ui {
 class BrushWidthWidget;
 }
@@ -20,11 +22,14 @@ public slots:
     void setStep(int v);
     void up();
     void down();
+    void setOrientation(Qt::Orientation ori);
 signals:
     void valueChanged(int v);
     
 private:
     Ui::BrushWidthWidget *ui;
+    QBoxLayout *layout_;
+    void makeLayout();
 };
 
 #endif // BRUSHWIDTHWIDGET_H
