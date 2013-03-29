@@ -14,11 +14,15 @@ BrushWidthWidget::BrushWidthWidget(QWidget *parent) :
     ui->slider->setSizePolicy(QSizePolicy::Preferred,
                               QSizePolicy::Preferred);
     ui->slider->setRange(1, 100);
-    connect(ui->slider, &QSlider::valueChanged,
-            [&](int value){
-        ui->width_show->setText(tr("%1 px").arg(value));
-        emit valueChanged(value);
-    });
+    ui->spinBox->setRange(1, 100);
+    connect(ui->slider, &QSlider::valueChanged, this, &BrushWidthWidget::valueChanged);
+//            [&](int value){
+//        ui->width_show->setText(tr("%1 px").arg(value));
+//        emit valueChanged(value);
+//    });
+    connect(ui->slider, &QSlider::valueChanged, ui->spinBox, &QSpinBox::setValue);
+    connect(ui->spinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            ui->slider, &QSlider::setValue);
 }
 
 BrushWidthWidget::~BrushWidthWidget()
@@ -69,6 +73,7 @@ void BrushWidthWidget::setOrientation(Qt::Orientation ori)
     this->setLayout(layout_);
     layout_->addWidget(ui->label);
     layout_->addWidget(ui->slider);
+    layout_->addWidget(ui->spinBox);
     layout_->addWidget(ui->width_show);
     ui->slider->setOrientation(ori);
 }
