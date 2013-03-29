@@ -66,6 +66,7 @@ void BrushWidthWidget::setOrientation(Qt::Orientation ori)
     }else{
         layout_ = new QVBoxLayout(this);
     }
+    this->setLayout(layout_);
     layout_->addWidget(ui->label);
     layout_->addWidget(ui->slider);
     layout_->addWidget(ui->width_show);
