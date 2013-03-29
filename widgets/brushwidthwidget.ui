@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>168</width>
+    <width>208</width>
     <height>19</height>
    </rect>
   </property>
@@ -45,17 +45,27 @@
   <widget class="QLabel" name="width_show">
    <property name="geometry">
     <rect>
-     <x>135</x>
+     <x>180</x>
      <y>0</y>
      <width>24</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
-    <string>1 px</string>
+    <string>px</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="spinBox">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>0</y>
+     <width>42</width>
+     <height>22</height>
+    </rect>
    </property>
   </widget>
  </widget>
