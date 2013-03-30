@@ -25,8 +25,9 @@ Eraser::~Eraser()
     //
 }
 
-void Eraser::setColor(const QColor &)
+void Eraser::setColor(const QColor &c)
 {
+    mainColor = c;
     return;
 }
 
@@ -50,7 +51,7 @@ void Eraser::drawPoint(const QPointF &st)
     eraser.setCapStyle(Qt::RoundCap);
     eraser.setJoinStyle(Qt::RoundJoin);
     painter.setPen(eraser);
-    painter.setBrush(mainColor);
+    painter.setBrush(Qt::transparent);
     painter.drawPoint(st.x(), st.y());
 }
 
