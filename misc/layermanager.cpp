@@ -161,10 +161,10 @@ void LayerManager::rename(const QString &oname,const QString &nname)
     }
 }
 
- void LayerManager::resizeLayers(const QSize &newsize)
- {
-     for(int i=0;i<layerLinks.count();++i){
-         layers[layerLinks[i]]->resize(newsize);
-     }
-     qDebug()<<"LayerManager::resizeLayers:"<<newsize;
- }
+void LayerManager::resizeLayers(const QSize &newsize)
+{
+    for(int i=0;i<layerLinks.count();++i){
+        layers[layerLinks[i]]->resize(newsize);
+    }
+    qDebug()<<"LayerManager::resizeLayers:"<<newsize;
+}
