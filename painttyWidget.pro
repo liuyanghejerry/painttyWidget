@@ -100,8 +100,7 @@ FORMS    += widgets/mainwindow.ui \
     widgets/colorspinboxgroup.ui \
     widgets/colorbox.ui \
     widgets/newroomwindow.ui \
-    widgets/aboutdialog.ui \
-    widgets/brushwidthwidget.ui
+    widgets/aboutdialog.ui
 
 UI_DIR = $${PWD}/widgets/
 

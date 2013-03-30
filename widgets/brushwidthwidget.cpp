@@ -1,67 +1,67 @@
 #include "brushwidthwidget.h"
-#include "ui_brushwidthwidget.h"
-
+//#include "ui_brushwidthwidget.h"
+#include <QLabel>
+#include <QSlider>
+#include <QSpinBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
 BrushWidthWidget::BrushWidthWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::BrushWidthWidget),
     layout_(nullptr)
 {
-    ui->setupUi(this);
+    widthLabel = new QLabel(tr("Width"), this);
+    widthSlider = new QSlider(this);
+    widthSpinBox = new QSpinBox(this);
+    unitLabel = new QLabel(tr("px"), this);
+
+    widthSlider->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    widthSlider->setRange(1, 100);
+    widthSpinBox->setRange(1, 100);
+
+    connect(widthSlider, &QSlider::valueChanged, this, &BrushWidthWidget::valueChanged);
+    connect(widthSlider, &QSlider::valueChanged, widthSpinBox, &QSpinBox::setValue);
+    connect(widthSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+            widthSlider, &QSlider::setValue);
+
     setOrientation(Qt::Horizontal);
-    ui->slider->setSizePolicy(QSizePolicy::Preferred,
-                              QSizePolicy::Preferred);
-    ui->slider->setRange(1, 100);
-    ui->spinBox->setRange(1, 100);
-    connect(ui->slider, &QSlider::valueChanged, this, &BrushWidthWidget::valueChanged);
-//            [&](int value){
-//        ui->width_show->setText(tr("%1 px").arg(value));
-//        emit valueChanged(value);
-//    });
-    connect(ui->slider, &QSlider::valueChanged, ui->spinBox, &QSpinBox::setValue);
-    connect(ui->spinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
-            ui->slider, &QSlider::setValue);
 }
 
 BrushWidthWidget::~BrushWidthWidget()
 {
-    delete ui;
 }
 
 int BrushWidthWidget::value()
 {
-    return ui->slider->value();
+    return widthSlider->value();
 }
 
 void BrushWidthWidget::setValue(int v)
 {
-    if(v != ui->slider->value()){
-        ui->slider->setValue(v);
+    if(v != widthSlider->value()){
+        widthSlider->setValue(v);
     }
 }
 
 void BrushWidthWidget::setStep(int v)
 {
-    ui->slider->setSingleStep(v);
+    widthSlider->setSingleStep(v);
 }
 
 void BrushWidthWidget::up()
 {
-    ui->slider->setValue(ui->slider->value()
-                         + ui->slider->singleStep());
+    widthSlider->setValue(widthSlider->value()
+                          + widthSlider->singleStep());
 }
 
 void BrushWidthWidget::down()
 {
-    ui->slider->setValue(ui->slider->value()
-                         - ui->slider->singleStep());
+    widthSlider->setValue(widthSlider->value()
+                          - widthSlider->singleStep());
 }
 
 void BrushWidthWidget::setOrientation(Qt::Orientation ori)
 {
-    this->setLayout(0);
     if(layout_){
         delete layout_;
     }
@@ -70,10 +70,11 @@ void BrushWidthWidget::setOrientation(Qt::Orientation ori)
     }else{
         layout_ = new QVBoxLayout(this);
     }
-    this->setLayout(layout_);
-    layout_->addWidget(ui->label);
-    layout_->addWidget(ui->slider);
-    layout_->addWidget(ui->spinBox);
-    layout_->addWidget(ui->width_show);
-    ui->slider->setOrientation(ori);
+    layout_->setContentsMargins(0, 0, 0, 0);
+    layout_->addWidget(widthLabel);
+    layout_->addWidget(widthSlider);
+    layout_->addWidget(widthSpinBox);
+    layout_->addWidget(unitLabel);
+    widthSlider->setOrientation(ori);
+    setLayout(layout_);
 }

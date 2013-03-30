@@ -226,7 +226,7 @@ void MainWindow::viewInit()
 void MainWindow::toolbarInit()
 {
     toolbar_ = new QToolBar("Brushes", this);
-    toolbar_->setObjectName("toolbar");
+    toolbar_->setObjectName("BrushToolbar");
     this->addToolBar(Qt::TopToolBarArea, toolbar_);
     brushActionGroup_ = new QActionGroup(this);
 
@@ -310,10 +310,13 @@ void MainWindow::toolbarInit()
     }
 
     // for brush width
+    QToolBar *brushSettingToolbar = new QToolBar(tr("Brush Settings"), this);
+    brushSettingToolbar->setObjectName("BrushSettingToolbar");
+    this->addToolBar(Qt::TopToolBarArea, brushSettingToolbar);
     BrushWidthWidget * widthWidget = new BrushWidthWidget(this);
     connect(widthWidget, &BrushWidthWidget::valueChanged,
             ui->canvas, &Canvas::setBrushWidth);
-    connect(toolbar_, &QToolBar::orientationChanged,
+    connect(brushSettingToolbar, &QToolBar::orientationChanged,
             widthWidget, &BrushWidthWidget::setOrientation);
 
     QShortcut* widthActionSub = new QShortcut(this);
@@ -326,8 +329,7 @@ void MainWindow::toolbarInit()
             widthWidget, SLOT(up()));
     widthControl_ = widthWidget;
 
-    toolbar_->addSeparator();
-    toolbar_->addWidget(widthWidget);
+    brushSettingToolbar->addWidget(widthWidget);
 
     //TODO: locking before complete connect
 }

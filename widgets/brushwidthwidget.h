@@ -4,10 +4,9 @@
 #include <QWidget>
 
 class QBoxLayout;
-
-namespace Ui {
-class BrushWidthWidget;
-}
+class QLabel;
+class QSlider;
+class QSpinBox;
 
 class BrushWidthWidget : public QWidget
 {
@@ -27,9 +26,11 @@ signals:
     void valueChanged(int v);
     
 private:
-    Ui::BrushWidthWidget *ui;
+    QLabel *widthLabel;
+    QSlider *widthSlider;
+    QSpinBox *widthSpinBox;
+    QLabel *unitLabel;
     QBoxLayout *layout_;
-    void makeLayout();
 };
 
 #endif // BRUSHWIDTHWIDGET_H
