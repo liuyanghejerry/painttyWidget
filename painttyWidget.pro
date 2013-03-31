@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-DEFINES += PAINTTY_DEV
+#DEFINES += PAINTTY_DEV
 QT       += core gui network widgets
 
 win32 {

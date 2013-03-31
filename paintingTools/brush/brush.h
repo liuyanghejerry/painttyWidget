@@ -2,7 +2,6 @@
 #define BRUSH_H
 
 #include "abstractbrush.h"
-#include <QFile>
 
 class Brush : public AbstractBrush
 {
@@ -21,10 +20,7 @@ public:
     QVariantMap brushInfo();
 
 protected:
-    QFile stencilFile;
     QPixmap stencil;
-    QImage originalStencil;
-    uchar *brushData;
     int width_;
     void drawPoint(const QPointF &st);
     void drawLine(const QPointF &st, const QPointF &end, qreal &left);
