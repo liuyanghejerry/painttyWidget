@@ -46,7 +46,7 @@ void Eraser::drawPoint(const QPointF &st)
     QPainter painter(surface_->imagePtr());
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
-    QPen eraser(mainColor);
+    QPen eraser(Qt::transparent);
     eraser.setWidth(width_);
     eraser.setCapStyle(Qt::RoundCap);
     eraser.setJoinStyle(Qt::RoundJoin);
@@ -62,12 +62,12 @@ void Eraser::drawLine(const QPointF &st,
     QPainter painter(surface_->imagePtr());
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setCompositionMode(QPainter::CompositionMode_Clear);
-    QPen eraser(mainColor);
+    QPen eraser(Qt::transparent);
     eraser.setWidth(width_);
     eraser.setCapStyle(Qt::RoundCap);
     eraser.setJoinStyle(Qt::RoundJoin);
     painter.setPen(eraser);
-    painter.setBrush(mainColor);
+    painter.setBrush(Qt::transparent);
     painter.drawLine(st, end);
 }
 
