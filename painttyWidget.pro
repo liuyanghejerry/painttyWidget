@@ -56,7 +56,8 @@ SOURCES += main.cpp\
     misc/errortable.cpp \
     widgets/brushwidthwidget.cpp \
     paintingTools/brush/abstractbrush.cpp \
-    paintingTools/brush/brushmanager.cpp
+    paintingTools/brush/brushmanager.cpp \
+    paintingTools/brush/wetfingure.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -94,7 +95,8 @@ HEADERS  += widgets/mainwindow.h \
     misc/errortable.h \
     widgets/brushwidthwidget.h \
     paintingTools/brush/abstractbrush.h \
-    paintingTools/brush/brushmanager.h
+    paintingTools/brush/brushmanager.h \
+    paintingTools/brush/wetfingure.h
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/colorspinboxgroup.ui \
