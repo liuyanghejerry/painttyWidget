@@ -85,13 +85,13 @@ Brush::~Brush()
 
 void Brush::makeStencil()
 {
-    stencil = QPixmap(width_*2, width_*2);
+    stencil = QPixmap(width_, width_);
     stencil.fill(Qt::transparent);
     QEasingCurve easing(QEasingCurve::OutQuart);
 
-    const QPoint center(width_, width_);
+    const QPoint center(width_/2, width_/2);
     QPainter painter(&stencil);
-    QRadialGradient gradient(center, width_);
+    QRadialGradient gradient(center, width_/2);
     QColor color(mainColor);
     for(int i=0;i<100;++i){
         qreal value = i/100.0;
@@ -99,12 +99,12 @@ void Brush::makeStencil()
         gradient.setColorAt(value, color);
     }
     gradient.setColorAt(1, Qt::transparent);
-    gradient.setCenterRadius(width_);
-    gradient.setFocalRadius(width_*hardness_/100.0 -1);
+    gradient.setCenterRadius(width_/2);
+    gradient.setFocalRadius(width_/2*hardness_/100.0 -1);
     QBrush brush(gradient);
-    QPen pen(brush, width_*2);
+    QPen pen(brush, width_);
     painter.setPen(pen);
-    painter.drawPoint(width_, width_);
+    painter.drawPoint(width_/2, width_/2);
 }
 
 /*!
