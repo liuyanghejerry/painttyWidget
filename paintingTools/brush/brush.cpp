@@ -1,5 +1,11 @@
 #include "brush.h"
 
+#include <QRadialGradient>
+#include <QPainter>
+#include <QPen>
+#include <QBrush>
+#include <QEasingCurve>
+
 /*!
      \class Brush
 
@@ -33,12 +39,12 @@
 */
 
 Brush::Brush()
+    :stencil(10, 10),
+      width_(0)
 {
     name_ = "Brush";
     displayName_ = QObject::tr("Brush");
     shortcut_ = Qt::Key_A;
-    brushData = new uchar[1];
-    loadStencil("iconset/brush/brush.raw");
     QVariantMap colorMap = this->defaultInfo()["color"].toMap();
     QColor c(colorMap["red"].toInt(),
             colorMap["green"].toInt(),
@@ -66,8 +72,6 @@ Brush::Brush()
 
 Brush::~Brush()
 {
-    delete [] brushData;
-    stencilFile.close();
 }
 
 /*!
@@ -79,54 +83,28 @@ Brush::~Brush()
     \sa setSurface(), setDirectDraw()
 */
 
-
-bool Brush::loadStencil(const QString &fileName)
+void Brush::makeStencil()
 {
-    char *brushPrototype; // raw brush prototype
+    stencil = QPixmap(width_*2, width_*2);
+    stencil.fill(Qt::transparent);
+    QEasingCurve easing(QEasingCurve::OutQuart);
 
-    stencilFile.setFileName(fileName);
-    // TODO: more native way to due with the error
-    bool ret = stencilFile.open(QIODevice::ReadOnly);
-    Q_ASSERT(ret);
-    if(!ret) return false;
-    QDataStream in;
-    in.setDevice(&stencilFile);
-
-    int size = stencilFile.size();  // set size to the length of the raw file
-    if(!size){
-        return false;
+    const QPoint center(width_, width_);
+    QPainter painter(&stencil);
+    QRadialGradient gradient(center, width_);
+    QColor color(mainColor);
+    for(int i=0;i<100;++i){
+        qreal value = i/100.0;
+        color.setAlphaF(1-easing.valueForProgress(value));
+        gradient.setColorAt(value, color);
     }
-    brushPrototype = new char[size];  // create the brush prototype array
-    in.readRawData(brushPrototype, size);  // read the file into the prototype
-    stencilFile.close();
-    brushData = new uchar[size];  // create the uchar array you need to construct QImage
-
-    for (int i = 0; i < size; ++i)
-        brushData[i] = (uchar)brushPrototype[i];  // copy the char to the uchar array
-
-    QImage img1(brushData, 100, 100, QImage::Format_Indexed8); // create QImage from the brush data array
-
-    QImage img2(100, 100, QImage::Format_ARGB32);
-
-
-    QVector<QRgb> vectorColors(256);  // create a color table for the image
-    for (int c = 0; c < 256; c++)
-        vectorColors[c] = qRgb(c, c, c);
-
-    img1.setColorTable(vectorColors);  // set the color table to the image
-
-    for (int iX = 0; iX < 100; ++iX)
-    {
-        for (int iY = 0; iY < 100; ++iY)
-        {
-            img2.setPixel(iX, iY, qRgba(255, 0, 0 , (255-qGray(img1.pixel(iX, iY)))*0.1));
-        }
-    }
-
-    originalStencil = img1;
-    stencil = QPixmap::fromImage(img2);
-    delete [] brushPrototype;
-    return ret;
+    gradient.setColorAt(1, Qt::transparent);
+    gradient.setCenterRadius(width_);
+    gradient.setFocalRadius(width_*hardness_/100.0 -1);
+    QBrush brush(gradient);
+    QPen pen(brush, width_*2);
+    painter.setPen(pen);
+    painter.drawPoint(width_, width_);
 }
 
 /*!
@@ -139,7 +117,7 @@ bool Brush::loadStencil(const QString &fileName)
 
 int Brush::width()
 {
-    return stencil.width();
+    return width_;
 }
 
 /*!
@@ -152,9 +130,8 @@ int Brush::width()
 
 void Brush::setWidth(int w)
 {
-    if(stencil.isNull()) return;
-    stencil = stencil.scaled(w,w);
-    setColor(color());
+    width_ = w;
+    makeStencil();
 }
 
 /*!
@@ -180,32 +157,14 @@ QColor Brush::color()
 
 void Brush::setColor(const QColor &color)
 {
-    QImage img(stencil.size(), QImage::Format_ARGB32);
-    QImage originalStencil_sized =
-            originalStencil.scaled(stencil.size());
-
-
-    for(int iX = 0; iX < img.width(); ++iX)
-    {
-        for(int iY = 0; iY < img.width(); ++iY)
-        {
-            int r = color.red();
-            int g = color.green();
-            int b = color.blue();
-            int a = (255 -
-                     qGray(originalStencil_sized.pixel(iX, iY)))
-                    *color.alphaF();
-            img.setPixel(iX, iY, qRgba(r, g, b, a));
-        }
-    }
     mainColor = color;
-
-    stencil = QPixmap::fromImage(img);
+    makeStencil();
 }
 
 void Brush::setHardness(int h)
 {
     hardness_ = h;
+    makeStencil();
 }
 
 int Brush::hardness()
@@ -275,7 +234,7 @@ void Brush::drawLine(const QPointF &st, const QPointF &end, qreal &left)
     QPainter painter;
     painter.begin(surface_->imagePtr());
     painter.setRenderHint(QPainter::Antialiasing);
-    qreal spacing = stencil.width()*0.1;
+    qreal spacing = width_*0.1;
 
     qreal deltaX = end.x() - st.x();
     qreal deltaY = end.y() - st.y();

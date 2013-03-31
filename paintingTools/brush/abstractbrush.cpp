@@ -1,6 +1,8 @@
 #include "abstractbrush.h"
 
 AbstractBrush::AbstractBrush()
+    :leftOverDistance(0),
+      hardness_(100)
 {
     //
 }

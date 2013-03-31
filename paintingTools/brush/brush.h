@@ -25,9 +25,11 @@ protected:
     QPixmap stencil;
     QImage originalStencil;
     uchar *brushData;
+    int width_;
     void drawPoint(const QPointF &st);
     void drawLine(const QPointF &st, const QPointF &end, qreal &left);
     bool loadStencil(const QString &fileName);
+    void makeStencil();
 };
 
 #endif // BRUSH_H
