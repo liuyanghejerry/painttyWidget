@@ -11,17 +11,23 @@ BrushWidthWidget::BrushWidthWidget(QWidget *parent) :
     layout_(nullptr)
 {
     widthLabel = new QLabel(tr("Width"), this);
+    widthLabel->setAlignment(Qt::AlignCenter);
     widthSlider = new QSlider(this);
     widthSpinBox = new QSpinBox(this);
     unitLabel = new QLabel(tr("px"), this);
+    unitLabel->setAlignment(Qt::AlignCenter);
 
-    widthSlider->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    widthSlider->setSizePolicy(QSizePolicy::Preferred,
+                               QSizePolicy::Fixed);
     widthSlider->setRange(1, 100);
     widthSpinBox->setRange(1, 100);
 
-    connect(widthSlider, &QSlider::valueChanged, this, &BrushWidthWidget::valueChanged);
-    connect(widthSlider, &QSlider::valueChanged, widthSpinBox, &QSpinBox::setValue);
-    connect(widthSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+    connect(widthSlider, &QSlider::valueChanged,
+            this, &BrushWidthWidget::valueChanged);
+    connect(widthSlider, &QSlider::valueChanged,
+            widthSpinBox, &QSpinBox::setValue);
+    connect(widthSpinBox,
+            static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             widthSlider, &QSlider::setValue);
 
     setOrientation(Qt::Horizontal);
@@ -71,6 +77,7 @@ void BrushWidthWidget::setOrientation(Qt::Orientation ori)
         layout_ = new QVBoxLayout(this);
     }
     layout_->setContentsMargins(0, 0, 0, 0);
+    layout_->setAlignment(Qt::AlignCenter);
     layout_->addWidget(widthLabel);
     layout_->addWidget(widthSlider);
     layout_->addWidget(widthSpinBox);

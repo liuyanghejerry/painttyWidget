@@ -13,7 +13,7 @@ ColorGridItem::ColorGridItem(int id, QWidget *parent) :
     menu(this),
     color_(Qt::transparent),
     hovered_(false),
-    picker(QPixmap("iconset/color-picker.png"))
+    picker(QPixmap("iconset/ui/picker-cursor.png"))
 {
     setContentsMargins(0,0,0,0);
     drawTransparent();
