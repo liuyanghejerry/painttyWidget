@@ -173,41 +173,6 @@ int Brush::hardness()
 }
 
 /*!
-    \fn void Brush::start(const QPointF &st)
-
-    Starts a new drawing action at \a st.
-    Internally, this function calls drawPoint().
-
-    \sa lineTo(), end()
-*/
-
-void Brush::start(const QPointF &st)
-{
-    leftOverDistance = 0;
-    drawPoint(st);
-    lastPoint_ = st;
-}
-
-/*!
-    \fn void Brush::lineTo(const QPointF &st)
-
-    Draws a line from last point to \a st. And \a st will be the last point at next time.
-    This function usually used with start().
-    Internally, this function calls drawLine().
-    \sa start(), end()
-*/
-
-void Brush::lineTo(const QPointF &st)
-{    
-    if(lastPoint_.isNull()){
-        start(st);
-        return;
-    }
-    this->drawLine(lastPoint_, st, leftOverDistance);
-    lastPoint_ = st;
-}
-
-/*!
     \fn void Brush::drawPoint(const QPointF &st)
 
     Draws a point at \a st.
@@ -219,7 +184,9 @@ void Brush::drawPoint(const QPointF &st)
     QPainter painter;
     painter.begin(surface_->imagePtr());
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.drawPixmap(st.x() - stencil.width()/2.0,st.y() - stencil.width()/2.0, stencil);
+    painter.drawPixmap(st.x() - stencil.width()/2.0,
+                       st.y() - stencil.width()/2.0,
+                       stencil);
 }
 
 /*!

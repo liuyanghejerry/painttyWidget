@@ -149,7 +149,6 @@ void Canvas::setBrushWidth(int newWidth)
     if(brush_->width() != newWidth){
         brush_->setWidth(newWidth);
         updateCursor(newWidth);
-//        qDebug()<<this->cursor().pixmap().size();
     }
 }
 
@@ -260,7 +259,7 @@ void Canvas::drawLineTo(const QPoint &endPoint)
     map.insert("end", QVariant(end_j));
     map.insert("layer", QVariant(currentLayer()));
     map.insert("clientid",
-               QVariant(CommandSocket::cmdSocket()->clientId()));
+               CommandSocket::cmdSocket()->clientId());
 
     QVariantMap bigMap;
     bigMap.insert("info", map);
@@ -441,19 +440,19 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
 
 void Canvas::onNewData(const QByteArray & array)
 {
-//    static quint64 h_size = 0;
-//    if(historySize_) {
-//        h_size += array.size();
-//        qDebug()<<h_size<<historySize_;
-//        if(h_size < quint64(historySize_)){
-//            this->setDisabled(true);
-//        }else{
-//            historySize_ = 0;
-//            h_size = 0;
-//            this->setEnabled(true);
-//            qDebug()<<"enable!";
-//        }
-//    }
+    //    static quint64 h_size = 0;
+    //    if(historySize_) {
+    //        h_size += array.size();
+    //        qDebug()<<h_size<<historySize_;
+    //        if(h_size < quint64(historySize_)){
+    //            this->setDisabled(true);
+    //        }else{
+    //            historySize_ = 0;
+    //            h_size = 0;
+    //            this->setEnabled(true);
+    //            qDebug()<<"enable!";
+    //        }
+    //    }
     QVariantMap m = fromJson(array).toMap();
     QString action = m["action"].toString().toLower();
 

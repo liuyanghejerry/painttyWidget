@@ -14,8 +14,6 @@ public:
     void setHardness(int h);
     QColor color();
     void setColor(const QColor &color);
-    void start(const QPointF &st);
-    void lineTo(const QPointF &st);
     QVariantMap defaultInfo();
     QVariantMap brushInfo();
 
