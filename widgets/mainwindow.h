@@ -8,7 +8,7 @@
 #include "../misc/router.h"
 
 class QToolButton;
-class BrushWidthWidget;
+class BrushSettingsWidget;
 class QActionGroup;
 
 namespace Ui {
@@ -73,7 +73,7 @@ private:
     QByteArray defaultView;
     QAction *lastBrushAction;
     Router<> cmdRouter_;
-    BrushWidthWidget *widthControl_;
+    BrushSettingsWidget *widthControl_;
     QToolBar *toolbar_;
     QActionGroup *brushActionGroup_;
     QToolButton *colorPickerButton_;

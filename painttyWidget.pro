@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-DEFINES += PAINTTY_DEV
+#DEFINES += PAINTTY_DEV
 QT       += core gui network widgets
 
 win32 {
@@ -54,10 +54,10 @@ SOURCES += main.cpp\
     widgets/canvascontainer.cpp \
     widgets/memberlistwidget.cpp \
     misc/errortable.cpp \
-    widgets/brushwidthwidget.cpp \
     paintingTools/brush/abstractbrush.cpp \
     paintingTools/brush/brushmanager.cpp \
-    paintingTools/brush/wetfingure.cpp
+    paintingTools/brush/wetfingure.cpp \
+    widgets/brushsettingswidget.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -93,10 +93,10 @@ HEADERS  += widgets/mainwindow.h \
     widgets/memberlistwidget.h \
     misc/router.h \
     misc/errortable.h \
-    widgets/brushwidthwidget.h \
     paintingTools/brush/abstractbrush.h \
     paintingTools/brush/brushmanager.h \
-    paintingTools/brush/wetfingure.h
+    paintingTools/brush/wetfingure.h \
+    widgets/brushsettingswidget.h
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/colorspinboxgroup.ui \

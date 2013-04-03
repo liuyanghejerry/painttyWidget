@@ -26,7 +26,7 @@
 #include "layeritem.h"
 #include "colorgrid.h"
 #include "aboutdialog.h"
-#include "brushwidthwidget.h"
+#include "brushsettingswidget.h"
 #include "../network/commandsocket.h"
 #include "../paintingTools/brush/brushmanager.h"
 #include "../common.h"
@@ -225,7 +225,7 @@ void MainWindow::viewInit()
 
 void MainWindow::toolbarInit()
 {
-    toolbar_ = new QToolBar("Brushes", this);
+    toolbar_ = new QToolBar(tr("Brushes"), this);
     toolbar_->setObjectName("BrushToolbar");
     this->addToolBar(Qt::TopToolBarArea, toolbar_);
     brushActionGroup_ = new QActionGroup(this);
@@ -313,11 +313,11 @@ void MainWindow::toolbarInit()
     QToolBar *brushSettingToolbar = new QToolBar(tr("Brush Settings"), this);
     brushSettingToolbar->setObjectName("BrushSettingToolbar");
     this->addToolBar(Qt::TopToolBarArea, brushSettingToolbar);
-    BrushWidthWidget * widthWidget = new BrushWidthWidget(this);
-    connect(widthWidget, &BrushWidthWidget::valueChanged,
+    BrushSettingsWidget * widthWidget = new BrushSettingsWidget(this);
+    connect(widthWidget, &BrushSettingsWidget::widthChanged,
             ui->canvas, &Canvas::setBrushWidth);
     connect(brushSettingToolbar, &QToolBar::orientationChanged,
-            widthWidget, &BrushWidthWidget::setOrientation);
+            widthWidget, &BrushSettingsWidget::setOrientation);
 
     QShortcut* widthActionSub = new QShortcut(this);
     widthActionSub->setKey(Qt::Key_Q);
@@ -605,8 +605,8 @@ void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
     // INFO: to prevent scaled to 1px, should always
     // change width first
     if(widthControl_){
-        if(widthControl_->value() != w)
-            widthControl_->setValue(w);
+        if(widthControl_->width() != w)
+            widthControl_->setWidth(w);
     }
     if(ui->colorBox->color() != c)
         ui->colorBox->setColor(c);
