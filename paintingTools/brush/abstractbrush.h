@@ -16,7 +16,6 @@ class AbstractBrush
 public:
     AbstractBrush();
     virtual ~AbstractBrush();
-    // TODO: icon, cursor and shrotcut
     virtual QString name();
     virtual QString displayName();
     virtual QIcon icon();

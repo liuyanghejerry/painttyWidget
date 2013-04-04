@@ -16,7 +16,9 @@ NewRoomWindow::NewRoomWindow(QWidget *parent) :
     ui->setupUi(this);
     // set validator for two lineinputs
     QIntValidator *inva = new QIntValidator(this);
-    inva->setRange(1, 65535);
+    // 4860*4860 = 220MB for each layer
+    // 10 layers will cost about 2200MB, which is 2GB.
+    inva->setRange(1, 4860);
     ui->height_input->setValidator(inva);
     ui->width_input->setValidator(inva);
     ui->buttonBox->
