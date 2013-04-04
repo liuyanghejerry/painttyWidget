@@ -28,6 +28,7 @@ public slots:
     void setShareColor(bool b);
     void setBrushColor(const QColor &newColor);
     void setBrushWidth(int newWidth);
+    void setBrushHardness(int h);
     void onNewData(const QByteArray & data);
     void addLayer(const QString &name);
     bool deleteLayer(const QString &name);

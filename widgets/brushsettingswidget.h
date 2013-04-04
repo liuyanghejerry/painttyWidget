@@ -34,7 +34,6 @@ private:
     QLabel *widthLabel;
     QSlider *widthSlider;
     QSpinBox *widthSpinBox;
-    QLabel *unitLabel;
     QFrame *separator;
     QLabel *hardnessLabel;
     QSlider *hardnessSlider;

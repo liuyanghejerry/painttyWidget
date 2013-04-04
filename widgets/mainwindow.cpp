@@ -39,7 +39,7 @@ MainWindow::MainWindow(const QSize& canvasSize, QWidget *parent) :
     historySize_(0),
     canvasSize_(canvasSize),
     lastBrushAction(nullptr),
-    widthControl_(nullptr),
+    brushSettingControl_(nullptr),
     toolbar_(nullptr),
     brushActionGroup_(nullptr),
     colorPickerButton_(nullptr)
@@ -313,23 +313,27 @@ void MainWindow::toolbarInit()
     QToolBar *brushSettingToolbar = new QToolBar(tr("Brush Settings"), this);
     brushSettingToolbar->setObjectName("BrushSettingToolbar");
     this->addToolBar(Qt::TopToolBarArea, brushSettingToolbar);
-    BrushSettingsWidget * widthWidget = new BrushSettingsWidget(this);
-    connect(widthWidget, &BrushSettingsWidget::widthChanged,
+    BrushSettingsWidget * brushSettingWidget = new BrushSettingsWidget(this);
+    connect(brushSettingWidget, &BrushSettingsWidget::widthChanged,
             ui->canvas, &Canvas::setBrushWidth);
+    connect(brushSettingWidget, &BrushSettingsWidget::hardnessChanged,
+            ui->canvas, &Canvas::setBrushHardness);
     connect(brushSettingToolbar, &QToolBar::orientationChanged,
-            widthWidget, &BrushSettingsWidget::setOrientation);
+            brushSettingWidget, &BrushSettingsWidget::setOrientation);
 
     QShortcut* widthActionSub = new QShortcut(this);
     widthActionSub->setKey(Qt::Key_Q);
-    connect(widthActionSub, SIGNAL(activated()),
-            widthWidget, SLOT(down()));
+    connect(widthActionSub, &QShortcut::activated,
+            brushSettingWidget, &BrushSettingsWidget::widthDown);
     QShortcut* widthActionAdd = new QShortcut(this);
     widthActionAdd->setKey(Qt::Key_W);
-    connect(widthActionAdd, SIGNAL(activated()),
-            widthWidget, SLOT(up()));
-    widthControl_ = widthWidget;
+    connect(widthActionAdd, &QShortcut::activated,
+            brushSettingWidget, &BrushSettingsWidget::widthUp);
+    // TODO: add shortcuts to hardness setting
 
-    brushSettingToolbar->addWidget(widthWidget);
+    brushSettingControl_ = brushSettingWidget;
+
+    brushSettingToolbar->addWidget(brushSettingWidget);
 
     //TODO: locking before complete connect
 }
@@ -604,9 +608,9 @@ void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
 
     // INFO: to prevent scaled to 1px, should always
     // change width first
-    if(widthControl_){
-        if(widthControl_->width() != w)
-            widthControl_->setWidth(w);
+    if(brushSettingControl_){
+        if(brushSettingControl_->width() != w)
+            brushSettingControl_->setWidth(w);
     }
     if(ui->colorBox->color() != c)
         ui->colorBox->setColor(c);

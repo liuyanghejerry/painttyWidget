@@ -73,7 +73,7 @@ private:
     QByteArray defaultView;
     QAction *lastBrushAction;
     Router<> cmdRouter_;
-    BrushSettingsWidget *widthControl_;
+    BrushSettingsWidget *brushSettingControl_;
     QToolBar *toolbar_;
     QActionGroup *brushActionGroup_;
     QToolButton *colorPickerButton_;

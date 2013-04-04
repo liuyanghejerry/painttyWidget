@@ -152,23 +152,16 @@ void Canvas::setBrushWidth(int newWidth)
     }
 }
 
+void Canvas::setBrushHardness(int h)
+{
+    if(brush_->hardness() != h){
+        brush_->setHardness(h);
+    }
+}
+
 BrushPointer Canvas::brushFactory(const QString &name)
 {
-    BrushPointer b;
-    QString n_name = name.toLower();
-    if(n_name == "brush"){
-        b = BrushPointer(new Brush);
-    }else if(n_name == "pencil"){
-        b = BrushPointer(new Pencil);
-    }else if(n_name == "sketch"){
-        b = BrushPointer(new SketchBrush);
-    }else if(n_name == "eraser"){
-        b = BrushPointer(new Eraser);
-    }else{
-        qDebug()<<name<<"cannot identify";
-        return BrushPointer(new Brush);
-    }
-    return b;
+    return BrushManager::makeBrush(name.toLower());
 }
 
 /*!
@@ -216,7 +209,6 @@ void Canvas::onColorPicker(bool in)
         setCursor(QCursor(icon, 0, icon.height()));
     }else{
         inPicker = false;
-        //        setCursor(Qt::CrossCursor);
         updateCursor(brush_->width());
         emit pickColorComplete();
     }
@@ -239,7 +231,6 @@ void Canvas::drawLineTo(const QPoint &endPoint)
         setCursor(Qt::ForbiddenCursor);
         return;
     }
-    //    setCursor(Qt::CrossCursor);
     updateCursor(brush_->width());
     brush_->setSurface(l);
     brush_->lineTo(endPoint);
@@ -284,7 +275,6 @@ void Canvas::drawPoint(const QPoint &point)
         setCursor(Qt::ForbiddenCursor);
         return;
     }
-    //    setCursor(Qt::CrossCursor);
     updateCursor(brush_->width());
     brush_->setSurface(l);
     brush_->start(point);
@@ -347,6 +337,7 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
 
     QString brushName = brushInfo["name"].toString();
     int width = brushInfo["width"].toInt();
+    int hardness = brushInfo["hardness"].toInt();
     QVariantMap colorMap = brushInfo["color"].toMap();
     QColor color(colorMap["red"].toInt(),
             colorMap["green"].toInt(),
@@ -358,6 +349,7 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
             BrushPointer newOne = brushFactory(brushName);
             newOne->setSurface(l);
             newOne->setWidth(width);
+            newOne->setHardness(hardness);
             newOne->setColor(color);
             newOne->start(point);
             remoteBrush[clientid] = newOne;
@@ -366,6 +358,7 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
             BrushPointer original = remoteBrush[clientid];
             original->setSurface(l);
             original->setWidth(width);
+            original->setHardness(hardness);
             original->setColor(color);
             original->start(point);
         }
@@ -373,6 +366,7 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
         BrushPointer newOne = brushFactory(brushName);
         newOne->setSurface(l);
         newOne->setWidth(width);
+        newOne->setHardness(hardness);
         newOne->setColor(color);
         newOne->start(point);
         remoteBrush[clientid] = newOne;
@@ -404,6 +398,7 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
 
     QString brushName = brushInfo["name"].toString();
     int width = brushInfo["width"].toInt();
+    int hardness = brushInfo["hardness"].toInt();
     QVariantMap colorMap = brushInfo["color"].toMap();
     QColor color(colorMap["red"].toInt(),
             colorMap["green"].toInt(),
@@ -415,6 +410,7 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
             BrushPointer newOne = brushFactory(brushName);
             newOne->setSurface(l);
             newOne->setWidth(width);
+            newOne->setHardness(hardness);
             newOne->setColor(color);
             newOne->lineTo(end);
             remoteBrush[clientid] = newOne;
@@ -423,6 +419,7 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
             BrushPointer original = remoteBrush[clientid];
             original->setSurface(l);
             original->setWidth(width);
+            original->setHardness(hardness);
             original->setColor(color);
             original->lineTo(end);
         }
@@ -430,6 +427,7 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
         BrushPointer newOne = brushFactory(brushName);
         newOne->setSurface(l);
         newOne->setWidth(width);
+        newOne->setHardness(hardness);
         newOne->setColor(color);
         newOne->lineTo(end);
         remoteBrush[clientid] = newOne;

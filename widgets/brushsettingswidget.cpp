@@ -13,7 +13,6 @@ BrushSettingsWidget::BrushSettingsWidget(QWidget *parent) :
     widthLabel->setAlignment(Qt::AlignCenter);
     widthSlider = new QSlider(this);
     widthSpinBox = new QSpinBox(this);
-    unitLabel = new QLabel(tr("px"), this);
     separator = new QFrame(this);
     hardnessLabel = new QLabel(tr("Hardness"), this);
     hardnessSlider = new QSlider(this);
@@ -23,7 +22,6 @@ BrushSettingsWidget::BrushSettingsWidget(QWidget *parent) :
                                QSizePolicy::Fixed);
     widthSlider->setRange(1, 100);
     widthSpinBox->setRange(1, 100);
-    unitLabel->setAlignment(Qt::AlignCenter);
     hardnessLabel->setAlignment(Qt::AlignCenter);
     separator->setFrameShadow(QFrame::Sunken);
     hardnessSlider->setSizePolicy(QSizePolicy::Preferred,
@@ -116,7 +114,6 @@ void BrushSettingsWidget::setOrientation(Qt::Orientation ori)
     layout_->addWidget(widthLabel);
     layout_->addWidget(widthSlider);
     layout_->addWidget(widthSpinBox);
-    layout_->addWidget(unitLabel);
     layout_->addWidget(separator);
     layout_->addWidget(hardnessLabel);
     layout_->addWidget(hardnessSlider);
