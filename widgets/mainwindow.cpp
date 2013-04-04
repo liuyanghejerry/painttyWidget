@@ -261,7 +261,9 @@ void MainWindow::toolbarInit()
         connect(shortcut, &SingleShortcut::inactivated,
                 restoreAction);
         action->setToolTip(
-                    tr("Shortcut: %1")
+                    tr("%1\n"
+                       "Shortcut: %2")
+                    .arg(item->displayName())
                     .arg(shortcut->key()
                          .toString()));
         if(toolbar_->actions().count() < 2){
@@ -303,7 +305,9 @@ void MainWindow::toolbarInit()
             connect(pickerShortcut, &SingleShortcut::inactivated,
                     b, &QToolButton::click);
             colorpicker->setToolTip(
-                        tr("Shortcut: %1")
+                        tr("%1\n"
+                           "Shortcut: %2")
+                        .arg(colorpicker->text())
                         .arg(pickerShortcut->key()
                              .toString()));
         }

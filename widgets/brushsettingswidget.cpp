@@ -45,6 +45,7 @@ BrushSettingsWidget::BrushSettingsWidget(QWidget *parent) :
             hardnessSlider, &QSlider::setValue);
 
     setOrientation(Qt::Horizontal);
+    setHardness(100);
 }
 
 BrushSettingsWidget::~BrushSettingsWidget()
