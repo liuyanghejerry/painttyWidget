@@ -39,6 +39,7 @@ public:
     virtual void setLastPoint(const QPointF &p);
     virtual LayerPointer surface();
     virtual void setSurface(LayerPointer p);
+    virtual AbstractBrush* createBrush()=0;
 
 protected:
     QString name_;

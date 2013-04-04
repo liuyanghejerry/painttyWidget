@@ -254,6 +254,7 @@ QVariantMap Brush::brushInfo()
     colorMap.insert("green", this->color().green());
     colorMap.insert("blue", this->color().blue());
     map.insert("width", QVariant(this->width()));
+    map.insert("hardness", QVariant(this->hardness()));
     map.insert("color", colorMap);
     map.insert("name", QVariant("Brush"));
     return map;
@@ -269,6 +270,7 @@ QVariantMap Brush::defaultInfo()
 {
     QVariantMap map;
     map.insert("width", QVariant(10));
+    map.insert("hardness", QVariant(50));
     QVariantMap colorMap;
     colorMap.insert("red", 254);
     colorMap.insert("green", 127);
@@ -276,4 +278,9 @@ QVariantMap Brush::defaultInfo()
 
     map.insert("color", colorMap);
     return map;
+}
+
+AbstractBrush* Brush::createBrush()
+{
+    return new Brush;
 }

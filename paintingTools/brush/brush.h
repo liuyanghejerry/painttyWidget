@@ -16,6 +16,7 @@ public:
     void setColor(const QColor &color);
     QVariantMap defaultInfo();
     QVariantMap brushInfo();
+    AbstractBrush* createBrush();
 
 protected:
     QPixmap stencil;

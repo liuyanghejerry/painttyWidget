@@ -1,5 +1,4 @@
 #include "brushsettingswidget.h"
-//#include "ui_brushwidthwidget.h"
 #include <QLabel>
 #include <QSlider>
 #include <QSpinBox>
@@ -25,6 +24,7 @@ BrushSettingsWidget::BrushSettingsWidget(QWidget *parent) :
     widthSlider->setRange(1, 100);
     widthSpinBox->setRange(1, 100);
     unitLabel->setAlignment(Qt::AlignCenter);
+    hardnessLabel->setAlignment(Qt::AlignCenter);
     separator->setFrameShadow(QFrame::Sunken);
     hardnessSlider->setSizePolicy(QSizePolicy::Preferred,
                                   QSizePolicy::Fixed);

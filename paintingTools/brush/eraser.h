@@ -13,6 +13,7 @@ public:
     void setWidth(int w);
     QVariantMap brushInfo();
     QVariantMap defaultInfo();
+    AbstractBrush* createBrush();
 
 protected:
     void drawPoint(const QPointF &st);

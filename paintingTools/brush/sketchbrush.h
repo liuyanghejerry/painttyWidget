@@ -17,6 +17,7 @@ public:
     void lineTo(const QPointF &st);
     QVariantMap brushInfo();
     QVariantMap defaultInfo();
+    AbstractBrush* createBrush();
     
 protected:
     QList<QPointF> points;

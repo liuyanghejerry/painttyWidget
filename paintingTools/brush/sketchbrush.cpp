@@ -97,6 +97,7 @@ QVariantMap SketchBrush::brushInfo()
     colorMap.insert("green", sketchPen.color().green());
     colorMap.insert("blue", sketchPen.color().blue());
     map.insert("width", QVariant(sketchPen.width()));
+    map.insert("width", QVariant(this->hardness()));
     map.insert("color", colorMap);
     map.insert("name", QVariant("Sketch"));
     return map;
@@ -110,6 +111,12 @@ QVariantMap SketchBrush::defaultInfo()
     colorMap.insert("green", 160);
     colorMap.insert("blue", 164);
     map.insert("width", QVariant(1));
+    map.insert("hardness", QVariant(50));
     map.insert("color", colorMap);
     return map;
+}
+
+AbstractBrush* SketchBrush::createBrush()
+{
+    return new SketchBrush;
 }
