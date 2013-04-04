@@ -601,6 +601,7 @@ void MainWindow::onBrushTypeChange()
 void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
 {
     int w = m["width"].toInt();
+    int h = m["hardness"].toInt();
     QVariantMap colorMap = m["color"].toMap();
     QColor c(colorMap["red"].toInt(),
             colorMap["green"].toInt(),
@@ -611,6 +612,10 @@ void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
     if(brushSettingControl_){
         if(brushSettingControl_->width() != w)
             brushSettingControl_->setWidth(w);
+    }
+    if(brushSettingControl_){
+        if(brushSettingControl_->hardness() != h)
+            brushSettingControl_->setHardness(h);
     }
     if(ui->colorBox->color() != c)
         ui->colorBox->setColor(c);
