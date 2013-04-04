@@ -102,13 +102,14 @@ void AbstractBrush::drawLine(const QPointF &,
 
 void AbstractBrush::updateCursor(int w)
 {
-    QPixmap img(w+1, w+1); // +1 for a border padding
+    int frame = w+2+w%2; // +2 for a border padding
+    QPixmap img(frame, frame);
     img.fill(Qt::transparent);
     QPainter painter(&img);
     painter.drawEllipse(0, 0, w, w);
     if (w > 10)
-        painter.drawPoint(w/2, w/2);
-    cursor_ = QCursor(img, w/2+(w&1)*2, w/2+(w&1)*2);
+        painter.drawPoint(frame/2, frame/2);
+    cursor_ = QCursor(img, frame/2, frame/2);
 }
 
 QPointF AbstractBrush::lastPoint()
