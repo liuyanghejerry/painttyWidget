@@ -106,7 +106,9 @@ void AbstractBrush::updateCursor(int w)
     img.fill(Qt::transparent);
     QPainter painter(&img);
     painter.drawEllipse(0, 0, w, w);
-    cursor_ = QCursor(img, w/2, w/2);
+    if (w > 10)
+        painter.drawPoint(w/2, w/2);
+    cursor_ = QCursor(img, w/2+(w&1)*2, w/2+(w&1)*2);
 }
 
 QPointF AbstractBrush::lastPoint()
