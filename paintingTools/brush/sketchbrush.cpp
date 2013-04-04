@@ -35,6 +35,7 @@ int SketchBrush::width()
 void SketchBrush::setWidth(int w)
 {
     sketchPen.setWidth(w);
+    updateCursor(w);
 }
 
 void SketchBrush::start(const QPointF &st)

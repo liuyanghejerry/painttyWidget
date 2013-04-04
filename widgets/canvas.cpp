@@ -57,7 +57,7 @@ Canvas::Canvas(QWidget *parent) :
     opacity = 1.0;
     brush_ = BrushPointer(new Brush);
     changeBrush("pencil");
-    updateCursor(brush_->width());
+    updateCursor();
 
     setMouseTracking(true);
     this->resize(canvasSize);
@@ -148,7 +148,7 @@ void Canvas::setBrushWidth(int newWidth)
 {
     if(brush_->width() != newWidth){
         brush_->setWidth(newWidth);
-        updateCursor(newWidth);
+        updateCursor();
     }
 }
 
@@ -196,7 +196,7 @@ void Canvas::changeBrush(const QString &name)
 
     brush_->setLastPoint(lp);
     brush_->setSurface(sur);
-    updateCursor(brush_->width());
+    updateCursor();
 
     emit newBrushSettings(currentSettings);
 }
@@ -209,7 +209,7 @@ void Canvas::onColorPicker(bool in)
         setCursor(QCursor(icon, 0, icon.height()));
     }else{
         inPicker = false;
-        updateCursor(brush_->width());
+        updateCursor();
         emit pickColorComplete();
     }
 }
@@ -231,7 +231,7 @@ void Canvas::drawLineTo(const QPoint &endPoint)
         setCursor(Qt::ForbiddenCursor);
         return;
     }
-    updateCursor(brush_->width());
+    updateCursor();
     brush_->setSurface(l);
     brush_->lineTo(endPoint);
 
@@ -275,7 +275,7 @@ void Canvas::drawPoint(const QPoint &point)
         setCursor(Qt::ForbiddenCursor);
         return;
     }
-    updateCursor(brush_->width());
+    updateCursor();
     brush_->setSurface(l);
     brush_->start(point);
 
@@ -308,14 +308,9 @@ void Canvas::pickColor(const QPoint &point)
     newBrushSettings(brush_->brushInfo());
 }
 
-void Canvas::updateCursor(const int &width)
+void Canvas::updateCursor()
 {
-    int r_width = width;
-    QPixmap img(r_width+1, r_width+1); // +1 for a border padding
-    img.fill(Qt::transparent);
-    QPainter painter(&img);
-    painter.drawEllipse(0, 0, r_width, r_width);
-    this->setCursor(QCursor(img, r_width/2, r_width/2));
+    this->setCursor(brush_->cursor());
 }
 
 /*!
@@ -735,7 +730,7 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
         }else{
             if(drawing){
                 drawing = false;
-                updateCursor(brush_->width());
+                updateCursor();
             }
         }
     }

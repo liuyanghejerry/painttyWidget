@@ -57,6 +57,7 @@ protected:
     virtual void drawLine(const QPointF &,
                           const QPointF &,
                           qreal &);
+    virtual void updateCursor(int w);
 };
 
 #endif // ABSTRACTBRUSH_H

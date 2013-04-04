@@ -71,7 +71,7 @@ private:
     void drawLineTo(const QPoint &endPoint);
     void drawPoint(const QPoint &point);
     void pickColor(const QPoint &point);
-    void updateCursor(const int &width);
+    void updateCursor();
 
     void resizeImage(QPixmap *image, const QSize &newSize);
     void combineLayers(const QRect &rec);

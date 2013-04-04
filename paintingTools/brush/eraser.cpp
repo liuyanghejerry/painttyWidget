@@ -39,6 +39,7 @@ int Eraser::width()
 void Eraser::setWidth(int w)
 {
     width_ = w;
+    updateCursor(w);
 }
 
 void Eraser::drawPoint(const QPointF &st)

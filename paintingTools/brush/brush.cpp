@@ -132,6 +132,8 @@ void Brush::setWidth(int w)
 {
     width_ = w;
     makeStencil();
+
+    updateCursor(w);
 }
 
 /*!

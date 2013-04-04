@@ -62,6 +62,7 @@ int Pencil::width()
 void Pencil::setWidth(int w)
 {
     pencil.setWidth(w);
+    updateCursor(w);
 }
 
 QVariantMap Pencil::brushInfo()
