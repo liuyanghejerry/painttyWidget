@@ -50,7 +50,7 @@ void SketchBrush::start(const QPointF &st)
 void SketchBrush::preparePen()
 {
     QColor subColor = mainColor;
-    subColor.setAlphaF(0.07);
+    subColor.setAlphaF(this->hardness()/100.0);
     sketchPen.setColor(subColor);
     sketchPen.setCapStyle(Qt::RoundCap);
     sketchPen.setJoinStyle(Qt::RoundJoin);
@@ -115,7 +115,7 @@ QVariantMap SketchBrush::defaultInfo()
     colorMap.insert("green", 160);
     colorMap.insert("blue", 164);
     map.insert("width", 1);
-    map.insert("hardness", 50);
+    map.insert("hardness", 7);
     map.insert("color", colorMap);
     return map;
 }

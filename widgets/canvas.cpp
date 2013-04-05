@@ -163,7 +163,7 @@ void Canvas::setBrushHardness(int h)
 
 BrushPointer Canvas::brushFactory(const QString &name)
 {
-    return BrushManager::makeBrush(name.toLower());
+    return BrushManager::makeBrush(name);
 }
 
 /*!
@@ -182,7 +182,7 @@ void Canvas::changeBrush(const QString &name)
     QVariantMap colorMap = brush_->brushInfo()
             .value("color").toMap();
 
-    QString brushName = name.toLower();
+    QString brushName = name;
     if(localBrush.contains(brushName)){
         brush_ = localBrush[brushName];
         currentSettings = brush_->brushInfo();

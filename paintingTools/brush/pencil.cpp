@@ -57,7 +57,9 @@ void Pencil::drawLine(const QPointF &st,
 
 void Pencil::setColor(const QColor &color)
 {
-    pencil.setColor(color);
+    QColor c = color;
+    c.setAlphaF(this->hardness()/100.0);
+    pencil.setColor(c);
     mainColor = color;
 }
 
