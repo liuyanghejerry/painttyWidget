@@ -31,10 +31,13 @@ Pencil::~Pencil()
 void Pencil::drawPoint(const QPointF &st)
 {
     QPainter painter;
-    painter.begin(surface_->imagePtr());
+    if(!painter.begin(surface_->imagePtr())){
+        return;
+    }
     painter.setPen(pencil);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.drawPoint(st);
+    painter.end();
 }
 
 void Pencil::drawLine(const QPointF &st,
@@ -42,10 +45,13 @@ void Pencil::drawLine(const QPointF &st,
                       qreal &)
 {
     QPainter painter;
-    painter.begin(surface_->imagePtr());
+    if(!painter.begin(surface_->imagePtr())){
+        return;
+    }
     painter.setPen(pencil);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.drawLine(st, end);
+    painter.end();
 }
 
 void Pencil::setColor(const QColor &color)

@@ -57,7 +57,8 @@ SOURCES += main.cpp\
     paintingTools/brush/abstractbrush.cpp \
     paintingTools/brush/brushmanager.cpp \
     paintingTools/brush/wetfingure.cpp \
-    widgets/brushsettingswidget.cpp
+    widgets/brushsettingswidget.cpp \
+    widgets/helpdialog.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -96,13 +97,15 @@ HEADERS  += widgets/mainwindow.h \
     paintingTools/brush/abstractbrush.h \
     paintingTools/brush/brushmanager.h \
     paintingTools/brush/wetfingure.h \
-    widgets/brushsettingswidget.h
+    widgets/brushsettingswidget.h \
+    widgets/helpdialog.h
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/colorspinboxgroup.ui \
     widgets/colorbox.ui \
     widgets/newroomwindow.ui \
-    widgets/aboutdialog.ui
+    widgets/aboutdialog.ui \
+    widgets/helpdialog.ui
 
 UI_DIR = $${PWD}/widgets/
 

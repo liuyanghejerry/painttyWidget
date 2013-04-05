@@ -90,7 +90,10 @@ void Brush::makeStencil()
     QEasingCurve easing(QEasingCurve::OutQuart);
 
     const QPoint center(width_/2, width_/2);
-    QPainter painter(&stencil);
+    QPainter painter;
+    if(!painter.begin(&stencil)){
+        return;
+    }
     QRadialGradient gradient(center, width_/2);
     QColor color(mainColor);
     for(int i=0;i<100;++i){
@@ -105,6 +108,7 @@ void Brush::makeStencil()
     QPen pen(brush, width_);
     painter.setPen(pen);
     painter.drawPoint(width_/2, width_/2);
+    painter.end();
 }
 
 /*!
@@ -184,11 +188,14 @@ int Brush::hardness()
 void Brush::drawPoint(const QPointF &st)
 {
     QPainter painter;
-    painter.begin(surface_->imagePtr());
+    if(!painter.begin(surface_->imagePtr())){
+        return;
+    }
     painter.setRenderHint(QPainter::Antialiasing);
     painter.drawPixmap(st.x() - stencil.width()/2.0,
                        st.y() - stencil.width()/2.0,
                        stencil);
+    painter.end();
 }
 
 /*!
@@ -201,7 +208,9 @@ void Brush::drawPoint(const QPointF &st)
 void Brush::drawLine(const QPointF &st, const QPointF &end, qreal &left)
 {
     QPainter painter;
-    painter.begin(surface_->imagePtr());
+    if(!painter.begin(surface_->imagePtr())){
+        return;
+    }
     painter.setRenderHint(QPainter::Antialiasing);
     qreal spacing = width_*0.1;
 
@@ -240,6 +249,7 @@ void Brush::drawLine(const QPointF &st, const QPointF &end, qreal &left)
         totalDistance -= spacing;
     }
     left = totalDistance;
+    painter.end();
 }
 
 /*!
