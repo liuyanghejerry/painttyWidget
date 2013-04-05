@@ -44,7 +44,6 @@ SOURCES += main.cpp\
     paintingTools/brush/brush.cpp \
     paintingTools/brush/pencil.cpp \
     widgets/colorspinboxgroup.cpp \
-    paintingTools/colorpicker.cpp \
     widgets/colorbox.cpp \
     widgets/newroomwindow.cpp \
     network/commandsocket.cpp \
@@ -82,7 +81,6 @@ HEADERS  += widgets/mainwindow.h \
     paintingTools/brush/brush.h \
     paintingTools/brush/pencil.h \
     widgets/colorspinboxgroup.h \
-    paintingTools/colorpicker.h \
     widgets/colorbox.h \
     widgets/newroomwindow.h \
     network/commandsocket.h \
