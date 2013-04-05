@@ -1,7 +1,7 @@
 #include "eraser.h"
 
 Eraser::Eraser() :
-    width_(100)
+    width_(10)
 {
     name_ = "Eraser";
     displayName_ = QObject::tr("Eraser");

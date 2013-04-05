@@ -200,8 +200,6 @@ void Canvas::changeBrush(const QString &name)
     brush_->setSurface(sur);
     updateCursor();
 
-    qDebug()<<"Change Brush to"<<name
-           <<"with settings: "<<currentSettings;
     emit newBrushSettings(currentSettings);
 }
 
