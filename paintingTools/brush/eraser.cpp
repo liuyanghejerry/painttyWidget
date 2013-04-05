@@ -18,6 +18,7 @@ Eraser::Eraser() :
                   QSize(16, 16), QIcon::Normal, QIcon::On);
     icon_.addFile("iconset/ui/eraser-4.png",
                   QSize(16, 16), QIcon::Normal);
+    updateCursor(this->width());
 }
 
 Eraser::~Eraser()

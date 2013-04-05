@@ -61,6 +61,7 @@ Brush::Brush()
                   QSize(16, 16), QIcon::Normal, QIcon::On);
     icon_.addFile("iconset/ui/brush-4.png",
                   QSize(16, 16), QIcon::Normal);
+    updateCursor(this->width());
 }
 
 /*!

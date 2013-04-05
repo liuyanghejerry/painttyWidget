@@ -12,6 +12,7 @@ public:
     void setColor(const QColor &color);
     int width();
     void setWidth(int w);
+    void setHardness(int h);
     QVariantMap brushInfo();
     QVariantMap defaultInfo();
     AbstractBrush* createBrush();

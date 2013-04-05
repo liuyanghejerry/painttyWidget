@@ -15,6 +15,7 @@ SketchBrush::SketchBrush()
                   QSize(), QIcon::Normal, QIcon::On);
     icon_.addFile("iconset/ui/sketch-4.png",
                   QSize(), QIcon::Normal);
+    updateCursor(this->width());
 }
 
 SketchBrush::~SketchBrush()

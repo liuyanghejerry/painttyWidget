@@ -23,6 +23,7 @@ Pencil::Pencil()
                   QSize(), QIcon::Normal, QIcon::On);
     icon_.addFile("iconset/ui/pencil-4.png",
                   QSize(), QIcon::Normal);
+    updateCursor(this->width());
 }
 
 Pencil::~Pencil()
@@ -72,6 +73,14 @@ void Pencil::setWidth(int w)
 {
     pencil.setWidth(w);
     updateCursor(w);
+}
+
+void Pencil::setHardness(int h)
+{
+    hardness_ = h;
+    QColor c = mainColor;
+    c.setAlphaF(this->hardness()/100.0);
+    pencil.setColor(c);
 }
 
 QVariantMap Pencil::brushInfo()
