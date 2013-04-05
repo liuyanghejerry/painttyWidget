@@ -12,7 +12,6 @@
 #include "../paintingTools/brush/sketchbrush.h"
 #include "../paintingTools/brush/eraser.h"
 #include "../paintingTools/brush/pencil.h"
-#include "../paintingTools/colorpicker.h"
 
 #include "canvas.h"
 
@@ -46,6 +45,7 @@
 Canvas::Canvas(QWidget *parent) :
     QWidget(parent),
     canvasSize(3240,2160),
+    layers(canvasSize),
     image(canvasSize),
     layerNameCounter(0),
     historySize_(0),
@@ -89,7 +89,9 @@ void Canvas::setHistorySize(const quint64 &size)
 
 QPixmap Canvas::currentCanvas()
 {
-    return combineLayers();
+    QPixmap pmp = image;
+    layers.combineLayers(&pmp);
+    return pmp;
 }
 
 QPixmap Canvas::allCanvas()
@@ -198,6 +200,8 @@ void Canvas::changeBrush(const QString &name)
     brush_->setSurface(sur);
     updateCursor();
 
+    qDebug()<<"Change Brush to"<<name
+           <<"with settings: "<<currentSettings;
     emit newBrushSettings(currentSettings);
 }
 
@@ -519,9 +523,7 @@ QString Canvas::currentLayer()
 
 void Canvas::addLayer(const QString &name)
 {
-    LayerPointer layer(new Layer(canvasSize));
-    layer->rename(name);
-    layers.appendLayer(layer, name);
+    layers.appendLayer(name);
     layerNameCounter++;
 }
 
@@ -603,48 +605,6 @@ void Canvas::showLayer(const QString &name)
 {
     layers.layerFrom(name)->show();
     update();
-}
-
-/*!
-    \fn void Canvas::combineLayers()
-
-    Combines all layers together.
-
-    This function is used when render on the screen.
-*/
-
-void Canvas::combineLayers(const QRect &rec)
-{
-    QPainter painter(&image);
-    image.fill(Qt::white);
-    int count = layers.count();
-    QPixmap * im = 0;
-    for(int i=0;i<count;++i){
-        LayerPointer l = layers.layerFrom(i);
-        if(l->isHided()){
-            continue;
-        }
-        im = l->imagePtr();
-        painter.drawPixmap(QRectF(rec), *im, QRectF(rec));
-    }
-}
-
-QPixmap Canvas::combineLayers()
-{
-    QPixmap pmp = image;
-    QPainter painter(&pmp);
-    pmp.fill(Qt::white);
-    int count = layers.count();
-    QPixmap * im = 0;
-    for(int i=0;i<count;++i){
-        LayerPointer l = layers.layerFrom(i);
-        if(l->isHided()){
-            continue;
-        }
-        im = l->imagePtr();
-        painter.drawPixmap(0, 0, *im);
-    }
-    return pmp;
 }
 
 void Canvas::moveLayerUp(const QString &name)
@@ -743,7 +703,7 @@ void Canvas::paintEvent(QPaintEvent *event)
     QRect dirtyRect = event->rect();
     if(dirtyRect.isEmpty())return;
     //    painter.setOpacity(opacity);
-    combineLayers(dirtyRect);
+    layers.combineLayers(&image, dirtyRect);
 
     painter.drawPixmap(dirtyRect, image, dirtyRect);
 
@@ -770,24 +730,15 @@ void Canvas::resizeEvent(QResizeEvent *event)
     QSize newSize = event->size();
     canvasSize = newSize;
     layers.resizeLayers(newSize);
-    resizeImage(&image, newSize);
-    update();
-    QWidget::resizeEvent(event);
-}
-
-/*!
-    \fn void Canvas::resizeImage(QPixmap *image, const QSize &newSize)
-
-    Resizes one QPixmap to \a newSize. It also fills all images into white.
-*/
-
-void Canvas::resizeImage(QPixmap *image, const QSize &newSize)
-{
+//    resizeImage(&image, newSize);
     QPixmap newImage(newSize);
     newImage.fill(Qt::transparent);
     QPainter painter(&newImage);
-    painter.drawPixmap(QPoint(0, 0), *image);
-    *image = newImage;
+    painter.drawPixmap(QPoint(0, 0), image);
+    image = newImage;
+
+    update();
+    QWidget::resizeEvent(event);
 }
 
 /*!

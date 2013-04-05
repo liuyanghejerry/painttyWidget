@@ -79,18 +79,18 @@ QVariantMap Eraser::brushInfo()
     colorMap.insert("red", this->color().red());
     colorMap.insert("green", this->color().green());
     colorMap.insert("blue", this->color().blue());
-    map.insert("width", QVariant(this->width()));
-    map.insert("hardness", QVariant(this->hardness()));
+    map.insert("width", this->width());
+    map.insert("hardness", this->hardness());
     map.insert("color", colorMap);
-    map.insert("name", QVariant("Eraser"));
+    map.insert("name", this->name());
     return map;
 }
 
 QVariantMap Eraser::defaultInfo()
 {
     QVariantMap map;
-    map.insert("width", QVariant(10));
-    map.insert("hardness", QVariant(100));
+    map.insert("width", 10);
+    map.insert("hardness", 100);
     QVariantMap colorMap;
     colorMap.insert("red", 255);
     colorMap.insert("green", 255);

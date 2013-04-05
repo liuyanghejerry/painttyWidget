@@ -8,9 +8,7 @@ QMap<QString, BrushPointer> BrushManager::registeredBrushes_;
 bool BrushManager::addBrush(BrushPointer brush)
 {
     registeredBrushes_.insert(
-                brush->brushInfo()
-                .value("name", "")
-                .toString()
+                brush->name()
                 .trimmed()
                 .toLower(),
                 brush);

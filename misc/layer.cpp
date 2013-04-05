@@ -2,11 +2,12 @@
 
 #include <QPixmap>
 
-Layer::Layer(const QSize &size)
+Layer::Layer(const QString &name, const QSize &size)
     :lock_(false),
       hide_(false),
       select_(false),
-      access_(true)
+      access_(true),
+      name_(name)
 {
     img_ = QSharedPointer<QPixmap>(new QPixmap(size));
     img_->fill(Qt::transparent);

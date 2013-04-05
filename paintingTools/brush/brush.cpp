@@ -268,7 +268,7 @@ QVariantMap Brush::brushInfo()
     map.insert("width", QVariant(this->width()));
     map.insert("hardness", QVariant(this->hardness()));
     map.insert("color", colorMap);
-    map.insert("name", QVariant("Brush"));
+    map.insert("name", this->name());
     return map;
 }
 

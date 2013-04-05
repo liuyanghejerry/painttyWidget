@@ -239,7 +239,7 @@ void MainWindow::toolbarInit()
 
     auto brushes = BrushManager::allBrushes();
 
-    for(auto item: brushes){
+    for(auto &item: brushes){
         // create action on tool bar
         QAction * action = toolbar_->addAction(item->icon(),
                                                item->displayName());

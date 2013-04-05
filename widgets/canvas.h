@@ -73,10 +73,6 @@ private:
     void pickColor(const QPoint &point);
     void updateCursor();
 
-    void resizeImage(QPixmap *image, const QSize &newSize);
-    void combineLayers(const QRect &rec);
-    QPixmap combineLayers();
-
     BrushPointer brushFactory(const QString &name);
 
     QByteArray toJson(const QVariant &m);
@@ -84,8 +80,8 @@ private:
 
     bool inPicker;
     bool drawing;
-    LayerManager layers;
     QSize canvasSize;
+    LayerManager layers;
     QPixmap image;
     QPixmap *currentImage;
     QPoint lastPoint;

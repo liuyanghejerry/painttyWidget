@@ -1,11 +1,12 @@
 #include "layermanager.h"
 
-#include <QImage>
+#include <QPixmap>
 #include <QPainter>
 #include <QDebug>
 
-LayerManager::LayerManager()
-    :lastSelected(0)
+LayerManager::LayerManager(const QSize &initSize)
+    :lastSelected(0),
+      layerSize_(initSize)
 {
 }
 
@@ -94,6 +95,19 @@ void LayerManager::appendLayer(LayerPointer image, const QString &name)
     qDebug()<<"append"<<name<<"at"<<(layerLinks.count()-1);
 }
 
+LayerPointer LayerManager::appendLayer(const QString &name)
+{
+    if(layers.contains(name)){
+        qWarning()<<"Duplicated layer skipped!";
+        return LayerPointer();
+    }
+    layerLinks.append(name);
+    LayerPointer lp(new Layer(name, layerSize_));
+    layers.insert(name, lp);
+    qDebug()<<"append"<<name<<"at"<<(layerLinks.count()-1);
+    return lp;
+}
+
 void LayerManager::removeLayer(const QString &name)
 {
     if(!exists(name))return;
@@ -163,8 +177,30 @@ void LayerManager::rename(const QString &oname,const QString &nname)
 
 void LayerManager::resizeLayers(const QSize &newsize)
 {
+    layerSize_ = newsize;
     for(int i=0;i<layerLinks.count();++i){
-        layers[layerLinks[i]]->resize(newsize);
+        layers[layerLinks[i]]->resize(layerSize_);
     }
-    qDebug()<<"LayerManager::resizeLayers:"<<newsize;
+    qDebug()<<"LayerManager::resizeLayers:"<<layerSize_;
+}
+
+void LayerManager::combineLayers(QPixmap *p, const QRect &rect)
+{
+    *p = p->scaled(layerSize_);
+    p->fill(Qt::white);
+    QPainter painter(p);
+    int lc = this->count();
+    QPixmap * im = 0;
+    for(int i=0;i<lc;++i){
+        LayerPointer l = layerFrom(i);
+        if(l->isHided()){
+            continue;
+        }
+        im = l->imagePtr();
+        if(rect.isNull()){
+            painter.drawPixmap(0, 0, *im);
+        }else{
+            painter.drawPixmap(QRectF(rect), *im, QRectF(rect));
+        }
+    }
 }

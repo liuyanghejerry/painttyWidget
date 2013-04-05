@@ -8,7 +8,7 @@ class QPixmap;
 class Layer
 {
 public:
-    Layer(const QSize &size);
+    Layer(const QString &name, const QSize &size);
     ~Layer();
     QPixmap* imagePtr();
     const QPixmap* imageConstPtr();

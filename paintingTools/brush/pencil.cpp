@@ -9,6 +9,7 @@ Pencil::Pencil()
     name_ = "Pencil";
     displayName_ = QObject::tr("Pencil");
     shortcut_ = Qt::Key_Z;
+    pencil.setWidth(1);
     pencil.setCapStyle(Qt::RoundCap);
     pencil.setJoinStyle(Qt::RoundJoin);
 
@@ -81,7 +82,7 @@ QVariantMap Pencil::brushInfo()
     map.insert("width", QVariant(pencil.width()));
     map.insert("hardness", QVariant(this->hardness()));
     map.insert("color", colorMap);
-    map.insert("name", QVariant("Pencil"));
+    map.insert("name", this->name());
     return map;
 }
 
