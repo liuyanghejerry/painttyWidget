@@ -46,6 +46,7 @@ BrushSettingsWidget::BrushSettingsWidget(QWidget *parent) :
 
     setOrientation(Qt::Horizontal);
     setHardness(100);
+    setWidth(10);
 }
 
 BrushSettingsWidget::~BrushSettingsWidget()
