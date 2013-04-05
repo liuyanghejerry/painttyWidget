@@ -2,6 +2,7 @@
 #define LAYER_H
 
 #include <QSharedPointer>
+#include <QSize>
 
 class QPixmap;
 
@@ -16,6 +17,7 @@ public:
     bool isLocked();
     bool isHided();
     bool isSelected();
+    bool isTouched();
     void lock();
     void unlock();
     void hide();
@@ -29,9 +31,12 @@ private:
     bool lock_;
     bool hide_;
     bool select_;
+    bool touched_;  // if pixmap is already created
     bool access_;   //reserved
     QSharedPointer<QPixmap> img_;
     QString name_;
+    QSize size_;
+    void create();
 };
 
 typedef QSharedPointer<Layer> LayerPointer;

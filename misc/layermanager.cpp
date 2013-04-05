@@ -193,7 +193,7 @@ void LayerManager::combineLayers(QPixmap *p, const QRect &rect)
     QPixmap * im = 0;
     for(int i=0;i<lc;++i){
         LayerPointer l = layerFrom(i);
-        if(l->isHided()){
+        if( l->isHided() || !l->isTouched() ){
             continue;
         }
         im = l->imagePtr();

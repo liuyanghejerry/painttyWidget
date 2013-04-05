@@ -6,16 +6,23 @@ Layer::Layer(const QString &name, const QSize &size)
     :lock_(false),
       hide_(false),
       select_(false),
+      touched_(false),
       access_(true),
-      name_(name)
+      name_(name),
+      size_(size)
 {
-    img_ = QSharedPointer<QPixmap>(new QPixmap(size));
-    img_->fill(Qt::transparent);
 }
 
 Layer::~Layer()
 {
     img_.clear();
+}
+
+void Layer::create()
+{
+    img_ = QSharedPointer<QPixmap>(new QPixmap(size_));
+    img_->fill(Qt::transparent);
+    touched_ = true;
 }
 
 bool Layer::isLocked()
@@ -31,6 +38,11 @@ bool Layer::isHided()
 bool Layer::isSelected()
 {
     return select_;
+}
+
+bool Layer::isTouched()
+{
+    return touched_;
 }
 
 void Layer::lock()
@@ -65,21 +77,29 @@ void Layer::deselect()
 
 void Layer::clear()
 {
-    img_->fill(Qt::transparent);
+    img_.clear();
+    touched_ = false;
 }
 
 QPixmap* Layer::imagePtr()
 {
+    if(!touched_){
+        create();
+    }
     return img_.data();
 }
 
 const QPixmap* Layer::imageConstPtr()
 {
+    if(!touched_){
+        create();
+    }
     return img_.data();
 }
 
 void Layer::resize(const QSize &size)
 {
+    size_ = size;
     if(!img_.isNull()){
         if (img_->size() == size)
             return;
