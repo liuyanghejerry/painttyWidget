@@ -59,6 +59,7 @@ private:
     void cmdSocketRouterInit();
     QVariant getRoomKey();
     void requestOnlinelist();
+    void requestCheckout();
     static QByteArray toJson(const QVariant &m);
     static QVariant fromJson(const QByteArray &d);
 

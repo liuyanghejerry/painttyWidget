@@ -381,6 +381,17 @@ void MainWindow::requestOnlinelist()
     CommandSocket::cmdSocket()->sendData(doc.toJson());
 }
 
+void MainWindow::requestCheckout()
+{
+    QJsonDocument doc;
+    QJsonObject obj;
+    obj.insert("request", QString("checkout"));
+    obj.insert("key", getRoomKey().toString());
+    doc.setObject(obj);
+    qDebug()<<"checkout with key: "<<getRoomKey();
+    CommandSocket::cmdSocket()->sendData(doc.toJson());
+}
+
 void MainWindow::shortcutInit()
 {
     connect(ui->action_Quit, SIGNAL(triggered()),
