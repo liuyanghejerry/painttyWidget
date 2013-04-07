@@ -185,6 +185,11 @@ void MainWindow::cmdSocketRouterInit()
                           std::bind(&MainWindow::onCommandResponseOnlinelist,
                                     this,
                                     std::placeholders::_1));
+    cmdRouter_.regHandler("response",
+                          "checkout",
+                          std::bind(&MainWindow::onCommandResponseCheckout,
+                                    this,
+                                    std::placeholders::_1));
 }
 
 void MainWindow::layerWidgetInit()
@@ -529,6 +534,17 @@ void MainWindow::onCommandResponseClearAll(const QJsonObject &m)
                               tr("Sorry"),
                               tr("Sorry, it seems you're not"
                                  "room owner."));
+    }
+}
+
+void MainWindow::onCommandResponseCheckout(const QJsonObject &m)
+{
+    bool result = m["result"].toBool();
+    if(!result){
+//        QMessageBox::critical(this,
+//                              tr("Sorry"),
+//                              tr("Sorry, it seems you're not"
+//                                 "room owner."));
     }
 }
 
