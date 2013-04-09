@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>translation/paintty_zh_CN.qm</file>
+        <file>translation/paintty_zh_TW.qm</file>
         <file>translation/qt_zh_CN.qm</file>
         <file>translation/qt_zh_TW.qm</file>
         <file>translation/qt_ja.qm</file>

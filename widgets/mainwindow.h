@@ -62,6 +62,7 @@ private:
     void requestCheckout();
     static QByteArray toJson(const QVariant &m);
     static QVariant fromJson(const QByteArray &d);
+    QMenu* languageMenu(QWidget *parent);
 
     Ui::MainWindow *ui;
     MessageSocket msgSocket;

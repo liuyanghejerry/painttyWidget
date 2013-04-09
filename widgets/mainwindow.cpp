@@ -20,6 +20,8 @@
 #include <QVariantList>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QRegularExpression>
+#include <QProcess>
 
 #include "../misc/singleshortcut.h"
 #include "layerwidget.h"
@@ -79,6 +81,7 @@ void MainWindow::init()
     ui->layerWidget->setDisabled(true);
     ui->lineEdit->setDisabled(true);
     ui->pushButton->setDisabled(true);
+    ui->menuBar->addMenu(languageMenu(this));
 
 
     connect(ui->lineEdit,&QLineEdit::returnPressed,
@@ -345,6 +348,71 @@ void MainWindow::toolbarInit()
     brushSettingToolbar->addWidget(brushSettingWidget);
 
     //TODO: locking before complete connect
+}
+
+QMenu* MainWindow::languageMenu(QWidget *parent)
+{
+    QMenu *menu = new QMenu(tr("Language"), parent);
+    QAction *defaultAction = menu->addAction(tr("System Default"));
+    QDir qmDir(":/translation");
+    QStringList qmList = qmDir.entryList(QStringList() << "paintty_*.qm", QDir::Files);
+    QActionGroup *languageGroup = new QActionGroup(parent);
+    defaultAction->setCheckable(true);
+    languageGroup->setExclusive(true);
+    languageGroup->addAction(defaultAction);
+
+    auto restartApp = [&]() {
+        int result = QMessageBox::warning(this, tr("Restart"),
+                                          tr("Application must restart "
+                                             "to enable new language settings.\n"
+                                             "Do you want to restart right now?"),
+                                          QMessageBox::Yes | QMessageBox::No);
+        if (result == QMessageBox::Yes)
+        {
+            qApp->closeAllWindows();
+            qApp->quit();
+            QProcess::startDetached(qApp->applicationFilePath(), QStringList());
+        }
+        else if (result == QMessageBox::No)
+        {
+            QMessageBox::information(this, tr("Restart"),
+                                     tr("Language change will be applied on next start."));
+        }
+    };
+    auto languageTriggered = [&](QAction *action) {
+        QSettings settings(GlobalDef::SETTINGS_NAME,
+                           QSettings::defaultFormat(),
+                           qApp);
+        if (settings.value("global/language", "").toString() != action->data().toString())
+        {
+            settings.setValue("global/language", action->data().toString());
+            restartApp();
+        }
+    };
+
+    //it seems we must connect before we add languageAction, otherwise app will crash...
+    connect(languageGroup, &QActionGroup::triggered, languageTriggered);
+
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    QString selectedLanguage = settings.value("global/language", "").toString();
+    if (selectedLanguage.isEmpty())
+        defaultAction->setChecked(true);
+    foreach (QString qmFile, qmList)
+    {
+        qmFile.remove(QRegularExpression(".?paintty_", QRegularExpression::CaseInsensitiveOption));
+        qmFile.remove(".qm", Qt::CaseInsensitive);
+        QString languageName = QLocale(qmFile).nativeLanguageName();
+        QAction *languageAction = menu->addAction(languageName);
+        languageAction->setData(qmFile);
+        languageAction->setCheckable(true);
+        languageGroup->addAction(languageAction);
+        if (selectedLanguage == qmFile)
+            languageAction->setChecked(true);
+    }
+
+    return menu;
 }
 
 QVariant MainWindow::getRoomKey()
