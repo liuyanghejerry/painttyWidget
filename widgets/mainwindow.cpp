@@ -280,15 +280,15 @@ void MainWindow::toolbarInit()
     // doing hacking to color picker
     QIcon colorpickerIcon;
     colorpickerIcon.addFile("iconset/ui/picker-1.png",
-                  QSize(), QIcon::Disabled);
+                            QSize(), QIcon::Disabled);
     colorpickerIcon.addFile("iconset/ui/picker-2.png",
-                  QSize(), QIcon::Active);
+                            QSize(), QIcon::Active);
     colorpickerIcon.addFile("iconset/ui/picker-3.png",
-                  QSize(), QIcon::Selected);
+                            QSize(), QIcon::Selected);
     colorpickerIcon.addFile("iconset/ui/picker-3.png",
-                  QSize(), QIcon::Normal, QIcon::On);
+                            QSize(), QIcon::Normal, QIcon::On);
     colorpickerIcon.addFile("iconset/ui/picker-4.png",
-                  QSize(), QIcon::Normal);
+                            QSize(), QIcon::Normal);
     QAction *colorpicker = toolbar_->addAction(colorpickerIcon,
                                                tr("Color Picker"));
     colorpicker->setCheckable(true);
@@ -360,11 +360,6 @@ QVariant MainWindow::getRoomKey()
         // Tell user that he's not owner
         qDebug()<<"hashed_name"<<hashed_name
                <<" key cannot found!";
-        QMessageBox::warning(this,
-                             tr("Sorry"),
-                             tr("Only room owner is authorized "
-                                "to close the room.\n"
-                                "It seems you're not room manager."));
         return QVariant();
     }
     QVariant key = settings.value("rooms/"+hashed_name);
@@ -421,6 +416,11 @@ void MainWindow::shortcutInit()
         QVariant r_key = getRoomKey();
         map.insert("request", "close");
         if(r_key.isNull()){
+            QMessageBox::warning(this,
+                                 tr("Sorry"),
+                                 tr("Only room owner is authorized "
+                                    "to close the room.\n"
+                                    "It seems you're not room manager."));
             return;
         }
         map.insert("key", r_key);
@@ -435,7 +435,10 @@ void MainWindow::socketInit(int dataPort, int msgPort)
 {
     connect(CommandSocket::cmdSocket(), &CommandSocket::newData,
             this, &MainWindow::onCmdServerData);
-
+    // checkout if client is room owner
+    if(!getRoomKey().isNull()){
+        requestCheckout();
+    }
 
     ui->canvas->setHistorySize(historySize_);
     ui->textEdit->insertPlainText(tr("Connecting to server...\n"));
@@ -541,10 +544,22 @@ void MainWindow::onCommandResponseCheckout(const QJsonObject &m)
 {
     bool result = m["result"].toBool();
     if(!result){
-//        QMessageBox::critical(this,
-//                              tr("Sorry"),
-//                              tr("Sorry, it seems you're not"
-//                                 "room owner."));
+        //        QMessageBox::critical(this,
+        //                              tr("Sorry"),
+        //                              tr("Sorry, it seems you're not"
+        //                                 "room owner."));
+    }else{
+        int hours = m["cycle"].toDouble();
+        if(hours){
+            // prepare next checkout
+            // this rarely happens, but still need
+            QTimer * checkoutTimer = new QTimer(this);
+            checkoutTimer->setSingleShot(true);
+            hours--;
+            checkoutTimer->setInterval(hours * 3600*1000);
+            connect(checkoutTimer, &QTimer::timeout,
+                    this, &MainWindow::requestCheckout);
+        }
     }
 }
 
