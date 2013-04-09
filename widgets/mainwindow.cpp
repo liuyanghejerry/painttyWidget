@@ -81,7 +81,7 @@ void MainWindow::init()
     ui->layerWidget->setDisabled(true);
     ui->lineEdit->setDisabled(true);
     ui->pushButton->setDisabled(true);
-    ui->menuBar->addMenu(languageMenu(this));
+    ui->menuBar->addMenu(languageMenu());
 
 
     connect(ui->lineEdit,&QLineEdit::returnPressed,
@@ -350,14 +350,14 @@ void MainWindow::toolbarInit()
     //TODO: locking before complete connect
 }
 
-QMenu* MainWindow::languageMenu(QWidget *parent)
+QMenu* MainWindow::languageMenu()
 {
-    QMenu *menu = new QMenu(tr("Language"), parent);
+    QMenu *menu = new QMenu(tr("Language"), this);
     QAction *defaultAction = menu->addAction(tr("System Default"));
     QDir qmDir(":/translation");
     QStringList qmList = qmDir.entryList(QStringList() << "paintty_*.qm",
                                          QDir::Files);
-    QActionGroup *languageGroup = new QActionGroup(parent);
+    QActionGroup *languageGroup = new QActionGroup(this);
     defaultAction->setCheckable(true);
     languageGroup->setExclusive(true);
     languageGroup->addAction(defaultAction);
