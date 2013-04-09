@@ -355,43 +355,40 @@ QMenu* MainWindow::languageMenu(QWidget *parent)
     QMenu *menu = new QMenu(tr("Language"), parent);
     QAction *defaultAction = menu->addAction(tr("System Default"));
     QDir qmDir(":/translation");
-    QStringList qmList = qmDir.entryList(QStringList() << "paintty_*.qm", QDir::Files);
+    QStringList qmList = qmDir.entryList(QStringList() << "paintty_*.qm",
+                                         QDir::Files);
     QActionGroup *languageGroup = new QActionGroup(parent);
     defaultAction->setCheckable(true);
     languageGroup->setExclusive(true);
     languageGroup->addAction(defaultAction);
 
-    auto restartApp = [&]() {
-        int result = QMessageBox::warning(this, tr("Restart"),
-                                          tr("Application must restart "
-                                             "to enable new language settings.\n"
-                                             "Do you want to restart right now?"),
-                                          QMessageBox::Yes | QMessageBox::No);
-        if (result == QMessageBox::Yes)
-        {
-            qApp->closeAllWindows();
-            qApp->quit();
-            QProcess::startDetached(qApp->applicationFilePath(), QStringList());
-        }
-        else if (result == QMessageBox::No)
-        {
-            QMessageBox::information(this, tr("Restart"),
-                                     tr("Language change will be applied on next start."));
-        }
-    };
-    auto languageTriggered = [&](QAction *action) {
+    connect(languageGroup, &QActionGroup::triggered,
+            [this](QAction *action) {
         QSettings settings(GlobalDef::SETTINGS_NAME,
                            QSettings::defaultFormat(),
                            qApp);
         if (settings.value("global/language", "").toString() != action->data().toString())
         {
             settings.setValue("global/language", action->data().toString());
-            restartApp();
-        }
-    };
 
-    //it seems we must connect before we add languageAction, otherwise app will crash...
-    connect(languageGroup, &QActionGroup::triggered, languageTriggered);
+            int result = QMessageBox::warning(this, tr("Restart"),
+                                              tr("Application must restart "
+                                                 "to enable new language settings.\n"
+                                                 "Do you want to restart right now?"),
+                                              QMessageBox::Yes | QMessageBox::No);
+            if (result == QMessageBox::Yes)
+            {
+                qApp->closeAllWindows();
+                qApp->exit(1);
+                QProcess::startDetached(qApp->applicationFilePath(), QStringList());
+            }
+            else if (result == QMessageBox::No)
+            {
+                QMessageBox::information(this, tr("Restart"),
+                                         tr("Language change will be applied on next start."));
+            }
+        }
+    });
 
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
@@ -399,7 +396,7 @@ QMenu* MainWindow::languageMenu(QWidget *parent)
     QString selectedLanguage = settings.value("global/language", "").toString();
     if (selectedLanguage.isEmpty())
         defaultAction->setChecked(true);
-    foreach (QString qmFile, qmList)
+    for (QString &qmFile: qmList)
     {
         qmFile.remove(QRegularExpression(".?paintty_", QRegularExpression::CaseInsensitiveOption));
         qmFile.remove(".qm", Qt::CaseInsensitive);

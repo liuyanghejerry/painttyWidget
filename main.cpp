@@ -80,7 +80,8 @@ int main(int argc, char *argv[])
     mainOnly::initTranslation();
 
     RoomListDialog *dialog = new RoomListDialog;
-    while(dialog->exec()) {
+    int exitCode = 0;
+    while( !exitCode && dialog->exec() ) {
         dialog->hide();
         MainWindow w(dialog->canvasSize());
         w.init();
@@ -93,7 +94,8 @@ int main(int argc, char *argv[])
 #else
         w.showMaximized();
 #endif
-        a.exec();
+        exitCode = a.exec();
+        qDebug()<<"exit code: "<<exitCode;
     }
 
     delete dialog;
