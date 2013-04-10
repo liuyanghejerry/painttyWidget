@@ -48,7 +48,6 @@ SOURCES += main.cpp\
     widgets/newroomwindow.cpp \
     network/commandsocket.cpp \
     widgets/aboutdialog.cpp \
-    widgets/panoramawidget.cpp \
     misc/singleshortcut.cpp \
     widgets/canvascontainer.cpp \
     widgets/memberlistwidget.cpp \
@@ -57,7 +56,10 @@ SOURCES += main.cpp\
     paintingTools/brush/brushmanager.cpp \
     paintingTools/brush/wetfingure.cpp \
     widgets/brushsettingswidget.cpp \
-    widgets/helpdialog.cpp
+    widgets/helpdialog.cpp \
+    widgets/panoramaview.cpp \
+    widgets/panoramawidget.cpp \
+    widgets/panoramaslider.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -86,7 +88,6 @@ HEADERS  += widgets/mainwindow.h \
     network/commandsocket.h \
     widgets/aboutdialog.h \
     common.h \
-    widgets/panoramawidget.h \
     misc/singleshortcut.h \
     widgets/canvascontainer.h \
     widgets/memberlistwidget.h \
@@ -96,7 +97,10 @@ HEADERS  += widgets/mainwindow.h \
     paintingTools/brush/brushmanager.h \
     paintingTools/brush/wetfingure.h \
     widgets/brushsettingswidget.h \
-    widgets/helpdialog.h
+    widgets/helpdialog.h \
+    widgets/panoramaview.h \
+    widgets/panoramawidget.h \
+    widgets/panoramaslider.h
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/colorspinboxgroup.ui \
