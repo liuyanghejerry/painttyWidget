@@ -354,7 +354,7 @@ void MainWindow::toolbarInit()
 
 QMenu* MainWindow::languageMenu()
 {
-    QMenu *menu = new QMenu(tr("Language"), this);
+    QMenu *menu = new QMenu(tr("&Language"), this);
     QAction *defaultAction = menu->addAction(tr("System Default"));
     QDir qmDir(":/translation");
     QStringList qmList = qmDir.entryList(QStringList() << "paintty_*.qm",
