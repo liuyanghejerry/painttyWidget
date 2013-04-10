@@ -5,17 +5,15 @@
 #include <QSlider>
 #include <QLabel>
 #include <QtCore/qmath.h>
+#include <QDebug>
 
 PanoramaSlider::PanoramaSlider(QWidget *parent) :
     QWidget(parent),
     currentScaleFactor_(1.0)
 {
-    makeScaleSlider();
-}
+    using GlobalDef::MIN_SCALE_FACTOR;
+    using GlobalDef::MAX_SCALE_FACTOR;
 
-
-void PanoramaSlider::makeScaleSlider()
-{
     QHBoxLayout *layout = new QHBoxLayout(this);
     QSlider *slider = new QSlider(Qt::Horizontal, this);
     QLabel *label = new QLabel("100%", this);
@@ -27,8 +25,6 @@ void PanoramaSlider::makeScaleSlider()
     layout->addWidget(slider);
     layout->addWidget(label);
     layout->setContentsMargins(0, 0, 0, 0);
-    using GlobalDef::MIN_SCALE_FACTOR;
-    using GlobalDef::MAX_SCALE_FACTOR;
 
     qreal internalFactor = -100 * qLn(MIN_SCALE_FACTOR) / MIN_SCALE_FACTOR / qLn(2);
     slider->setRange(-qCeil(MIN_SCALE_FACTOR * internalFactor),

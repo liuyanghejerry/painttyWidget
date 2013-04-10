@@ -48,6 +48,9 @@ void CanvasContainer::setScaleFactor(qreal factor)
 {
     factor = qBound(MIN_SCALE_FACTOR, factor, MAX_SCALE_FACTOR);
     if(proxy){
+        if(qFuzzyCompare(proxy->scale(), factor)){
+            return;
+        }
         if(smoothScaleFlag){
             if(factor < 1)
                 setRenderHints(QPainter::Antialiasing

@@ -14,7 +14,6 @@ signals:
 public slots:
     void setScale(qreal scaleFactor);
 private:
-    void makeScaleSlider();
     qreal currentScaleFactor_;
 };
 
