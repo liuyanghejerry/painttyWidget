@@ -141,11 +141,10 @@ void MainWindow::init()
             this, &MainWindow::onPanoramaRefresh);
     connect(ui->centralWidget, &CanvasContainer::rectChanged,
             ui->panorama, &PanoramaWidget::onRectChange);
-    // use lambda to avoid that long static_cast :)
     connect(ui->panorama, &PanoramaWidget::moveTo,
-            [&](const QPointF &p){
-        ui->centralWidget->centerOn(p);
-    });
+            ui->centralWidget,
+            static_cast<void (CanvasContainer::*)(const QPointF&)>
+            (&CanvasContainer::centerOn));
 
     layerWidgetInit();
     colorGridInit();
