@@ -22,6 +22,7 @@
 #include <QMessageBox>
 #include <QRegularExpression>
 #include <QProcess>
+#include <QTimer>
 
 #include "../misc/singleshortcut.h"
 #include "layerwidget.h"
@@ -80,6 +81,10 @@ void MainWindow::init()
     ui->pushButton->setDisabled(true);
     ui->menuBar->addMenu(languageMenu());
 
+    connect(ui->panorama, &PanoramaWidget::scaled,
+            ui->centralWidget, &CanvasContainer::setScaleFactor);
+    connect(ui->centralWidget, &CanvasContainer::scaled,
+            ui->panorama, &PanoramaWidget::setScaled);
 
     connect(ui->lineEdit,&QLineEdit::returnPressed,
             this,&MainWindow::onSendPressed);

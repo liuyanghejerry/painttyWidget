@@ -12,7 +12,7 @@ public:
 signals:
     void scaled(qreal scaleFactor);
 public slots:
-    void onScaled(qreal scaleFactor);
+    void setScale(qreal scaleFactor);
 private:
     void makeScaleSlider();
     qreal currentScaleFactor_;

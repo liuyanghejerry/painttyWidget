@@ -2,7 +2,9 @@
 #define PANORAMAWIDGET_H
 
 #include <QWidget>
-#include "panoramaview.h"
+
+class PanoramaSlider;
+class PanoramaView;
 
 class PanoramaWidget : public QWidget
 {
@@ -13,12 +15,14 @@ signals:
     void refresh();
     void moveTo(const QPointF &p);
     void viewportChange(const QRectF &r);
+    void scaled(qreal);
 public slots:
+    void setScaled(qreal);
     void onImageChange(const QPixmap &p, const QRect &r);
     void onRectChange(const QRect &r);
 private:
-    PanoramaView view;
-    
+    PanoramaSlider *slider;
+    PanoramaView *view;
 };
 
 #endif // PANORAMAWIDGET_H

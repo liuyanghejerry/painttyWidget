@@ -8,6 +8,11 @@
 #include <qmath.h>
 #include <QDebug>
 
+#include "../common.h"
+
+using GlobalDef::MAX_SCALE_FACTOR;
+using GlobalDef::MIN_SCALE_FACTOR;
+
 CanvasContainer::CanvasContainer(QWidget *parent) :
     QGraphicsView(parent), proxy(0), scaleSliderWidget(0),
     smoothScaleFlag(true)
@@ -42,20 +47,25 @@ void CanvasContainer::setCanvas(QWidget *canvas)
 void CanvasContainer::setScaleFactor(qreal factor)
 {
     factor = qBound(MIN_SCALE_FACTOR, factor, MAX_SCALE_FACTOR);
-    if (proxy)
-    {
-        if (smoothScaleFlag)
-        {
-            if (factor < 1)
-                setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-            else
-            {
+    if(proxy){
+        if(smoothScaleFlag){
+            if(factor < 1)
+                setRenderHints(QPainter::Antialiasing
+                               | QPainter::SmoothPixmapTransform);
+            else{
                 setRenderHint(QPainter::Antialiasing, false);
-                setRenderHint(QPainter::SmoothPixmapTransform, false);
+                setRenderHint(QPainter::SmoothPixmapTransform,
+                              false);
             }
         }
         proxy->setScale(factor);
         setSceneRect(scene->itemsBoundingRect());
+
+        QPointF position = proxy->mapFromScene(
+                    mapToScene(viewport()->rect().center()));
+        if(proxy->rect().contains(position))
+            proxy->setTransformOriginPoint(position);
+
         emit scaled(factor);
         emit rectChanged(visualRect().toRect());
     }
@@ -88,92 +98,6 @@ QRectF CanvasContainer::visualRect() const
     return proxy->mapFromScene(
                 mapToScene(viewport()->rect()))
             .boundingRect().intersected(proxy->rect());
-}
-
-QWidget* CanvasContainer::scaleSlider()
-{
-    if (!scaleSliderWidget)
-    {
-        scaleSliderWidget = new QWidget(this);
-        QHBoxLayout *layout = new QHBoxLayout(scaleSliderWidget);
-        QSlider *slider = new QSlider(Qt::Horizontal, scaleSliderWidget);
-        QLabel *label = new QLabel("100%", scaleSliderWidget);
-        label->setFixedWidth(label->fontMetrics().width("100.%"));
-        label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-        //label->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed); //not working?
-
-        scaleSliderWidget->setLayout(layout);
-        layout->addWidget(slider);
-        layout->addWidget(label);
-        layout->setContentsMargins(0, 0, 0, 0);
-
-        qreal internalFactor = -100 * qLn(MIN_SCALE_FACTOR) / MIN_SCALE_FACTOR / qLn(2);
-        slider->setRange(-qCeil(MIN_SCALE_FACTOR * internalFactor),
-                         qCeil(MAX_SCALE_FACTOR - 1) * 100);
-        slider->setPageStep(100);
-        slider->setTickPosition(QSlider::TicksBelow);
-
-        auto setScaleOrigin = [=]()
-        {
-            if (proxy)
-            {
-                QPointF position = proxy->mapFromScene(mapToScene(viewport()->rect().center()));
-                if (proxy->rect().contains(position))
-                    proxy->setTransformOriginPoint(position);
-            }
-        };
-
-        auto calculateScale = [=](int sliderValue)
-        {
-            if (sliderValue >= 0)
-            {
-                qreal newScale = 1.0 + 0.01 * sliderValue;
-                if (!qFuzzyCompare(newScale, currentScaleFactor()))
-                {
-                    setScaleOrigin();
-                    setScaleFactor(1.0 + 0.01 * sliderValue);
-                    label->setText(QString("%1%").arg(100 + sliderValue));
-                }
-              }
-            else
-            {
-                qreal newScale = qPow(MIN_SCALE_FACTOR, -sliderValue / internalFactor / MIN_SCALE_FACTOR);
-                if (!qFuzzyCompare(newScale, currentScaleFactor()))
-                {
-                    setScaleOrigin();
-                    setScaleFactor(newScale);
-                    label->setText(QString("%1%").arg(newScale * 100, 0, 'f', 1));
-                }
-            }
-        };
-        auto calculateValue = [=](qreal scaleFactor)
-        {
-            slider->blockSignals(true);
-            if (scaleFactor >= 1.0)
-            {
-                int newValue = 100 * scaleFactor - 100;
-                if (newValue != slider->value())
-                {
-                    slider->setValue(newValue);
-                    label->setText(QString("%1%").arg(qFloor(100 * scaleFactor)));
-                }
-            }
-            else
-            {
-                int newValue = -internalFactor * MIN_SCALE_FACTOR / qLn(MIN_SCALE_FACTOR) * qLn(scaleFactor);
-                if (newValue != slider->value())
-                {
-                    slider->setValue(newValue);
-                    label->setText(QString("%1%").arg(100 * scaleFactor, 0, 'f', 1));
-                }
-            }
-            slider->blockSignals(false);
-        };
-
-        connect(slider, &QSlider::valueChanged, calculateScale);
-        connect(this, &CanvasContainer::scaled, calculateValue);
-    }
-    return scaleSliderWidget;
 }
 
 void CanvasContainer::centerOn(const QPointF &pos)

@@ -7,7 +7,8 @@
 #include <QtCore/qmath.h>
 
 PanoramaSlider::PanoramaSlider(QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent),
+    currentScaleFactor_(1.0)
 {
     makeScaleSlider();
 }
@@ -81,7 +82,7 @@ void PanoramaSlider::makeScaleSlider()
     connect(this, &PanoramaSlider::scaled, calculateValue);
 }
 
-void PanoramaSlider::onScaled(qreal scaleFactor)
+void PanoramaSlider::setScale(qreal scaleFactor)
 {
     emit scaled(scaleFactor);
 }

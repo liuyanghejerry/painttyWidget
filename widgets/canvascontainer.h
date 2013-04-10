@@ -6,9 +6,6 @@
 class QGraphicsScene;
 class QGraphicsProxyWidget;
 
-const qreal MAX_SCALE_FACTOR = 5.0;
-const qreal MIN_SCALE_FACTOR = 0.125;
-
 class CanvasContainer : public QGraphicsView
 {
     Q_OBJECT
@@ -18,7 +15,6 @@ public:
     qreal currentScaleFactor() const;
     bool smoothScale() const;
     QRectF visualRect() const;
-    QWidget* scaleSlider();
     void centerOn(const QPointF &pos);
     void centerOn(qreal x, qreal y);
     
