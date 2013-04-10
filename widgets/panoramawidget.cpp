@@ -5,11 +5,10 @@
 #include <QVBoxLayout>
 
 PanoramaWidget::PanoramaWidget(QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent),
+    slider(new PanoramaSlider(this)),
+    view(new PanoramaView(this))
 {
-    slider = new PanoramaSlider(this);
-    view = new PanoramaView(this);
-
     connect(view, &PanoramaView::refresh,
             this, &PanoramaWidget::refresh);
     connect(view, &PanoramaView::moveTo,
@@ -25,7 +24,8 @@ PanoramaWidget::PanoramaWidget(QWidget *parent) :
     this->setLayout(layout);
     layout->addWidget(view);
     layout->addWidget(slider);
-    layout->setContentsMargins(8, 8, 8, 8);
+    layout->setStretchFactor(view, 1);
+    layout->setStretchFactor(slider, 0);
     layout->setSpacing(2);
 }
 

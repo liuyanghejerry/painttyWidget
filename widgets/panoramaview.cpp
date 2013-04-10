@@ -3,12 +3,7 @@
 #include <QPixmap>
 #include <QResizeEvent>
 #include <QPainter>
-#include <QSlider>
-#include <QLabel>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
 #include <QDebug>
-
 
 PanoramaView::PanoramaView(QWidget *parent) :
     QWidget(parent),
@@ -32,7 +27,7 @@ PanoramaView::PanoramaView(QWidget *parent) :
 
 QSize PanoramaView::sizeHint() const
 {
-    return image_.size() + QSize(10, 10);
+    return image_.size();
 }
 
 QSize PanoramaView::minimumSizeHint() const

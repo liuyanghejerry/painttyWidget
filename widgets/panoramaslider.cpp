@@ -5,7 +5,6 @@
 #include <QSlider>
 #include <QLabel>
 #include <QtCore/qmath.h>
-#include <QDebug>
 
 PanoramaSlider::PanoramaSlider(QWidget *parent) :
     QWidget(parent),
@@ -80,6 +79,9 @@ PanoramaSlider::PanoramaSlider(QWidget *parent) :
 
 void PanoramaSlider::setScale(qreal scaleFactor)
 {
+    if(qFuzzyCompare(currentScaleFactor_, scaleFactor)){
+        return;
+    }
     emit scaled(scaleFactor);
 }
 
