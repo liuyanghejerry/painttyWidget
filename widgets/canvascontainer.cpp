@@ -19,8 +19,6 @@ CanvasContainer::CanvasContainer(QWidget *parent) :
 {
     setCacheMode(QGraphicsView::CacheBackground);
     setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-    setResizeAnchor(QGraphicsView::AnchorUnderMouse);
     scene = new QGraphicsScene(this);
     setScene(scene);
 
@@ -46,29 +44,9 @@ void CanvasContainer::setCanvas(QWidget *canvas)
 
 void CanvasContainer::setScaleFactor(qreal factor)
 {
-    factor = qBound(MIN_SCALE_FACTOR, factor, MAX_SCALE_FACTOR);
-    if(proxy){
-        if(smoothScaleFlag){
-            if(factor < 1)
-                setRenderHints(QPainter::Antialiasing
-                               | QPainter::SmoothPixmapTransform);
-            else{
-                setRenderHint(QPainter::Antialiasing, false);
-                setRenderHint(QPainter::SmoothPixmapTransform,
-                              false);
-            }
-        }
-        proxy->setScale(factor);
-        setSceneRect(scene->itemsBoundingRect());
-
-        QPointF position = proxy->mapFromScene(
-                    mapToScene(viewport()->rect().center()));
-        if(proxy->rect().contains(position))
-            proxy->setTransformOriginPoint(position);
-
-        emit scaled(factor);
-        emit rectChanged(visualRect().toRect());
-    }
+    //new signal and slot syntax has some trouble
+    //dealing with slots having default parameter
+    setScaleFactorInternal(factor);
 }
 
 qreal CanvasContainer::currentScaleFactor() const
@@ -151,6 +129,35 @@ qreal CanvasContainer::calculateFactor(qreal current, bool zoomIn)
     }
 }
 
+void CanvasContainer::setScaleFactorInternal(qreal factor, const QPoint scaleCenter)
+{
+    factor = qBound(MIN_SCALE_FACTOR, factor, MAX_SCALE_FACTOR);
+    if(proxy){
+        if (qFuzzyCompare(factor, proxy->scale()))
+            return;
+        if(smoothScaleFlag){
+            if(factor < 1)
+                setRenderHints(QPainter::Antialiasing
+                               | QPainter::SmoothPixmapTransform);
+            else{
+                setRenderHint(QPainter::Antialiasing, false);
+                setRenderHint(QPainter::SmoothPixmapTransform,
+                              false);
+            }
+        }
+
+        QPointF position = proxy->mapFromScene(
+                    mapToScene(scaleCenter.isNull()? viewport()->rect().center() : scaleCenter));
+        if(proxy->rect().contains(position))
+            proxy->setTransformOriginPoint(position);
+        proxy->setScale(factor);
+        setSceneRect(scene->itemsBoundingRect());
+
+        emit scaled(factor);
+        emit rectChanged(visualRect().toRect());
+    }
+}
+
 void CanvasContainer::wheelEvent(QWheelEvent *event)
 {
     if (!event->modifiers().testFlag(Qt::ControlModifier)
@@ -159,11 +166,11 @@ void CanvasContainer::wheelEvent(QWheelEvent *event)
         QGraphicsView::wheelEvent(event);
         return;
     }
-    QPointF position = proxy->mapFromScene(mapToScene(event->pos()));
-    if (!proxy->rect().contains(position))
-        return;
-    proxy->setTransformOriginPoint(position);
-    setScaleFactor(calculateFactor(proxy->scale(), event->delta() > 0));
+    //QPointF position = proxy->mapFromScene(mapToScene(event->pos()));
+    //if (!proxy->rect().contains(position))
+        //return;
+    //proxy->setTransformOriginPoint(position);
+    setScaleFactorInternal(calculateFactor(proxy->scale(), event->delta() > 0), event->pos());
 }
 
 void CanvasContainer::mousePressEvent(QMouseEvent *event)

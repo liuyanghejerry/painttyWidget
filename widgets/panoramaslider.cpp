@@ -6,16 +6,16 @@
 #include <QLabel>
 #include <QtCore/qmath.h>
 
-PanoramaSlider::PanoramaSlider(QWidget *parent) :
-    QWidget(parent),
-    currentScaleFactor_(1.0)
-{
-    using GlobalDef::MIN_SCALE_FACTOR;
-    using GlobalDef::MAX_SCALE_FACTOR;
+using GlobalDef::MIN_SCALE_FACTOR;
+using GlobalDef::MAX_SCALE_FACTOR;
 
+PanoramaSlider::PanoramaSlider(QWidget *parent) :
+    QWidget(parent)
+    //currentScaleFactor_(1.0)
+{
     QHBoxLayout *layout = new QHBoxLayout(this);
-    QSlider *slider = new QSlider(Qt::Horizontal, this);
-    QLabel *label = new QLabel("100%", this);
+    slider = new QSlider(Qt::Horizontal, this);
+    label = new QLabel("100%", this);
     label->setFixedWidth(label->fontMetrics().width("100.%"));
     label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     //label->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed); //not working?
@@ -25,68 +25,59 @@ PanoramaSlider::PanoramaSlider(QWidget *parent) :
     layout->addWidget(label);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    qreal internalFactor = -100 * qLn(MIN_SCALE_FACTOR) / MIN_SCALE_FACTOR / qLn(2);
+    internalFactor = -100 * qLn(MIN_SCALE_FACTOR) / MIN_SCALE_FACTOR / qLn(2);
     slider->setRange(-qCeil(MIN_SCALE_FACTOR * internalFactor),
                      qCeil(MAX_SCALE_FACTOR - 1) * 100);
     slider->setPageStep(100);
     slider->setTickPosition(QSlider::TicksBelow);
 
-    auto calculateScale = [this, label, internalFactor](int sliderValue){
+    auto calculateScale = [this](int sliderValue){
         if (sliderValue >= 0){
             qreal newScale = 1.0 + 0.01 * sliderValue;
-            if (!qFuzzyCompare(newScale, currentScaleFactor_)){
-                currentScaleFactor_ = newScale;
-                label->setText(QString("%1%")
-                               .arg(100 + sliderValue));
-                emit scaled(currentScaleFactor_);
-            }
+            label->setText(QString("%1%")
+                           .arg(100 + sliderValue));
+            emit scaled(newScale);
         }else{
             qreal newScale = qPow(MIN_SCALE_FACTOR,
                                   -sliderValue
                                   / internalFactor
                                   / MIN_SCALE_FACTOR);
-            if (!qFuzzyCompare(newScale, currentScaleFactor_)){
-                currentScaleFactor_ = newScale;
-                label->setText(QString("%1%")
-                               .arg(newScale * 100, 0, 'f', 1));
-                emit scaled(currentScaleFactor_);
-            }
+            label->setText(QString("%1%")
+                           .arg(newScale * 100, 0, 'f', 1));
+            emit scaled(newScale);
         }
     };
-    auto calculateValue = [this, slider, label, internalFactor](qreal scaleFactor){
-        slider->blockSignals(true);
-        if (scaleFactor >= 1.0){
-            int newValue = 100 * scaleFactor - 100;
-            if (newValue != slider->value()){
-                slider->setValue(newValue);
-                currentScaleFactor_ = scaleFactor;
-                label->setText(QString("%1%").arg(qFloor(100 * scaleFactor)));
-            }
-        }else{
-            int newValue = -internalFactor * MIN_SCALE_FACTOR / qLn(MIN_SCALE_FACTOR) * qLn(scaleFactor);
-            if (newValue != slider->value()){
-                slider->setValue(newValue);
-                currentScaleFactor_ = scaleFactor;
-                label->setText(QString("%1%").arg(100 * scaleFactor, 0, 'f', 1));
-            }
-        }
-        slider->blockSignals(false);
-    };
+//    auto calculateValue = [this, slider, label, internalFactor](qreal scaleFactor){
+//        slider->blockSignals(true);
+
+//        slider->blockSignals(false);
+//    };
 
     connect(slider, &QSlider::valueChanged, calculateScale);
-    connect(this, &PanoramaSlider::scaled, calculateValue);
+    //connect(this, &PanoramaSlider::scaled, calculateValue);
 }
 
 void PanoramaSlider::setScale(qreal scaleFactor)
 {
-    if(qFuzzyCompare(currentScaleFactor_, scaleFactor)){
-        return;
+    slider->blockSignals(true);
+    if (scaleFactor >= 1.0){
+        int newValue = 100 * scaleFactor - 100;
+        if (newValue != slider->value()){
+            slider->setValue(newValue);
+            label->setText(QString("%1%").arg(qFloor(100 * scaleFactor)));
+        }
+    }else{
+        int newValue = -internalFactor * MIN_SCALE_FACTOR / qLn(MIN_SCALE_FACTOR) * qLn(scaleFactor);
+        if (newValue != slider->value()){
+            slider->setValue(newValue);
+            label->setText(QString("%1%").arg(100 * scaleFactor, 0, 'f', 1));
+        }
     }
-    emit scaled(scaleFactor);
+    slider->blockSignals(false);
 }
 
-qreal PanoramaSlider::currentScaleFactor()
-{
-    return currentScaleFactor_;
-}
+//qreal PanoramaSlider::currentScaleFactor()
+//{
+//    return currentScaleFactor_;
+//}
 

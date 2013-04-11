@@ -35,6 +35,7 @@ private:
     int verticalScrollValue;
     bool smoothScaleFlag;
     qreal calculateFactor(qreal current, bool zoomIn);
+    void setScaleFactorInternal(qreal factor, const QPoint scaleCenter = QPoint());
 
 protected:
     void wheelEvent(QWheelEvent *event);

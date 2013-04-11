@@ -3,18 +3,24 @@
 
 #include <QWidget>
 
+class QSlider;
+class QLabel;
+
 class PanoramaSlider : public QWidget
 {
     Q_OBJECT
 public:
     explicit PanoramaSlider(QWidget *parent = 0);
-    qreal currentScaleFactor();
+    //qreal currentScaleFactor();
 signals:
     void scaled(qreal scaleFactor);
 public slots:
     void setScale(qreal scaleFactor);
 private:
-    qreal currentScaleFactor_;
+    QSlider *slider;
+    QLabel *label;
+    qreal internalFactor;
+    //qreal currentScaleFactor_;
 };
 
 #endif // PANORAMASLIDER_H
