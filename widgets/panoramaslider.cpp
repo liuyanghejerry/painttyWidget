@@ -10,12 +10,13 @@ using GlobalDef::MIN_SCALE_FACTOR;
 using GlobalDef::MAX_SCALE_FACTOR;
 
 PanoramaSlider::PanoramaSlider(QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent),
+    slider(new QSlider(Qt::Horizontal, this)),
+    label(new QLabel("100%", this)),
+    internalFactor(1.0)
     //currentScaleFactor_(1.0)
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
-    slider = new QSlider(Qt::Horizontal, this);
-    label = new QLabel("100%", this);
     label->setFixedWidth(label->fontMetrics().width("100.%"));
     label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     //label->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed); //not working?
