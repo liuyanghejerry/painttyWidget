@@ -19,7 +19,6 @@ public:
     int layerNum(){return layerNameCounter;}
     QPixmap currentCanvas();
     QPixmap allCanvas();
-    void setHistorySize(const quint64 &size);
 
     virtual QSize sizeHint () const;
     virtual QSize minimumSizeHint () const;
@@ -88,7 +87,6 @@ private:
     qreal opacity;
     int layerNameCounter;
     BrushPointer brush_;
-    int historySize_;
     bool shareColor_;
     QHash<QString, BrushPointer> remoteBrush;
     QHash<QString, BrushPointer> localBrush;

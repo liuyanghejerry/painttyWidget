@@ -17,6 +17,8 @@ public:
     bool isConnected();
     QHostAddress address();
     int port();
+    quint64 pastSize();
+    void clearPastSize();
     void setCompressed(bool b);
     bool compressed();
     
@@ -32,6 +34,7 @@ protected slots:
     void onReceipt();
 protected:
     quint32 dataSize;
+    quint64 historySize;
     bool commandStarted;
     QTcpSocket *socket;
     bool compressed_;

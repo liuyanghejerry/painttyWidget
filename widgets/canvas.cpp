@@ -48,7 +48,6 @@ Canvas::Canvas(QWidget *parent) :
     layers(canvasSize),
     image(canvasSize),
     layerNameCounter(0),
-    historySize_(0),
     shareColor_(true)
 {
     setAttribute(Qt::WA_StaticContents);
@@ -80,11 +79,6 @@ Canvas::Canvas(QWidget *parent) :
 
 Canvas::~Canvas()
 {
-}
-
-void Canvas::setHistorySize(const quint64 &size)
-{
-    historySize_ = size;
 }
 
 QPixmap Canvas::currentCanvas()
@@ -435,19 +429,6 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
 
 void Canvas::onNewData(const QByteArray & array)
 {
-    //    static quint64 h_size = 0;
-    //    if(historySize_) {
-    //        h_size += array.size();
-    //        qDebug()<<h_size<<historySize_;
-    //        if(h_size < quint64(historySize_)){
-    //            this->setDisabled(true);
-    //        }else{
-    //            historySize_ = 0;
-    //            h_size = 0;
-    //            this->setEnabled(true);
-    //            qDebug()<<"enable!";
-    //        }
-    //    }
     QVariantMap m = fromJson(array).toMap();
     QString action = m["action"].toString().toLower();
 

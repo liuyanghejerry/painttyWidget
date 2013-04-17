@@ -5,6 +5,7 @@
 Socket::Socket(QObject *parent) :
     QObject(parent),
     dataSize(0),
+    historySize(0),
     commandStarted(false),
     compressed_(true)
 {
@@ -28,6 +29,16 @@ QHostAddress Socket::address()
 int Socket::port()
 {
     return socket->peerPort();
+}
+
+quint64 Socket::pastSize()
+{
+    return historySize;
+}
+
+void Socket::clearPastSize()
+{
+    historySize = 0;
 }
 
 void Socket::setCompressed(bool b)
@@ -102,14 +113,18 @@ void Socket::onReceipt()
         commandStarted=true;
         /* getting the length of the message */
         char c1, c2, c3, c4;
-        socket->getChar(&c1), socket->getChar(&c2); socket->getChar(&c3), socket->getChar(&c4);
-        dataSize= (uchar(c1) << 24) + (uchar(c2) << 16) + (uchar(c3) << 8) + uchar(c4);
+        socket->getChar(&c1), socket->getChar(&c2);
+        socket->getChar(&c3), socket->getChar(&c4);
+        historySize += 4;
+        dataSize= (uchar(c1) << 24) + (uchar(c2) << 16)
+                + (uchar(c3) << 8) + uchar(c4);
         /* Recursive call to write less code =) */
         onReceipt();
     } else {
         /* Checking if the command is complete! */
         if (socket->bytesAvailable() >= dataSize) {
             QByteArray info = socket->read(dataSize);
+            historySize += dataSize;
             bool isCompressed = info[0] & 0x1;
             if(isCompressed){
                 auto tmp = qUncompress(
