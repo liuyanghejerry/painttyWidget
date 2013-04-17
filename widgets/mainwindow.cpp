@@ -194,6 +194,11 @@ void MainWindow::cmdSocketRouterInit()
                           std::bind(&MainWindow::onCommandResponseCheckout,
                                     this,
                                     std::placeholders::_1));
+    cmdRouter_.regHandler("action",
+                          "notify",
+                          std::bind(&MainWindow::onActionNotify,
+                                    this,
+                                    std::placeholders::_1));
 }
 
 void MainWindow::layerWidgetInit()
@@ -648,6 +653,23 @@ void MainWindow::onCommandResponseOnlinelist(const QJsonObject &o)
         l.insert(id, vl);
     }
     ui->memberList->setMemberList(l);
+}
+
+void MainWindow::onActionNotify(const QJsonObject &o)
+{
+    QString content = o.value("content").toString();
+    if(content.isEmpty()){
+        return;
+    }
+
+    QTextCursor c = ui->textEdit->textCursor();
+    c.movePosition(QTextCursor::End);
+    ui->textEdit->setTextCursor(c);
+    ui->textEdit->insertHtml(content);
+    ui->textEdit->verticalScrollBar()
+            ->setValue(ui->textEdit->verticalScrollBar()
+                       ->maximum());
+    ui->textEdit->insertPlainText("\n");
 }
 
 void MainWindow::onNewMessage(const QString &content)
