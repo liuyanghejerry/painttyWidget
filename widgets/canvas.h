@@ -48,6 +48,7 @@ signals:
     void sendData(const QByteArray &);
     void pickColorComplete();
     void newBrushSettings(const QVariantMap &map);
+    void historyComplete();
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);

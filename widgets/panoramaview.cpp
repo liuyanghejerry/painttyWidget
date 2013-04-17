@@ -19,8 +19,8 @@ PanoramaView::PanoramaView(QWidget *parent) :
     full_img_.fill(Qt::white);
     image_.fill(Qt::white);
     timer_.setInterval(5*1000);
-    connect(&timer_, SIGNAL(timeout()),
-            this, SIGNAL(refresh()));
+    connect(&timer_, &QTimer::timeout,
+            this, &PanoramaView::refresh);
     timer_.start();
     emit refresh();
 }

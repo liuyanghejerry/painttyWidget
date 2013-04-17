@@ -344,7 +344,8 @@ It seems you&apos;re not room manager.</source>
         <location filename="../widgets/mainwindow.cpp" line="510"/>
         <source>Connecting to server...
 </source>
-        <translation>サーバに連結してる...</translation>
+        <translation>サーバに連結してる...
+</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="523"/>
@@ -355,13 +356,15 @@ It seems you&apos;re not room manager.</source>
         <location filename="../widgets/mainwindow.cpp" line="540"/>
         <source>Server Connected.
 </source>
-        <translation>サーバに連結完了。</translation>
+        <translation>サーバに連結完了。
+</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="551"/>
         <source>Server Connection Failed.
 </source>
-        <translation>サーバに連結失敗。</translation>
+        <translation>サーバに連結失敗。
+</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="568"/>

@@ -446,6 +446,7 @@ void Canvas::onNewData(const QByteArray & array)
             historySize_ = 0;
             h_size = 0;
             this->setEnabled(true);
+            emit historyComplete();
         }
     }
     QVariantMap m = fromJson(array).toMap();
