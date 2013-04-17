@@ -276,147 +276,147 @@
         <translation>所有圖層</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="238"/>
+        <location filename="../widgets/mainwindow.cpp" line="237"/>
         <source>Brushes</source>
         <translation>畫刷</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="274"/>
-        <location filename="../widgets/mainwindow.cpp" line="318"/>
+        <location filename="../widgets/mainwindow.cpp" line="273"/>
+        <location filename="../widgets/mainwindow.cpp" line="317"/>
         <source>%1
 Shortcut: %2</source>
         <translation>%1
 快捷鍵：%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="298"/>
+        <location filename="../widgets/mainwindow.cpp" line="297"/>
         <source>Color Picker</source>
         <translation>拾色器</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="327"/>
+        <location filename="../widgets/mainwindow.cpp" line="326"/>
         <source>Brush Settings</source>
         <translation>畫刷設定</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="357"/>
+        <location filename="../widgets/mainwindow.cpp" line="356"/>
         <source>&amp;Language</source>
         <translation>語言(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="358"/>
+        <location filename="../widgets/mainwindow.cpp" line="357"/>
         <source>System Default</source>
         <translation>系統默認</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="376"/>
-        <location filename="../widgets/mainwindow.cpp" line="389"/>
+        <location filename="../widgets/mainwindow.cpp" line="375"/>
+        <location filename="../widgets/mainwindow.cpp" line="388"/>
         <source>Restart</source>
         <translation>重新啟動</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="377"/>
+        <location filename="../widgets/mainwindow.cpp" line="376"/>
         <source>Application must restart to enable new language settings.
 Do you want to restart right now?</source>
         <translation>程式必須重新啟動才可以應用新的語言設置。
 是否立即重新啟動？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="390"/>
+        <location filename="../widgets/mainwindow.cpp" line="389"/>
         <source>Language change will be applied on next start.</source>
         <translation>語言更改將在下次啟動程式時生效。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="487"/>
-        <location filename="../widgets/mainwindow.cpp" line="581"/>
-        <location filename="../widgets/mainwindow.cpp" line="604"/>
+        <location filename="../widgets/mainwindow.cpp" line="486"/>
+        <location filename="../widgets/mainwindow.cpp" line="580"/>
+        <location filename="../widgets/mainwindow.cpp" line="603"/>
         <source>Sorry</source>
         <translation>抱歉</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="488"/>
+        <location filename="../widgets/mainwindow.cpp" line="487"/>
         <source>Only room owner is authorized to close the room.
 It seems you&apos;re not room manager.</source>
         <translation>只有房主才有權限關閉房間。
 您似乎不是房主。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="511"/>
+        <location filename="../widgets/mainwindow.cpp" line="510"/>
         <source>Connecting to server...
 </source>
         <translation>正在連接至伺服器...
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="524"/>
+        <location filename="../widgets/mainwindow.cpp" line="523"/>
         <source> - Mr.Paint</source>
         <translation> - 茶繪君</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="541"/>
+        <location filename="../widgets/mainwindow.cpp" line="540"/>
         <source>Server Connected.
 </source>
         <translation>伺服器連接成功。
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="552"/>
+        <location filename="../widgets/mainwindow.cpp" line="551"/>
         <source>Server Connection Failed.
 </source>
         <translation>伺服器斷開了連接。
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="569"/>
+        <location filename="../widgets/mainwindow.cpp" line="568"/>
         <source>Closing</source>
         <translation>房間關閉</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="570"/>
+        <location filename="../widgets/mainwindow.cpp" line="569"/>
         <source>Warning, the room owner has closed the room. This room will close when everyone leaves.
 Save your work if you like it!</source>
         <translation>警告，房主已經關閉了本房間。所有人離開後本房間將刪除。
 請保存好您的得意之作！</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="582"/>
-        <location filename="../widgets/mainwindow.cpp" line="605"/>
+        <location filename="../widgets/mainwindow.cpp" line="581"/>
+        <location filename="../widgets/mainwindow.cpp" line="604"/>
         <source>Sorry, it seems you&apos;re notroom owner.</source>
         <translation>抱歉，您似乎不是房主。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="811"/>
-        <location filename="../widgets/mainwindow.cpp" line="832"/>
+        <location filename="../widgets/mainwindow.cpp" line="810"/>
+        <location filename="../widgets/mainwindow.cpp" line="831"/>
         <source>OMG</source>
         <translation>天吶</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="812"/>
+        <location filename="../widgets/mainwindow.cpp" line="811"/>
         <source>You&apos;re going to clear layer %1. All the work of that layerwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translation>您將清空圖層 %1。該圖層的所有內容將被清空，並且&lt;b&gt;無法&lt;/b&gt;恢復。
 您確定您要這麼做嗎？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="833"/>
+        <location filename="../widgets/mainwindow.cpp" line="832"/>
         <source>You&apos;re going to clear ALL LAYERS. All of work in this roomwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translation>您將清空所有圖層。本房間的所有內容將被清空，並且&lt;b&gt;無法&lt;/b&gt;恢復。
 您確定要這麼做嗎？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="874"/>
+        <location filename="../widgets/mainwindow.cpp" line="873"/>
         <source>Export all to file</source>
         <translation>全部導出至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="876"/>
-        <location filename="../widgets/mainwindow.cpp" line="894"/>
+        <location filename="../widgets/mainwindow.cpp" line="875"/>
+        <location filename="../widgets/mainwindow.cpp" line="893"/>
         <source>Images (*.png)</source>
         <translation>圖像 (*.png)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="892"/>
+        <location filename="../widgets/mainwindow.cpp" line="891"/>
         <source>Export visible part to file</source>
         <translation>導出可見圖層至文件</translation>
     </message>
