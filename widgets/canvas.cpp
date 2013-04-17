@@ -48,6 +48,7 @@ Canvas::Canvas(QWidget *parent) :
     layers(canvasSize),
     image(canvasSize),
     layerNameCounter(0),
+    historySize_(0),
     shareColor_(true)
 {
     setAttribute(Qt::WA_StaticContents);
@@ -55,7 +56,6 @@ Canvas::Canvas(QWidget *parent) :
     drawing = false;
     opacity = 1.0;
     brush_ = BrushPointer(new Brush);
-    changeBrush("pencil");
     updateCursor();
 
     setMouseTracking(true);
@@ -101,6 +101,11 @@ QPixmap Canvas::allCanvas()
         painter.drawPixmap(0, 0, *im);
     }
     return exp;
+}
+
+void Canvas::setHistorySize(quint64 s)
+{
+    historySize_ = s;
 }
 
 /*!
@@ -432,8 +437,10 @@ void Canvas::onNewData(const QByteArray & array)
     static quint64 h_size = 0;
     if(historySize_) {
         h_size += array.size();
-        if(h_size < quint64(historySize_)){
+        if(h_size < historySize_){
             this->setDisabled(true);
+            qDebug()<<"History: "<<historySize_
+                   <<"Loaded: "<<h_size;
         }else{
             qDebug()<<"History"<<historySize_<<"bytes loaded!";
             historySize_ = 0;

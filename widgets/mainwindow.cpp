@@ -104,8 +104,6 @@ void MainWindow::init()
     connect(&dataSocket,&DataSocket::connected,
             this,&MainWindow::onServerConnected);
     connect(&dataSocket,&DataSocket::newData,
-            this,&MainWindow::onRawData);
-    connect(&dataSocket,&DataSocket::newData,
             ui->canvas,&Canvas::onNewData);
     connect(ui->canvas,&Canvas::sendData,
             &dataSocket,&DataSocket::sendData);
@@ -508,6 +506,7 @@ void MainWindow::socketInit(int dataPort, int msgPort)
         requestCheckout();
     }
 
+    ui->canvas->setHistorySize(historySize_);
     ui->textEdit->insertPlainText(tr("Connecting to server...\n"));
     msgSocket.connectToHost(QHostAddress(GlobalDef::HOST_ADDR),msgPort);
     dataSocket.connectToHost(QHostAddress(GlobalDef::HOST_ADDR),dataPort);
@@ -527,8 +526,6 @@ void MainWindow::setRoomName(const QString &name)
 void MainWindow::setHistorySize(const quint64 &size)
 {
     historySize_ = size;
-    // disable canvas before enough data
-    ui->canvas->setDisabled(true);
 }
 
 void MainWindow::setCanvasSize(const QSize &size)
@@ -553,15 +550,6 @@ void MainWindow::onServerDisconnected()
 {
     ui->textEdit->insertPlainText(tr("Server Connection Failed.\n"));
     ui->canvas->setEnabled(false);
-}
-
-void MainWindow::onRawData()
-{
-    qDebug()<<"History: "<<this->historySize_
-           <<"pastSize: "<<dataSocket.pastSize();
-    if(this->historySize_ < dataSocket.pastSize()) {
-        ui->canvas->setEnabled(true);
-    }
 }
 
 void MainWindow::onCmdServerDisconnected()

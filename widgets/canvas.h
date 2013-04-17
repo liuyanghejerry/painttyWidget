@@ -19,6 +19,7 @@ public:
     int layerNum(){return layerNameCounter;}
     QPixmap currentCanvas();
     QPixmap allCanvas();
+    void setHistorySize(quint64 s);
 
     virtual QSize sizeHint () const;
     virtual QSize minimumSizeHint () const;

@@ -98,7 +98,6 @@ private slots:
     void onCommandResponseCheckout(const QJsonObject &m);
     void onCommandActionClearAll(const QJsonObject &);
     void onCommandResponseOnlinelist(const QJsonObject &o);
-    void onRawData();
 
 };
 
