@@ -429,6 +429,18 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
 
 void Canvas::onNewData(const QByteArray & array)
 {
+    static quint64 h_size = 0;
+    if(historySize_) {
+        h_size += array.size();
+        if(h_size < quint64(historySize_)){
+            this->setDisabled(true);
+        }else{
+            qDebug()<<"History"<<historySize_<<"bytes loaded!";
+            historySize_ = 0;
+            h_size = 0;
+            this->setEnabled(true);
+        }
+    }
     QVariantMap m = fromJson(array).toMap();
     QString action = m["action"].toString().toLower();
 
@@ -709,7 +721,7 @@ void Canvas::resizeEvent(QResizeEvent *event)
     QSize newSize = event->size();
     canvasSize = newSize;
     layers.resizeLayers(newSize);
-//    resizeImage(&image, newSize);
+    //    resizeImage(&image, newSize);
     QPixmap newImage(newSize);
     newImage.fill(Qt::transparent);
     QPainter painter(&newImage);
