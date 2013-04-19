@@ -59,7 +59,8 @@ SOURCES += main.cpp\
     widgets/helpdialog.cpp \
     widgets/panoramaview.cpp \
     widgets/panoramawidget.cpp \
-    widgets/panoramaslider.cpp
+    widgets/panoramaslider.cpp \
+    network/localnetworkinterface.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -100,7 +101,8 @@ HEADERS  += widgets/mainwindow.h \
     widgets/helpdialog.h \
     widgets/panoramaview.h \
     widgets/panoramawidget.h \
-    widgets/panoramaslider.h
+    widgets/panoramaslider.h \
+    network/localnetworkinterface.h
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/colorspinboxgroup.ui \

@@ -2,6 +2,7 @@
 #define COMMON_H
 
 #include <QtGlobal>
+#include <QString>
 
 namespace GlobalDef
 {
@@ -12,14 +13,17 @@ const static char CLIENT_TYPE[] = "alpha";
 const static char SETTINGS_NAME[] = "mrpaint.ini";
 
 #ifdef PAINTTY_DEV
-//const static char HOST_ADDR[] = "42.121.85.47";
-//const static char HOST_ADDR[] = "106.187.92.58";
-const static char HOST_ADDR[] = "2400:8900::f03c:91ff:fe70:bc64";
+const static QString HOST_ADDR_IPV4("106.187.92.58");
+const static QString HOST_ADDR_IPV6("2400:8900::f03c:91ff:fe70:bc64");
 const static int HOST_MGR_PORT = 7070;
 #else
-const static char HOST_ADDR[] = "42.121.85.47";
+const static QString HOST_ADDR_IPV4("42.121.85.47");
+const static QString HOST_ADDR_IPV6("42.121.85.47");
 const static int HOST_MGR_PORT = 3030;
 #endif
+
+const static QString HOST_ADDR[] = {HOST_ADDR_IPV4,
+                                    HOST_ADDR_IPV6};
 
 const qreal MAX_SCALE_FACTOR = 5.0;
 const qreal MIN_SCALE_FACTOR = 0.125;

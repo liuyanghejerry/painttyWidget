@@ -18,6 +18,7 @@
 
 #include "../common.h"
 #include "../network/commandsocket.h"
+#include "../network/localnetworkinterface.h"
 #include "newroomwindow.h"
 
 RoomListDialog::RoomListDialog(QWidget *parent) :
@@ -94,7 +95,16 @@ void RoomListDialog::socketInit()
             this,&RoomListDialog::requestRoomList);
     connect(socket,&Socket::disconnected,
             this,&RoomListDialog::onServerClosed);
-    socket->connectToHost(GlobalDef::HOST_ADDR,
+    QHostAddress addr;
+    if(LocalNetworkInterface::supportIpv6()){
+        addr = GlobalDef::HOST_ADDR[1];
+        qDebug()<<"using ipv6 address to connect server";
+    }else{
+        addr = GlobalDef::HOST_ADDR[0];
+        qDebug()<<"using ipv4 address to connect server";
+    }
+
+    socket->connectToHost(addr,
                           GlobalDef::HOST_MGR_PORT);
     managerSocketRouter_.regHandler("response",
                                     "roomlist",

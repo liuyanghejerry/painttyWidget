@@ -31,6 +31,7 @@
 #include "aboutdialog.h"
 #include "brushsettingswidget.h"
 #include "../network/commandsocket.h"
+#include "../network/localnetworkinterface.h"
 #include "../paintingTools/brush/brushmanager.h"
 #include "../common.h"
 
@@ -513,8 +514,16 @@ void MainWindow::socketInit(int dataPort, int msgPort)
 
     ui->canvas->setHistorySize(historySize_);
     ui->textEdit->insertPlainText(tr("Connecting to server...\n"));
-    msgSocket.connectToHost(QHostAddress(GlobalDef::HOST_ADDR),msgPort);
-    dataSocket.connectToHost(QHostAddress(GlobalDef::HOST_ADDR),dataPort);
+    QHostAddress addr;
+    if(LocalNetworkInterface::supportIpv6()){
+        addr = GlobalDef::HOST_ADDR[1];
+        qDebug()<<"using ipv6 address to connect server";
+    }else{
+        addr = GlobalDef::HOST_ADDR[0];
+        qDebug()<<"using ipv4 address to connect server";
+    }
+    msgSocket.connectToHost(addr, msgPort);
+    dataSocket.connectToHost(addr, dataPort);
 }
 
 void MainWindow::setNickName(const QString &name)
