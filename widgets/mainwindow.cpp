@@ -597,6 +597,8 @@ void MainWindow::onCommandResponseClose(const QJsonObject &m)
                            qApp);
         settings.remove("rooms/"+hashed_name);
         settings.sync();
+        ui->statusBar->showMessage(tr("Close Request Completed."),
+                                   5000);
     }
 }
 
@@ -609,6 +611,8 @@ void MainWindow::onCommandResponseClearAll(const QJsonObject &m)
                               tr("Sorry, it seems you're not"
                                  "room owner."));
     }
+    ui->statusBar->showMessage(tr("Clear Request Completed."),
+                               5000);
 }
 
 void MainWindow::onCommandResponseCheckout(const QJsonObject &m)
@@ -631,6 +635,8 @@ void MainWindow::onCommandResponseCheckout(const QJsonObject &m)
             connect(checkoutTimer, &QTimer::timeout,
                     this, &MainWindow::requestCheckout);
         }
+        ui->statusBar->showMessage(tr("Checkout Completed."),
+                                   5000);
     }
 }
 
@@ -653,6 +659,8 @@ void MainWindow::onCommandResponseOnlinelist(const QJsonObject &o)
         l.insert(id, vl);
     }
     ui->memberList->setMemberList(l);
+    ui->statusBar->showMessage(tr("Online List Refreshed."),
+                               2000);
 }
 
 void MainWindow::onActionNotify(const QJsonObject &o)
@@ -670,6 +678,8 @@ void MainWindow::onActionNotify(const QJsonObject &o)
             ->setValue(ui->textEdit->verticalScrollBar()
                        ->maximum());
     ui->textEdit->insertPlainText("\n");
+
+    qDebug()<<"notified with: "<<o;
 }
 
 void MainWindow::onNewMessage(const QString &content)
@@ -681,6 +691,7 @@ void MainWindow::onNewMessage(const QString &content)
     ui->textEdit->verticalScrollBar()
             ->setValue(ui->textEdit->verticalScrollBar()
                        ->maximum());
+    qDebug()<<"new message with: "<<content;
     // BUG: looks it does nothing!?
     qApp->alert(this, 3000);
 }

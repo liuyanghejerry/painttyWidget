@@ -12,7 +12,9 @@ const static char CLIENT_TYPE[] = "alpha";
 const static char SETTINGS_NAME[] = "mrpaint.ini";
 
 #ifdef PAINTTY_DEV
-const static char HOST_ADDR[] = "42.121.85.47";
+//const static char HOST_ADDR[] = "42.121.85.47";
+//const static char HOST_ADDR[] = "106.187.92.58";
+const static char HOST_ADDR[] = "2400:8900::f03c:91ff:fe70:bc64";
 const static int HOST_MGR_PORT = 7070;
 #else
 const static char HOST_ADDR[] = "42.121.85.47";

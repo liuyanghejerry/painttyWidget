@@ -239,6 +239,7 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExport_All">
    <property name="text">
     <string>Export All to File</string>
