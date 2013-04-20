@@ -48,6 +48,8 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
             newRoomWindow, &NewRoomWindow::show);
     connect(newRoomWindow, &NewRoomWindow::newRoom,
             this,&RoomListDialog::requestNewRoom);
+    connect(newRoomWindow, &NewRoomWindow::finished,
+            this,&RoomListDialog::requestRoomList);
     connect(CommandSocket::cmdSocket(), &CommandSocket::connected,
             this, &RoomListDialog::onCmdServerConnected);
     connect(CommandSocket::cmdSocket(), &CommandSocket::newData,
