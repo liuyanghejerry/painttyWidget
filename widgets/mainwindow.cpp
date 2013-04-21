@@ -341,6 +341,7 @@ void MainWindow::toolbarInit()
     connect(brushSettingToolbar, &QToolBar::orientationChanged,
             brushSettingWidget, &BrushSettingsWidget::setOrientation);
 
+    // shortcuts for width control
     QShortcut* widthActionSub = new QShortcut(this);
     widthActionSub->setKey(Qt::Key_Q);
     connect(widthActionSub, &QShortcut::activated,
@@ -349,7 +350,15 @@ void MainWindow::toolbarInit()
     widthActionAdd->setKey(Qt::Key_W);
     connect(widthActionAdd, &QShortcut::activated,
             brushSettingWidget, &BrushSettingsWidget::widthUp);
-    // TODO: add shortcuts to hardness setting
+    // shortcuts for hardness control
+    QShortcut* hardnessActionSub = new QShortcut(this);
+    hardnessActionSub->setKey(Qt::Key_D);
+    connect(hardnessActionSub, &QShortcut::activated,
+            brushSettingWidget, &BrushSettingsWidget::hardnessDown);
+    QShortcut* hardnessActionAdd = new QShortcut(this);
+    hardnessActionAdd->setKey(Qt::Key_F);
+    connect(hardnessActionAdd, &QShortcut::activated,
+            brushSettingWidget, &BrushSettingsWidget::hardnessUp);
 
     brushSettingControl_ = brushSettingWidget;
 
