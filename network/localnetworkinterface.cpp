@@ -1,6 +1,9 @@
 #include "localnetworkinterface.h"
 #include <QNetworkInterface>
+#include <QSettings>
+#include <QApplication>
 #include <QDebug>
+#include "../common.h"
 
 LocalNetworkInterface::LocalNetworkInterface()
 {
@@ -8,6 +11,13 @@ LocalNetworkInterface::LocalNetworkInterface()
 
 bool LocalNetworkInterface::supportIpv6()
 {
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    bool useIpv6 = settings.value("global/ipv6", false).toBool();
+    if (!useIpv6)
+        return false;
+
     auto list = allAddress();
     for(auto &item : list){
         if(item.protocol() == QAbstractSocket::IPv6Protocol) {
