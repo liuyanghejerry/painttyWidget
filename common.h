@@ -14,7 +14,7 @@ const static char SETTINGS_NAME[] = "mrpaint.ini";
 
 #ifdef PAINTTY_DEV
 const static QString HOST_ADDR_IPV4("106.187.92.58");
-const static QString HOST_ADDR_IPV6("106.187.92.58");
+const static QString HOST_ADDR_IPV6("2400:8900::f03c:91ff:fe70:bc64");
 const static int HOST_MGR_PORT = 7070;
 #else
 const static QString HOST_ADDR_IPV4("106.187.92.58");
