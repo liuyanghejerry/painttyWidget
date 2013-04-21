@@ -5,6 +5,7 @@
 #include <QPen>
 #include <QBrush>
 #include <QEasingCurve>
+#include <qmath.h>
 
 /*!
      \class Brush

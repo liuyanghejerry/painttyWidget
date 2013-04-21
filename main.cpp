@@ -2,6 +2,7 @@
 #include <QTranslator>
 #include <QSettings>
 #include <QVariant>
+#include <QDir>
 #include "common.h"
 #include "widgets/mainwindow.h"
 #include "widgets/roomlistdialog.h"
