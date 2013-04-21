@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QStyleOption>
+#include <QInputDialog>
 
 LayerLabel::LayerLabel(QWidget *parent) :
     QWidget(parent),
@@ -32,12 +33,28 @@ void LayerLabel::setEditFlag(bool b)
     update();
 }
 
+void LayerLabel::genStaticText()
+{
+    if(shown_text_.isEmpty()){
+        static_text_.setText(prefix_+text_);
+    }else{
+        static_text_.setText(shown_text_);
+    }
+    static_text_.setTextFormat(Qt::PlainText);
+    static_text_.prepare();
+}
+
 void LayerLabel::setText(const QString &string)
 {
     text_ = string;
-    static_text_.setText(prefix_+text_);
-    static_text_.setTextFormat(Qt::PlainText);
-    static_text_.prepare();
+    genStaticText();
+}
+
+void LayerLabel::setShownName(const QString &string)
+{
+    shown_text_ = string;
+    genStaticText();
+    update();
 }
 
 QString LayerLabel::text()
@@ -82,4 +99,10 @@ void LayerLabel::paintEvent (QPaintEvent *)
         painter.drawEllipse(QPoint(width()-20, height()/2), 3, 3);
     }
     painter.restore();
+}
+
+void LayerLabel::mouseDoubleClickEvent(QMouseEvent *)
+{
+    setShownName(QInputDialog::getText(this, tr("Layer Name"),
+                                       tr("Input your desire layer name here")));
 }
