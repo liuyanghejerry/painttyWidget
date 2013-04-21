@@ -34,6 +34,7 @@
 #include "../network/localnetworkinterface.h"
 #include "../paintingTools/brush/brushmanager.h"
 #include "../common.h"
+#include "../misc/platformextend.h"
 
 MainWindow::MainWindow(const QSize& canvasSize, QWidget *parent) :
     QMainWindow(parent),
@@ -539,6 +540,7 @@ void MainWindow::setRoomName(const QString &name)
 
 void MainWindow::setHistorySize(const quint64 &size)
 {
+    qDebug()<<"set Histroy size: "<<size;
     historySize_ = size;
 }
 
@@ -701,8 +703,8 @@ void MainWindow::onNewMessage(const QString &content)
             ->setValue(ui->textEdit->verticalScrollBar()
                        ->maximum());
     qDebug()<<"new message with: "<<content;
-    // BUG: looks it does nothing!?
-    qApp->alert(this, 3000);
+    if(!this->isActiveWindow())
+        PlatformExtend::notify(this);
 }
 
 QByteArray MainWindow::toJson(const QVariant &m)

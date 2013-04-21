@@ -12,6 +12,7 @@
 #include "../paintingTools/brush/sketchbrush.h"
 #include "../paintingTools/brush/eraser.h"
 #include "../paintingTools/brush/pencil.h"
+#include "../misc/platformextend.h"
 
 #include "canvas.h"
 
@@ -59,7 +60,8 @@ Canvas::Canvas(QWidget *parent) :
     updateCursor();
 
     setMouseTracking(true);
-    this->resize(canvasSize);
+    setFocusPolicy(Qt::WheelFocus); // necessary for IME control
+    resize(canvasSize);
 
     BrushPointer p1(new Brush);
     BrushPointer p2(new Pencil);
@@ -652,6 +654,16 @@ void Canvas::tabletEvent(QTabletEvent *ev)
         lastPoint = ev->pos();
     }
     ev->accept();
+}
+
+void Canvas::focusInEvent(QFocusEvent *)
+{
+    PlatformExtend::setIMEState(this, false);
+}
+
+void Canvas::focusOutEvent(QFocusEvent *)
+{
+    PlatformExtend::setIMEState(this, true);
 }
 
 void Canvas::mousePressEvent(QMouseEvent *event)

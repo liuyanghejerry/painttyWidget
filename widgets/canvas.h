@@ -56,6 +56,8 @@ protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *event);
     void tabletEvent(QTabletEvent *ev);
+    void focusInEvent(QFocusEvent * event);
+    void focusOutEvent(QFocusEvent * event);
 
     void remoteDrawPoint(const QPoint &point,
                          const QVariantMap &brushInfo,

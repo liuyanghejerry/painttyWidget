@@ -8,7 +8,8 @@ DEFINES += PAINTTY_DEV
 QT       += core gui network widgets
 
 win32 {
-     RC_FILE = app.rc
+    RC_FILE = app.rc
+    LIBS += -limm32
 }
 
 mac {
@@ -60,7 +61,10 @@ SOURCES += main.cpp\
     widgets/panoramaview.cpp \
     widgets/panoramawidget.cpp \
     widgets/panoramaslider.cpp \
-    network/localnetworkinterface.cpp
+    network/localnetworkinterface.cpp \
+    misc/platformextend_win32.cpp \
+    misc/platformextend_dummy.cpp \
+    misc/platformextend.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -102,7 +106,8 @@ HEADERS  += widgets/mainwindow.h \
     widgets/panoramaview.h \
     widgets/panoramawidget.h \
     widgets/panoramaslider.h \
-    network/localnetworkinterface.h
+    network/localnetworkinterface.h \
+    misc/platformextend.h
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/colorspinboxgroup.ui \
