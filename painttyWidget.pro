@@ -107,7 +107,9 @@ HEADERS  += widgets/mainwindow.h \
     widgets/panoramawidget.h \
     widgets/panoramaslider.h \
     network/localnetworkinterface.h \
-    misc/platformextend.h
+    misc/platformextend.h \
+    misc/singleton.h \
+    misc/call_once.h
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/colorspinboxgroup.ui \

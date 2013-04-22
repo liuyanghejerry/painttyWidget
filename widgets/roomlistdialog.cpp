@@ -20,6 +20,7 @@
 #include "../network/commandsocket.h"
 #include "../network/localnetworkinterface.h"
 #include "newroomwindow.h"
+#include "../misc/singleton.h"
 
 RoomListDialog::RoomListDialog(QWidget *parent) :
     QDialog(parent),
@@ -50,9 +51,9 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
             this,&RoomListDialog::requestNewRoom);
     connect(newRoomWindow, &NewRoomWindow::finished,
             this,&RoomListDialog::requestRoomList);
-    connect(CommandSocket::cmdSocket(), &CommandSocket::connected,
+    connect(&Singleton<CommandSocket>::instance(), &CommandSocket::connected,
             this, &RoomListDialog::onCmdServerConnected);
-    connect(CommandSocket::cmdSocket(), &CommandSocket::newData,
+    connect(&Singleton<CommandSocket>::instance(), &CommandSocket::newData,
             this, &RoomListDialog::onCmdServerData);
 
     tableInit();
@@ -122,7 +123,7 @@ void RoomListDialog::socketInit()
 
 void RoomListDialog::requestJoin()
 {
-    CommandSocket::cmdSocket()->close();
+    Singleton<CommandSocket>::instance().close();
     ui->lineEdit->setText(ui->lineEdit->text().trimmed());
     nickName_ = ui->lineEdit->text();
     if(nickName_.isEmpty()){
@@ -143,14 +144,13 @@ void RoomListDialog::requestJoin()
 
     roomName_ = ui->tableWidget->item(list.at(0)->row(), 0)->text();
     if(!roomsInfo.contains(roomName_)){
-        // TODO: not found!
         return;
     }
     //    QHostAddress address(
     //                roomsInfo[roomName].value("serverAddress").toString());
     QHostAddress address = socket->address();
     int cmdPort = roomsInfo[roomName_].value("cmdport").toDouble();
-    CommandSocket::cmdSocket()->connectToHost(address, cmdPort);
+    Singleton<CommandSocket>::instance().connectToHost(address, cmdPort);
 
 }
 
@@ -202,7 +202,6 @@ void RoomListDialog::onManagerResponseRoomlist(const QJsonObject &obj)
     ui->tableWidget->clearContents();
     ui->tableWidget->setSortingEnabled(false);
     foreach(info, list){
-        // TODO: we need more validate!
         QJsonObject m = info.toObject();
         QString name = m["name"].toString();
         tmpRoomsInfo.insert(name, m);
@@ -294,7 +293,7 @@ void RoomListDialog::onCmdServerConnected()
 
     auto array = doc.toJson();
 
-    CommandSocket::cmdSocket()->sendData(array);
+    Singleton<CommandSocket>::instance().sendData(array);
     ui->progressBar->setRange(0, 0);
 }
 
@@ -336,9 +335,9 @@ void RoomListDialog::onCmdServerData(const QByteArray &array)
             }
             if(info.contains("clientid")){
                 QString clientid = info["clientid"].toString();
-                CommandSocket::setClientId(clientid);
+                Singleton<CommandSocket>::instance().setClientId(clientid);
                 qDebug()<<"clientid assign"
-                       <<CommandSocket::clientId();
+                       <<Singleton<CommandSocket>::instance().clientId();
             }
             accept();
         }

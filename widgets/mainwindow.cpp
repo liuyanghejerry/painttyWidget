@@ -35,6 +35,7 @@
 #include "../paintingTools/brush/brushmanager.h"
 #include "../common.h"
 #include "../misc/platformextend.h"
+#include "../misc/singleton.h"
 
 MainWindow::MainWindow(const QSize& canvasSize, QWidget *parent) :
     QMainWindow(parent),
@@ -58,7 +59,7 @@ MainWindow::~MainWindow()
 {
     msgSocket.close();
     dataSocket.close();
-    CommandSocket::cmdSocket()->close();
+    Singleton<CommandSocket>::instance().close();
     delete ui;
 }
 
@@ -457,10 +458,10 @@ void MainWindow::requestOnlinelist()
     QJsonDocument doc;
     QJsonObject obj;
     obj.insert("request", QString("onlinelist"));
-    obj.insert("clientid", CommandSocket::clientId());
+    obj.insert("clientid", Singleton<CommandSocket>::instance().clientId());
     doc.setObject(obj);
-    qDebug()<<"clientid: "<<CommandSocket::clientId();
-    CommandSocket::cmdSocket()->sendData(doc.toJson());
+    qDebug()<<"clientid: "<<Singleton<CommandSocket>::instance().clientId();
+    Singleton<CommandSocket>::instance().sendData(doc.toJson());
 }
 
 void MainWindow::requestCheckout()
@@ -471,7 +472,7 @@ void MainWindow::requestCheckout()
     obj.insert("key", getRoomKey().toString());
     doc.setObject(obj);
     qDebug()<<"checkout with key: "<<getRoomKey();
-    CommandSocket::cmdSocket()->sendData(doc.toJson());
+    Singleton<CommandSocket>::instance().sendData(doc.toJson());
 }
 
 void MainWindow::shortcutInit()
@@ -506,8 +507,7 @@ void MainWindow::shortcutInit()
             return;
         }
         map.insert("key", r_key);
-        CommandSocket::cmdSocket()
-                ->sendData(toJson(QVariant(map)));
+        Singleton<CommandSocket>::instance().sendData(toJson(QVariant(map)));
     });
     connect(ui->actionAll_Layers, &QAction::triggered,
             this, &MainWindow::clearAllLayer);
@@ -515,7 +515,7 @@ void MainWindow::shortcutInit()
 
 void MainWindow::socketInit(int dataPort, int msgPort)
 {
-    connect(CommandSocket::cmdSocket(), &CommandSocket::newData,
+    connect(&Singleton<CommandSocket>::instance(), &CommandSocket::newData,
             this, &MainWindow::onCmdServerData);
     // checkout if client is room owner
     if(!getRoomKey().isNull()){
@@ -872,8 +872,7 @@ void MainWindow::clearLayer(const QString &name)
         map.insert("request", "clear");
         map.insert("key", getRoomKey());
         map.insert("layer", name);
-        CommandSocket::cmdSocket()
-                ->sendData(toJson(QVariant(map)));
+        Singleton<CommandSocket>::instance().sendData(toJson(QVariant(map)));
     }
 
 }
@@ -895,8 +894,7 @@ void MainWindow::clearAllLayer()
         }
         map.insert("request", "clearall");
         map.insert("key", getRoomKey());
-        CommandSocket::cmdSocket()
-                ->sendData(toJson(QVariant(map)));
+        Singleton<CommandSocket>::instance().sendData(toJson(QVariant(map)));
     }
 }
 

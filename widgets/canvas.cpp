@@ -13,6 +13,7 @@
 #include "../paintingTools/brush/eraser.h"
 #include "../paintingTools/brush/pencil.h"
 #include "../misc/platformextend.h"
+#include "../misc/singleton.h"
 
 #include "canvas.h"
 
@@ -253,7 +254,7 @@ void Canvas::drawLineTo(const QPoint &endPoint)
     map.insert("end", QVariant(end_j));
     map.insert("layer", QVariant(currentLayer()));
     map.insert("clientid",
-               CommandSocket::cmdSocket()->clientId());
+               Singleton<CommandSocket>::instance().clientId());
 
     QVariantMap bigMap;
     bigMap.insert("info", map);
@@ -295,7 +296,7 @@ void Canvas::drawPoint(const QPoint &point)
     map.insert("layer", QVariant(currentLayer()));
     map.insert("point", QVariant(point_j));
     map.insert("clientid",
-               QVariant(CommandSocket::cmdSocket()->clientId()));
+               QVariant(Singleton<CommandSocket>::instance().clientId()));
 
     QVariantMap bigMap;
     bigMap.insert("info", map);
