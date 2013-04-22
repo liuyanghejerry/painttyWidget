@@ -104,7 +104,6 @@ void ColorSpinBoxGroup::onModeChanged()
 
 void ColorSpinBoxGroup::onColorChanged()
 {
-    // TODO:
     if(noColorUpdate) return;
 
     QColor c;

@@ -94,25 +94,6 @@ void MainWindow::init()
     connect(ui->pushButton,&QPushButton::clicked,
             this,&MainWindow::onSendPressed);
 
-    connect(&msgSocket,&MessageSocket::connected,
-            this,&MainWindow::onServerConnected);
-    connect(&msgSocket,&MessageSocket::disconnected,
-            this,&MainWindow::onServerDisconnected);
-    connect(&msgSocket,
-            static_cast<void (MessageSocket::*)(QString)>
-            (&MessageSocket::newMessage),
-            this,&MainWindow::onNewMessage);
-    connect(this,&MainWindow::sendMessage,
-            &msgSocket,&MessageSocket::sendMessage);
-    connect(&dataSocket,&DataSocket::connected,
-            this,&MainWindow::onServerConnected);
-    connect(&dataSocket,&DataSocket::newData,
-            ui->canvas,&Canvas::onNewData);
-    connect(ui->canvas,&Canvas::sendData,
-            &dataSocket,&DataSocket::sendData);
-    connect(&dataSocket,&DataSocket::disconnected,
-            this,&MainWindow::onServerDisconnected);
-
     connect(ui->canvas, &Canvas::newBrushSettings,
             this, &MainWindow::onBrushSettingsChanged);
 
@@ -156,7 +137,6 @@ void MainWindow::init()
 
     shortcutInit();
     //    stylize();
-    cmdSocketRouterInit();
 
     QTimer *t = new QTimer(this);
     t->setInterval(5000);
@@ -254,7 +234,7 @@ void MainWindow::toolbarInit()
         }
     };
 
-    auto brushes = BrushManager::allBrushes();
+    auto brushes = Singleton<BrushManager>::instance().allBrushes();
 
     for(auto &item: brushes){
         // create action on tool bar
@@ -515,8 +495,29 @@ void MainWindow::shortcutInit()
 
 void MainWindow::socketInit(int dataPort, int msgPort)
 {
+    connect(&msgSocket,&MessageSocket::connected,
+            this,&MainWindow::onServerConnected);
+    connect(&msgSocket,&MessageSocket::disconnected,
+            this,&MainWindow::onServerDisconnected);
+    connect(&msgSocket,
+            static_cast<void (MessageSocket::*)(QString)>
+            (&MessageSocket::newMessage),
+            this,&MainWindow::onNewMessage);
+    connect(this,&MainWindow::sendMessage,
+            &msgSocket,&MessageSocket::sendMessage);
+
+    connect(&dataSocket,&DataSocket::connected,
+            this,&MainWindow::onServerConnected);
+    connect(&dataSocket,&DataSocket::newData,
+            ui->canvas,&Canvas::onNewData);
+    connect(ui->canvas,&Canvas::sendData,
+            &dataSocket,&DataSocket::sendData);
+    connect(&dataSocket,&DataSocket::disconnected,
+            this,&MainWindow::onServerDisconnected);
+
     connect(&Singleton<CommandSocket>::instance(), &CommandSocket::newData,
             this, &MainWindow::onCmdServerData);
+    cmdSocketRouterInit();
     // checkout if client is room owner
     if(!getRoomKey().isNull()){
         requestCheckout();
