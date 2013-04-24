@@ -119,7 +119,7 @@
     <message>
         <location filename="../widgets/helpdialog.ui" line="14"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>

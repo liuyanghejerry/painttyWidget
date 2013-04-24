@@ -328,7 +328,7 @@ Shortcut: %2</source>
         <location filename="../widgets/mainwindow.cpp" line="373"/>
         <source>Application must restart to enable new language settings.
 Do you want to restart right now?</source>
-        <translation type="unfinished">新しい言語設定を使うために、ソフトは再起動しなければなりません。
+        <translation>新しい言語設定を使うために、ソフトは再起動しなければなりません。
 今すぐ再起動しますか。</translation>
     </message>
     <message>
@@ -424,14 +424,14 @@ Save your work if you like it!</source>
         <location filename="../widgets/mainwindow.cpp" line="865"/>
         <source>You&apos;re going to clear layer %1. All the work of that layerwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
-        <translation type="unfinished">全消しますか。 %1全てのレイヤーが全消されます、やり直しはできませんので、
+        <translation>全消しますか。 %1全てのレイヤーが全消されます、やり直しはできませんので、
 本当にいいですか。</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="885"/>
         <source>You&apos;re going to clear ALL LAYERS. All of work in this roomwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
-        <translation type="unfinished">全消しますか。全てのレイヤーが全消されます、やり直しはできませんので、
+        <translation>全消しますか。全てのレイヤーが全消されます、やり直しはできませんので、
 本当にいいですか。</translation>
     </message>
     <message>
@@ -517,7 +517,7 @@ Do you really want to do so?</source>
         <location filename="../widgets/newroomwindow.cpp" line="71"/>
         <source>Error: %1, %2
 Do you want to retry?</source>
-        <translation type="unfinished">エラー：%，%2
+        <translation>エラー：%，%2
 もう一度しますか。</translation>
     </message>
     <message>
