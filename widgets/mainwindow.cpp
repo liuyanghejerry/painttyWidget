@@ -285,7 +285,7 @@ void MainWindow::toolbarInit()
                                                tr("Color Picker"));
     colorpicker->setCheckable(true);
     colorpicker->setAutoRepeat(false);
-    // we need a real QToolButton to know weather the picker is
+    // we need the real QToolButton to know weather the picker is
     // canceled by hand
     auto l = colorpicker->associatedWidgets();
     if(l.count() > 1){

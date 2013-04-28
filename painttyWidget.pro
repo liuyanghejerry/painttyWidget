@@ -64,7 +64,8 @@ SOURCES += main.cpp\
     network/localnetworkinterface.cpp \
     misc/platformextend_win32.cpp \
     misc/platformextend_dummy.cpp \
-    misc/platformextend.cpp
+    misc/platformextend.cpp \
+    misc/shortcutmanager.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -109,7 +110,8 @@ HEADERS  += widgets/mainwindow.h \
     network/localnetworkinterface.h \
     misc/platformextend.h \
     misc/singleton.h \
-    misc/call_once.h
+    misc/call_once.h \
+    misc/shortcutmanager.h
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/colorspinboxgroup.ui \
