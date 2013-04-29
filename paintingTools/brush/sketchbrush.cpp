@@ -1,10 +1,14 @@
 #include "sketchbrush.h"
 
+#include "../misc/singleton.h"
+#include "../misc/shortcutmanager.h"
+
 SketchBrush::SketchBrush()
 {
     name_ = "Sketch";
     displayName_ = QObject::tr("Sketch");
-    shortcut_ = Qt::Key_S;
+    shortcut_ = Singleton<ShortcutManager>::instance()
+            .shortcut("sketch")["key"].toString();
     icon_.addFile("iconset/ui/sketch-1.png",
                   QSize(), QIcon::Disabled);
     icon_.addFile("iconset/ui/sketch-2.png",

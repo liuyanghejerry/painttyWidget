@@ -21,6 +21,7 @@ public:
     virtual QIcon icon();
     virtual QCursor cursor();
     virtual QKeySequence shortcut();
+    virtual void setShortcut(QKeySequence key);
     virtual int width()=0;
     virtual void setWidth(int w)=0;
     virtual int hardness();

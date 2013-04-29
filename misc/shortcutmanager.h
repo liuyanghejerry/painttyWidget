@@ -16,16 +16,20 @@ public:
     explicit ShortcutManager(QObject *parent = 0);
     
 signals:
+    // QVariantMap is the changed shortcut
+    void shortcutChange(const QVariantMap&);
     
 public slots:
     bool setShortcut(const QString&,
                      const QKeySequence&,
                      ShortcutType);
+    QVariantMap shortcut(const QString& s);
     void resetShortcut(const QString&);
     void resetAllShortcuts();
     
 private:
     QVariantMap shortcut_conf;
+    QVariantMap default_conf;
     // each item in QVariantMap has scheme:
     // name: QString,
     // key: QKeySequence,

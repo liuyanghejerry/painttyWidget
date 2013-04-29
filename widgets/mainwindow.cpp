@@ -36,6 +36,7 @@
 #include "../common.h"
 #include "../misc/platformextend.h"
 #include "../misc/singleton.h"
+#include "../misc/shortcutmanager.h"
 
 MainWindow::MainWindow(const QSize& canvasSize, QWidget *parent) :
     QMainWindow(parent),
@@ -323,21 +324,22 @@ void MainWindow::toolbarInit()
             brushSettingWidget, &BrushSettingsWidget::setOrientation);
 
     // shortcuts for width control
+    ShortcutManager &stctmgr = Singleton<ShortcutManager>::instance();
     QShortcut* widthActionSub = new QShortcut(this);
-    widthActionSub->setKey(Qt::Key_Q);
+    widthActionSub->setKey(stctmgr.shortcut("subwidth")["key"].toString());
     connect(widthActionSub, &QShortcut::activated,
             brushSettingWidget, &BrushSettingsWidget::widthDown);
     QShortcut* widthActionAdd = new QShortcut(this);
-    widthActionAdd->setKey(Qt::Key_W);
+    widthActionAdd->setKey(stctmgr.shortcut("addwidth")["key"].toString());
     connect(widthActionAdd, &QShortcut::activated,
             brushSettingWidget, &BrushSettingsWidget::widthUp);
     // shortcuts for hardness control
     QShortcut* hardnessActionSub = new QShortcut(this);
-    hardnessActionSub->setKey(Qt::Key_D);
+    hardnessActionSub->setKey(stctmgr.shortcut("subhardness")["key"].toString());
     connect(hardnessActionSub, &QShortcut::activated,
             brushSettingWidget, &BrushSettingsWidget::hardnessDown);
     QShortcut* hardnessActionAdd = new QShortcut(this);
-    hardnessActionAdd->setKey(Qt::Key_F);
+    hardnessActionAdd->setKey(stctmgr.shortcut("addhardness")["key"].toString());
     connect(hardnessActionAdd, &QShortcut::activated,
             brushSettingWidget, &BrushSettingsWidget::hardnessUp);
 

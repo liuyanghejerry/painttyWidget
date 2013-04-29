@@ -37,6 +37,11 @@ QKeySequence AbstractBrush::shortcut()
     return shortcut_;
 }
 
+void AbstractBrush::setShortcut(QKeySequence key)
+{
+    shortcut_ = key;
+}
+
 void AbstractBrush::start(const QPointF &st)
 {
     leftOverDistance = 0;

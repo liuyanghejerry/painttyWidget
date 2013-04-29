@@ -7,6 +7,51 @@
 ShortcutManager::ShortcutManager(QObject *parent) :
     QObject(parent)
 {
+    QVariantMap map;
+    map.insert("name", "pencil");
+    map.insert("key", QKeySequence("Z"));
+    map.insert("type", ShortcutType::Single);
+    default_conf.insert("pencil", map);
+
+    map.insert("name", "brush");
+    map.insert("key", QKeySequence("P"));
+    map.insert("type", ShortcutType::Single);
+    default_conf.insert("brush", map);
+
+    map.insert("name", "sketch");
+    map.insert("key", QKeySequence("S"));
+    map.insert("type", ShortcutType::Single);
+    default_conf.insert("sketch", map);
+
+    map.insert("name", "eraser");
+    map.insert("key", QKeySequence("E"));
+    map.insert("type", ShortcutType::Single);
+    default_conf.insert("eraser", map);
+
+    map.insert("name", "addwidth");
+    map.insert("key", QKeySequence("W"));
+    map.insert("type", ShortcutType::Single);
+    default_conf.insert("addwidth", map);
+
+    map.insert("name", "subwidth");
+    map.insert("key", QKeySequence("Q"));
+    map.insert("type", ShortcutType::Single);
+    default_conf.insert("subwidth", map);
+
+    map.insert("name", "addhardness");
+    map.insert("key", QKeySequence("F"));
+    map.insert("type", ShortcutType::Single);
+    default_conf.insert("addhardness", map);
+
+    map.insert("name", "subhardness");
+    map.insert("key", QKeySequence("D"));
+    map.insert("type", ShortcutType::Single);
+    default_conf.insert("subhardness", map);
+
+    if( !loadFromConfigure() ){
+        shortcut_conf = default_conf;
+    }
+
 }
 
 bool ShortcutManager::loadFromConfigure()
@@ -50,15 +95,27 @@ bool ShortcutManager::setShortcut(const QString& s,
     map.insert("key", k);
     map.insert("type", t);
     shortcut_conf.insert(s, map);
+    emit shortcutChange(map);
     return true;
 }
 
-void ShortcutManager::resetShortcut(const QString&)
+QVariantMap ShortcutManager::shortcut(const QString& s)
 {
-    // TODO
+    return shortcut_conf[s].toMap();
+}
+
+void ShortcutManager::resetShortcut(const QString& s)
+{
+    shortcut_conf[s] = default_conf[s];
+    saveToConfigure();
+    emit shortcutChange(shortcut_conf[s].toMap());
 }
 
 void ShortcutManager::resetAllShortcuts()
 {
-    // TODO
+    shortcut_conf = default_conf;
+    saveToConfigure();
+    for(const QVariant& v: shortcut_conf){
+        emit shortcutChange(v.toMap());
+    }
 }
