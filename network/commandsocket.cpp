@@ -1,20 +1,10 @@
 #include "commandsocket.h"
-
-CommandSocket * CommandSocket::socket = nullptr;
-QVariantMap CommandSocket::info_;
-
-CommandSocket * CommandSocket::cmdSocket()
-{
-    // notice, this is NOT a thread-safe class.
-    if(!CommandSocket::socket){
-        CommandSocket::socket = new CommandSocket;
-    }
-    return CommandSocket::socket;
-}
+#include <QDebug>
 
 CommandSocket::CommandSocket(QObject *parent) :
     Socket(parent)
 {
+    qDebug()<<"CommandSocket init.";
 }
 
 void CommandSocket::setClientId(const QString &id)

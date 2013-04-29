@@ -1,11 +1,14 @@
 #include "eraser.h"
+#include "../misc/singleton.h"
+#include "../misc/shortcutmanager.h"
 
 Eraser::Eraser() :
     width_(10)
 {
     name_ = "Eraser";
     displayName_ = QObject::tr("Eraser");
-    shortcut_ = Qt::Key_E;
+    shortcut_ = Singleton<ShortcutManager>::instance()
+            .shortcut("eraser")["key"].toString();
     mainColor = Qt::transparent;
 
     icon_.addFile("iconset/ui/eraser-1.png",

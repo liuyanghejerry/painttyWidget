@@ -35,6 +35,8 @@
 #include "../paintingTools/brush/brushmanager.h"
 #include "../common.h"
 #include "../misc/platformextend.h"
+#include "../misc/singleton.h"
+#include "../misc/shortcutmanager.h"
 
 MainWindow::MainWindow(const QSize& canvasSize, QWidget *parent) :
     QMainWindow(parent),
@@ -58,7 +60,7 @@ MainWindow::~MainWindow()
 {
     msgSocket.close();
     dataSocket.close();
-    CommandSocket::cmdSocket()->close();
+    Singleton<CommandSocket>::instance().close();
     delete ui;
 }
 
@@ -92,25 +94,6 @@ void MainWindow::init()
             this,&MainWindow::onSendPressed);
     connect(ui->pushButton,&QPushButton::clicked,
             this,&MainWindow::onSendPressed);
-
-    connect(&msgSocket,&MessageSocket::connected,
-            this,&MainWindow::onServerConnected);
-    connect(&msgSocket,&MessageSocket::disconnected,
-            this,&MainWindow::onServerDisconnected);
-    connect(&msgSocket,
-            static_cast<void (MessageSocket::*)(QString)>
-            (&MessageSocket::newMessage),
-            this,&MainWindow::onNewMessage);
-    connect(this,&MainWindow::sendMessage,
-            &msgSocket,&MessageSocket::sendMessage);
-    connect(&dataSocket,&DataSocket::connected,
-            this,&MainWindow::onServerConnected);
-    connect(&dataSocket,&DataSocket::newData,
-            ui->canvas,&Canvas::onNewData);
-    connect(ui->canvas,&Canvas::sendData,
-            &dataSocket,&DataSocket::sendData);
-    connect(&dataSocket,&DataSocket::disconnected,
-            this,&MainWindow::onServerDisconnected);
 
     connect(ui->canvas, &Canvas::newBrushSettings,
             this, &MainWindow::onBrushSettingsChanged);
@@ -155,7 +138,6 @@ void MainWindow::init()
 
     shortcutInit();
     //    stylize();
-    cmdSocketRouterInit();
 
     QTimer *t = new QTimer(this);
     t->setInterval(5000);
@@ -253,7 +235,7 @@ void MainWindow::toolbarInit()
         }
     };
 
-    auto brushes = BrushManager::allBrushes();
+    auto brushes = Singleton<BrushManager>::instance().allBrushes();
 
     for(auto &item: brushes){
         // create action on tool bar
@@ -304,7 +286,7 @@ void MainWindow::toolbarInit()
                                                tr("Color Picker"));
     colorpicker->setCheckable(true);
     colorpicker->setAutoRepeat(false);
-    // we need a real QToolButton to know weather the picker is
+    // we need the real QToolButton to know weather the picker is
     // canceled by hand
     auto l = colorpicker->associatedWidgets();
     if(l.count() > 1){
@@ -342,21 +324,22 @@ void MainWindow::toolbarInit()
             brushSettingWidget, &BrushSettingsWidget::setOrientation);
 
     // shortcuts for width control
+    ShortcutManager &stctmgr = Singleton<ShortcutManager>::instance();
     QShortcut* widthActionSub = new QShortcut(this);
-    widthActionSub->setKey(Qt::Key_Q);
+    widthActionSub->setKey(stctmgr.shortcut("subwidth")["key"].toString());
     connect(widthActionSub, &QShortcut::activated,
             brushSettingWidget, &BrushSettingsWidget::widthDown);
     QShortcut* widthActionAdd = new QShortcut(this);
-    widthActionAdd->setKey(Qt::Key_W);
+    widthActionAdd->setKey(stctmgr.shortcut("addwidth")["key"].toString());
     connect(widthActionAdd, &QShortcut::activated,
             brushSettingWidget, &BrushSettingsWidget::widthUp);
     // shortcuts for hardness control
     QShortcut* hardnessActionSub = new QShortcut(this);
-    hardnessActionSub->setKey(Qt::Key_D);
+    hardnessActionSub->setKey(stctmgr.shortcut("subhardness")["key"].toString());
     connect(hardnessActionSub, &QShortcut::activated,
             brushSettingWidget, &BrushSettingsWidget::hardnessDown);
     QShortcut* hardnessActionAdd = new QShortcut(this);
-    hardnessActionAdd->setKey(Qt::Key_F);
+    hardnessActionAdd->setKey(stctmgr.shortcut("addhardness")["key"].toString());
     connect(hardnessActionAdd, &QShortcut::activated,
             brushSettingWidget, &BrushSettingsWidget::hardnessUp);
 
@@ -457,10 +440,10 @@ void MainWindow::requestOnlinelist()
     QJsonDocument doc;
     QJsonObject obj;
     obj.insert("request", QString("onlinelist"));
-    obj.insert("clientid", CommandSocket::clientId());
+    obj.insert("clientid", Singleton<CommandSocket>::instance().clientId());
     doc.setObject(obj);
-    qDebug()<<"clientid: "<<CommandSocket::clientId();
-    CommandSocket::cmdSocket()->sendData(doc.toJson());
+    qDebug()<<"clientid: "<<Singleton<CommandSocket>::instance().clientId();
+    Singleton<CommandSocket>::instance().sendData(doc.toJson());
 }
 
 void MainWindow::requestCheckout()
@@ -471,7 +454,7 @@ void MainWindow::requestCheckout()
     obj.insert("key", getRoomKey().toString());
     doc.setObject(obj);
     qDebug()<<"checkout with key: "<<getRoomKey();
-    CommandSocket::cmdSocket()->sendData(doc.toJson());
+    Singleton<CommandSocket>::instance().sendData(doc.toJson());
 }
 
 void MainWindow::shortcutInit()
@@ -506,8 +489,7 @@ void MainWindow::shortcutInit()
             return;
         }
         map.insert("key", r_key);
-        CommandSocket::cmdSocket()
-                ->sendData(toJson(QVariant(map)));
+        Singleton<CommandSocket>::instance().sendData(toJson(QVariant(map)));
     });
     connect(ui->actionAll_Layers, &QAction::triggered,
             this, &MainWindow::clearAllLayer);
@@ -515,8 +497,29 @@ void MainWindow::shortcutInit()
 
 void MainWindow::socketInit(int dataPort, int msgPort)
 {
-    connect(CommandSocket::cmdSocket(), &CommandSocket::newData,
+    connect(&msgSocket,&MessageSocket::connected,
+            this,&MainWindow::onServerConnected);
+    connect(&msgSocket,&MessageSocket::disconnected,
+            this,&MainWindow::onServerDisconnected);
+    connect(&msgSocket,
+            static_cast<void (MessageSocket::*)(QString)>
+            (&MessageSocket::newMessage),
+            this,&MainWindow::onNewMessage);
+    connect(this,&MainWindow::sendMessage,
+            &msgSocket,&MessageSocket::sendMessage);
+
+    connect(&dataSocket,&DataSocket::connected,
+            this,&MainWindow::onServerConnected);
+    connect(&dataSocket,&DataSocket::newData,
+            ui->canvas,&Canvas::onNewData);
+    connect(ui->canvas,&Canvas::sendData,
+            &dataSocket,&DataSocket::sendData);
+    connect(&dataSocket,&DataSocket::disconnected,
+            this,&MainWindow::onServerDisconnected);
+
+    connect(&Singleton<CommandSocket>::instance(), &CommandSocket::newData,
             this, &MainWindow::onCmdServerData);
+    cmdSocketRouterInit();
     // checkout if client is room owner
     if(!getRoomKey().isNull()){
         requestCheckout();
@@ -872,8 +875,7 @@ void MainWindow::clearLayer(const QString &name)
         map.insert("request", "clear");
         map.insert("key", getRoomKey());
         map.insert("layer", name);
-        CommandSocket::cmdSocket()
-                ->sendData(toJson(QVariant(map)));
+        Singleton<CommandSocket>::instance().sendData(toJson(QVariant(map)));
     }
 
 }
@@ -895,8 +897,7 @@ void MainWindow::clearAllLayer()
         }
         map.insert("request", "clearall");
         map.insert("key", getRoomKey());
-        CommandSocket::cmdSocket()
-                ->sendData(toJson(QVariant(map)));
+        Singleton<CommandSocket>::instance().sendData(toJson(QVariant(map)));
     }
 }
 

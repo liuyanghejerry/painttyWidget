@@ -11,13 +11,12 @@ typedef QSharedPointer<AbstractBrush> BrushPointer;
 class BrushManager
 {
 public:
-    static bool addBrush(BrushPointer brush);
-    static QList<BrushPointer> allBrushes();
-    static BrushPointer getBrush(const QString &name);
-    static BrushPointer makeBrush(const QString &name);
+    bool addBrush(BrushPointer brush);
+    QList<BrushPointer> allBrushes();
+    BrushPointer getBrush(const QString &name);
+    BrushPointer makeBrush(const QString &name);
 private:
-    static QMap<QString, BrushPointer> registeredBrushes_;
-    BrushManager();
+    QMap<QString, BrushPointer> registeredBrushes_;
 };
 
 #endif // BRUSHMANAGER_H

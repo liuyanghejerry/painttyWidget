@@ -4,11 +4,15 @@
 #include <QPainter>
 #include <QDebug>
 
+#include "../misc/singleton.h"
+#include "../misc/shortcutmanager.h"
+
 Pencil::Pencil()
 {
     name_ = "Pencil";
     displayName_ = QObject::tr("Pencil");
-    shortcut_ = Qt::Key_Z;
+    shortcut_ = Singleton<ShortcutManager>::instance()
+            .shortcut("pencil")["key"].toString();
     pencil.setWidth(1);
     pencil.setCapStyle(Qt::RoundCap);
     pencil.setJoinStyle(Qt::RoundJoin);

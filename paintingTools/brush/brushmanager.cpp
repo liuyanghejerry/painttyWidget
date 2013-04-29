@@ -3,8 +3,6 @@
 #include "brush.h"
 #include <QDebug>
 
-QMap<QString, BrushPointer> BrushManager::registeredBrushes_;
-
 bool BrushManager::addBrush(BrushPointer brush)
 {
     registeredBrushes_.insert(

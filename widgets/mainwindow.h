@@ -11,6 +11,8 @@ class QToolButton;
 class BrushSettingsWidget;
 class QActionGroup;
 
+typedef Router<> RegularRouter;
+
 namespace Ui {
 class MainWindow;
 }
@@ -74,7 +76,7 @@ private:
     QSize canvasSize_;
     QByteArray defaultView;
     QAction *lastBrushAction;
-    Router<> cmdRouter_;
+    RegularRouter cmdRouter_;
     BrushSettingsWidget *brushSettingControl_;
     QToolBar *toolbar_;
     QActionGroup *brushActionGroup_;

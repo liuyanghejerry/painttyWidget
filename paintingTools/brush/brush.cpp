@@ -7,6 +7,9 @@
 #include <QEasingCurve>
 #include <qmath.h>
 
+#include "../misc/singleton.h"
+#include "../misc/shortcutmanager.h"
+
 /*!
      \class Brush
 
@@ -45,7 +48,8 @@ Brush::Brush()
 {
     name_ = "Brush";
     displayName_ = QObject::tr("Brush");
-    shortcut_ = Qt::Key_A;
+    shortcut_ = Singleton<ShortcutManager>::instance()
+            .shortcut("brush")["key"].toString();
     QVariantMap colorMap = this->defaultInfo()["color"].toMap();
     QColor c(colorMap["red"].toInt(),
             colorMap["green"].toInt(),

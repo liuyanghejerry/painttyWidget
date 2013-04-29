@@ -13,6 +13,7 @@
 #include "../paintingTools/brush/eraser.h"
 #include "../paintingTools/brush/pencil.h"
 #include "../misc/platformextend.h"
+#include "../misc/singleton.h"
 
 #include "canvas.h"
 
@@ -67,10 +68,10 @@ Canvas::Canvas(QWidget *parent) :
     BrushPointer p2(new Pencil);
     BrushPointer p3(new SketchBrush);
     BrushPointer p4(new Eraser);
-    BrushManager::addBrush(p1);
-    BrushManager::addBrush(p2);
-    BrushManager::addBrush(p3);
-    BrushManager::addBrush(p4);
+    Singleton<BrushManager>::instance().addBrush(p1);
+    Singleton<BrushManager>::instance().addBrush(p2);
+    Singleton<BrushManager>::instance().addBrush(p3);
+    Singleton<BrushManager>::instance().addBrush(p4);
 }
 
 /*!
@@ -164,7 +165,7 @@ void Canvas::setBrushHardness(int h)
 
 BrushPointer Canvas::brushFactory(const QString &name)
 {
-    return BrushManager::makeBrush(name);
+    return Singleton<BrushManager>::instance().makeBrush(name);
 }
 
 /*!
@@ -253,7 +254,7 @@ void Canvas::drawLineTo(const QPoint &endPoint)
     map.insert("end", QVariant(end_j));
     map.insert("layer", QVariant(currentLayer()));
     map.insert("clientid",
-               CommandSocket::cmdSocket()->clientId());
+               Singleton<CommandSocket>::instance().clientId());
 
     QVariantMap bigMap;
     bigMap.insert("info", map);
@@ -295,7 +296,7 @@ void Canvas::drawPoint(const QPoint &point)
     map.insert("layer", QVariant(currentLayer()));
     map.insert("point", QVariant(point_j));
     map.insert("clientid",
-               QVariant(CommandSocket::cmdSocket()->clientId()));
+               QVariant(Singleton<CommandSocket>::instance().clientId()));
 
     QVariantMap bigMap;
     bigMap.insert("info", map);
