@@ -65,7 +65,8 @@ SOURCES += main.cpp\
     misc/platformextend_win32.cpp \
     misc/platformextend_dummy.cpp \
     misc/platformextend.cpp \
-    misc/shortcutmanager.cpp
+    misc/shortcutmanager.cpp \
+    widgets/configuredialog.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -111,14 +112,16 @@ HEADERS  += widgets/mainwindow.h \
     misc/platformextend.h \
     misc/singleton.h \
     misc/call_once.h \
-    misc/shortcutmanager.h
+    misc/shortcutmanager.h \
+    widgets/configuredialog.h
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/colorspinboxgroup.ui \
     widgets/colorbox.ui \
     widgets/newroomwindow.ui \
     widgets/aboutdialog.ui \
-    widgets/helpdialog.ui
+    widgets/helpdialog.ui \
+    widgets/configuredialog.ui
 
 UI_DIR = $${PWD}/widgets/
 
