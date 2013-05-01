@@ -56,6 +56,9 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
     connect(&Singleton<CommandSocket>::instance(), &CommandSocket::newData,
             this, &RoomListDialog::onCmdServerData);
 
+    ui->counter_label->setText(tr("Rooms: %1, Members: %2")
+                               .arg("?")
+                               .arg("?"));
     tableInit();
     socketInit();
     timer = new QTimer(this);
@@ -195,6 +198,7 @@ void RoomListDialog::onManagerResponseRoomlist(const QJsonObject &obj)
     QJsonValue info;
     int row = 0;
     int column = 0;
+    int members = 0;
     ui->progressBar->setMaximum(100);
     ui->tableWidget->clearContents();
     ui->tableWidget->setRowCount(0);
@@ -230,6 +234,7 @@ void RoomListDialog::onManagerResponseRoomlist(const QJsonObject &obj)
         item->setTextAlignment(Qt::AlignCenter);
         item->setData(Qt::DisplayRole, m["currentload"].toDouble());
         ui->tableWidget->setItem(0, column++, item);
+        members += m["currentload"].toDouble();
 
         item = new QTableWidgetItem;
         item->setTextAlignment(Qt::AlignCenter);
@@ -239,6 +244,9 @@ void RoomListDialog::onManagerResponseRoomlist(const QJsonObject &obj)
         row++;
         ui->progressBar->setValue(100*row/list.count());
     }
+    ui->counter_label->setText(tr("Rooms: %1, Members: %2")
+                               .arg(list.count())
+                               .arg(members));
     roomsInfo = tmpRoomsInfo;
     ui->progressBar->setValue(100);
     ui->tableWidget->setSortingEnabled(true);
@@ -314,7 +322,8 @@ void RoomListDialog::onCmdServerData(const QByteArray &array)
             QMessageBox::critical(this,
                                   tr("Error"),
                                   tr("Sorry, an error occurred.\n"
-                                     "Error: %1, %2").arg(errcode).arg(ErrorTable::toString(errcode)));
+                                     "Error: %1, %2").arg(errcode)
+                                  .arg(ErrorTable::toString(errcode)));
         }else{
             if(!map.contains("info"))
                 return;
