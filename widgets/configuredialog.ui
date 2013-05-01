@@ -32,7 +32,7 @@
        <item row="1" column="0">
         <widget class="QLabel" name="connectLabel">
          <property name="text">
-          <string>&amp;Connect</string>
+          <string>&amp;Connection</string>
          </property>
          <property name="buddy">
           <cstring>ipv6CheckBox</cstring>
@@ -51,6 +51,20 @@
      <widget class="QWidget" name="shortcutTab">
       <attribute name="title">
        <string>Shortcut</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QTreeView" name="shortcutView">
+         <property name="animated">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="experimentalTab">
+      <attribute name="title">
+       <string>Experimental Fetures</string>
       </attribute>
      </widget>
     </widget>
