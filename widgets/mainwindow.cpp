@@ -29,6 +29,7 @@
 #include "layeritem.h"
 #include "colorgrid.h"
 #include "aboutdialog.h"
+#include "configuredialog.h"
 #include "brushsettingswidget.h"
 #include "../network/commandsocket.h"
 #include "../network/localnetworkinterface.h"
@@ -493,6 +494,11 @@ void MainWindow::shortcutInit()
     });
     connect(ui->actionAll_Layers, &QAction::triggered,
             this, &MainWindow::clearAllLayer);
+    connect(ui->actionConfiguration, &QAction::triggered,
+            [this](){
+        ConfigureDialog conf_dialog;
+        conf_dialog.exec();
+    });
 }
 
 void MainWindow::socketInit(int dataPort, int msgPort)
