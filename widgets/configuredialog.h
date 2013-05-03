@@ -17,6 +17,15 @@ public:
     
 private:
     Ui::ConfigureDialog *ui;
+    QString selectedLanguage;
+    bool tryIpv6;
+
+    void readSettings();
+    void initLanguageList();
+    void initUi();
+
+private slots:
+    void acceptConfigure();
 };
 
 #endif // CONFIGUREDIALOG_H
