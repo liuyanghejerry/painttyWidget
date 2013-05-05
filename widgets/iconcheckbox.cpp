@@ -11,7 +11,8 @@ IconCheckBox::IconCheckBox(QWidget *parent) :
     setCheckable(true);
     setAutoRepeat(false);
     resize(size_);
-    connect(this,SIGNAL(toggled(bool)),this,SLOT(update()));
+    connect(this,&IconCheckBox::toggled,
+            this,static_cast<void (IconCheckBox::*) ()>(&IconCheckBox::update));
 //    connect(this,SIGNAL(pressed()),this,SLOT(update()));
 }
 

@@ -21,10 +21,10 @@ void ColorGrid::initItems()
     layout_ = new FlowLayout(widget,3,1,1);
     for(int i=0;i<gridCount;++i){
         ColorGridItem * item = new ColorGridItem(i,this);
-        connect(item, SIGNAL(colorDroped(int)),
-                this, SIGNAL(colorDroped(int)));
-        connect(item, SIGNAL(colorPicked(int,QColor)),
-                this, SIGNAL(colorPicked(int,QColor)));
+        connect(item, &ColorGridItem::colorDroped,
+                this, static_cast<void (ColorGrid::*) (const int&)>(&ColorGrid::colorDroped));
+        connect(item, &ColorGridItem::colorPicked,
+                this, &ColorGrid::colorPicked);
         items.append(item);
         layout_->addWidget(item);
     }

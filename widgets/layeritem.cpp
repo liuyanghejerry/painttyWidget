@@ -28,8 +28,10 @@ LayerItem::LayerItem(QWidget *parent) :
     int m = lay->margin();
     lay->setContentsMargins(m,m-5,0,m-5);
 
-    connect(lock_,SIGNAL(toggled(bool)), this, SIGNAL(lock(bool)));
-    connect(visible_,SIGNAL(toggled(bool)), this, SIGNAL(hide(bool)));
+    connect(lock_,&IconCheckBox::toggled,
+            this, &LayerItem::lock);
+    connect(visible_,&IconCheckBox::toggled,
+            this, &LayerItem::hide);
 }
 
 void LayerItem::setVisibleIcon(const QIcon &icon)

@@ -460,22 +460,22 @@ void MainWindow::requestCheckout()
 
 void MainWindow::shortcutInit()
 {
-    connect(ui->action_Quit, SIGNAL(triggered()),
-            this, SLOT(close()));
-    connect(ui->actionExport_All, SIGNAL(triggered()),
-            this, SLOT(exportAllToFile()));
-    connect(ui->actionExport_Visiable, SIGNAL(triggered()),
-            this, SLOT(exportVisibleToFile()));
-    connect(ui->actionExport_All_To_Clipboard, SIGNAL(triggered()),
-            this, SLOT(exportAllToClipboard()));
-    connect(ui->actionExport_Visible_To_ClipBorad, SIGNAL(triggered()),
-            this, SLOT(exportVisibleToClipboard()));
-    connect(ui->actionReset_View, SIGNAL(triggered()),
-            this, SLOT(resetView()));
-    connect(ui->action_About_Mr_Paint, SIGNAL(triggered()),
-            this, SLOT(about()));
-    connect(ui->actionAbout_Qt, SIGNAL(triggered()),
-            qApp, SLOT(aboutQt()));
+    connect(ui->action_Quit, &QAction::triggered,
+            this, &MainWindow::close);
+    connect(ui->actionExport_All, &QAction::triggered,
+            this, &MainWindow::exportAllToFile);
+    connect(ui->actionExport_Visiable, &QAction::triggered,
+            this, &MainWindow::exportVisibleToFile);
+    connect(ui->actionExport_All_To_Clipboard, &QAction::triggered,
+            this, &MainWindow::exportAllToClipboard);
+    connect(ui->actionExport_Visible_To_ClipBorad, &QAction::triggered,
+            this, &MainWindow::exportVisibleToClipboard);
+    connect(ui->actionReset_View, &QAction::triggered,
+            this, &MainWindow::resetView);
+    connect(ui->action_About_Mr_Paint, &QAction::triggered,
+            this, &MainWindow::about);
+    connect(ui->actionAbout_Qt, &QAction::triggered,
+            &QApplication::aboutQt);
     connect(ui->actionClose_Room, &QAction::triggered,
             [&](){
         QVariantMap map;

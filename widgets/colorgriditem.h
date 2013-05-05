@@ -18,7 +18,6 @@ signals:
     void colorPicked(int, const QColor &);
 
 public slots:
-//    void setSource(ColorWheel * wheel);
     void setColor(const QColor& color);
     void onColorPicked();
     void onColorDroped();
@@ -35,7 +34,6 @@ protected:
     QColor color_;
     QPixmap backgroundImg;
     bool hovered_;
-//    ColorWheel * wheel_;
     QCursor picker;
     static const int gridWidth = 16;
 };

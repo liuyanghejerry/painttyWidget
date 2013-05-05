@@ -6,10 +6,10 @@ ColorBox::ColorBox(QWidget *parent) :
     ui(new Ui::ColorBox)
 {
     ui->setupUi(this);
-    connect(ui->colorWheel,SIGNAL(colorChange(QColor)),
-            this,SLOT(onWheelChange(QColor)));
-    connect(ui->colorSpinBoxGroup,SIGNAL(colorChange(QColor)),
-            this,SLOT(onSpinboxChange(QColor)));
+    connect(ui->colorWheel,&ColorWheel::colorChange,
+            this,&ColorBox::onWheelChange);
+    connect(ui->colorSpinBoxGroup,&ColorSpinBoxGroup::colorChange,
+            this,&ColorBox::onSpinboxChange);
 }
 
 ColorBox::~ColorBox()

@@ -16,7 +16,7 @@ signals:
     
 public slots:
     void sendMessage(const QString &content);
-    void newMessage(const QByteArray &array);
+    void onNewMessage(const QByteArray &array);
 };
 
 #endif // SOCKETTHREAD_H

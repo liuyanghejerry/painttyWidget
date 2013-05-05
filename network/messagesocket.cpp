@@ -8,8 +8,8 @@
 MessageSocket::MessageSocket(QObject *parent) :
     Socket(parent)
 {
-    connect(this,SIGNAL(newData(QByteArray)),
-            this,SLOT(newMessage(QByteArray)));
+    connect(this,&Socket::newData,
+            this,&MessageSocket::onNewMessage);
 }
 
 MessageSocket::~MessageSocket()
@@ -28,7 +28,7 @@ void MessageSocket::sendMessage(const QString &content)
     this->sendData(buffer);
 }
 
-void MessageSocket::newMessage(const QByteArray &array)
+void MessageSocket::onNewMessage(const QByteArray &array)
 {
     QJsonObject map = QJsonDocument::fromJson(array).object();
     if(!map.contains("content")) return;

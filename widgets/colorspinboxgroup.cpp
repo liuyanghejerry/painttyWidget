@@ -10,14 +10,14 @@ ColorSpinBoxGroup::ColorSpinBoxGroup(QWidget *parent) :
     noColorUpdate(false)
 {
     ui->setupUi(this);
-    connect(ui->RedspinBox, SIGNAL(valueChanged(int)),
-            this, SLOT(onColorChanged()));
-    connect(ui->GreenspinBox, SIGNAL(valueChanged(int)),
-            this, SLOT(onColorChanged()));
-    connect(ui->BluespinBox, SIGNAL(valueChanged(int)),
-            this, SLOT(onColorChanged()));
-    connect(ui->rgb, SIGNAL(toggled(bool)),
-            this, SLOT(onModeChanged()));
+    connect(ui->RedspinBox, static_cast<void (QSpinBox::*) (int)>(&QSpinBox::valueChanged),
+            this, &ColorSpinBoxGroup::onColorChanged);
+    connect(ui->GreenspinBox, static_cast<void (QSpinBox::*) (int)>(&QSpinBox::valueChanged),
+            this, &ColorSpinBoxGroup::onColorChanged);
+    connect(ui->BluespinBox, static_cast<void (QSpinBox::*) (int)>(&QSpinBox::valueChanged),
+            this, &ColorSpinBoxGroup::onColorChanged);
+    connect(ui->rgb, &QRadioButton::toggled,
+            this, &ColorSpinBoxGroup::onModeChanged);
 }
 
 ColorSpinBoxGroup::~ColorSpinBoxGroup()

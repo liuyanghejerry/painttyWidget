@@ -11,9 +11,12 @@ Socket::Socket(QObject *parent) :
 {
     socket = new QTcpSocket(this);
     socket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
-    connect(socket,SIGNAL(readyRead()),this,SLOT(onReceipt()));
-    connect(socket, SIGNAL(connected()),this,SIGNAL(connected()));
-    connect(socket, SIGNAL(disconnected()),this,SIGNAL(disconnected()));
+    connect(socket,&QTcpSocket::readyRead,
+            this,&Socket::onReceipt);
+    connect(socket, &QTcpSocket::connected,
+            this,&Socket::connected);
+    connect(socket, &QTcpSocket::disconnected,
+            this,&Socket::disconnected);
 }
 
 Socket::~Socket()
