@@ -2,25 +2,28 @@
 #define PANORAMASLIDER_H
 
 #include <QWidget>
+#include <QRegExp>
 
 class QSlider;
-class QLabel;
+class QLineEdit;
 
 class PanoramaSlider : public QWidget
 {
     Q_OBJECT
 public:
     explicit PanoramaSlider(QWidget *parent = 0);
-    //qreal currentScaleFactor();
 signals:
     void scaled(qreal scaleFactor);
 public slots:
     void setScale(qreal scaleFactor);
 private:
     QSlider *slider;
-    QLabel *label;
+    QLineEdit *input;
     qreal internalFactor;
-    //qreal currentScaleFactor_;
+    QRegExp inputReg;
+private slots:
+    void calculateScale(int sliderValue);
+    void inputScaleConfirmed();
 };
 
 #endif // PANORAMASLIDER_H

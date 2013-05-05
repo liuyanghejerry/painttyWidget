@@ -3,7 +3,8 @@
 
 #include <QHBoxLayout>
 #include <QSlider>
-#include <QLabel>
+#include <QLineEdit>
+#include <QRegExpValidator>
 #include <QtCore/qmath.h>
 
 using GlobalDef::MIN_SCALE_FACTOR;
@@ -12,18 +13,18 @@ using GlobalDef::MAX_SCALE_FACTOR;
 PanoramaSlider::PanoramaSlider(QWidget *parent) :
     QWidget(parent),
     slider(new QSlider(Qt::Horizontal, this)),
-    label(new QLabel("100%", this)),
-    internalFactor(1.0)
-    //currentScaleFactor_(1.0)
+    input(new QLineEdit("100%", this)),
+    internalFactor(1.0),
+    inputReg("([0-9]*(\\.[0-9]*)?)%?")
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
-    label->setFixedWidth(label->fontMetrics().width("100.%"));
-    label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    //label->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed); //not working?
+    input->setFixedWidth(input->fontMetrics().width("100.00%"));
+    input->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    input->setValidator(new QRegExpValidator(inputReg, input));
 
     this->setLayout(layout);
     layout->addWidget(slider);
-    layout->addWidget(label);
+    layout->addWidget(input);
     layout->setContentsMargins(0, 0, 0, 0);
 
     internalFactor = -100 * qLn(MIN_SCALE_FACTOR) / MIN_SCALE_FACTOR / qLn(2);
@@ -32,53 +33,65 @@ PanoramaSlider::PanoramaSlider(QWidget *parent) :
     slider->setPageStep(100);
     slider->setTickPosition(QSlider::TicksBelow);
 
-    auto calculateScale = [this](int sliderValue){
-        if (sliderValue >= 0){
-            qreal newScale = 1.0 + 0.01 * sliderValue;
-            label->setText(QString("%1%")
-                           .arg(100 + sliderValue));
-            emit scaled(newScale);
-        }else{
-            qreal newScale = qPow(MIN_SCALE_FACTOR,
-                                  -sliderValue
-                                  / internalFactor
-                                  / MIN_SCALE_FACTOR);
-            label->setText(QString("%1%")
-                           .arg(newScale * 100, 0, 'f', 1));
-            emit scaled(newScale);
-        }
-    };
-//    auto calculateValue = [this, slider, label, internalFactor](qreal scaleFactor){
-//        slider->blockSignals(true);
-
-//        slider->blockSignals(false);
-//    };
-
-    connect(slider, &QSlider::valueChanged, calculateScale);
-    //connect(this, &PanoramaSlider::scaled, calculateValue);
+    connect(slider, &QSlider::valueChanged, this, &PanoramaSlider::calculateScale);
+    connect(input, &QLineEdit::returnPressed, this, &PanoramaSlider::inputScaleConfirmed);
 }
 
 void PanoramaSlider::setScale(qreal scaleFactor)
 {
     slider->blockSignals(true);
-    if (scaleFactor >= 1.0){
+    if (scaleFactor >= 1.0)
+    {
         int newValue = 100 * scaleFactor - 100;
-        if (newValue != slider->value()){
-            slider->setValue(newValue);
-            label->setText(QString("%1%").arg(qFloor(100 * scaleFactor)));
-        }
-    }else{
+        slider->setValue(newValue);
+        input->setText(QString("%1%").arg(qFloor(100 * scaleFactor)));
+    }
+    else
+    {
         int newValue = -internalFactor * MIN_SCALE_FACTOR / qLn(MIN_SCALE_FACTOR) * qLn(scaleFactor);
-        if (newValue != slider->value()){
-            slider->setValue(newValue);
-            label->setText(QString("%1%").arg(100 * scaleFactor, 0, 'f', 1));
-        }
+        slider->setValue(newValue);
+        input->setText(QString("%1%").arg(100 * scaleFactor, 0, 'f', 1));
     }
     slider->blockSignals(false);
 }
 
-//qreal PanoramaSlider::currentScaleFactor()
-//{
-//    return currentScaleFactor_;
-//}
+void PanoramaSlider::calculateScale(int sliderValue)
+{
+    if (sliderValue >= 0)
+    {
+        qreal newScale = 1.0 + 0.01 * sliderValue;
+        input->setText(QString("%1%")
+                       .arg(100 + sliderValue));
+        emit scaled(newScale);
+    }
+    else
+    {
+        qreal newScale = qPow(MIN_SCALE_FACTOR,
+                              -sliderValue
+                              / internalFactor
+                              / MIN_SCALE_FACTOR);
+        input->setText(QString("%1%")
+                       .arg(newScale * 100, 0, 'f', 1));
+        emit scaled(newScale);
+    }
+}
 
+void PanoramaSlider::inputScaleConfirmed()
+{
+    if (inputReg.indexIn(input->text()))
+        calculateScale(slider->value());
+    else
+    {
+        bool ok;
+        qreal newScale = qBound(MIN_SCALE_FACTOR,
+                                inputReg.cap(1).toDouble(&ok) / 100.0,
+                                MAX_SCALE_FACTOR);
+        if (ok)
+        {
+            setScale(newScale);
+            emit scaled(newScale);
+        }
+        else
+            calculateScale(slider->value());
+    }
+}
