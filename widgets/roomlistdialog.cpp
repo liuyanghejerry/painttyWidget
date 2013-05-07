@@ -16,9 +16,9 @@
 #include <QDateTime>
 #include <QCryptographicHash>
 
-#include "../common.h"
-#include "../network/commandsocket.h"
-#include "../network/localnetworkinterface.h"
+#include "../../common/common.h"
+#include "../../common/network/commandsocket.h"
+#include "../../common/network/localnetworkinterface.h"
 #include "newroomwindow.h"
 #include "../misc/singleton.h"
 

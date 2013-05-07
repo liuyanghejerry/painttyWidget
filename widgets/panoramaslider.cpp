@@ -1,5 +1,5 @@
 #include "panoramaslider.h"
-#include "../common.h"
+#include "../../common/common.h"
 
 #include <QHBoxLayout>
 #include <QSlider>

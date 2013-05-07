@@ -6,7 +6,7 @@
 #include <QProcess>
 #include "configuredialog.h"
 #include "ui_configuredialog.h"
-#include "../common.h"
+#include "../../common/common.h"
 
 ConfigureDialog::ConfigureDialog(QWidget *parent) :
     QDialog(parent),

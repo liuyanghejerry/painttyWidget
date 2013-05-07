@@ -8,7 +8,7 @@
 #include <qmath.h>
 #include <QDebug>
 
-#include "../common.h"
+#include "../../common/common.h"
 
 using GlobalDef::MAX_SCALE_FACTOR;
 using GlobalDef::MIN_SCALE_FACTOR;

@@ -5,7 +5,7 @@
 #include <QSettings>
 #include <QVariant>
 #include <QDir>
-#include "common.h"
+#include "../common/common.h"
 #include "widgets/mainwindow.h"
 #include "widgets/roomlistdialog.h"
 

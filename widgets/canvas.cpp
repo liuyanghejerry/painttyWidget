@@ -6,7 +6,7 @@
 #include <QMouseEvent>
 #include <QTabletEvent>
 
-#include "../network/commandsocket.h"
+#include "../common/network/commandsocket.h"
 #include "../paintingTools/brush/brushmanager.h"
 #include "../paintingTools/brush/brush.h"
 #include "../paintingTools/brush/sketchbrush.h"

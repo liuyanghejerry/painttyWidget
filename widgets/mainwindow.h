@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 
-#include "../network/messagesocket.h"
-#include "../network/datasocket.h"
+#include "../common/network/messagesocket.h"
+#include "../common/network/datasocket.h"
 #include "../misc/router.h"
 
 class QToolButton;

@@ -7,7 +7,7 @@
 #include <QJsonObject>
 
 #include <QDebug>
-#include "../common.h"
+#include "../../common/common.h"
 
 NewRoomWindow::NewRoomWindow(QWidget *parent) :
     QDialog(parent),

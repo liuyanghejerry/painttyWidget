@@ -27,10 +27,10 @@ SOURCES += main.cpp\
     widgets/mainwindow.cpp \
     widgets/canvas.cpp \
     misc/layermanager.cpp \
-    network/messagesocket.cpp \
+    ../common/network/messagesocket.cpp \
     widgets/colorwheel.cpp \
     widgets/roomlistdialog.cpp \
-    network/socket.cpp \
+    ../common/network/socket.cpp \
     widgets/colorgriditem.cpp \
     widgets/colorgrid.cpp \
     widgets/flowlayout.cpp \
@@ -47,7 +47,7 @@ SOURCES += main.cpp\
     widgets/colorspinboxgroup.cpp \
     widgets/colorbox.cpp \
     widgets/newroomwindow.cpp \
-    network/commandsocket.cpp \
+    ../common/network/commandsocket.cpp \
     widgets/aboutdialog.cpp \
     misc/singleshortcut.cpp \
     widgets/canvascontainer.cpp \
@@ -61,7 +61,7 @@ SOURCES += main.cpp\
     widgets/panoramaview.cpp \
     widgets/panoramawidget.cpp \
     widgets/panoramaslider.cpp \
-    network/localnetworkinterface.cpp \
+    ../common/network/localnetworkinterface.cpp \
     misc/platformextend_win32.cpp \
     misc/platformextend_dummy.cpp \
     misc/platformextend.cpp \
@@ -71,11 +71,11 @@ SOURCES += main.cpp\
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
     misc/layermanager.h \
-    network/messagesocket.h \
-    network/datasocket.h \
+    ../common/network/messagesocket.h \
+    ../common/network/datasocket.h \
     widgets/colorwheel.h \
     widgets/roomlistdialog.h \
-    network/socket.h \
+    ../common/network/socket.h \
     widgets/colorgriditem.h \
     widgets/colorgrid.h \
     widgets/flowlayout.h \
@@ -92,9 +92,9 @@ HEADERS  += widgets/mainwindow.h \
     widgets/colorspinboxgroup.h \
     widgets/colorbox.h \
     widgets/newroomwindow.h \
-    network/commandsocket.h \
+    ../common/network/commandsocket.h \
     widgets/aboutdialog.h \
-    common.h \
+    ../common/common.h \
     misc/singleshortcut.h \
     widgets/canvascontainer.h \
     widgets/memberlistwidget.h \
@@ -108,7 +108,7 @@ HEADERS  += widgets/mainwindow.h \
     widgets/panoramaview.h \
     widgets/panoramawidget.h \
     widgets/panoramaslider.h \
-    network/localnetworkinterface.h \
+    ../common/network/localnetworkinterface.h \
     misc/platformextend.h \
     misc/singleton.h \
     misc/call_once.h \
