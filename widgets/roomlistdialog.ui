@@ -88,7 +88,7 @@
         <string>Someone</string>
        </property>
        <property name="maxLength">
-        <number>32767</number>
+        <number>16</number>
        </property>
       </widget>
      </item>
