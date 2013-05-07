@@ -1,4 +1,6 @@
 #include <QApplication>
+#include <QProcess>
+#include <QMessageBox>
 #include <QTranslator>
 #include <QSettings>
 #include <QVariant>
@@ -68,6 +70,21 @@ void initTranslation()
     QCoreApplication::installTranslator(myappTranslator);
 }
 
+void runUpdater()
+{
+    QStringList args;
+//    args<<"-v"<<GlobalDef::CLIENT_VER;
+    args<<"-v"<<"0.2";
+    bool m = QProcess::startDetached("updater", args, QDir::currentPath());
+//    qDebug()<<"currentDir:"<<QDir::currentPath()<<"updater runs: "<<m;
+    if(!m){
+        QMessageBox::warning(0, QObject::tr("No Updater?"),
+                                       QObject::tr("We cannot find updater.\n"
+                                          "You may need to check update yourself."),
+                                       QMessageBox::Ok);
+    }
+}
+
 } // namespace mainOnly
 
 int main(int argc, char *argv[])
@@ -76,6 +93,7 @@ int main(int argc, char *argv[])
 #ifdef Q_OS_MACX
     QDir::setCurrent(a.applicationDirPath());
 #endif
+    mainOnly::runUpdater();
     mainOnly::initStyle();
     mainOnly::initSettings();
     mainOnly::initTranslation();
