@@ -1,0 +1,18 @@
+project = painttyWidget Project
+description = paintty project
+sourceencoding = UTF-8
+outputencoding = UTF-8
+language = Cpp
+syntaxhighlighting = true
+outputdir = docs
+headerdirs = .
+#headers = ./widgets/canvas.h
+sourcedirs = .
+#sources = ./widgets/canvas.cpp
+imagedirs = ./images
+HTML.stylesheets = doc.css
+
+sources.fileextensions = "*.cpp *.qdoc *.mm *.qml"
+headers.fileextensions = "*.h *.ch *.h++ *.hh *.hpp *.hxx"
+examples.fileextensions = "*.cpp *.h *.js *.xq *.svg *.xml *.ui *.qhp *.qhcp *.qml"
+examples.imageextensions = "*.png *.jpeg *.jpg *.gif *.mng"
