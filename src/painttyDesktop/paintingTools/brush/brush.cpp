@@ -56,15 +56,15 @@ Brush::Brush()
             colorMap["blue"].toInt());
     this->setColor(c);
     this->setWidth(this->defaultInfo()["width"].toInt());
-    icon_.addFile("iconset/ui/brush-1.png",
+    icon_.addFile(":/iconset/ui/brush-1.png",
                   QSize(16, 16), QIcon::Disabled);
-    icon_.addFile("iconset/ui/brush-2.png",
+    icon_.addFile(":/iconset/ui/brush-2.png",
                   QSize(16, 16), QIcon::Active);
-    icon_.addFile("iconset/ui/brush-3.png",
+    icon_.addFile(":/iconset/ui/brush-3.png",
                   QSize(16, 16), QIcon::Selected);
-    icon_.addFile("iconset/ui/brush-3.png",
+    icon_.addFile(":/iconset/ui/brush-3.png",
                   QSize(16, 16), QIcon::Normal, QIcon::On);
-    icon_.addFile("iconset/ui/brush-4.png",
+    icon_.addFile(":/iconset/ui/brush-4.png",
                   QSize(16, 16), QIcon::Normal);
     updateCursor(this->width());
 }

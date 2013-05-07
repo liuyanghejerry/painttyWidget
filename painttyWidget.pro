@@ -8,5 +8,5 @@ CONFIG += ordered
 
 TEMPLATE = subdirs
 
-SUBDIRS = painttyWidget \
-          painttyUpdater
+SUBDIRS = src/painttyDesktop \
+          src/painttyUpdater

@@ -273,15 +273,15 @@ void MainWindow::toolbarInit()
 
     // doing hacking to color picker
     QIcon colorpickerIcon;
-    colorpickerIcon.addFile("iconset/ui/picker-1.png",
+    colorpickerIcon.addFile(":/iconset/ui/picker-1.png",
                             QSize(), QIcon::Disabled);
-    colorpickerIcon.addFile("iconset/ui/picker-2.png",
+    colorpickerIcon.addFile(":/iconset/ui/picker-2.png",
                             QSize(), QIcon::Active);
-    colorpickerIcon.addFile("iconset/ui/picker-3.png",
+    colorpickerIcon.addFile(":/iconset/ui/picker-3.png",
                             QSize(), QIcon::Selected);
-    colorpickerIcon.addFile("iconset/ui/picker-3.png",
+    colorpickerIcon.addFile(":/iconset/ui/picker-3.png",
                             QSize(), QIcon::Normal, QIcon::On);
-    colorpickerIcon.addFile("iconset/ui/picker-4.png",
+    colorpickerIcon.addFile(":/iconset/ui/picker-4.png",
                             QSize(), QIcon::Normal);
     QAction *colorpicker = toolbar_->addAction(colorpickerIcon,
                                                tr("Color Picker"));
@@ -827,8 +827,8 @@ void MainWindow::remoteAddLayer(const QString &layerName)
     }
 
     LayerItem *item = new LayerItem;
-    item->setVisibleIcon(QIcon("iconset/visibility.png"));
-    item->setLockIcon(QIcon("iconset/lock.png"));
+    item->setVisibleIcon(QIcon(":/iconset/visibility.png"));
+    item->setLockIcon(QIcon(":/iconset/lock.png"));
     item->setLabel(layerName);
     ui->layerWidget->addItem(item);
 }
@@ -840,8 +840,8 @@ void MainWindow::addLayer(const QString &layerName)
         name = QString::number(ui->canvas->layerNum());
 
     LayerItem *item = new LayerItem;
-    item->setVisibleIcon(QIcon("iconset/visibility.png"));
-    item->setLockIcon(QIcon("iconset/lock.png"));
+    item->setVisibleIcon(QIcon(":/iconset/visibility.png"));
+    item->setLockIcon(QIcon(":/iconset/lock.png"));
     item->setLabel(name);
     ui->layerWidget->addItem(item);
     ui->canvas->addLayer(name);

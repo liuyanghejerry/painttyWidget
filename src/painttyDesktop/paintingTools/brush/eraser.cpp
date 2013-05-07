@@ -11,15 +11,15 @@ Eraser::Eraser() :
             .shortcut("eraser")["key"].toString();
     mainColor = Qt::transparent;
 
-    icon_.addFile("iconset/ui/eraser-1.png",
+    icon_.addFile(":/iconset/ui/eraser-1.png",
                   QSize(16, 16), QIcon::Disabled);
-    icon_.addFile("iconset/ui/eraser-2.png",
+    icon_.addFile(":/iconset/ui/eraser-2.png",
                   QSize(16, 16), QIcon::Active);
-    icon_.addFile("iconset/ui/eraser-3.png",
+    icon_.addFile(":/iconset/ui/eraser-3.png",
                   QSize(16, 16), QIcon::Selected);
-    icon_.addFile("iconset/ui/eraser-3.png",
+    icon_.addFile(":/iconset/ui/eraser-3.png",
                   QSize(16, 16), QIcon::Normal, QIcon::On);
-    icon_.addFile("iconset/ui/eraser-4.png",
+    icon_.addFile(":/iconset/ui/eraser-4.png",
                   QSize(16, 16), QIcon::Normal);
     updateCursor(this->width());
 }

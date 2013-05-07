@@ -9,15 +9,15 @@ SketchBrush::SketchBrush()
     displayName_ = QObject::tr("Sketch");
     shortcut_ = Singleton<ShortcutManager>::instance()
             .shortcut("sketch")["key"].toString();
-    icon_.addFile("iconset/ui/sketch-1.png",
+    icon_.addFile(":/iconset/ui/sketch-1.png",
                   QSize(), QIcon::Disabled);
-    icon_.addFile("iconset/ui/sketch-2.png",
+    icon_.addFile(":/iconset/ui/sketch-2.png",
                   QSize(), QIcon::Active);
-    icon_.addFile("iconset/ui/sketch-3.png",
+    icon_.addFile(":/iconset/ui/sketch-3.png",
                   QSize(), QIcon::Selected);
-    icon_.addFile("iconset/ui/sketch-3.png",
+    icon_.addFile(":/iconset/ui/sketch-3.png",
                   QSize(), QIcon::Normal, QIcon::On);
-    icon_.addFile("iconset/ui/sketch-4.png",
+    icon_.addFile(":/iconset/ui/sketch-4.png",
                   QSize(), QIcon::Normal);
     updateCursor(this->width());
 }

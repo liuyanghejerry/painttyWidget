@@ -17,15 +17,15 @@ Pencil::Pencil()
     pencil.setCapStyle(Qt::RoundCap);
     pencil.setJoinStyle(Qt::RoundJoin);
 
-    icon_.addFile("iconset/ui/pencil-1.png",
+    icon_.addFile(":/iconset/ui/pencil-1.png",
                   QSize(), QIcon::Disabled);
-    icon_.addFile("iconset/ui/pencil-2.png",
+    icon_.addFile(":/iconset/ui/pencil-2.png",
                   QSize(), QIcon::Active);
-    icon_.addFile("iconset/ui/pencil-3.png",
+    icon_.addFile(":/iconset/ui/pencil-3.png",
                   QSize(), QIcon::Selected);
-    icon_.addFile("iconset/ui/pencil-3.png",
+    icon_.addFile(":/iconset/ui/pencil-3.png",
                   QSize(), QIcon::Normal, QIcon::On);
-    icon_.addFile("iconset/ui/pencil-4.png",
+    icon_.addFile(":/iconset/ui/pencil-4.png",
                   QSize(), QIcon::Normal);
     updateCursor(this->width());
 }
