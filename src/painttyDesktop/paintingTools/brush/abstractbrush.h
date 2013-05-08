@@ -29,8 +29,8 @@ public:
     virtual QColor color();
     virtual void setColor(const QColor &color);
 
-    virtual void start(const QPointF &st);
-    virtual void lineTo(const QPointF &st);
+    virtual void start(const QPointF &st, qreal pressure=1.0);
+    virtual void lineTo(const QPointF &st, qreal pressure=1.0);
     virtual void end();
 
     virtual QVariantMap defaultInfo()=0;
@@ -53,10 +53,11 @@ protected:
     qreal leftOverDistance;
     QColor mainColor;
     int hardness_;
-    virtual void drawPoint(const QPointF &st);
+    virtual void drawPoint(const QPointF &st, qreal pressure=1.0);
     virtual void drawLine(const QPointF &,
                           const QPointF &,
-                          qreal &);
+                          qreal &,
+                          qreal pressure=1.0);
     virtual void updateCursor(int w);
 };
 

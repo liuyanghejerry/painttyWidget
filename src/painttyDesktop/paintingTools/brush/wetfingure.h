@@ -11,8 +11,8 @@ public:
     void setWidth(int w);
     QVariantMap defaultInfo();
     QVariantMap brushInfo();
-    void start(const QPointF &st);
-    void lineTo(const QPointF &st) override;
+    void start(const QPointF &st, qreal pressure=1.0);
+    void lineTo(const QPointF &st, qreal pressure=1.0) override;
 
 private:
     int width_;

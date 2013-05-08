@@ -228,7 +228,7 @@ void Canvas::onColorPicker(bool in)
     \sa drawPoint() , linePainted()
 */
 
-void Canvas::drawLineTo(const QPoint &endPoint)
+void Canvas::drawLineTo(const QPoint &endPoint, qreal pressure)
 {
     LayerPointer l = layers.selectedLayer();
     if(l.isNull() || l->isLocked() || l->isHided()){
@@ -237,7 +237,7 @@ void Canvas::drawLineTo(const QPoint &endPoint)
     }
     updateCursor();
     brush_->setSurface(l);
-    brush_->lineTo(endPoint);
+    brush_->lineTo(endPoint, pressure);
 
     update();
 
@@ -272,7 +272,7 @@ void Canvas::drawLineTo(const QPoint &endPoint)
     \sa drawPoint() , pointPainted()
 */
 
-void Canvas::drawPoint(const QPoint &point)
+void Canvas::drawPoint(const QPoint &point, qreal pressure)
 {
     LayerPointer l = layers.selectedLayer();
     if(l.isNull() || l->isLocked() || l->isHided()){
@@ -281,7 +281,7 @@ void Canvas::drawPoint(const QPoint &point)
     }
     updateCursor();
     brush_->setSurface(l);
-    brush_->start(point);
+    brush_->start(point, pressure);
 
     int rad = (brush_->width() / 2) + 2;
     update(QRect(lastPoint, point).normalized()
@@ -442,8 +442,8 @@ void Canvas::onNewData(const QByteArray & array)
         h_size += array.size();
         if(h_size < historySize_){
             this->setDisabled(true);
-            qDebug()<<"History: "<<historySize_
-                   <<"Loaded: "<<h_size;
+//            qDebug()<<"History: "<<historySize_
+//                   <<"Loaded: "<<h_size;
         }else{
             qDebug()<<"History"<<historySize_<<"bytes loaded!";
             historySize_ = 0;
@@ -639,6 +639,7 @@ void Canvas::layerSelected(const QString &name)
 void Canvas::tabletEvent(QTabletEvent *ev)
 {
     //TODO: fully support tablet
+    qDebug()<<"tablet Event";
     qreal pressure = ev->pressure();
     if(pressure < 0.000001){
         drawing = false;
@@ -649,9 +650,9 @@ void Canvas::tabletEvent(QTabletEvent *ev)
     if(!drawing){
         lastPoint = ev->pos();
         drawing = true;
-        drawPoint(lastPoint);
+        drawPoint(lastPoint, pressure);
     }else{
-        drawLineTo(ev->pos());
+        drawLineTo(ev->pos(), pressure);
         lastPoint = ev->pos();
     }
     ev->accept();

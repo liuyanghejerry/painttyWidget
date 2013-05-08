@@ -71,8 +71,8 @@ protected:
 
 private:
 
-    void drawLineTo(const QPoint &endPoint);
-    void drawPoint(const QPoint &point);
+    void drawLineTo(const QPoint &endPoint, qreal pressure=1.0);
+    void drawPoint(const QPoint &point, qreal pressure=1.0);
     void pickColor(const QPoint &point);
     void updateCursor();
 

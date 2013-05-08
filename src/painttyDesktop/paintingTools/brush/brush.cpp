@@ -6,6 +6,7 @@
 #include <QBrush>
 #include <QEasingCurve>
 #include <qmath.h>
+#include <QDebug>
 
 #include "../misc/singleton.h"
 #include "../misc/shortcutmanager.h"
@@ -191,16 +192,18 @@ int Brush::hardness()
     \sa start(), drawLine()
 */
 
-void Brush::drawPoint(const QPointF &st)
+void Brush::drawPoint(const QPointF &st, qreal pressure)
 {
+    qDebug()<<"pressure: "<<pressure;
     QPainter painter;
     if(!painter.begin(surface_->imagePtr())){
         return;
     }
+    QPixmap pressure_stencil = stencil.scaledToWidth(stencil.width()*pressure);
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.drawPixmap(st.x() - stencil.width()/2.0,
-                       st.y() - stencil.width()/2.0,
-                       stencil);
+    painter.drawPixmap(st.x() - pressure_stencil.width()/2.0,
+                       st.y() - pressure_stencil.width()/2.0,
+                       pressure_stencil);
     painter.end();
 }
 
@@ -211,8 +214,9 @@ void Brush::drawPoint(const QPointF &st)
     \sa drawPoint(), lineTo()
 */
 
-void Brush::drawLine(const QPointF &st, const QPointF &end, qreal &left)
+void Brush::drawLine(const QPointF &st, const QPointF &end, qreal &left, qreal pressure)
 {
+    qDebug()<<"pressure: "<<pressure;
     QPainter painter;
     if(!painter.begin(surface_->imagePtr())){
         return;
@@ -236,21 +240,22 @@ void Brush::drawLine(const QPointF &st, const QPointF &end, qreal &left)
     qreal offsetY = 0.0;
 
     qreal totalDistance = left + distance;
+    QPixmap pressure_stencil = stencil.scaledToWidth(stencil.width()*pressure);
 
     while ( totalDistance >= spacing ) {
         if ( left > 0.0 ) {
             offsetX += stepX * (spacing - left);
             offsetY += stepY * (spacing - left);
-            painter.drawPixmap(st.x() + offsetX - stencil.width()/2.0,
-                               st.y() + offsetY - stencil.width()/2.0,
-                               stencil);
+            painter.drawPixmap(st.x() + offsetX - pressure_stencil.width()/2.0,
+                               st.y() + offsetY - pressure_stencil.width()/2.0,
+                               pressure_stencil);
             left -= spacing;
         } else {
             offsetX += stepX * spacing;
             offsetY += stepY * spacing;
-            painter.drawPixmap(st.x() + offsetX - stencil.width()/2.0,
-                               st.y() + offsetY - stencil.width()/2.0,
-                               stencil);
+            painter.drawPixmap(st.x() + offsetX - pressure_stencil.width()/2.0,
+                               st.y() + offsetY - pressure_stencil.width()/2.0,
+                               pressure_stencil);
         }
         totalDistance -= spacing;
     }

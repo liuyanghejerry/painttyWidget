@@ -46,7 +46,7 @@ void Eraser::setWidth(int w)
     updateCursor(w);
 }
 
-void Eraser::drawPoint(const QPointF &st)
+void Eraser::drawPoint(const QPointF &st, qreal pressure)
 {
     QPainter painter(surface_->imagePtr());
     painter.setRenderHint(QPainter::Antialiasing);
@@ -62,7 +62,8 @@ void Eraser::drawPoint(const QPointF &st)
 
 void Eraser::drawLine(const QPointF &st,
                       const QPointF &end,
-                      qreal &)
+                      qreal &,
+                      qreal pressure)
 {
     QPainter painter(surface_->imagePtr());
     painter.setRenderHint(QPainter::Antialiasing);

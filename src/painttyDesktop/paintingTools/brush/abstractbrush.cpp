@@ -42,20 +42,20 @@ void AbstractBrush::setShortcut(QKeySequence key)
     shortcut_ = key;
 }
 
-void AbstractBrush::start(const QPointF &st)
+void AbstractBrush::start(const QPointF &st, qreal pressure)
 {
     leftOverDistance = 0;
-    drawPoint(st);
+    drawPoint(st, pressure);
     lastPoint_ = st;
 }
 
-void AbstractBrush::lineTo(const QPointF &st)
+void AbstractBrush::lineTo(const QPointF &st, qreal pressure)
 {
     if(lastPoint_.isNull()){
-        start(st);
+        start(st, pressure);
         return;
     }
-    this->drawLine(lastPoint_, st, leftOverDistance);
+    this->drawLine(lastPoint_, st, leftOverDistance, pressure);
     lastPoint_ = st;
 }
 
@@ -93,14 +93,14 @@ void AbstractBrush::end()
 {
 }
 
-void AbstractBrush::drawPoint(const QPointF &)
+void AbstractBrush::drawPoint(const QPointF &, qreal pressure)
 {
     //
 }
 
 void AbstractBrush::drawLine(const QPointF &,
                       const QPointF &,
-                      qreal &)
+                      qreal &, qreal pressure)
 {
     //
 }

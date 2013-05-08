@@ -44,7 +44,7 @@ QVariantMap WetFingure::brushInfo()
     return map;
 }
 
-void WetFingure::start(const QPointF &st)
+void WetFingure::start(const QPointF &st, qreal pressure)
 {
     QRectF rect(0, 0, width_, width_);
     rect.moveCenter(st);
@@ -52,7 +52,7 @@ void WetFingure::start(const QPointF &st)
     lastPoint_ = st;
 }
 
-void WetFingure::lineTo(const QPointF &end)
+void WetFingure::lineTo(const QPointF &end, qreal pressure)
 {
     QPainter painter(surface_->imagePtr());
     painter.setOpacity(0.1);

@@ -43,7 +43,7 @@ void SketchBrush::setWidth(int w)
     updateCursor(w);
 }
 
-void SketchBrush::start(const QPointF &st)
+void SketchBrush::start(const QPointF &st, qreal pressure)
 {
     preparePen();
     leftOverDistance = 0;
@@ -61,7 +61,7 @@ void SketchBrush::preparePen()
     sketchPen.setJoinStyle(Qt::RoundJoin);
 }
 
-void SketchBrush::lineTo(const QPointF &st)
+void SketchBrush::lineTo(const QPointF &st, qreal pressure)
 {
     if(lastPoint_.isNull()){
         start(st);

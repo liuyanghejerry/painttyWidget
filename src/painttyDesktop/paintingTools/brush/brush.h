@@ -21,8 +21,11 @@ public:
 protected:
     QPixmap stencil;
     int width_;
-    void drawPoint(const QPointF &st);
-    void drawLine(const QPointF &st, const QPointF &end, qreal &left);
+    void drawPoint(const QPointF &st, qreal pressure=1.0);
+    void drawLine(const QPointF &st,
+                  const QPointF &end,
+                  qreal &left,
+                  qreal pressure=1.0);
     bool loadStencil(const QString &fileName);
     void makeStencil();
 };
