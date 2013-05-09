@@ -19,6 +19,8 @@ private:
     Ui::ConfigureDialog *ui;
     QString selectedLanguage;
     bool tryIpv6;
+    bool msg_notify;
+    bool auto_disable_ime;
 
     void readSettings();
     void initLanguageList();

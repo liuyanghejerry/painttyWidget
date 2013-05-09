@@ -10,7 +10,10 @@
 
 ConfigureDialog::ConfigureDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::ConfigureDialog)
+    ui(new Ui::ConfigureDialog),
+    tryIpv6(false),
+    msg_notify(false),
+    auto_disable_ime(false)
 {
     ui->setupUi(this);
     readSettings();
@@ -32,6 +35,8 @@ void ConfigureDialog::readSettings()
                        qApp);
     selectedLanguage = settings.value("global/language").toString();
     tryIpv6 = settings.value("global/ipv6", false).toBool();
+    msg_notify = settings.value("chat/msg_notify", false).toBool();
+    auto_disable_ime = settings.value("canvas/auto_disable_ime", false).toBool();
 }
 
 void ConfigureDialog::initLanguageList()
@@ -54,6 +59,8 @@ void ConfigureDialog::initLanguageList()
 void ConfigureDialog::initUi()
 {
     ui->ipv6CheckBox->setChecked(tryIpv6);
+    ui->msg_notify_checkbox->setChecked(msg_notify);
+    ui->auto_disable_ime_checkbox->setChecked(auto_disable_ime);
 }
 
 void ConfigureDialog::acceptConfigure()
@@ -73,9 +80,24 @@ void ConfigureDialog::acceptConfigure()
     }
 
     //save ipv6 settings
-    if (ui->ipv6CheckBox->isChecked() ^ tryIpv6)
+    if (ui->ipv6CheckBox->isChecked() != tryIpv6)
     {
         settings.setValue("global/ipv6", ui->ipv6CheckBox->isChecked());
+        needRestart = true;
+    }
+
+    //save msg notify settings
+    if (ui->msg_notify_checkbox->isChecked() != msg_notify)
+    {
+        settings.setValue("chat/msg_notify", ui->msg_notify_checkbox->isChecked());
+        needRestart = true;
+    }
+
+    //save auto disable IME settings
+    if (ui->auto_disable_ime_checkbox->isChecked() != auto_disable_ime)
+    {
+        settings.setValue("canvas/auto_disable_ime",
+                          ui->auto_disable_ime_checkbox->isChecked());
         needRestart = true;
     }
 
