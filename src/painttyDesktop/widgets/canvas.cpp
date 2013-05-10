@@ -1,12 +1,15 @@
 #include <QPainter>
+#include <QCoreApplication>
 #include <QHash>
 #include <QSharedPointer>
+#include <QSettings>
 #include <QJsonDocument>
 #include <QStyleOption>
 #include <QMouseEvent>
 #include <QTabletEvent>
 
 #include "../common/network/commandsocket.h"
+#include "../common/common.h"
 #include "../paintingTools/brush/brushmanager.h"
 #include "../paintingTools/brush/brush.h"
 #include "../paintingTools/brush/sketchbrush.h"
@@ -670,6 +673,9 @@ void Canvas::focusInEvent(QFocusEvent *)
 
 void Canvas::focusOutEvent(QFocusEvent *)
 {
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
     bool disable_ime = settings.value("canvas/auto_disable_ime").toBool();
     if(disable_ime)
         PlatformExtend::setIMEState(this, true);
