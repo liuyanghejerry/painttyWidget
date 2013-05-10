@@ -5,7 +5,6 @@
 #include <QCursor>
 #include <QPainter>
 #include <QStyleOptionViewItem>
-#include "colorwheel.h"
 
 ColorGridItem::ColorGridItem(int id, QWidget *parent) :
     QWidget(parent),

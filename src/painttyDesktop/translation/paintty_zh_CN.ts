@@ -54,25 +54,25 @@
 <context>
     <name>ColorGridItem</name>
     <message>
-        <location filename="../widgets/colorgriditem.cpp" line="26"/>
+        <location filename="../widgets/colorgriditem.cpp" line="25"/>
         <source>Pick</source>
         <translatorcomment>スポイト</translatorcomment>
         <translation>取色</translation>
     </message>
     <message>
-        <location filename="../widgets/colorgriditem.cpp" line="27"/>
+        <location filename="../widgets/colorgriditem.cpp" line="26"/>
         <source>Tint</source>
         <translatorcomment>色の追加</translatorcomment>
         <translation>新加色板</translation>
     </message>
     <message>
-        <location filename="../widgets/colorgriditem.cpp" line="28"/>
+        <location filename="../widgets/colorgriditem.cpp" line="27"/>
         <source>Clear</source>
         <translatorcomment>色の削除</translatorcomment>
         <translation>清除色板</translation>
     </message>
     <message>
-        <location filename="../widgets/colorgriditem.cpp" line="29"/>
+        <location filename="../widgets/colorgriditem.cpp" line="28"/>
         <source>Cancel</source>
         <translatorcomment>キャンセル</translatorcomment>
         <translation>取消</translation>
@@ -161,21 +161,32 @@
     </message>
     <message>
         <location filename="../widgets/configuredialog.ui" line="64"/>
+        <location filename="../widgets/configuredialog.ui" line="82"/>
         <source>Shortcut</source>
         <translation>快捷键</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="78"/>
+        <location filename="../widgets/configuredialog.ui" line="77"/>
+        <source>Name</source>
+        <translation>名称</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.ui" line="90"/>
+        <source>Note: You still cannot edit them yet.</source>
+        <translation>提示：我们目前还没有加入快捷键的编辑功能（赶进度神马的</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.ui" line="98"/>
         <source>Experimental Fetures</source>
         <translation>试验特性</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="84"/>
+        <location filename="../widgets/configuredialog.ui" line="104"/>
         <source>Disable IME when painting</source>
         <translation>绘画时关闭输入法</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="94"/>
+        <location filename="../widgets/configuredialog.ui" line="114"/>
         <source>Message Notification</source>
         <translation>消息通知</translation>
     </message>
@@ -184,25 +195,30 @@
         <translation type="obsolete">有新消息时提醒我</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="47"/>
+        <location filename="../widgets/configuredialog.cpp" line="52"/>
         <source>System Default</source>
         <translation>系统默认</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="107"/>
-        <location filename="../widgets/configuredialog.cpp" line="120"/>
+        <location filename="../widgets/configuredialog.cpp" line="69"/>
+        <source>Brushes</source>
+        <translation>画刷相关</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="133"/>
+        <location filename="../widgets/configuredialog.cpp" line="146"/>
         <source>Restart</source>
         <translation>重新启动</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="108"/>
+        <location filename="../widgets/configuredialog.cpp" line="134"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation>程序必须重新启动才可以应用一些新的设置。
 是否立即重新启动？</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="121"/>
+        <location filename="../widgets/configuredialog.cpp" line="147"/>
         <source>New settings will be applied on next start.</source>
         <translation>新设置将在下次启动程序时生效。</translation>
     </message>

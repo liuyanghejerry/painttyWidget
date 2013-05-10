@@ -48,22 +48,22 @@
 <context>
     <name>ColorGridItem</name>
     <message>
-        <location filename="../widgets/colorgriditem.cpp" line="26"/>
+        <location filename="../widgets/colorgriditem.cpp" line="25"/>
         <source>Pick</source>
         <translation>取色</translation>
     </message>
     <message>
-        <location filename="../widgets/colorgriditem.cpp" line="27"/>
+        <location filename="../widgets/colorgriditem.cpp" line="26"/>
         <source>Tint</source>
         <translation>著色</translation>
     </message>
     <message>
-        <location filename="../widgets/colorgriditem.cpp" line="28"/>
+        <location filename="../widgets/colorgriditem.cpp" line="27"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
     <message>
-        <location filename="../widgets/colorgriditem.cpp" line="29"/>
+        <location filename="../widgets/colorgriditem.cpp" line="28"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -143,44 +143,60 @@
     </message>
     <message>
         <location filename="../widgets/configuredialog.ui" line="64"/>
+        <location filename="../widgets/configuredialog.ui" line="82"/>
         <source>Shortcut</source>
         <translation>快捷鍵</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="78"/>
+        <location filename="../widgets/configuredialog.ui" line="77"/>
+        <source>Name</source>
+        <translation>名字</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.ui" line="90"/>
+        <source>Note: You still cannot edit them yet.</source>
+        <translation>提示：我們仍未增加快捷鍵的修改功能。</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.ui" line="98"/>
         <source>Experimental Fetures</source>
         <translation>實驗項目</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="84"/>
+        <location filename="../widgets/configuredialog.ui" line="104"/>
         <source>Disable IME when painting</source>
         <translation>繪畫時禁用輸入法</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="94"/>
+        <location filename="../widgets/configuredialog.ui" line="114"/>
         <source>Message Notification</source>
         <translation>消息通知</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="47"/>
+        <location filename="../widgets/configuredialog.cpp" line="52"/>
         <source>System Default</source>
         <translation>系統默認</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="107"/>
-        <location filename="../widgets/configuredialog.cpp" line="120"/>
+        <location filename="../widgets/configuredialog.cpp" line="69"/>
+        <source>Brushes</source>
+        <translation>畫刷</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="133"/>
+        <location filename="../widgets/configuredialog.cpp" line="146"/>
         <source>Restart</source>
         <translation>重新啟動</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="108"/>
+        <location filename="../widgets/configuredialog.cpp" line="134"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation>程式必須重新啟動才可以應用新的語言設置。
 是否立即重新啟動？</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="121"/>
+        <location filename="../widgets/configuredialog.cpp" line="147"/>
         <source>New settings will be applied on next start.</source>
         <translation>語言更改將在下次啟動程式時生效。</translation>
     </message>

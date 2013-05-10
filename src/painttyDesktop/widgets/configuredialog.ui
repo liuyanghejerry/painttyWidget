@@ -16,6 +16,9 @@
   <layout class="QVBoxLayout">
    <item>
     <widget class="QTabWidget" name="configureTab">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
      <widget class="QWidget" name="generalTab">
       <attribute name="title">
        <string>General</string>
@@ -79,6 +82,13 @@
            <string>Shortcut</string>
           </property>
          </column>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Note: You still cannot edit them yet.</string>
+         </property>
         </widget>
        </item>
       </layout>

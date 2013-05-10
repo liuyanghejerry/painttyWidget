@@ -48,22 +48,22 @@
 <context>
     <name>ColorGridItem</name>
     <message>
-        <location filename="../widgets/colorgriditem.cpp" line="26"/>
+        <location filename="../widgets/colorgriditem.cpp" line="25"/>
         <source>Pick</source>
         <translation>スポイト</translation>
     </message>
     <message>
-        <location filename="../widgets/colorgriditem.cpp" line="27"/>
+        <location filename="../widgets/colorgriditem.cpp" line="26"/>
         <source>Tint</source>
         <translation>色の追加</translation>
     </message>
     <message>
-        <location filename="../widgets/colorgriditem.cpp" line="28"/>
+        <location filename="../widgets/colorgriditem.cpp" line="27"/>
         <source>Clear</source>
         <translation>色の削除</translation>
     </message>
     <message>
-        <location filename="../widgets/colorgriditem.cpp" line="29"/>
+        <location filename="../widgets/colorgriditem.cpp" line="28"/>
         <source>Cancel</source>
         <translation>キャンセル</translation>
     </message>
@@ -143,43 +143,59 @@
     </message>
     <message>
         <location filename="../widgets/configuredialog.ui" line="64"/>
+        <location filename="../widgets/configuredialog.ui" line="82"/>
         <source>Shortcut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="78"/>
+        <location filename="../widgets/configuredialog.ui" line="77"/>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.ui" line="90"/>
+        <source>Note: You still cannot edit them yet.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.ui" line="98"/>
         <source>Experimental Fetures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="84"/>
+        <location filename="../widgets/configuredialog.ui" line="104"/>
         <source>Disable IME when painting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="94"/>
+        <location filename="../widgets/configuredialog.ui" line="114"/>
         <source>Message Notification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="47"/>
+        <location filename="../widgets/configuredialog.cpp" line="52"/>
         <source>System Default</source>
         <translation type="unfinished">システムのデフォルト</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="107"/>
-        <location filename="../widgets/configuredialog.cpp" line="120"/>
+        <location filename="../widgets/configuredialog.cpp" line="69"/>
+        <source>Brushes</source>
+        <translation type="unfinished">ブラシ</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="133"/>
+        <location filename="../widgets/configuredialog.cpp" line="146"/>
         <source>Restart</source>
         <translation type="unfinished">再起動</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="108"/>
+        <location filename="../widgets/configuredialog.cpp" line="134"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="121"/>
+        <location filename="../widgets/configuredialog.cpp" line="147"/>
         <source>New settings will be applied on next start.</source>
         <translation type="unfinished"></translation>
     </message>
