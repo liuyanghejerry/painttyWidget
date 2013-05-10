@@ -721,7 +721,12 @@ void MainWindow::onNewMessage(const QString &content)
             ->setValue(ui->textEdit->verticalScrollBar()
                        ->maximum());
     qDebug()<<"new message with: "<<content;
-    if(!this->isActiveWindow())
+
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    bool msg_notify = settings.value("chat/msg_notify").toBool();
+    if(!this->isActiveWindow() && msg_notify)
         PlatformExtend::notify(this);
 }
 

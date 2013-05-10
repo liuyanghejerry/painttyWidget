@@ -442,8 +442,8 @@ void Canvas::onNewData(const QByteArray & array)
         h_size += array.size();
         if(h_size < historySize_){
             this->setDisabled(true);
-//            qDebug()<<"History: "<<historySize_
-//                   <<"Loaded: "<<h_size;
+            //            qDebug()<<"History: "<<historySize_
+            //                   <<"Loaded: "<<h_size;
         }else{
             qDebug()<<"History"<<historySize_<<"bytes loaded!";
             historySize_ = 0;
@@ -660,12 +660,19 @@ void Canvas::tabletEvent(QTabletEvent *ev)
 
 void Canvas::focusInEvent(QFocusEvent *)
 {
-    PlatformExtend::setIMEState(this, false);
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    bool disable_ime = settings.value("canvas/auto_disable_ime").toBool();
+    if(disable_ime)
+        PlatformExtend::setIMEState(this, false);
 }
 
 void Canvas::focusOutEvent(QFocusEvent *)
 {
-    PlatformExtend::setIMEState(this, true);
+    bool disable_ime = settings.value("canvas/auto_disable_ime").toBool();
+    if(disable_ime)
+        PlatformExtend::setIMEState(this, true);
 }
 
 void Canvas::mousePressEvent(QMouseEvent *event)
