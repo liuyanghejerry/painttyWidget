@@ -3,7 +3,7 @@
 #include <QSettings>
 #include <QApplication>
 #include <QDebug>
-#include "../common/common.h"
+#include "../common.h"
 
 LocalNetworkInterface::LocalNetworkInterface()
 {
