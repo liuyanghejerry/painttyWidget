@@ -5,8 +5,11 @@
 #include <QStyleOption>
 #include <QMouseEvent>
 #include <QTabletEvent>
+#include <QSettings>
+#include <QApplication>
 
-#include "../common/network/commandsocket.h"
+#include "../../common/common.h"
+#include "../../common/network/commandsocket.h"
 #include "../paintingTools/brush/brushmanager.h"
 #include "../paintingTools/brush/brush.h"
 #include "../paintingTools/brush/sketchbrush.h"
