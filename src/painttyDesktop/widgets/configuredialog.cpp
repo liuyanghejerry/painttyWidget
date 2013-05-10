@@ -4,9 +4,13 @@
 #include <QRegularExpression>
 #include <QMessageBox>
 #include <QProcess>
+#include <QTreeWidgetItem>
+#include <QMapIterator>
 #include "configuredialog.h"
 #include "ui_configuredialog.h"
 #include "../../common/common.h"
+#include "../misc/shortcutmanager.h"
+#include "../misc/singleton.h"
 
 ConfigureDialog::ConfigureDialog(QWidget *parent) :
     QDialog(parent),
@@ -18,6 +22,7 @@ ConfigureDialog::ConfigureDialog(QWidget *parent) :
     ui->setupUi(this);
     readSettings();
     initLanguageList();
+    initShortcutList();
     initUi();
 
     connect(this, &ConfigureDialog::accepted, this, &ConfigureDialog::acceptConfigure);
@@ -53,6 +58,27 @@ void ConfigureDialog::initLanguageList()
         ui->languageComboBox->addItem(languageName, qmFile);
         if (selectedLanguage == qmFile)
             ui->languageComboBox->setCurrentIndex(ui->languageComboBox->count() - 1);
+    }
+}
+
+void ConfigureDialog::initShortcutList()
+{
+    const ShortcutManager& manager = Singleton<ShortcutManager>::instance();
+    const QVariantMap& shortcutMap = manager.allShortcutMap();
+    QTreeWidgetItem *categoryItem = new QTreeWidgetItem(ui->shortcutList);
+    categoryItem->setText(0, tr("Brushes"));
+    ui->shortcutList->addTopLevelItem(categoryItem);
+    QMapIterator<QString, QVariant> iterator(shortcutMap);
+    while (iterator.hasNext())
+    {
+        iterator.next();
+        QTreeWidgetItem *shortcutItem = new QTreeWidgetItem(categoryItem);
+        shortcutItem->setText(0, iterator.key());
+        shortcutItem->setText(1, iterator.value()   //we get QVariant for a single QVariantMap entry
+                              .toMap()              //we get QVariantMap for a single entry
+                              .value("key")         //we get QVariant for a QKeySequence
+                              .value<QKeySequence>()//we get QKeySequence
+                              .toString());         //we get its QString
     }
 }
 

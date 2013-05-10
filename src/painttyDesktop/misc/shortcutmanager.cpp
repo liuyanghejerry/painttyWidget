@@ -99,6 +99,11 @@ bool ShortcutManager::setShortcut(const QString& s,
     return true;
 }
 
+const QVariantMap& ShortcutManager::allShortcutMap() const
+{
+    return shortcut_conf;
+}
+
 QVariantMap ShortcutManager::shortcut(const QString& s)
 {
     return shortcut_conf[s].toMap();

@@ -2,6 +2,9 @@
 #define CONFIGUREDIALOG_H
 
 #include <QDialog>
+#include <QAbstractItemModel>
+
+class ShortcutModel;
 
 namespace Ui {
 class ConfigureDialog;
@@ -24,6 +27,7 @@ private:
 
     void readSettings();
     void initLanguageList();
+    void initShortcutList();
     void initUi();
 
 private slots:

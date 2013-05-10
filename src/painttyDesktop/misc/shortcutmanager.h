@@ -14,6 +14,7 @@ public:
     };
 
     explicit ShortcutManager(QObject *parent = 0);
+    const QVariantMap& allShortcutMap() const;
     
 signals:
     // QVariantMap is the changed shortcut

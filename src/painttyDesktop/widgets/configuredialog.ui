@@ -16,9 +16,6 @@
   <layout class="QVBoxLayout">
    <item>
     <widget class="QTabWidget" name="configureTab">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
      <widget class="QWidget" name="generalTab">
       <attribute name="title">
        <string>General</string>
@@ -65,10 +62,23 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QTreeView" name="shortcutView">
-         <property name="animated">
+        <widget class="QTreeWidget" name="shortcutList">
+         <property name="alternatingRowColors">
           <bool>true</bool>
          </property>
+         <property name="columnCount">
+          <number>2</number>
+         </property>
+         <column>
+          <property name="text">
+           <string>Name</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Shortcut</string>
+          </property>
+         </column>
         </widget>
        </item>
       </layout>
