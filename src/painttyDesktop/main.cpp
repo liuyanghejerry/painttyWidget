@@ -73,8 +73,7 @@ void initTranslation()
 void runUpdater()
 {
     QStringList args;
-//    args<<"-v"<<GlobalDef::CLIENT_VER;
-    args<<"-v"<<"0.2";
+    args<<"-v"<<GlobalDef::CLIENT_VER;
     bool m = QProcess::startDetached("updater", args, QDir::currentPath());
 //    qDebug()<<"currentDir:"<<QDir::currentPath()<<"updater runs: "<<m;
     if(!m){
