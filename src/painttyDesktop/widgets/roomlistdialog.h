@@ -37,6 +37,7 @@ private slots:
     void onCmdServerData(const QByteArray &array);
     void loadNick();
     void saveNick();
+    void openConfigure();
 protected:
     void hideEvent(QHideEvent *);
     void showEvent(QShowEvent *);

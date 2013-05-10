@@ -21,6 +21,7 @@
 #include "../../common/network/localnetworkinterface.h"
 #include "newroomwindow.h"
 #include "../misc/singleton.h"
+#include "configuredialog.h"
 
 RoomListDialog::RoomListDialog(QWidget *parent) :
     QDialog(parent),
@@ -32,6 +33,8 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
     newRoomWindow(new NewRoomWindow(this))
 {
     ui->setupUi(this);
+    connect(ui->pushButton_5, &QPushButton::clicked,
+            this, &RoomListDialog::openConfigure);
     connect(ui->pushButton_4,&QPushButton::clicked,
             this, &RoomListDialog::reject);
     connect(ui->pushButton_4,&QPushButton::clicked,
@@ -424,6 +427,12 @@ void RoomListDialog::saveNick()
     settings.setValue("global/personal/nick",
                       name.toUtf8());
     settings.sync();
+}
+
+void RoomListDialog::openConfigure()
+{
+    ConfigureDialog w;
+    w.exec();
 }
 
 void RoomListDialog::hideEvent(QHideEvent *)
