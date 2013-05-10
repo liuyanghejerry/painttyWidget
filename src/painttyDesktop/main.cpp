@@ -72,6 +72,7 @@ void initTranslation()
 
 void runUpdater()
 {
+#if !defined(Q_OS_MACX)
     QStringList args;
     args<<"-v"<<GlobalDef::CLIENT_VER;
     bool m = QProcess::startDetached("updater", args, QDir::currentPath());
@@ -82,6 +83,7 @@ void runUpdater()
                                           "You may need to check update yourself."),
                                        QMessageBox::Ok);
     }
+#endif
 }
 
 } // namespace mainOnly
