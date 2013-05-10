@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 
-#include "../common/network/messagesocket.h"
-#include "../common/network/datasocket.h"
+#include "../../common/network/messagesocket.h"
+#include "../../common/network/datasocket.h"
 #include "../misc/router.h"
 
 class QToolButton;
@@ -64,7 +64,6 @@ private:
     void requestCheckout();
     static QByteArray toJson(const QVariant &m);
     static QVariant fromJson(const QByteArray &d);
-    QMenu* languageMenu();
 
     Ui::MainWindow *ui;
     MessageSocket msgSocket;
