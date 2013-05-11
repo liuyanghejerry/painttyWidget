@@ -94,10 +94,10 @@ int main(int argc, char *argv[])
 #ifdef Q_OS_MACX
     QDir::setCurrent(a.applicationDirPath());
 #endif
-    mainOnly::runUpdater();
     mainOnly::initStyle();
     mainOnly::initSettings();
     mainOnly::initTranslation();
+    mainOnly::runUpdater();
 
     RoomListDialog *dialog = new RoomListDialog;
     int exitCode = 0;
