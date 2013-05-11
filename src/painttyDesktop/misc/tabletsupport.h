@@ -19,6 +19,8 @@ public:
     int eventRate() const;
     bool supportTilt() const;
     const WinTabAPI& callFunc() const;
+    void start();
+    void stop();
 private:
     bool loadWintab();
     bool freeWintab();

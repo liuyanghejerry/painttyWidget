@@ -52,7 +52,6 @@ TabletSupport::TabletSupport(QWidget *window)
     qDebug()<<"Pressure Range: "<<normalPressureInfo().axMin
            <<normalPressureInfo().axMax;
     qDebug()<<"Event Rate: "<<eventRate();
-    captureEvent();
 }
 
 TabletSupport::~TabletSupport()
@@ -60,6 +59,20 @@ TabletSupport::~TabletSupport()
     captor_.terminate();
     freeWintab();
     delete logContext;
+}
+
+void TabletSupport::start()
+{
+    if(hasDevice()) {
+        captureEvent();
+    }
+}
+
+void TabletSupport::stop()
+{
+    if(captor_.isRunning()) {
+        captor_.terminate();
+    }
 }
 
 bool TabletSupport::hasDevice() const

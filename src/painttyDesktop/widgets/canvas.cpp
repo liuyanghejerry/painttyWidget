@@ -76,7 +76,9 @@ Canvas::Canvas(QWidget *parent) :
     Singleton<BrushManager>::instance().addBrush(p2);
     Singleton<BrushManager>::instance().addBrush(p3);
     Singleton<BrushManager>::instance().addBrush(p4);
-    tbl_spt;
+    if(tbl_spt.hasDevice()){
+        tbl_spt.start();
+    }
 }
 
 /*!
@@ -87,6 +89,7 @@ Canvas::Canvas(QWidget *parent) :
 
 Canvas::~Canvas()
 {
+    tbl_spt.stop();
 }
 
 QPixmap Canvas::currentCanvas()
@@ -644,21 +647,32 @@ void Canvas::layerSelected(const QString &name)
 void Canvas::tabletEvent(QTabletEvent *ev)
 {
     //TODO: fully support tablet
-    qDebug()<<"tablet Event";
+//    qDebug()<<"tablet Event";
     qreal pressure = ev->pressure();
-    if(pressure < 0.000001){
-        drawing = false;
-        ev->accept();
-        return;
-    }
-    //    pen->setWidthF(pressure*10);
-    if(!drawing){
-        lastPoint = ev->pos();
-        drawing = true;
-        drawPoint(lastPoint, pressure);
-    }else{
-        drawLineTo(ev->pos(), pressure);
-        lastPoint = ev->pos();
+
+    switch(ev->type()){
+    case QEvent::TabletPress:
+        if(!drawing){
+            lastPoint = ev->pos();
+            drawing = true;
+            drawPoint(lastPoint, pressure);
+        }
+        break;
+    case QEvent::TabletMove:
+        if(drawing && lastPoint != ev->pos()){
+            qDebug()<<"lastPoint: "<<lastPoint
+                   <<"thisPoint: "<<ev->pos();
+            drawLineTo(ev->pos(), pressure);
+            lastPoint = ev->pos();
+        }
+        break;
+    case QEvent::TabletRelease:
+        if(drawing){
+            drawing = false;
+        }
+        break;
+    default:
+        break;
     }
     ev->accept();
 }

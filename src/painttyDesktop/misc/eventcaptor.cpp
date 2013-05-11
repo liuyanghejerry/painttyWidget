@@ -30,7 +30,6 @@ void EventCaptor::run()
         QPointF old_point;
         QPointF new_point;
         QPointF window_point;
-//        bool isPressed = false;
         for(int i=0;i<real_num;++i){
             new_point.setX(buff[i].pkX);
             new_point.setY(buff[i].pkY);
@@ -58,8 +57,6 @@ void EventCaptor::run()
                                 0// TODO: uniqueID
                                 );
                 qApp->postEvent(tbl_.window_, te);
-//                isPressed = true;
-//                qDebug()<<"TabletPress";
             }else if(HIWORD(buff[i].pkButtons) == TBN_UP){
                 QTabletEvent *te = new QTabletEvent(QEvent::TabletRelease,
                                 window_point,
@@ -77,9 +74,7 @@ void EventCaptor::run()
                                 0// TODO: uniqueID
                                 );
                 qApp->postEvent(tbl_.window_, te);
-//                isPressed = false;
-//                qDebug()<<"TabletRelease";
-            }else{
+            }else if(HIWORD(buff[i].pkButtons) == TBN_NONE){
                 if(new_point != old_point){
                     QTabletEvent *te = new QTabletEvent(QEvent::TabletMove,
                                     window_point,
@@ -97,10 +92,9 @@ void EventCaptor::run()
                                     0// TODO: uniqueID
                                     );
                     qApp->postEvent(tbl_.window_, te);
-//                    qDebug()<<"TabletMove";
                 }
             }
-//            qDebug()<<"button: "<<buff[i].pkButtons;
+            old_point = new_point;
         }
     }
     qDebug()<<"capture event stoped.";

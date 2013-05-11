@@ -194,7 +194,7 @@ int Brush::hardness()
 
 void Brush::drawPoint(const QPointF &st, qreal pressure)
 {
-    qDebug()<<"pressure: "<<pressure;
+//    qDebug()<<"pressure: "<<pressure;
     QPainter painter;
     if(!painter.begin(surface_->imagePtr())){
         return;
