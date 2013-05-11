@@ -135,13 +135,13 @@ void Updater::checkNewestVersion()
     //
     QHostAddress addr;
     if(LocalNetworkInterface::supportIpv6()){
-        addr = GlobalDef::HOST_ADDR[1];
+        addr = GlobalDef::UPDATER_ADDR[1];
         qDebug()<<"using ipv6 address to connect server";
     }else{
-        addr = GlobalDef::HOST_ADDR[0];
+        addr = GlobalDef::UPDATER_ADDR[0];
         qDebug()<<"using ipv4 address to connect server";
     }
-    socket->connectToHost(addr, GlobalDef::HOST_UPDATER_PORT);
+    socket->connectToHost(addr, GlobalDef::UPDATER_PORT);
 
     return;
 }
