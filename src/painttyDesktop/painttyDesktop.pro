@@ -66,7 +66,9 @@ SOURCES += main.cpp\
     misc/platformextend_dummy.cpp \
     misc/platformextend.cpp \
     misc/shortcutmanager.cpp \
-    widgets/configuredialog.cpp
+    widgets/configuredialog.cpp \
+    misc/tabletsupport.cpp \
+    misc/eventcaptor.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -113,7 +115,12 @@ HEADERS  += widgets/mainwindow.h \
     misc/singleton.h \
     misc/call_once.h \
     misc/shortcutmanager.h \
-    widgets/configuredialog.h
+    widgets/configuredialog.h \
+    misc/pktdef.h \
+    misc/wintab.h \
+    misc/tabletsupport.h \
+    misc/eventcaptor.h \
+    misc/WinTabAPI.h
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/colorspinboxgroup.ui \

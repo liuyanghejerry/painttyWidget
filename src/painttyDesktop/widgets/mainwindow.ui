@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>862</width>
-    <height>370</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Mr.Paint</string>
   </property>
@@ -187,7 +179,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>862</width>
+     <width>856</width>
      <height>23</height>
     </rect>
    </property>
