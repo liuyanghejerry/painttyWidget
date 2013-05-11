@@ -7,9 +7,9 @@
 namespace GlobalDef
 {
 
-const static char CLIENT_VER[] = "0.3";
+const static char CLIENT_VER[] = "0.31";
 const static char CLIENT_TYPE[] = "alpha";
-static const char UPDATER_VERSION[] = "0.1";
+static const char UPDATER_VERSION[] = "0.11";
 
 const static char SETTINGS_NAME[] = "mrpaint.ini";
 
