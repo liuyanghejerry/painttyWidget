@@ -299,7 +299,7 @@ Do you want to restart right now?</source>
     <message>
         <location filename="../widgets/mainwindow.ui" line="238"/>
         <source>&amp;Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>編集(&amp;E)</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="250"/>
@@ -354,7 +354,7 @@ Do you want to restart right now?</source>
     <message>
         <location filename="../widgets/mainwindow.ui" line="343"/>
         <source>Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>設定</translation>
     </message>
     <message>
         <source>English</source>
