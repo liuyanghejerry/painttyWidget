@@ -224,20 +224,20 @@
         <translation>松开后触发</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="182"/>
-        <location filename="../widgets/configuredialog.cpp" line="195"/>
+        <location filename="../widgets/configuredialog.cpp" line="183"/>
+        <location filename="../widgets/configuredialog.cpp" line="196"/>
         <source>Restart</source>
         <translation>重新启动</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="183"/>
+        <location filename="../widgets/configuredialog.cpp" line="184"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation>程序必须重新启动才可以应用一些新的设置。
 是否立即重新启动？</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="196"/>
+        <location filename="../widgets/configuredialog.cpp" line="197"/>
         <source>New settings will be applied on next start.</source>
         <translation>新设置将在下次启动程序时生效。</translation>
     </message>
@@ -285,148 +285,149 @@ Do you want to restart right now?</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="6"/>
+        <location filename="../widgets/mainwindow.ui" line="14"/>
         <source>Mr.Paint</source>
         <translatorcomment>チャエ君</translatorcomment>
         <translation>茶绘君</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="17"/>
+        <location filename="../widgets/mainwindow.ui" line="34"/>
         <source>Color</source>
         <translatorcomment>カラー</translatorcomment>
         <translation>颜色</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="63"/>
+        <location filename="../widgets/mainwindow.ui" line="80"/>
         <source>Chat</source>
         <translatorcomment>チャット</translatorcomment>
         <translation>聊天</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="129"/>
+        <location filename="../widgets/mainwindow.ui" line="146"/>
         <source>Send</source>
         <translatorcomment>送信</translatorcomment>
         <translation>发送</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="140"/>
+        <location filename="../widgets/mainwindow.ui" line="157"/>
         <source>Layers</source>
         <translatorcomment>レイヤー</translatorcomment>
         <translation>图层</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="179"/>
+        <location filename="../widgets/mainwindow.ui" line="196"/>
         <source>&amp;File</source>
         <translatorcomment>ファイル(&amp;F)</translatorcomment>
         <translation>文件(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="183"/>
+        <location filename="../widgets/mainwindow.ui" line="200"/>
         <source>Export...</source>
         <translatorcomment>書き出し...</translatorcomment>
         <translation>导出...</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="195"/>
+        <location filename="../widgets/mainwindow.ui" line="212"/>
         <source>&amp;About</source>
         <translatorcomment>ヘルプ(&amp;A)</translatorcomment>
         <translation>关于(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="202"/>
+        <location filename="../widgets/mainwindow.ui" line="219"/>
         <source>&amp;View</source>
         <translatorcomment>ウィンドウ(&amp;V)</translatorcomment>
         <translation>窗口(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="208"/>
+        <location filename="../widgets/mainwindow.ui" line="225"/>
         <source>&amp;Room</source>
         <translatorcomment>ルーム(&amp;R)</translatorcomment>
         <translation>房间(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="212"/>
+        <location filename="../widgets/mainwindow.ui" line="229"/>
         <source>Clear Canvas</source>
         <translatorcomment>全消し</translatorcomment>
         <translation>清空画布</translation>
     </message>
     <message>
+        <location filename="../widgets/mainwindow.ui" line="238"/>
         <source>&amp;Edit</source>
-        <translation type="obsolete">编辑(&amp;E)</translation>
+        <translation>编辑(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="226"/>
+        <location filename="../widgets/mainwindow.ui" line="250"/>
         <source>Panorama</source>
         <translatorcomment>ナビゲーター</translatorcomment>
         <translation>导航</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="264"/>
+        <location filename="../widgets/mainwindow.ui" line="288"/>
         <source>Export All to File</source>
         <translatorcomment>全てのレイヤー画像を書き出し</translatorcomment>
         <translation>导出全部至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="269"/>
+        <location filename="../widgets/mainwindow.ui" line="293"/>
         <source>Export Visible To File</source>
         <translatorcomment>表示レイヤーを書き出し</translatorcomment>
         <translation>导出可见图层至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="274"/>
+        <location filename="../widgets/mainwindow.ui" line="298"/>
         <source>&amp;Quit</source>
         <translatorcomment>退室(&amp;Q)</translatorcomment>
         <translation>退出(&amp;Q)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="279"/>
+        <location filename="../widgets/mainwindow.ui" line="303"/>
         <source>About Mr.Paint</source>
         <translatorcomment>チャエ君について</translatorcomment>
         <translation>关于茶绘君</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="284"/>
+        <location filename="../widgets/mainwindow.ui" line="308"/>
         <source>About Qt</source>
         <translatorcomment>Qtについて</translatorcomment>
         <translation>关于Qt</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="289"/>
+        <location filename="../widgets/mainwindow.ui" line="313"/>
         <source>Export Visible To ClipBorad</source>
         <translatorcomment>表示レイヤーをコピー</translatorcomment>
         <translation>导出可见图层至剪贴板</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="294"/>
+        <location filename="../widgets/mainwindow.ui" line="318"/>
         <source>Export All To Clipboard</source>
         <translatorcomment>全てのレイヤー画像をコピー</translatorcomment>
         <translation>导出全部至剪贴板</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="299"/>
+        <location filename="../widgets/mainwindow.ui" line="323"/>
         <source>Reset View</source>
         <translatorcomment>すべてのツール配置を初期化</translatorcomment>
         <translation>复位工作区</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="304"/>
+        <location filename="../widgets/mainwindow.ui" line="328"/>
         <source>Nothing Here</source>
         <translatorcomment>べつに</translatorcomment>
         <translation>啥都没</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="319"/>
+        <location filename="../widgets/mainwindow.ui" line="343"/>
         <source>Configuration</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="309"/>
+        <location filename="../widgets/mainwindow.ui" line="333"/>
         <source>Close Room</source>
         <translatorcomment>ルームを閉じる</translatorcomment>
         <translation>关闭房间</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="314"/>
+        <location filename="../widgets/mainwindow.ui" line="338"/>
         <source>All Layers</source>
         <translatorcomment>すべてのレイヤー</translatorcomment>
         <translation>所有图层</translation>
@@ -1100,16 +1101,16 @@ Use this software only when you accept it.</source>
 <context>
     <name>ShortcutDelegate</name>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="215"/>
-        <location filename="../widgets/configuredialog.cpp" line="236"/>
-        <location filename="../widgets/configuredialog.cpp" line="255"/>
+        <location filename="../widgets/configuredialog.cpp" line="216"/>
+        <location filename="../widgets/configuredialog.cpp" line="237"/>
+        <location filename="../widgets/configuredialog.cpp" line="256"/>
         <source>Immediately</source>
         <translation>立即触发</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="216"/>
-        <location filename="../widgets/configuredialog.cpp" line="238"/>
-        <location filename="../widgets/configuredialog.cpp" line="257"/>
+        <location filename="../widgets/configuredialog.cpp" line="217"/>
+        <location filename="../widgets/configuredialog.cpp" line="239"/>
+        <location filename="../widgets/configuredialog.cpp" line="258"/>
         <source>When Release</source>
         <translation>松开后触发</translation>
     </message>

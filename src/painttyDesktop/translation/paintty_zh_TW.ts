@@ -202,20 +202,20 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="182"/>
-        <location filename="../widgets/configuredialog.cpp" line="195"/>
+        <location filename="../widgets/configuredialog.cpp" line="183"/>
+        <location filename="../widgets/configuredialog.cpp" line="196"/>
         <source>Restart</source>
         <translation>重新啟動</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="183"/>
+        <location filename="../widgets/configuredialog.cpp" line="184"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation>程式必須重新啟動才可以應用新的語言設置。
 是否立即重新啟動？</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="196"/>
+        <location filename="../widgets/configuredialog.cpp" line="197"/>
         <source>New settings will be applied on next start.</source>
         <translation>語言更改將在下次啟動程式時生效。</translation>
     </message>
@@ -262,126 +262,127 @@ Do you want to restart right now?</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="6"/>
+        <location filename="../widgets/mainwindow.ui" line="14"/>
         <source>Mr.Paint</source>
         <translation>茶繪君</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="17"/>
+        <location filename="../widgets/mainwindow.ui" line="34"/>
         <source>Color</source>
         <translation>顏色</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="63"/>
+        <location filename="../widgets/mainwindow.ui" line="80"/>
         <source>Chat</source>
         <translation>聊天</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="129"/>
+        <location filename="../widgets/mainwindow.ui" line="146"/>
         <source>Send</source>
         <translation>發送</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="140"/>
+        <location filename="../widgets/mainwindow.ui" line="157"/>
         <source>Layers</source>
         <translation>圖層</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="179"/>
+        <location filename="../widgets/mainwindow.ui" line="196"/>
         <source>&amp;File</source>
         <translation>文件(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="183"/>
+        <location filename="../widgets/mainwindow.ui" line="200"/>
         <source>Export...</source>
         <translation>導出...</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="195"/>
+        <location filename="../widgets/mainwindow.ui" line="212"/>
         <source>&amp;About</source>
         <translation>關於(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="202"/>
+        <location filename="../widgets/mainwindow.ui" line="219"/>
         <source>&amp;View</source>
         <translation>視圖(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="208"/>
+        <location filename="../widgets/mainwindow.ui" line="225"/>
         <source>&amp;Room</source>
         <translation>房間(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="212"/>
+        <location filename="../widgets/mainwindow.ui" line="229"/>
         <source>Clear Canvas</source>
         <translation>清空畫布</translation>
     </message>
     <message>
+        <location filename="../widgets/mainwindow.ui" line="238"/>
         <source>&amp;Edit</source>
-        <translation type="obsolete">編輯</translation>
+        <translation>編輯(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="226"/>
+        <location filename="../widgets/mainwindow.ui" line="250"/>
         <source>Panorama</source>
         <translation>全景圖</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="264"/>
+        <location filename="../widgets/mainwindow.ui" line="288"/>
         <source>Export All to File</source>
         <translation>導出全部至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="269"/>
+        <location filename="../widgets/mainwindow.ui" line="293"/>
         <source>Export Visible To File</source>
         <translation>導出可見圖層至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="274"/>
+        <location filename="../widgets/mainwindow.ui" line="298"/>
         <source>&amp;Quit</source>
         <translation>退出(&amp;Q)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="279"/>
+        <location filename="../widgets/mainwindow.ui" line="303"/>
         <source>About Mr.Paint</source>
         <translation>關於茶繪君</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="284"/>
+        <location filename="../widgets/mainwindow.ui" line="308"/>
         <source>About Qt</source>
         <translation>關於Qt</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="289"/>
+        <location filename="../widgets/mainwindow.ui" line="313"/>
         <source>Export Visible To ClipBorad</source>
         <translation>導出可見圖層至剪貼板</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="294"/>
+        <location filename="../widgets/mainwindow.ui" line="318"/>
         <source>Export All To Clipboard</source>
         <translation>導出全部至剪貼板</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="299"/>
+        <location filename="../widgets/mainwindow.ui" line="323"/>
         <source>Reset View</source>
         <translation>重置視圖</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="304"/>
+        <location filename="../widgets/mainwindow.ui" line="328"/>
         <source>Nothing Here</source>
         <translation>無</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="319"/>
+        <location filename="../widgets/mainwindow.ui" line="343"/>
         <source>Configuration</source>
         <translation>設定</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="309"/>
+        <location filename="../widgets/mainwindow.ui" line="333"/>
         <source>Close Room</source>
         <translation>關閉房間</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="314"/>
+        <location filename="../widgets/mainwindow.ui" line="338"/>
         <source>All Layers</source>
         <translation>所有圖層</translation>
     </message>
@@ -952,16 +953,16 @@ Use this software only when you accept it.</source>
 <context>
     <name>ShortcutDelegate</name>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="215"/>
-        <location filename="../widgets/configuredialog.cpp" line="236"/>
-        <location filename="../widgets/configuredialog.cpp" line="255"/>
+        <location filename="../widgets/configuredialog.cpp" line="216"/>
+        <location filename="../widgets/configuredialog.cpp" line="237"/>
+        <location filename="../widgets/configuredialog.cpp" line="256"/>
         <source>Immediately</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="216"/>
-        <location filename="../widgets/configuredialog.cpp" line="238"/>
-        <location filename="../widgets/configuredialog.cpp" line="257"/>
+        <location filename="../widgets/configuredialog.cpp" line="217"/>
+        <location filename="../widgets/configuredialog.cpp" line="239"/>
+        <location filename="../widgets/configuredialog.cpp" line="258"/>
         <source>When Release</source>
         <translation type="unfinished"></translation>
     </message>
