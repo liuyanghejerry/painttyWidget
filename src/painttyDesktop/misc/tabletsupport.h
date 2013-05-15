@@ -2,13 +2,11 @@
 #define TABLETSUPPORT_H
 
 #include <QObject>
+#include <QAbstractNativeEventFilter>
 #include "wintabapi.h"
-#include "eventcaptor.h"
-class EventCaptor;
 
-class TabletSupport : public QObject
+class TabletSupport : public QAbstractNativeEventFilter
 {
-    Q_OBJECT
 public:
     TabletSupport(QWidget *window=nullptr);
     ~TabletSupport();
@@ -18,9 +16,12 @@ public:
     tagAXIS tangentialPressureInfo() const;
     int eventRate() const;
     bool supportTilt() const;
-    const WinTabAPI& callFunc() const;
     void start();
     void stop();
+    const WinTabAPI& callFunc() const;
+protected:
+    virtual bool nativeEventFilter(const QByteArray &eventType,
+                                   void *message, long *) override;
 private:
     bool loadWintab();
     bool freeWintab();
@@ -35,14 +36,11 @@ private:
         return true;
     }
     bool mapWintabFuns();
-    void captureEvent();
     HMODULE wintab_module;
     WinTabAPI tabapis;
     QObject msg_bumper;
     QWidget *window_;
     LOGCONTEXTA *logContext;
-    EventCaptor captor_;
-    friend class EventCaptor;
 };
 
 #endif // TABLETSUPPORT_H

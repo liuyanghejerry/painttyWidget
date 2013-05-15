@@ -4,7 +4,7 @@
 #include <QWidget>
 #include "../paintingTools/brush/abstractbrush.h"
 #include "../misc/layermanager.h"
-#include "../misc/tabletsupport.h"
+//#include "../misc/tabletsupport.h"
 
 typedef QSharedPointer<AbstractBrush> BrushPointer;
 
@@ -97,7 +97,6 @@ private:
     QHash<QString, BrushPointer> remoteBrush;
     QHash<QString, BrushPointer> localBrush;
 //    QSharedPointer<ColorPicker> colorPicker;
-    TabletSupport tbl_spt;
 };
 
 #endif // CANVAS_H

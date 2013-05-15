@@ -2,6 +2,7 @@
 #define CANVASCONTAINER_H
 
 #include <QGraphicsView>
+#include "../misc/tabletsupport.h"
 
 class QGraphicsScene;
 class QGraphicsProxyWidget;
@@ -11,6 +12,7 @@ class CanvasContainer : public QGraphicsView
     Q_OBJECT
 public:
     CanvasContainer(QWidget *parent = 0);
+    ~CanvasContainer();
     void setCanvas(QWidget *canvas);
     qreal currentScaleFactor() const;
     bool smoothScale() const;
@@ -29,18 +31,19 @@ public slots:
 private:
     QGraphicsScene *scene;
     QGraphicsProxyWidget *proxy;
-    QWidget *scaleSliderWidget;
     QPoint moveStartPoint;
     int horizontalScrollValue;
     int verticalScrollValue;
     bool smoothScaleFlag;
     qreal calculateFactor(qreal current, bool zoomIn);
     void setScaleFactorInternal(qreal factor, const QPoint scaleCenter = QPoint());
+    TabletSupport tbl_spt;
 
 protected:
     void wheelEvent(QWheelEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void tabletEvent(QTabletEvent *event);
     bool eventFilter(QObject *object, QEvent *event);
 };
 

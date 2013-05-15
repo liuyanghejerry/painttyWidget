@@ -54,8 +54,7 @@ Canvas::Canvas(QWidget *parent) :
     image(canvasSize),
     layerNameCounter(0),
     historySize_(0),
-    shareColor_(true),
-    tbl_spt(this)
+    shareColor_(true)
 {
     setAttribute(Qt::WA_StaticContents);
     inPicker = false;
@@ -76,9 +75,6 @@ Canvas::Canvas(QWidget *parent) :
     Singleton<BrushManager>::instance().addBrush(p2);
     Singleton<BrushManager>::instance().addBrush(p3);
     Singleton<BrushManager>::instance().addBrush(p4);
-    if(tbl_spt.hasDevice()){
-        tbl_spt.start();
-    }
 }
 
 /*!
@@ -89,7 +85,6 @@ Canvas::Canvas(QWidget *parent) :
 
 Canvas::~Canvas()
 {
-    tbl_spt.stop();
 }
 
 QPixmap Canvas::currentCanvas()
@@ -647,7 +642,7 @@ void Canvas::layerSelected(const QString &name)
 void Canvas::tabletEvent(QTabletEvent *ev)
 {
     //TODO: fully support tablet
-//    qDebug()<<"tablet Event";
+    qDebug()<<"tablet Event in Canvas";
     qreal pressure = ev->pressure();
 
     switch(ev->type()){
@@ -669,6 +664,7 @@ void Canvas::tabletEvent(QTabletEvent *ev)
     case QEvent::TabletRelease:
         if(drawing){
             drawing = false;
+            updateCursor();
         }
         break;
     default:

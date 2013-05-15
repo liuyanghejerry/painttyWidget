@@ -1,7 +1,7 @@
 #ifndef WINTABAPI_H
 #define WINTABAPI_H
 
-#include "windows.h"
+#include <windows.h>
 // WINTAB headers
 #include "wintab.h"
 #define PACKETDATA ( PK_X | PK_Y | PK_Z | PK_BUTTONS | PK_NORMAL_PRESSURE | PK_ORIENTATION | PK_TANGENT_PRESSURE )

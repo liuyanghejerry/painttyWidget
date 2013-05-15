@@ -1,15 +1,14 @@
 #include "tabletsupport.h"
 #include <QWidget>
 #include <QTabletEvent>
-#include <QGuiApplication>
+#include <QApplication>
+#include <QAbstractEventDispatcher>
 #include <QDebug>
 
-TabletSupport::TabletSupport(QWidget *window)
-    :QObject(window),
+TabletSupport::TabletSupport(QWidget *window):
       wintab_module(nullptr),
       window_(window),
-      logContext(nullptr),
-      captor_(*this)
+      logContext(nullptr)
 {
     if(!loadWintab()) {
         return;
@@ -23,23 +22,28 @@ TabletSupport::TabletSupport(QWidget *window)
         return;
     }
     logContext = new tagLOGCONTEXTA;
-//    logContext->lcOptions |= CXO_SYSTEM;
     auto handle = (HWND)window_->winId();
 
     callFunc().ptrWTInfoA(WTI_DEFSYSCTX, 0, logContext);
-//    logContext->lcOptions |= CXO_MESSAGES;
+    logContext->lcOptions |= CXO_MESSAGES;
     logContext->lcMoveMask = PACKETDATA;
-//    logContext->lcBtnUpMask = logContext->lcBtnDnMask;
+    logContext->lcBtnUpMask = logContext->lcBtnDnMask;
 
-//    AXIS TabletX;
-//    AXIS TabletY;
-//    callFunc().ptrWTInfoA( WTI_DEVICES, DVC_X, &TabletX );
-//    callFunc().ptrWTInfoA( WTI_DEVICES, DVC_Y, &TabletY );
+    AXIS TabletX;
+    AXIS TabletY;
+    callFunc().ptrWTInfoA( WTI_DEVICES, DVC_X, &TabletX );
+    callFunc().ptrWTInfoA( WTI_DEVICES, DVC_Y, &TabletY );
 
-//    logContext->lcInOrgX = 0;
-//    logContext->lcInOrgY = 0;
-//    logContext->lcInExtX = TabletX.axMax;
-//    logContext->lcInExtY = TabletY.axMax;
+    logContext->lcInOrgX = 0;
+    logContext->lcInOrgY = 0;
+    logContext->lcInExtX = TabletX.axMax;
+    logContext->lcInExtY = TabletY.axMax;
+
+    /* output the data in screen coords */
+    logContext->lcOutOrgX = logContext->lcOutOrgY = 0;
+    logContext->lcOutExtX = GetSystemMetrics(SM_CXSCREEN);
+    /* move origin to upper left */
+    logContext->lcOutExtY = -GetSystemMetrics(SM_CYSCREEN);
 
     logContext->lcPktData = PACKETDATA;
     logContext->lcPktMode = PACKETMODE;
@@ -47,16 +51,12 @@ TabletSupport::TabletSupport(QWidget *window)
     tabapis.context_ = callFunc().ptrWTOpenA(handle,
                                              (LPLOGCONTEXTA)logContext,
                                              true);
-
-    qDebug()<<"Device Info: "<<deviceString();
-    qDebug()<<"Pressure Range: "<<normalPressureInfo().axMin
-           <<normalPressureInfo().axMax;
-    qDebug()<<"Event Rate: "<<eventRate();
+    qDebug()<<deviceString();
 }
 
 TabletSupport::~TabletSupport()
 {
-    captor_.terminate();
+    stop();
     freeWintab();
     delete logContext;
 }
@@ -64,15 +64,18 @@ TabletSupport::~TabletSupport()
 void TabletSupport::start()
 {
     if(hasDevice()) {
-        captureEvent();
+        auto dispacher = QAbstractEventDispatcher::instance(window_->thread());
+        dispacher->installNativeEventFilter(this);
     }
 }
 
 void TabletSupport::stop()
 {
-    if(captor_.isRunning()) {
-        captor_.terminate();
+    if(tabapis.context_){
+        callFunc().ptrWTClose(tabapis.context_);
     }
+    auto dispacher = QAbstractEventDispatcher::instance(window_->thread());
+    dispacher->removeNativeEventFilter(this);
 }
 
 bool TabletSupport::hasDevice() const
@@ -138,18 +141,13 @@ bool TabletSupport::supportTilt() const
         // Does the tablet support azimuth and altitude
         if (tiltOrient[0].axResolution && tiltOrient[1].axResolution){
             // Get resolution
-//            auto azimuth = tiltOrient[0].axResolution;
-//            auto altitude = tiltOrient[1].axResolution;
+            //            auto azimuth = tiltOrient[0].axResolution;
+            //            auto altitude = tiltOrient[1].axResolution;
         }else{
             tiltSupport = false;
         }
     }
     return tiltSupport;
-}
-
-void TabletSupport::captureEvent()
-{
-    captor_.start();
 }
 
 const WinTabAPI& TabletSupport::callFunc() const
@@ -174,7 +172,7 @@ bool TabletSupport::freeWintab()
         bool ok = FreeLibrary(wintab_module);
         if(!ok) {
             DWORD err = GetLastError();
-            qCritical()<<"Cannot load wintab32.dll:"<<err;
+            qCritical()<<"Error while free wintab32.dll:"<<err;
             return false;
         }
         return true;
@@ -206,4 +204,90 @@ bool TabletSupport::mapWintabFuns()
     isOk = isOk && getProcAddr<WinTabAPI::WTMGRDEFCONTEXT>(tabapis.ptrWTMgrDefContext, "WTMgrDefContext");
     isOk = isOk && getProcAddr<WinTabAPI::WTMGRDEFCONTEXTEX>(tabapis.ptrWTMgrDefContextEx, "WTMgrDefContextEx");
     return isOk;
+}
+
+
+bool TabletSupport::nativeEventFilter(const QByteArray &eventType,
+                                      void *message, long *)
+{
+    if (eventType == "windows_generic_MSG") {
+        MSG* ev = static_cast<MSG *>(message);
+        switch(ev->message){
+        case WT_PACKET:
+            PACKET pkt;
+            if(!callFunc().ptrWTPacket((HCTX)ev->lParam,
+                                       ev->wParam,
+                                       &pkt)){
+                return false;
+            }
+            QPointF new_point(pkt.pkX, pkt.pkY);
+            QPointF window_point = window_->mapFromGlobal(new_point.toPoint());;
+
+            auto preRange_s = normalPressureInfo();
+            int preRange = preRange_s.axMax - preRange_s.axMin +1;
+            auto tpreRange_s = tangentialPressureInfo();
+            int tpreRange = tpreRange_s.axMax - tpreRange_s.axMin +1;
+
+            auto btn_state = HIWORD(pkt.pkButtons);
+            if(btn_state == TBN_DOWN) {
+                QTabletEvent *te = new QTabletEvent(QEvent::TabletPress,
+                                                    window_point,
+                                                    new_point,
+                                                    QTabletEvent::Stylus,
+                                                    QTabletEvent::Pen,
+                                                    pkt.pkNormalPressure/qreal(preRange),
+                                                    0,// TODO: xTilt
+                                                    0,// TODO: yTilt
+                                                    // tangentialPressure
+                                                    pkt.pkTangentPressure/qreal(tpreRange),
+                                                    0.0,// TODO: rotation
+                                                    0,// z
+                                                    Qt::NoModifier, // TODO: get modfier
+                                                    0// TODO: uniqueID
+                                                    );
+                qApp->postEvent(window_, te);
+                qDebug()<<"TabletPress";
+            }else if(btn_state == TBN_UP){
+                QTabletEvent *te = new QTabletEvent(QEvent::TabletRelease,
+                                                    window_point,
+                                                    new_point,
+                                                    QTabletEvent::Stylus,
+                                                    QTabletEvent::Pen,
+                                                    pkt.pkNormalPressure/qreal(preRange),
+                                                    0,// TODO: xTilt
+                                                    0,// TODO: yTilt
+                                                    // tangentialPressure
+                                                    pkt.pkTangentPressure/qreal(tpreRange),
+                                                    0.0,// TODO: rotation
+                                                    0,// z
+                                                    Qt::NoModifier, // TODO: get modfier
+                                                    0// TODO: uniqueID
+                                                    );
+                qApp->postEvent(window_, te);
+                qDebug()<<"TabletRelease";
+            }else{
+                if( !new_point.isNull() ){
+                    QTabletEvent *te = new QTabletEvent(QEvent::TabletMove,
+                                                        window_point,
+                                                        new_point,
+                                                        QTabletEvent::Stylus,
+                                                        QTabletEvent::Pen,
+                                                        pkt.pkNormalPressure/qreal(preRange),
+                                                        0,// TODO: xTilt
+                                                        0,// TODO: yTilt
+                                                        // tangentialPressure
+                                                        pkt.pkTangentPressure/qreal(tpreRange),
+                                                        0.0,// TODO: rotation
+                                                        pkt.pkZ,// z
+                                                        Qt::NoModifier, // TODO: get modfier
+                                                        0// TODO: uniqueID
+                                                        );
+                    qApp->postEvent(window_, te);
+                    qDebug()<<"TabletMove";
+                }
+            }
+            break;
+        }
+    }
+    return false;
 }

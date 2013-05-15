@@ -1,6 +1,7 @@
 #include <QGraphicsScene>
 #include "canvascontainer.h"
 #include <QGraphicsProxyWidget>
+#include <QApplication>
 #include <QScrollBar>
 #include <QSlider>
 #include <QLabel>
@@ -14,8 +15,9 @@ using GlobalDef::MAX_SCALE_FACTOR;
 using GlobalDef::MIN_SCALE_FACTOR;
 
 CanvasContainer::CanvasContainer(QWidget *parent) :
-    QGraphicsView(parent), proxy(0), scaleSliderWidget(0),
-    smoothScaleFlag(true)
+    QGraphicsView(parent), proxy(0),
+    smoothScaleFlag(true),
+    tbl_spt(this)
 {
     setCacheMode(QGraphicsView::CacheBackground);
     setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -29,6 +31,13 @@ CanvasContainer::CanvasContainer(QWidget *parent) :
             rc);
     connect(verticalScrollBar(), &QScrollBar::valueChanged,
             rc);
+    if(tbl_spt.hasDevice()){
+        tbl_spt.start();
+    }
+}
+CanvasContainer::~CanvasContainer()
+{
+    tbl_spt.stop();
 }
 
 void CanvasContainer::setCanvas(QWidget *canvas)
@@ -182,6 +191,13 @@ void CanvasContainer::mousePressEvent(QMouseEvent *event)
         moveStartPoint = event->pos();
     }
     QGraphicsView::mousePressEvent(event);
+}
+
+void CanvasContainer::tabletEvent(QTabletEvent *event)
+{
+    // BUG
+    qApp->sendEvent(proxy->widget(), event);
+    event->accept();
 }
 
 void CanvasContainer::mouseMoveEvent(QMouseEvent *event)
