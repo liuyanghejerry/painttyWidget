@@ -77,24 +77,26 @@ void ConfigureDialog::initShortcutList()
     {
         iterator.next();
         QTreeWidgetItem *shortcutItem = new QTreeWidgetItem(categoryItem);
-        shortcutItem->setText(0, iterator.key());
         QVariantMap singleEntry = iterator.value()  //we get QVariant for a single QVariantMap entry
                 .toMap();                           //we get QVariantMap for a single entry
         QKeySequence sequence = singleEntry.value("key")    //we get QVariant for a QKeySequence
                 .value<QKeySequence>();                     //we get QKeySequence
         ShortcutManager::ShortcutType type =
                 ShortcutManager::ShortcutType(singleEntry.value("type").toInt());
+        shortcutItem->setText(0, singleEntry.value("description").toString());
         shortcutItem->setText(1,sequence.toString(QKeySequence::NativeText));
         if (type == ShortcutManager::Single)
             shortcutItem->setText(2, tr("Immediately"));
         else if (type == ShortcutManager::Multiple)
             shortcutItem->setText(2, tr("When Release"));
+        shortcutItem->setData(0, Qt::UserRole, iterator.key());
         shortcutItem->setData(1, Qt::UserRole, sequence);
         shortcutItem->setData(2, Qt::UserRole, type);
         shortcutItem->setFlags(shortcutItem->flags() | Qt::ItemIsEditable);
     }
     ui->shortcutList->expandAll();
-    //ui->shortcutList->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->shortcutList->resizeColumnToContents(2);
+    ui->shortcutList->resizeColumnToContents(0);
 }
 
 void ConfigureDialog::initUi()
@@ -140,19 +142,19 @@ void ConfigureDialog::acceptConfigure()
             QTreeWidgetItem *shortcutItem = categoryItem->child(k);
             if (!shortcutItem)
                 return;
-            QKeySequence oldSequence = shortcutMap.value(shortcutItem->text(0))
-                    .toMap().value("key").value<QKeySequence>();
+            QVariantMap oldEntry =
+                    shortcutMap.value(shortcutItem->data(0, Qt::UserRole).toString()).toMap();
+            QKeySequence oldSequence = oldEntry.value("key").value<QKeySequence>();
             QKeySequence newSequence = shortcutItem->data(1, Qt::UserRole).value<QKeySequence>();
             ShortcutManager::ShortcutType oldType =
-                    ShortcutManager::ShortcutType(shortcutMap.value(shortcutItem->text(0))
-                                                  .toMap().value("type").toInt());
+                    ShortcutManager::ShortcutType(oldEntry.value("type").toInt());
             ShortcutManager::ShortcutType newType =
                     ShortcutManager::ShortcutType(shortcutItem->data(2, Qt::UserRole).toInt());
             if (oldSequence != newSequence || oldType != newType) //we compare old sequence with new one
                                                                     //to see if we need restart and set new value.
             {
                 needRestart = true;
-                manager.setShortcut(shortcutItem->text(0),
+                manager.setShortcut(shortcutItem->data(0, Qt::UserRole).toString(),
                                             newSequence,
                                             newType);
             }
