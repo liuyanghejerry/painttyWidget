@@ -122,27 +122,27 @@
         <translation>設定</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="24"/>
+        <location filename="../widgets/configuredialog.ui" line="21"/>
         <source>General</source>
         <translation>通用</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="33"/>
+        <location filename="../widgets/configuredialog.ui" line="30"/>
         <source>&amp;Language:</source>
         <translation>語言</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="46"/>
+        <location filename="../widgets/configuredialog.ui" line="43"/>
         <source>&amp;Connection:</source>
         <translation>連結</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="56"/>
+        <location filename="../widgets/configuredialog.ui" line="53"/>
         <source>Try to use IPv6 to connect to server</source>
         <translation>嘗試使用IPv6連結伺服器</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="64"/>
+        <location filename="../widgets/configuredialog.ui" line="61"/>
         <location filename="../widgets/configuredialog.ui" line="82"/>
         <source>Shortcut</source>
         <translation>快捷鍵</translation>
@@ -153,50 +153,69 @@
         <translation>名字</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="90"/>
-        <source>Note: You still cannot edit them yet.</source>
-        <translation>提示：我們仍未增加快捷鍵的修改功能。</translation>
+        <location filename="../widgets/configuredialog.ui" line="87"/>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="98"/>
+        <location filename="../widgets/configuredialog.ui" line="95"/>
+        <source>Double click the shortcut and press your shortcut keys.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Note: You still cannot edit them yet.</source>
+        <translation type="obsolete">提示：我們仍未增加快捷鍵的修改功能。</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.ui" line="106"/>
         <source>Experimental Fetures</source>
         <translation>實驗項目</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="104"/>
+        <location filename="../widgets/configuredialog.ui" line="112"/>
         <source>Disable IME when painting</source>
         <translation>繪畫時禁用輸入法</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="114"/>
+        <location filename="../widgets/configuredialog.ui" line="122"/>
         <source>Message Notification</source>
         <translation>消息通知</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="52"/>
+        <location filename="../widgets/configuredialog.cpp" line="54"/>
         <source>System Default</source>
         <translation>系統默認</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="69"/>
+        <location filename="../widgets/configuredialog.cpp" line="73"/>
         <source>Brushes</source>
         <translation>畫刷</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="133"/>
-        <location filename="../widgets/configuredialog.cpp" line="146"/>
+        <location filename="../widgets/configuredialog.cpp" line="89"/>
+        <source>Immediately</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="91"/>
+        <source>When Release</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="181"/>
+        <location filename="../widgets/configuredialog.cpp" line="194"/>
         <source>Restart</source>
         <translation>重新啟動</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="134"/>
+        <location filename="../widgets/configuredialog.cpp" line="182"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation>程式必須重新啟動才可以應用新的語言設置。
 是否立即重新啟動？</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="147"/>
+        <location filename="../widgets/configuredialog.cpp" line="195"/>
         <source>New settings will be applied on next start.</source>
         <translation>語言更改將在下次啟動程式時生效。</translation>
     </message>
@@ -243,127 +262,126 @@ Do you want to restart right now?</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="14"/>
+        <location filename="../widgets/mainwindow.ui" line="6"/>
         <source>Mr.Paint</source>
         <translation>茶繪君</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="34"/>
+        <location filename="../widgets/mainwindow.ui" line="17"/>
         <source>Color</source>
         <translation>顏色</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="80"/>
+        <location filename="../widgets/mainwindow.ui" line="63"/>
         <source>Chat</source>
         <translation>聊天</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="146"/>
+        <location filename="../widgets/mainwindow.ui" line="129"/>
         <source>Send</source>
         <translation>發送</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="157"/>
+        <location filename="../widgets/mainwindow.ui" line="140"/>
         <source>Layers</source>
         <translation>圖層</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="196"/>
+        <location filename="../widgets/mainwindow.ui" line="179"/>
         <source>&amp;File</source>
         <translation>文件(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="200"/>
+        <location filename="../widgets/mainwindow.ui" line="183"/>
         <source>Export...</source>
         <translation>導出...</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="212"/>
+        <location filename="../widgets/mainwindow.ui" line="195"/>
         <source>&amp;About</source>
         <translation>關於(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="219"/>
+        <location filename="../widgets/mainwindow.ui" line="202"/>
         <source>&amp;View</source>
         <translation>視圖(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="225"/>
+        <location filename="../widgets/mainwindow.ui" line="208"/>
         <source>&amp;Room</source>
         <translation>房間(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="229"/>
+        <location filename="../widgets/mainwindow.ui" line="212"/>
         <source>Clear Canvas</source>
         <translation>清空畫布</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="238"/>
         <source>&amp;Edit</source>
-        <translation>編輯</translation>
+        <translation type="obsolete">編輯</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="250"/>
+        <location filename="../widgets/mainwindow.ui" line="226"/>
         <source>Panorama</source>
         <translation>全景圖</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="288"/>
+        <location filename="../widgets/mainwindow.ui" line="264"/>
         <source>Export All to File</source>
         <translation>導出全部至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="293"/>
+        <location filename="../widgets/mainwindow.ui" line="269"/>
         <source>Export Visible To File</source>
         <translation>導出可見圖層至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="298"/>
+        <location filename="../widgets/mainwindow.ui" line="274"/>
         <source>&amp;Quit</source>
         <translation>退出(&amp;Q)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="303"/>
+        <location filename="../widgets/mainwindow.ui" line="279"/>
         <source>About Mr.Paint</source>
         <translation>關於茶繪君</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="308"/>
+        <location filename="../widgets/mainwindow.ui" line="284"/>
         <source>About Qt</source>
         <translation>關於Qt</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="313"/>
+        <location filename="../widgets/mainwindow.ui" line="289"/>
         <source>Export Visible To ClipBorad</source>
         <translation>導出可見圖層至剪貼板</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="318"/>
+        <location filename="../widgets/mainwindow.ui" line="294"/>
         <source>Export All To Clipboard</source>
         <translation>導出全部至剪貼板</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="323"/>
+        <location filename="../widgets/mainwindow.ui" line="299"/>
         <source>Reset View</source>
         <translation>重置視圖</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="328"/>
+        <location filename="../widgets/mainwindow.ui" line="304"/>
         <source>Nothing Here</source>
         <translation>無</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="343"/>
+        <location filename="../widgets/mainwindow.ui" line="319"/>
         <source>Configuration</source>
         <translation>設定</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="333"/>
+        <location filename="../widgets/mainwindow.ui" line="309"/>
         <source>Close Room</source>
         <translation>關閉房間</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="338"/>
+        <location filename="../widgets/mainwindow.ui" line="314"/>
         <source>All Layers</source>
         <translation>所有圖層</translation>
     </message>
@@ -929,6 +947,23 @@ Error: %1, %2</source>
 Use this software only when you accept it.</source>
         <translation>我們仍處於早期測試階段。這意味著軟體隨時有可能宕機。
 請只在您意識到這一點後使用，以免發生不愉快的問題。</translation>
+    </message>
+</context>
+<context>
+    <name>ShortcutDelegate</name>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="214"/>
+        <location filename="../widgets/configuredialog.cpp" line="233"/>
+        <location filename="../widgets/configuredialog.cpp" line="252"/>
+        <source>Immediately</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="215"/>
+        <location filename="../widgets/configuredialog.cpp" line="235"/>
+        <location filename="../widgets/configuredialog.cpp" line="254"/>
+        <source>When Release</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

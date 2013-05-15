@@ -66,7 +66,8 @@ SOURCES += main.cpp\
     misc/platformextend_dummy.cpp \
     misc/platformextend.cpp \
     misc/shortcutmanager.cpp \
-    widgets/configuredialog.cpp
+    widgets/configuredialog.cpp \
+    widgets/shortcutgrabberedit.cpp
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -113,7 +114,8 @@ HEADERS  += widgets/mainwindow.h \
     misc/singleton.h \
     misc/call_once.h \
     misc/shortcutmanager.h \
-    widgets/configuredialog.h
+    widgets/configuredialog.h \
+    widgets/shortcutgrabberedit.h
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/colorspinboxgroup.ui \

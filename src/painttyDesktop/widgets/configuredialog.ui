@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>353</width>
-    <height>283</height>
+    <height>315</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,9 +16,6 @@
   <layout class="QVBoxLayout">
    <item>
     <widget class="QTabWidget" name="configureTab">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
      <widget class="QWidget" name="generalTab">
       <attribute name="title">
        <string>General</string>
@@ -69,8 +66,11 @@
          <property name="alternatingRowColors">
           <bool>true</bool>
          </property>
+         <property name="animated">
+          <bool>true</bool>
+         </property>
          <property name="columnCount">
-          <number>2</number>
+          <number>3</number>
          </property>
          <column>
           <property name="text">
@@ -82,12 +82,20 @@
            <string>Shortcut</string>
           </property>
          </column>
+         <column>
+          <property name="text">
+           <string>Type</string>
+          </property>
+         </column>
         </widget>
        </item>
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Note: You still cannot edit them yet.</string>
+          <string>Double click the shortcut and press your shortcut keys.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
