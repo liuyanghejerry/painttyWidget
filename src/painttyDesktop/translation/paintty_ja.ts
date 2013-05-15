@@ -198,19 +198,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="181"/>
-        <location filename="../widgets/configuredialog.cpp" line="194"/>
+        <location filename="../widgets/configuredialog.cpp" line="182"/>
+        <location filename="../widgets/configuredialog.cpp" line="195"/>
         <source>Restart</source>
         <translation type="unfinished">再起動</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="182"/>
+        <location filename="../widgets/configuredialog.cpp" line="183"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="195"/>
+        <location filename="../widgets/configuredialog.cpp" line="196"/>
         <source>New settings will be applied on next start.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -954,17 +954,60 @@ Use this software only when you accept it.</source>
 <context>
     <name>ShortcutDelegate</name>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="214"/>
-        <location filename="../widgets/configuredialog.cpp" line="233"/>
-        <location filename="../widgets/configuredialog.cpp" line="252"/>
+        <location filename="../widgets/configuredialog.cpp" line="215"/>
+        <location filename="../widgets/configuredialog.cpp" line="236"/>
+        <location filename="../widgets/configuredialog.cpp" line="255"/>
         <source>Immediately</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="215"/>
-        <location filename="../widgets/configuredialog.cpp" line="235"/>
-        <location filename="../widgets/configuredialog.cpp" line="254"/>
+        <location filename="../widgets/configuredialog.cpp" line="216"/>
+        <location filename="../widgets/configuredialog.cpp" line="238"/>
+        <location filename="../widgets/configuredialog.cpp" line="257"/>
         <source>When Release</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ShortcutManager</name>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="14"/>
+        <source>Pencil</source>
+        <translation type="unfinished">鉛筆</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="20"/>
+        <source>Brush</source>
+        <translation type="unfinished">ブラシ</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="26"/>
+        <source>Sketch</source>
+        <translation type="unfinished">スケッチブラシ</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="32"/>
+        <source>Eraser</source>
+        <translation type="unfinished">消しゴム</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="38"/>
+        <source>Increase brush width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="44"/>
+        <source>Decrease brush width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="50"/>
+        <source>Increase brush hardness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="56"/>
+        <source>Decrease brush hardness</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

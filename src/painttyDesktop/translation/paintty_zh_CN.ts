@@ -211,7 +211,7 @@
     <message>
         <location filename="../widgets/configuredialog.cpp" line="73"/>
         <source>Brushes</source>
-        <translation>画刷相关</translation>
+        <translation>画笔相关</translation>
     </message>
     <message>
         <location filename="../widgets/configuredialog.cpp" line="89"/>
@@ -224,20 +224,20 @@
         <translation>松开后触发</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="181"/>
-        <location filename="../widgets/configuredialog.cpp" line="194"/>
+        <location filename="../widgets/configuredialog.cpp" line="182"/>
+        <location filename="../widgets/configuredialog.cpp" line="195"/>
         <source>Restart</source>
         <translation>重新启动</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="182"/>
+        <location filename="../widgets/configuredialog.cpp" line="183"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation>程序必须重新启动才可以应用一些新的设置。
 是否立即重新启动？</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="195"/>
+        <location filename="../widgets/configuredialog.cpp" line="196"/>
         <source>New settings will be applied on next start.</source>
         <translation>新设置将在下次启动程序时生效。</translation>
     </message>
@@ -435,7 +435,7 @@ Do you want to restart right now?</source>
         <location filename="../widgets/mainwindow.cpp" line="226"/>
         <source>Brushes</source>
         <translatorcomment>ブラシ</translatorcomment>
-        <translation>画刷</translation>
+        <translation>画笔</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="262"/>
@@ -457,7 +457,7 @@ Shortcut: %2</source>
         <location filename="../widgets/mainwindow.cpp" line="315"/>
         <source>Brush Settings</source>
         <translatorcomment>ブラシ設定</translatorcomment>
-        <translation>笔刷设置</translation>
+        <translation>画笔设置</translation>
     </message>
     <message>
         <source>&amp;Language</source>
@@ -1100,18 +1100,61 @@ Use this software only when you accept it.</source>
 <context>
     <name>ShortcutDelegate</name>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="214"/>
-        <location filename="../widgets/configuredialog.cpp" line="233"/>
-        <location filename="../widgets/configuredialog.cpp" line="252"/>
+        <location filename="../widgets/configuredialog.cpp" line="215"/>
+        <location filename="../widgets/configuredialog.cpp" line="236"/>
+        <location filename="../widgets/configuredialog.cpp" line="255"/>
         <source>Immediately</source>
         <translation>立即触发</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="215"/>
-        <location filename="../widgets/configuredialog.cpp" line="235"/>
-        <location filename="../widgets/configuredialog.cpp" line="254"/>
+        <location filename="../widgets/configuredialog.cpp" line="216"/>
+        <location filename="../widgets/configuredialog.cpp" line="238"/>
+        <location filename="../widgets/configuredialog.cpp" line="257"/>
         <source>When Release</source>
         <translation>松开后触发</translation>
+    </message>
+</context>
+<context>
+    <name>ShortcutManager</name>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="14"/>
+        <source>Pencil</source>
+        <translation>铅笔</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="20"/>
+        <source>Brush</source>
+        <translation>画笔</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="26"/>
+        <source>Sketch</source>
+        <translation>素描笔</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="32"/>
+        <source>Eraser</source>
+        <translation>橡皮</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="38"/>
+        <source>Increase brush width</source>
+        <translation>增大画笔大小</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="44"/>
+        <source>Decrease brush width</source>
+        <translation>减小画笔大小</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="50"/>
+        <source>Increase brush hardness</source>
+        <translation>增大画笔硬度</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="56"/>
+        <source>Decrease brush hardness</source>
+        <translation>减小画笔硬度</translation>
     </message>
 </context>
 </TS>
