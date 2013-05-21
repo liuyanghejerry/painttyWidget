@@ -122,27 +122,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="24"/>
+        <location filename="../widgets/configuredialog.ui" line="21"/>
         <source>General</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="33"/>
+        <location filename="../widgets/configuredialog.ui" line="30"/>
         <source>&amp;Language:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="46"/>
+        <location filename="../widgets/configuredialog.ui" line="43"/>
         <source>&amp;Connection:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="56"/>
+        <location filename="../widgets/configuredialog.ui" line="53"/>
         <source>Try to use IPv6 to connect to server</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="64"/>
+        <location filename="../widgets/configuredialog.ui" line="61"/>
         <location filename="../widgets/configuredialog.ui" line="82"/>
         <source>Shortcut</source>
         <translation type="unfinished"></translation>
@@ -153,49 +153,64 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="90"/>
-        <source>Note: You still cannot edit them yet.</source>
+        <location filename="../widgets/configuredialog.ui" line="87"/>
+        <source>Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="98"/>
+        <location filename="../widgets/configuredialog.ui" line="95"/>
+        <source>Double click the shortcut and press your shortcut keys.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.ui" line="106"/>
         <source>Experimental Fetures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="104"/>
+        <location filename="../widgets/configuredialog.ui" line="112"/>
         <source>Disable IME when painting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="114"/>
+        <location filename="../widgets/configuredialog.ui" line="122"/>
         <source>Message Notification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="52"/>
+        <location filename="../widgets/configuredialog.cpp" line="54"/>
         <source>System Default</source>
         <translation type="unfinished">システムのデフォルト</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="69"/>
+        <location filename="../widgets/configuredialog.cpp" line="73"/>
         <source>Brushes</source>
         <translation type="unfinished">ブラシ</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="133"/>
-        <location filename="../widgets/configuredialog.cpp" line="146"/>
+        <location filename="../widgets/configuredialog.cpp" line="89"/>
+        <source>Immediately</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="91"/>
+        <source>When Release</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="183"/>
+        <location filename="../widgets/configuredialog.cpp" line="196"/>
         <source>Restart</source>
         <translation type="unfinished">再起動</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="134"/>
+        <location filename="../widgets/configuredialog.cpp" line="184"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="147"/>
+        <location filename="../widgets/configuredialog.cpp" line="197"/>
         <source>New settings will be applied on next start.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -939,6 +954,66 @@ Error: %1, %2</source>
 Use this software only when you accept it.</source>
         <translation>チャエ君はまだテストの段階なんで、プログラムは時々崩れかねないから、
 貴方樣が不快なバグをお避けになるために、これを意識した上でお使いください。</translation>
+    </message>
+</context>
+<context>
+    <name>ShortcutDelegate</name>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="216"/>
+        <location filename="../widgets/configuredialog.cpp" line="237"/>
+        <location filename="../widgets/configuredialog.cpp" line="256"/>
+        <source>Immediately</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="217"/>
+        <location filename="../widgets/configuredialog.cpp" line="239"/>
+        <location filename="../widgets/configuredialog.cpp" line="258"/>
+        <source>When Release</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ShortcutManager</name>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="14"/>
+        <source>Pencil</source>
+        <translation type="unfinished">鉛筆</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="20"/>
+        <source>Brush</source>
+        <translation type="unfinished">ブラシ</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="26"/>
+        <source>Sketch</source>
+        <translation type="unfinished">スケッチブラシ</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="32"/>
+        <source>Eraser</source>
+        <translation type="unfinished">消しゴム</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="38"/>
+        <source>Increase brush width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="44"/>
+        <source>Decrease brush width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="50"/>
+        <source>Increase brush hardness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="56"/>
+        <source>Decrease brush hardness</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

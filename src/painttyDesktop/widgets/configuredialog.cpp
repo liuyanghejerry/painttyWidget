@@ -6,11 +6,13 @@
 #include <QProcess>
 #include <QTreeWidgetItem>
 #include <QMapIterator>
+#include <QComboBox>
 #include "configuredialog.h"
 #include "ui_configuredialog.h"
 #include "../../common/common.h"
 #include "../misc/shortcutmanager.h"
 #include "../misc/singleton.h"
+#include "shortcutgrabberedit.h"
 
 ConfigureDialog::ConfigureDialog(QWidget *parent) :
     QDialog(parent),
@@ -65,6 +67,8 @@ void ConfigureDialog::initShortcutList()
 {
     const ShortcutManager& manager = Singleton<ShortcutManager>::instance();
     const QVariantMap& shortcutMap = manager.allShortcutMap();
+    ShortcutDelegate *delegate = new ShortcutDelegate(ui->shortcutList);
+    ui->shortcutList->setItemDelegate(delegate);
     QTreeWidgetItem *categoryItem = new QTreeWidgetItem(ui->shortcutList);
     categoryItem->setText(0, tr("Brushes"));
     ui->shortcutList->addTopLevelItem(categoryItem);
@@ -73,13 +77,26 @@ void ConfigureDialog::initShortcutList()
     {
         iterator.next();
         QTreeWidgetItem *shortcutItem = new QTreeWidgetItem(categoryItem);
-        shortcutItem->setText(0, iterator.key());
-        shortcutItem->setText(1, iterator.value()   //we get QVariant for a single QVariantMap entry
-                              .toMap()              //we get QVariantMap for a single entry
-                              .value("key")         //we get QVariant for a QKeySequence
-                              .value<QKeySequence>()//we get QKeySequence
-                              .toString());         //we get its QString
+        QVariantMap singleEntry = iterator.value()  //we get QVariant for a single QVariantMap entry
+                .toMap();                           //we get QVariantMap for a single entry
+        QKeySequence sequence = singleEntry.value("key")    //we get QVariant for a QKeySequence
+                .value<QKeySequence>();                     //we get QKeySequence
+        ShortcutManager::ShortcutType type =
+                ShortcutManager::ShortcutType(singleEntry.value("type").toInt());
+        shortcutItem->setText(0, singleEntry.value("description").toString());
+        shortcutItem->setText(1,sequence.toString(QKeySequence::NativeText));
+        if (type == ShortcutManager::Single)
+            shortcutItem->setText(2, tr("Immediately"));
+        else if (type == ShortcutManager::Multiple)
+            shortcutItem->setText(2, tr("When Release"));
+        shortcutItem->setData(0, Qt::UserRole, iterator.key());
+        shortcutItem->setData(1, Qt::UserRole, sequence);
+        shortcutItem->setData(2, Qt::UserRole, type);
+        shortcutItem->setFlags(shortcutItem->flags() | Qt::ItemIsEditable);
     }
+    ui->shortcutList->expandAll();
+    ui->shortcutList->resizeColumnToContents(2);
+    ui->shortcutList->resizeColumnToContents(0);
 }
 
 void ConfigureDialog::initUi()
@@ -111,6 +128,39 @@ void ConfigureDialog::acceptConfigure()
         settings.setValue("global/ipv6", ui->ipv6CheckBox->isChecked());
         needRestart = true;
     }
+
+    //save shortcut settings
+    ShortcutManager& manager = Singleton<ShortcutManager>::instance();
+    QVariantMap shortcutMap = manager.allShortcutMap();
+    for (int i = 0; i < ui->shortcutList->topLevelItemCount(); i++)
+    {
+        QTreeWidgetItem *categoryItem = ui->shortcutList->topLevelItem(i);
+        if (!categoryItem)
+            continue;
+        for (int k = 0; k < categoryItem->childCount(); k++)
+        {
+            QTreeWidgetItem *shortcutItem = categoryItem->child(k);
+            if (!shortcutItem)
+                return;
+            QVariantMap oldEntry =
+                    shortcutMap.value(shortcutItem->data(0, Qt::UserRole).toString()).toMap();
+            QKeySequence oldSequence = oldEntry.value("key").value<QKeySequence>();
+            QKeySequence newSequence = shortcutItem->data(1, Qt::UserRole).value<QKeySequence>();
+            ShortcutManager::ShortcutType oldType =
+                    ShortcutManager::ShortcutType(oldEntry.value("type").toInt());
+            ShortcutManager::ShortcutType newType =
+                    ShortcutManager::ShortcutType(shortcutItem->data(2, Qt::UserRole).toInt());
+            if (oldSequence != newSequence || oldType != newType) //we compare old sequence with new one
+                                                                    //to see if we need restart and set new value.
+            {
+                needRestart = true;
+                manager.setShortcut(shortcutItem->data(0, Qt::UserRole).toString(),
+                                            newSequence,
+                                            newType);
+            }
+        }
+    }
+    manager.saveToConfigure();
 
     //save msg notify settings
     if (ui->msg_notify_checkbox->isChecked() != msg_notify)
@@ -147,4 +197,73 @@ void ConfigureDialog::acceptConfigure()
                                  tr("New settings will be applied on next start."));
         }
     }
+}
+
+ShortcutDelegate::ShortcutDelegate(QObject *parent) :
+    QItemDelegate(parent)
+{
+}
+
+QWidget* ShortcutDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    if (!index.isValid() || !index.parent().isValid() || !index.column())
+        return 0;
+    if (index.column() == 1)
+        return new ShortcutGrabberEdit(parent);
+    else if (index.column() == 2)
+    {
+        QComboBox *comboBox = new QComboBox(parent);
+        comboBox->addItems(QStringList() << tr("Immediately")
+                           << tr("When Release"));
+        return comboBox;
+    }
+    else
+        return 0;
+}
+
+void ShortcutDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+{
+    if (!index.isValid() || !index.parent().isValid() || !index.column())
+        return;
+    if (index.column() == 1)
+    {
+        ShortcutGrabberEdit *shortcutEditor = qobject_cast<ShortcutGrabberEdit*>(editor);
+        shortcutEditor->setShortcut(index.data(Qt::UserRole).value<QKeySequence>());
+    }
+    else if (index.column() == 2)
+    {
+        QComboBox *comboBox = qobject_cast<QComboBox*>(editor);
+        if (index.data(Qt::UserRole).toInt() == ShortcutManager::Single)
+            comboBox->setCurrentText(tr("Immediately"));
+        else if (index.data(Qt::UserRole).toInt() == ShortcutManager::Multiple)
+            comboBox->setCurrentText(tr("When Release"));
+    }
+}
+
+void ShortcutDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+{
+    if (!index.isValid() || !index.parent().isValid() || !index.column())
+        return;
+    if (index.column() == 1)
+    {
+        ShortcutGrabberEdit *shortcutEditor = qobject_cast<ShortcutGrabberEdit*>(editor);
+        model->setData(index, shortcutEditor->shortcut(), Qt::UserRole);
+        model->setData(index, shortcutEditor->text(), Qt::DisplayRole);
+    }
+    else if (index.column() == 2)
+    {
+        QComboBox *comboBox = qobject_cast<QComboBox*>(editor);
+        if (comboBox->currentText() == tr("Immediately"))
+            model->setData(index, ShortcutManager::Single, Qt::UserRole);
+        else if (comboBox->currentText() == tr("When Release"))
+            model->setData(index, ShortcutManager::Multiple, Qt::UserRole);
+        model->setData(index, comboBox->currentText(), Qt::DisplayRole);
+    }
+}
+
+void ShortcutDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    if (!index.isValid() || !index.parent().isValid() || !index.column())
+        return;
+    editor->setGeometry(option.rect);
 }

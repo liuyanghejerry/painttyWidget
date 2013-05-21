@@ -27,6 +27,7 @@ public slots:
     QVariantMap shortcut(const QString& s);
     void resetShortcut(const QString&);
     void resetAllShortcuts();
+    bool saveToConfigure();
     
 private:
     QVariantMap shortcut_conf;
@@ -36,7 +37,6 @@ private:
     // key: QKeySequence,
     // type: ShortcutType
     bool loadFromConfigure();
-    bool saveToConfigure();
 };
 
 #endif // SHORTCUTMANAGER_H

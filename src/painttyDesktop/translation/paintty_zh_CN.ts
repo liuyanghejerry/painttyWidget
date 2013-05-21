@@ -140,27 +140,27 @@
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="24"/>
+        <location filename="../widgets/configuredialog.ui" line="21"/>
         <source>General</source>
         <translation>常规</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="33"/>
+        <location filename="../widgets/configuredialog.ui" line="30"/>
         <source>&amp;Language:</source>
         <translation>语言(&amp;L)：</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="46"/>
+        <location filename="../widgets/configuredialog.ui" line="43"/>
         <source>&amp;Connection:</source>
         <translation>连接(&amp;C)：</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="56"/>
+        <location filename="../widgets/configuredialog.ui" line="53"/>
         <source>Try to use IPv6 to connect to server</source>
         <translation>尝试使用IPv6连接服务器</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="64"/>
+        <location filename="../widgets/configuredialog.ui" line="61"/>
         <location filename="../widgets/configuredialog.ui" line="82"/>
         <source>Shortcut</source>
         <translation>快捷键</translation>
@@ -171,22 +171,31 @@
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="90"/>
-        <source>Note: You still cannot edit them yet.</source>
-        <translation>提示：我们目前还没有加入快捷键的编辑功能（赶进度神马的</translation>
+        <location filename="../widgets/configuredialog.ui" line="87"/>
+        <source>Type</source>
+        <translation>类型</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="98"/>
+        <location filename="../widgets/configuredialog.ui" line="95"/>
+        <source>Double click the shortcut and press your shortcut keys.</source>
+        <translation>双击要修改的快捷键，然后按下您要设置的按键。</translation>
+    </message>
+    <message>
+        <source>Note: You still cannot edit them yet.</source>
+        <translation type="obsolete">提示：我们目前还没有加入快捷键的编辑功能（赶进度神马的</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.ui" line="106"/>
         <source>Experimental Fetures</source>
         <translation>试验特性</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="104"/>
+        <location filename="../widgets/configuredialog.ui" line="112"/>
         <source>Disable IME when painting</source>
         <translation>绘画时关闭输入法</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="114"/>
+        <location filename="../widgets/configuredialog.ui" line="122"/>
         <source>Message Notification</source>
         <translation>消息通知</translation>
     </message>
@@ -195,30 +204,40 @@
         <translation type="obsolete">有新消息时提醒我</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="52"/>
+        <location filename="../widgets/configuredialog.cpp" line="54"/>
         <source>System Default</source>
         <translation>系统默认</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="69"/>
+        <location filename="../widgets/configuredialog.cpp" line="73"/>
         <source>Brushes</source>
-        <translation>画刷相关</translation>
+        <translation>画笔相关</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="133"/>
-        <location filename="../widgets/configuredialog.cpp" line="146"/>
+        <location filename="../widgets/configuredialog.cpp" line="89"/>
+        <source>Immediately</source>
+        <translation>立即触发</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="91"/>
+        <source>When Release</source>
+        <translation>松开后触发</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="183"/>
+        <location filename="../widgets/configuredialog.cpp" line="196"/>
         <source>Restart</source>
         <translation>重新启动</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="134"/>
+        <location filename="../widgets/configuredialog.cpp" line="184"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation>程序必须重新启动才可以应用一些新的设置。
 是否立即重新启动？</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="147"/>
+        <location filename="../widgets/configuredialog.cpp" line="197"/>
         <source>New settings will be applied on next start.</source>
         <translation>新设置将在下次启动程序时生效。</translation>
     </message>
@@ -417,7 +436,7 @@ Do you want to restart right now?</source>
         <location filename="../widgets/mainwindow.cpp" line="226"/>
         <source>Brushes</source>
         <translatorcomment>ブラシ</translatorcomment>
-        <translation>画刷</translation>
+        <translation>画笔</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="262"/>
@@ -439,7 +458,7 @@ Shortcut: %2</source>
         <location filename="../widgets/mainwindow.cpp" line="315"/>
         <source>Brush Settings</source>
         <translatorcomment>ブラシ設定</translatorcomment>
-        <translation>笔刷设置</translation>
+        <translation>画笔设置</translation>
     </message>
     <message>
         <source>&amp;Language</source>
@@ -1077,6 +1096,66 @@ Use this software only when you accept it.</source>
         <translatorcomment>チャエ君はまだテストの段階なんで、プログラムは時々崩れかねないから、貴方樣が不快なバグをお避けになるために、これを意識した上でお使いください。</translatorcomment>
         <translation>我们仍处于早期内部测试阶段。这意味着程序随时都有可能崩溃。
 请只在您意识到这一点之后使用，以免发生不愉快的BUG。</translation>
+    </message>
+</context>
+<context>
+    <name>ShortcutDelegate</name>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="216"/>
+        <location filename="../widgets/configuredialog.cpp" line="237"/>
+        <location filename="../widgets/configuredialog.cpp" line="256"/>
+        <source>Immediately</source>
+        <translation>立即触发</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="217"/>
+        <location filename="../widgets/configuredialog.cpp" line="239"/>
+        <location filename="../widgets/configuredialog.cpp" line="258"/>
+        <source>When Release</source>
+        <translation>松开后触发</translation>
+    </message>
+</context>
+<context>
+    <name>ShortcutManager</name>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="14"/>
+        <source>Pencil</source>
+        <translation>铅笔</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="20"/>
+        <source>Brush</source>
+        <translation>画笔</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="26"/>
+        <source>Sketch</source>
+        <translation>素描笔</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="32"/>
+        <source>Eraser</source>
+        <translation>橡皮</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="38"/>
+        <source>Increase brush width</source>
+        <translation>增大画笔大小</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="44"/>
+        <source>Decrease brush width</source>
+        <translation>减小画笔大小</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="50"/>
+        <source>Increase brush hardness</source>
+        <translation>增大画笔硬度</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="56"/>
+        <source>Decrease brush hardness</source>
+        <translation>减小画笔硬度</translation>
     </message>
 </context>
 </TS>

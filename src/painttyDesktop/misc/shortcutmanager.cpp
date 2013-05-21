@@ -11,41 +11,49 @@ ShortcutManager::ShortcutManager(QObject *parent) :
     map.insert("name", "pencil");
     map.insert("key", QKeySequence("Z"));
     map.insert("type", ShortcutType::Single);
+    map.insert("description", tr("Pencil"));
     default_conf.insert("pencil", map);
 
     map.insert("name", "brush");
     map.insert("key", QKeySequence("P"));
     map.insert("type", ShortcutType::Single);
+    map.insert("description", tr("Brush"));
     default_conf.insert("brush", map);
 
     map.insert("name", "sketch");
     map.insert("key", QKeySequence("S"));
     map.insert("type", ShortcutType::Single);
+    map.insert("description", tr("Sketch"));
     default_conf.insert("sketch", map);
 
     map.insert("name", "eraser");
     map.insert("key", QKeySequence("E"));
     map.insert("type", ShortcutType::Single);
+    map.insert("description", tr("Eraser"));
     default_conf.insert("eraser", map);
 
     map.insert("name", "addwidth");
     map.insert("key", QKeySequence("W"));
     map.insert("type", ShortcutType::Single);
+    map.insert("description", tr("Increase brush width"));
     default_conf.insert("addwidth", map);
 
     map.insert("name", "subwidth");
     map.insert("key", QKeySequence("Q"));
     map.insert("type", ShortcutType::Single);
+    map.insert("description", tr("Decrease brush width"));
     default_conf.insert("subwidth", map);
 
     map.insert("name", "addhardness");
     map.insert("key", QKeySequence("F"));
     map.insert("type", ShortcutType::Single);
+    map.insert("description", tr("Increase brush hardness"));
     default_conf.insert("addhardness", map);
 
     map.insert("name", "subhardness");
     map.insert("key", QKeySequence("D"));
     map.insert("type", ShortcutType::Single);
+    map.insert("description", tr("Decrease brush hardness"));
     default_conf.insert("subhardness", map);
 
     if( !loadFromConfigure() ){
@@ -90,7 +98,7 @@ bool ShortcutManager::setShortcut(const QString& s,
                  const QKeySequence& k,
                  ShortcutType t)
 {
-    QVariantMap map;
+    QVariantMap map = shortcut_conf.value(s).toMap();
     map.insert("name", s);
     map.insert("key", k);
     map.insert("type", t);
