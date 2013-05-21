@@ -2,10 +2,10 @@
 #define CANVASCONTAINER_H
 
 #include <QGraphicsView>
-#include "../misc/tabletsupport.h"
 
 class QGraphicsScene;
 class QGraphicsProxyWidget;
+class TabletSupport;
 
 class CanvasContainer : public QGraphicsView
 {
@@ -37,7 +37,7 @@ private:
     bool smoothScaleFlag;
     qreal calculateFactor(qreal current, bool zoomIn);
     void setScaleFactorInternal(qreal factor, const QPoint scaleCenter = QPoint());
-    TabletSupport tbl_spt;
+    TabletSupport* tbl_spt;
 
 protected:
     void wheelEvent(QWheelEvent *event);

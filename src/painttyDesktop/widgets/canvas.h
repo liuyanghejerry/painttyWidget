@@ -63,12 +63,14 @@ protected:
     void remoteDrawPoint(const QPoint &point,
                          const QVariantMap &brushInfo,
                          const QString &layer,
-                         const QString clientid);
+                         const QString clientid,
+                         const qreal pressure=1.0);
     void remoteDrawLine(const QPoint &start,
                         const QPoint &end,
                         const QVariantMap &brushInfo,
                         const QString &layer,
-                        const QString clientid);
+                        const QString clientid,
+                        const qreal pressure=1.0);
 
 private:
 

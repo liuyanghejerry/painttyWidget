@@ -255,6 +255,8 @@ void Canvas::drawLineTo(const QPoint &endPoint, qreal pressure)
     map.insert("brush", QVariant(brushInfo()));
     map.insert("start", QVariant(start_j));
     map.insert("end", QVariant(end_j));
+    // guarantee that pressure is double
+    map.insert("pressure", QVariant(double(pressure)));
     map.insert("layer", QVariant(currentLayer()));
     map.insert("clientid",
                Singleton<CommandSocket>::instance().clientId());
@@ -296,6 +298,8 @@ void Canvas::drawPoint(const QPoint &point, qreal pressure)
 
     QVariantMap map;
     map.insert("brush", QVariant(brushInfo()));
+    // guarantee that pressure is double
+    map.insert("pressure", QVariant(double(pressure)));
     map.insert("layer", QVariant(currentLayer()));
     map.insert("point", QVariant(point_j));
     map.insert("clientid",
@@ -330,9 +334,11 @@ void Canvas::updateCursor()
     \sa Canvas::remoteDrawLine()
 */
 
-void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
+void Canvas::remoteDrawPoint(const QPoint &point,
+                             const QVariantMap &brushInfo,
                              const QString &layer,
-                             const QString clientid)
+                             const QString clientid,
+                             const qreal pressure)
 {
     if(!layers.exists(layer)) return;
     LayerPointer l = layers.layerFrom(layer);
@@ -353,7 +359,7 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
             newOne->setWidth(width);
             newOne->setHardness(hardness);
             newOne->setColor(color);
-            newOne->start(point);
+            newOne->start(point, pressure);
             remoteBrush[clientid] = newOne;
             t.clear();
         }else{
@@ -362,7 +368,7 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
             original->setWidth(width);
             original->setHardness(hardness);
             original->setColor(color);
-            original->start(point);
+            original->start(point, pressure);
         }
     }else{
         BrushPointer newOne = brushFactory(brushName);
@@ -370,7 +376,7 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
         newOne->setWidth(width);
         newOne->setHardness(hardness);
         newOne->setColor(color);
-        newOne->start(point);
+        newOne->start(point, pressure);
         remoteBrush[clientid] = newOne;
     }
 
@@ -391,7 +397,8 @@ void Canvas::remoteDrawPoint(const QPoint &point, const QVariantMap &brushInfo,
 void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
                             const QVariantMap &brushInfo,
                             const QString &layer,
-                            const QString clientid)
+                            const QString clientid,
+                            const qreal pressure)
 {
     if(!layers.exists(layer)){
         return;
@@ -414,7 +421,7 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
             newOne->setWidth(width);
             newOne->setHardness(hardness);
             newOne->setColor(color);
-            newOne->lineTo(end);
+            newOne->lineTo(end, pressure);
             remoteBrush[clientid] = newOne;
             t.clear();
         }else{
@@ -423,7 +430,7 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
             original->setWidth(width);
             original->setHardness(hardness);
             original->setColor(color);
-            original->lineTo(end);
+            original->lineTo(end, pressure);
         }
     }else{
         BrushPointer newOne = brushFactory(brushName);
@@ -431,7 +438,7 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
         newOne->setWidth(width);
         newOne->setHardness(hardness);
         newOne->setColor(color);
-        newOne->lineTo(end);
+        newOne->lineTo(end, pressure);
         remoteBrush[clientid] = newOne;
     }
 
@@ -468,10 +475,12 @@ void Canvas::onNewData(const QByteArray & array)
         point.setY(point_j["y"].toInt());
         layerName = map["layer"].toString();
         QVariantMap brushInfo = map["brush"].toMap();
+        qreal pressure = map["pressure"].toDouble();
         QString clientid = map["clientid"].toString();
 
         remoteDrawPoint(point, brushInfo,
-                        layerName, clientid);
+                        layerName, clientid,
+                        pressure);
     }else if(action == "drawline"){
         QPoint start;
         QPoint end;
@@ -486,11 +495,12 @@ void Canvas::onNewData(const QByteArray & array)
         end.setY(end_j["y"].toInt());
         layerName = map["layer"].toString();
         QVariantMap brushInfo = map["brush"].toMap();
+        qreal pressure = map["pressure"].toDouble();
         QString clientid = map["clientid"].toString();
 
         remoteDrawLine(start, end,
                        brushInfo, layerName,
-                       clientid);
+                       clientid, pressure);
 
     }
 }
@@ -642,23 +652,21 @@ void Canvas::layerSelected(const QString &name)
 void Canvas::tabletEvent(QTabletEvent *ev)
 {
     //TODO: fully support tablet
-    qDebug()<<"tablet Event in Canvas";
     qreal pressure = ev->pressure();
+    QPoint pos = ev->pos();
 
     switch(ev->type()){
     case QEvent::TabletPress:
         if(!drawing){
-            lastPoint = ev->pos();
+            lastPoint = pos;
+            drawPoint(pos, pressure);
             drawing = true;
-            drawPoint(lastPoint, pressure);
         }
         break;
     case QEvent::TabletMove:
-        if(drawing && lastPoint != ev->pos()){
-            qDebug()<<"lastPoint: "<<lastPoint
-                   <<"thisPoint: "<<ev->pos();
-            drawLineTo(ev->pos(), pressure);
-            lastPoint = ev->pos();
+        if(drawing && lastPoint != pos){
+            drawLineTo(pos, pressure);
+            lastPoint = pos;
         }
         break;
     case QEvent::TabletRelease:
@@ -699,8 +707,8 @@ void Canvas::mousePressEvent(QMouseEvent *event)
         lastPoint = event->pos();
         if(inPicker){
         }else{
-            drawing = true;
-            drawPoint(lastPoint);
+//            drawing = true;
+//            drawPoint(lastPoint);
         }
     }
 }
@@ -712,8 +720,9 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
             pickColor(event->pos());
         }else{
             if(drawing){
-                drawLineTo(event->pos());
+//                drawLineTo(event->pos());
                 lastPoint = event->pos();
+                qDebug()<<"mouse drawing";
             }
         }
     }

@@ -10,6 +10,7 @@
 #include <QDebug>
 
 #include "../../common/common.h"
+#include "../misc/tabletsupport.h"
 
 using GlobalDef::MAX_SCALE_FACTOR;
 using GlobalDef::MIN_SCALE_FACTOR;
@@ -17,7 +18,7 @@ using GlobalDef::MIN_SCALE_FACTOR;
 CanvasContainer::CanvasContainer(QWidget *parent) :
     QGraphicsView(parent), proxy(0),
     smoothScaleFlag(true),
-    tbl_spt(this)
+    tbl_spt(new TabletSupport(this))
 {
     setCacheMode(QGraphicsView::CacheBackground);
     setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -31,13 +32,14 @@ CanvasContainer::CanvasContainer(QWidget *parent) :
             rc);
     connect(verticalScrollBar(), &QScrollBar::valueChanged,
             rc);
-    if(tbl_spt.hasDevice()){
-        tbl_spt.start();
+    if(tbl_spt->hasDevice()){
+        tbl_spt->start();
     }
 }
 CanvasContainer::~CanvasContainer()
 {
-    tbl_spt.stop();
+    tbl_spt->stop();
+    delete tbl_spt;
 }
 
 void CanvasContainer::setCanvas(QWidget *canvas)
@@ -177,7 +179,7 @@ void CanvasContainer::wheelEvent(QWheelEvent *event)
     }
     //QPointF position = proxy->mapFromScene(mapToScene(event->pos()));
     //if (!proxy->rect().contains(position))
-        //return;
+    //return;
     //proxy->setTransformOriginPoint(position);
     setScaleFactorInternal(calculateFactor(proxy->scale(), event->delta() > 0), event->pos());
 }
@@ -193,13 +195,6 @@ void CanvasContainer::mousePressEvent(QMouseEvent *event)
     QGraphicsView::mousePressEvent(event);
 }
 
-void CanvasContainer::tabletEvent(QTabletEvent *event)
-{
-    // BUG
-    qApp->sendEvent(proxy->widget(), event);
-    event->accept();
-}
-
 void CanvasContainer::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() & Qt::RightButton)
@@ -211,6 +206,68 @@ void CanvasContainer::mouseMoveEvent(QMouseEvent *event)
         moveStartPoint = event->pos();
     }
     QGraphicsView::mouseMoveEvent(event);
+}
+
+void CanvasContainer::tabletEvent(QTabletEvent *event)
+{
+    if(!proxy->widget())
+        return;
+    // TODO: simplify
+    QPointF global_pos = event->globalPosF();
+    // FIXME: prevent tablet event out of widget translating to widget
+    QRegion re = this->visibleRegion() - horizontalScrollBar()->visibleRegion()
+            - verticalScrollBar()->visibleRegion();
+
+    if(!re.boundingRect().contains(event->globalPos()-this->pos())){
+        return;
+    }
+    QPointF view_pos = this->mapFromGlobal(global_pos.toPoint());
+    QPointF canvas_pos;
+
+    if(this->currentScaleFactor() < 1.0){
+        canvas_pos = view_pos;
+
+        // caculate offsets
+        QPointF plus;
+        if(horizontalScrollBar()->value()){
+            int v = horizontalScrollBar()->value()
+                    - horizontalScrollBar()->minimum();
+            plus.setX( v );
+        }
+        if(verticalScrollBar()->value()){
+            int v = verticalScrollBar()->value()
+                    - verticalScrollBar()->minimum();
+            plus.setY( v );
+        }
+        canvas_pos += plus;
+        canvas_pos /= this->currentScaleFactor();
+    }else{
+        canvas_pos = proxy->mapFromParent(view_pos);
+        canvas_pos += QPointF(horizontalScrollBar()->value(),
+                              verticalScrollBar()->value())
+                /this->currentScaleFactor();
+    }
+
+    if(!proxy->boundingRect().contains(canvas_pos)){
+        return;
+    }
+
+    QTabletEvent event2(event->type(),
+                        canvas_pos,
+                        event->globalPosF(),
+                        event->device(),
+                        event->pointerType(),
+                        event->pressure(),
+                        event->xTilt(),
+                        event->yTilt(),
+                        event->tangentialPressure(),
+                        event->rotation(),
+                        event->z(),
+                        event->modifiers(),
+                        event->uniqueId()
+                        );
+    qApp->sendEvent(proxy->widget(), &event2);
+    event->accept();
 }
 
 bool CanvasContainer::eventFilter(QObject *object, QEvent *event)

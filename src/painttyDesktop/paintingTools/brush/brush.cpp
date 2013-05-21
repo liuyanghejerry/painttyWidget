@@ -216,13 +216,13 @@ void Brush::drawPoint(const QPointF &st, qreal pressure)
 
 void Brush::drawLine(const QPointF &st, const QPointF &end, qreal &left, qreal pressure)
 {
-    qDebug()<<"pressure: "<<pressure;
+//    qDebug()<<"pressure: "<<pressure;
     QPainter painter;
     if(!painter.begin(surface_->imagePtr())){
         return;
     }
     painter.setRenderHint(QPainter::Antialiasing);
-    qreal spacing = width_*0.1;
+    qreal spacing = width_*pressure*0.1;
 
     qreal deltaX = end.x() - st.x();
     qreal deltaY = end.y() - st.y();
@@ -240,6 +240,7 @@ void Brush::drawLine(const QPointF &st, const QPointF &end, qreal &left, qreal p
     qreal offsetY = 0.0;
 
     qreal totalDistance = left + distance;
+    // TODO
     QPixmap pressure_stencil = stencil.scaledToWidth(stencil.width()*pressure);
 
     while ( totalDistance >= spacing ) {
