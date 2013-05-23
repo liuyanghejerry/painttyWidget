@@ -214,21 +214,21 @@ void CanvasContainer::tabletEvent(QTabletEvent *event)
         return;
     // TODO: simplify
     QPointF global_pos = event->globalPosF();
-    //    QRect hr = horizontalScrollBar()->visibleRegion().boundingRect();
-    //    QRect vr = verticalScrollBar()->visibleRegion().boundingRect();
-    //    qDebug()<<event->globalPos()
-    //           <<horizontalScrollBar()->visibleRegion()
-    //          <<hr;
-    //    if(hr.contains(event->globalPos() - horizontalScrollBar()->pos())){
-    //        return;
-    //    }
-    //    qDebug()<<event->globalPos()
-    //           <<verticalScrollBar()->visibleRegion()
-    //          <<vr;
-    //    if(vr.contains(event->globalPos() - verticalScrollBar()->pos())){
-    //        return;
-    //    }
-    // FIXME: prevent tablet event out of widget translating to widget
+    // exclude the scroll bar
+    int bottom = 0;
+    int right = 0;
+    if(horizontalScrollBar()->value()){ // we have horizontal scrollbar
+        bottom = horizontalScrollBar()->height();
+    }
+    if(verticalScrollBar()->value()){ // we have vertical scrollbar
+        right = verticalScrollBar()->width();
+    }
+    QRect re = this->visibleRegion().boundingRect();
+    re.setRight(re.right() - right);
+    re.setBottom(re.bottom() - bottom);
+    if(!re.contains(event->globalPos() - this->pos())){
+        return;
+    }
 
     QPointF view_pos = this->mapFromGlobal(global_pos.toPoint());
     QPointF canvas_pos;
