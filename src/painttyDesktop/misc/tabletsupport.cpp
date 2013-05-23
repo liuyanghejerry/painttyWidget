@@ -6,9 +6,9 @@
 #include <QDebug>
 
 TabletSupport::TabletSupport(QWidget *window):
-      wintab_module(nullptr),
-      window_(window),
-      logContext(nullptr)
+    wintab_module(nullptr),
+    window_(window),
+    logContext(nullptr)
 {
     if(!loadWintab()) {
         return;
@@ -221,7 +221,12 @@ bool TabletSupport::nativeEventFilter(const QByteArray &eventType,
                 return false;
             }
             QPointF new_point(pkt.pkX, pkt.pkY);
-            QPointF window_point = window_->mapFromGlobal(new_point.toPoint());;
+            QRect r = window_->visibleRegion().boundingRect();
+            if(!r.contains(new_point.toPoint() - window_->pos())){
+                return false;
+            }
+
+            QPointF window_point = window_->mapFromGlobal(new_point.toPoint());
 
             auto preRange_s = normalPressureInfo();
             int preRange = preRange_s.axMax - preRange_s.axMin +1;
