@@ -36,6 +36,10 @@ void initSettings()
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+#ifdef Q_OS_MACX
+    QDir::setCurrent(a.applicationDirPath());
+#endif
+    initSettings();
     initTranslation();
     Updater up;
     return a.exec();
