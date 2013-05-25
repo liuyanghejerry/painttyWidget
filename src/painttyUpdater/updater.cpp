@@ -7,9 +7,9 @@
 #include <QJsonValue>
 #include <QMessageBox>
 #include <QTimer>
-#include "../common/common.h"
-#include "../common/network/socket.h"
-#include "../common/network/localnetworkinterface.h"
+#include "common.h"
+#include "network/socket.h"
+#include "network/localnetworkinterface.h"
 
 
 Updater::Updater() :
