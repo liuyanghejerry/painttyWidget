@@ -17,12 +17,12 @@ mac {
     ICON = iconset/icon.icns
 }
 
+include(../../commonconfigure.pri)
+
 CONFIG += c++11
 
 TARGET = MrPaint
 TEMPLATE = app
-
-include(../../commonconfigure.pri)
 
 SOURCES += main.cpp\
     widgets/mainwindow.cpp \
