@@ -74,9 +74,15 @@ void runUpdater()
 {
     QStringList args;
     args<<"-v"<<GlobalDef::CLIENT_VER;
-    bool m = QProcess::startDetached("updater", args, QDir::currentPath());
+    QProcess *process = new QProcess(qApp);
+    process->setWorkingDirectory(QDir::currentPath());
+    QObject::connect(qApp, &QApplication::aboutToQuit, process, &QProcess::kill);
+    process->start(QDir::current().filePath("updater"), args);
+    if (!process->waitForStarted())
+    {
+//    bool m = QProcess::startDetached("updater", args, QDir::currentPath());
 //    qDebug()<<"currentDir:"<<QDir::currentPath()<<"updater runs: "<<m;
-    if(!m){
+//    if(!m){
         QMessageBox::warning(0, QObject::tr("No Updater?"),
                                        QObject::tr("We cannot find updater.\n"
                                           "You may need to check update yourself."),
