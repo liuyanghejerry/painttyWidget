@@ -13,6 +13,8 @@ TEMPLATE = app
 
 CONFIG += c++11
 
+include(../../commonconfigure.pri)
+
 mac {
     # Prevent qmlplugindump from popping up in the dock when launched.
     # We embed the Info.plist file, so the application doesn't need to

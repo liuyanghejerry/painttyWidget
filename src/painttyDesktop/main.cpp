@@ -70,7 +70,7 @@ void initTranslation()
     QCoreApplication::installTranslator(myappTranslator);
 }
 
-void runUpdater()
+bool runUpdater()
 {
     QStringList args;
     args<<"-v"<<GlobalDef::CLIENT_VER;
@@ -80,14 +80,13 @@ void runUpdater()
     process->start(QDir::current().filePath("updater"), args);
     if (!process->waitForStarted())
     {
-//    bool m = QProcess::startDetached("updater", args, QDir::currentPath());
-//    qDebug()<<"currentDir:"<<QDir::currentPath()<<"updater runs: "<<m;
-//    if(!m){
         QMessageBox::warning(0, QObject::tr("No Updater?"),
                                        QObject::tr("We cannot find updater.\n"
                                           "You may need to check update yourself."),
                                        QMessageBox::Ok);
+        return false;
     }
+    return true;
 }
 
 } // namespace mainOnly
@@ -101,10 +100,11 @@ int main(int argc, char *argv[])
     mainOnly::initStyle();
     mainOnly::initSettings();
     mainOnly::initTranslation();
-    mainOnly::runUpdater();
 
     RoomListDialog *dialog = new RoomListDialog;
     int exitCode = 0;
+    dialog->show();
+    mainOnly::runUpdater();
     while( !exitCode && dialog->exec() ) {
         dialog->hide();
         MainWindow w(dialog->canvasSize());

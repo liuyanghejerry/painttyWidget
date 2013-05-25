@@ -14,6 +14,7 @@ public:
     bool download();
     bool overlap();
     void printUsage();
+    void timeout();
     ~Updater();
     
 private:
@@ -30,6 +31,7 @@ private:
 
     Socket *socket;
     State state_;
+    QTimer *timer_;
 };
 
 #endif // MAINWINDOW_H
