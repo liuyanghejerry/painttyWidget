@@ -22,6 +22,7 @@ CONFIG += c++11
 TARGET = MrPaint
 TEMPLATE = app
 
+include(../../commonconfigure.pri)
 
 SOURCES += main.cpp\
     widgets/mainwindow.cpp \
@@ -124,8 +125,6 @@ FORMS    += widgets/mainwindow.ui \
     widgets/aboutdialog.ui \
     widgets/helpdialog.ui \
     widgets/configuredialog.ui
-
-UI_DIR = $${PWD}/widgets/
 
 TRANSLATIONS += translation/paintty_zh_CN.ts \ #Simplified Chinese
     translation/paintty_zh_TW.ts \ #Traditional Chinese
