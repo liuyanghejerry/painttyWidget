@@ -1,4 +1,4 @@
-#include "tabletsupport.h"
+#include "tabletsupport_win32.h"
 #include <QWidget>
 #include <QTabletEvent>
 #include <QApplication>
@@ -234,6 +234,12 @@ bool TabletSupport::nativeEventFilter(const QByteArray &eventType,
             int tpreRange = tpreRange_s.axMax - tpreRange_s.axMin +1;
 
             auto btn_state = HIWORD(pkt.pkButtons);
+            auto btn_number = LOWORD(pkt.pkButtons);
+            qDebug()<<"btn_state"<<btn_state
+                   <<"btn_number"<<btn_number;
+            if(btn_number){
+                return false;
+            }
             if(btn_state == TBN_DOWN) {
                 QTabletEvent *te = new QTabletEvent(QEvent::TabletPress,
                                                     window_point,

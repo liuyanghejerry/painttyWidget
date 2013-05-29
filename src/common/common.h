@@ -31,9 +31,13 @@ const static int UPDATER_PORT = 7071;
 
 const static QString HOST_ADDR[] = {HOST_ADDR_IPV4,
                                     HOST_ADDR_IPV6};
+
+
+#ifdef PAINTTY_UPDATER
+
 const static QString UPDATER_ADDR[] = {UPDATER_ADDR_IPV4,
                                     UPDATER_ADDR_IPV6};
-									
+
 #if defined(Q_OS_WIN32)
 static const char* DOWNLOAD_URL = "http://mrspaint.oss.aliyuncs.com/%E8%8C%B6%E7%BB%98%E5%90%9B_Alpha_x86.zip";
 #elif defined(Q_OS_UNIX) && !defined(Q_OS_MACX)
@@ -42,8 +46,12 @@ static const char* DOWNLOAD_URL = "";
 static const char* DOWNLOAD_URL = "http://mrspaint.oss.aliyuncs.com/%E8%8C%B6%E7%BB%98%E5%90%9B.app.zip";
 #endif
 
+#endif
+
+#ifdef PAINTTY_DESKTOP
 const qreal MAX_SCALE_FACTOR = 5.0;
 const qreal MIN_SCALE_FACTOR = 0.125;
+#endif
 
 } // namespace GlobalDef
 

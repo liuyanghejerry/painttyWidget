@@ -10,7 +10,7 @@
 #include <QDebug>
 
 #include "../../common/common.h"
-#include "../misc/tabletsupport.h"
+#include "../misc/platformextend.h"
 
 using GlobalDef::MAX_SCALE_FACTOR;
 using GlobalDef::MIN_SCALE_FACTOR;

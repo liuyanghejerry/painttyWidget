@@ -7,9 +7,21 @@
 DEFINES += PAINTTY_DEV
 QT       += core gui network widgets
 
+DEFINES += PAINTTY_DESKTOP
+
 win32 {
     RC_FILE = app.rc
     LIBS += -limm32
+    SOURCES += misc/tabletsupport_win32.cpp
+    HEADERS += misc/pktdef.h \
+                misc/wintab.h \
+                misc/tabletsupport_win32.h \
+                misc/WinTabAPI.h
+}
+
+!win32 {
+    SOURCES += misc/tabletsupport_dummy.cpp
+    HEADERS += misc/tabletsupport_dummy.h
 }
 
 mac {
@@ -68,8 +80,8 @@ SOURCES += main.cpp\
     misc/platformextend.cpp \
     misc/shortcutmanager.cpp \
     widgets/configuredialog.cpp\
-    widgets/shortcutgrabberedit.cpp\
-    misc/tabletsupport.cpp
+    widgets/shortcutgrabberedit.cpp
+
 
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
@@ -117,11 +129,8 @@ HEADERS  += widgets/mainwindow.h \
     misc/call_once.h \
     misc/shortcutmanager.h \
     widgets/configuredialog.h\
-    widgets/shortcutgrabberedit.h\
-    misc/pktdef.h \
-    misc/wintab.h \
-    misc/tabletsupport.h \
-    misc/WinTabAPI.h
+    widgets/shortcutgrabberedit.h
+
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
     widgets/colorspinboxgroup.ui \
