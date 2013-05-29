@@ -6,15 +6,21 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QMessageBox>
-#include "../common/common.h"
-#include "../common/network/socket.h"
-#include "../common/network/localnetworkinterface.h"
+#include <QTimer>
+#include "common.h"
+#include "network/socket.h"
+#include "network/localnetworkinterface.h"
 
 
 Updater::Updater() :
     socket(new Socket(this)),
-    state_(State::READY)
+    state_(State::READY),
+    timer_(new QTimer(this))
 {
+    timer_->setSingleShot(true);
+    connect(timer_, &QTimer::timeout,
+            this, &Updater::timeout);
+    timer_->start(20*1000);
     checkNewestVersion();
 }
 
@@ -156,6 +162,21 @@ bool Updater::overlap()
 {
     // TODO: overlap the old version
     return false;
+}
+
+void Updater::timeout()
+{
+    if(state_ <= 0 ){
+        QMessageBox msgBox;
+        msgBox.setTextFormat(Qt::RichText);
+        msgBox.setWindowTitle(tr("Update Failed!"));
+        msgBox.setIcon(QMessageBox::Critical);
+        msgBox.setText(tr("Cannot connect to server!\n"
+                          "We suggest you check network again"
+                          ", or update manually."));
+        msgBox.exec();
+        qApp->exit(1);
+    }
 }
 
 void Updater::printUsage()

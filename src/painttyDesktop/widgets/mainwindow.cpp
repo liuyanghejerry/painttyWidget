@@ -841,6 +841,11 @@ void MainWindow::clearAllLayer()
         QVariantMap map;
         QVariant r_key = getRoomKey();
         if(r_key.isNull()){
+            QMessageBox::warning(this,
+                                 tr("Sorry"),
+                                 tr("Only room owner is authorized "
+                                    "to clear the canvas.\n"
+                                    "It seems you're not room manager."));
             return;
         }
         map.insert("request", "clearall");

@@ -25,6 +25,14 @@ QPalette& rePalette(QPalette &p)
     p.setColor(QPalette::BrightText, QColor::fromRgb(168, 216, 185));
     p.setColor(QPalette::Highlight, QColor::fromRgb(168, 216, 185));
     p.setColor(QPalette::HighlightedText, QColor::fromRgb(54, 86, 60));
+
+    // TODO: new palette, Cthulhu Rises
+    //    p.setColor(QPalette::Text, QColor::fromRgb(85, 51, 51));
+    //    p.setColor(QPalette::Button, QColor::fromRgb(170, 187, 170));
+    //    p.setColor(QPalette::ButtonText, QColor::fromRgb(85, 51, 51));
+    //    p.setColor(QPalette::BrightText, QColor::fromRgb(153, 136, 102));
+    //    p.setColor(QPalette::Highlight, QColor::fromRgb(153, 170, 170));
+    //    p.setColor(QPalette::HighlightedText, QColor::fromRgb(85, 51, 51));
     return p;
 }
 
@@ -70,20 +78,23 @@ void initTranslation()
     QCoreApplication::installTranslator(myappTranslator);
 }
 
-void runUpdater()
+bool runUpdater()
 {
-#if !defined(Q_OS_MACX)
     QStringList args;
     args<<"-v"<<GlobalDef::CLIENT_VER;
-    bool m = QProcess::startDetached("updater", args, QDir::currentPath());
-//    qDebug()<<"currentDir:"<<QDir::currentPath()<<"updater runs: "<<m;
-    if(!m){
+    QProcess *process = new QProcess(qApp);
+    process->setWorkingDirectory(QDir::currentPath());
+    QObject::connect(qApp, &QApplication::aboutToQuit, process, &QProcess::kill);
+    process->start(QDir::current().filePath("updater"), args);
+    if (!process->waitForStarted())
+    {
         QMessageBox::warning(0, QObject::tr("No Updater?"),
-                                       QObject::tr("We cannot find updater.\n"
-                                          "You may need to check update yourself."),
-                                       QMessageBox::Ok);
+                             QObject::tr("We cannot find updater.\n"
+                                         "You may need to check update yourself."),
+                             QMessageBox::Ok);
+        return false;
     }
-#endif
+    return true;
 }
 
 } // namespace mainOnly
@@ -97,10 +108,11 @@ int main(int argc, char *argv[])
     mainOnly::initStyle();
     mainOnly::initSettings();
     mainOnly::initTranslation();
-    mainOnly::runUpdater();
 
     RoomListDialog *dialog = new RoomListDialog;
     int exitCode = 0;
+    dialog->show();
+    mainOnly::runUpdater();
     while( !exitCode && dialog->exec() ) {
         dialog->hide();
         MainWindow w(dialog->canvasSize());

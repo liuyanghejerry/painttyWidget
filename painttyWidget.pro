@@ -8,8 +8,5 @@ CONFIG += ordered
 
 TEMPLATE = subdirs
 
-SUBDIRS = src/painttyDesktop
-
-!mac {
-    SUBDIRS += src/painttyUpdater
-}
+SUBDIRS = src/painttyDesktop \
+          src/painttyUpdater
