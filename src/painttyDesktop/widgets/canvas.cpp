@@ -707,8 +707,8 @@ void Canvas::mousePressEvent(QMouseEvent *event)
         lastPoint = event->pos();
         if(inPicker){
         }else{
-//            drawing = true;
-//            drawPoint(lastPoint);
+            drawing = true;
+            drawPoint(lastPoint);
         }
     }
 }
@@ -720,7 +720,7 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
             pickColor(event->pos());
         }else{
             if(drawing){
-//                drawLineTo(event->pos());
+                drawLineTo(event->pos());
                 lastPoint = event->pos();
                 qDebug()<<"mouse drawing";
             }

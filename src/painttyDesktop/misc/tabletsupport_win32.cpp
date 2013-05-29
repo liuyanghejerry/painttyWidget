@@ -235,65 +235,65 @@ bool TabletSupport::nativeEventFilter(const QByteArray &eventType,
 
             auto btn_state = HIWORD(pkt.pkButtons);
             auto btn_number = LOWORD(pkt.pkButtons);
-            qDebug()<<"btn_state"<<btn_state
-                   <<"btn_number"<<btn_number;
+//            qDebug()<<"btn_state"<<btn_state
+//                   <<"btn_number"<<btn_number;
             if(btn_number){
                 return false;
             }
             if(btn_state == TBN_DOWN) {
-                QTabletEvent *te = new QTabletEvent(QEvent::TabletPress,
-                                                    window_point,
-                                                    new_point,
-                                                    QTabletEvent::Stylus,
-                                                    QTabletEvent::Pen,
-                                                    pkt.pkNormalPressure/qreal(preRange),
-                                                    0,// TODO: xTilt
-                                                    0,// TODO: yTilt
-                                                    // tangentialPressure
-                                                    pkt.pkTangentPressure/qreal(tpreRange),
-                                                    0.0,// TODO: rotation
-                                                    0,// z
-                                                    Qt::NoModifier, // TODO: get modfier
-                                                    0// TODO: uniqueID
-                                                    );
-                qApp->postEvent(window_, te);
+                QTabletEvent te(QEvent::TabletPress,
+                                window_point,
+                                new_point,
+                                QTabletEvent::Stylus,
+                                QTabletEvent::Pen,
+                                pkt.pkNormalPressure/qreal(preRange),
+                                0,// TODO: xTilt
+                                0,// TODO: yTilt
+                                // tangentialPressure
+                                pkt.pkTangentPressure/qreal(tpreRange),
+                                0.0,// TODO: rotation
+                                0,// z
+                                Qt::NoModifier, // TODO: get modfier
+                                0// TODO: uniqueID
+                                );
+                qApp->sendEvent(window_, &te);
                 qDebug()<<"TabletPress";
             }else if(btn_state == TBN_UP){
-                QTabletEvent *te = new QTabletEvent(QEvent::TabletRelease,
-                                                    window_point,
-                                                    new_point,
-                                                    QTabletEvent::Stylus,
-                                                    QTabletEvent::Pen,
-                                                    pkt.pkNormalPressure/qreal(preRange),
-                                                    0,// TODO: xTilt
-                                                    0,// TODO: yTilt
-                                                    // tangentialPressure
-                                                    pkt.pkTangentPressure/qreal(tpreRange),
-                                                    0.0,// TODO: rotation
-                                                    0,// z
-                                                    Qt::NoModifier, // TODO: get modfier
-                                                    0// TODO: uniqueID
-                                                    );
-                qApp->postEvent(window_, te);
+                QTabletEvent te(QEvent::TabletRelease,
+                                window_point,
+                                new_point,
+                                QTabletEvent::Stylus,
+                                QTabletEvent::Pen,
+                                pkt.pkNormalPressure/qreal(preRange),
+                                0,// TODO: xTilt
+                                0,// TODO: yTilt
+                                // tangentialPressure
+                                pkt.pkTangentPressure/qreal(tpreRange),
+                                0.0,// TODO: rotation
+                                0,// z
+                                Qt::NoModifier, // TODO: get modfier
+                                0// TODO: uniqueID
+                                );
+                qApp->sendEvent(window_, &te);
                 qDebug()<<"TabletRelease";
             }else{
                 if( !new_point.isNull() ){
-                    QTabletEvent *te = new QTabletEvent(QEvent::TabletMove,
-                                                        window_point,
-                                                        new_point,
-                                                        QTabletEvent::Stylus,
-                                                        QTabletEvent::Pen,
-                                                        pkt.pkNormalPressure/qreal(preRange),
-                                                        0,// TODO: xTilt
-                                                        0,// TODO: yTilt
-                                                        // tangentialPressure
-                                                        pkt.pkTangentPressure/qreal(tpreRange),
-                                                        0.0,// TODO: rotation
-                                                        pkt.pkZ,// z
-                                                        Qt::NoModifier, // TODO: get modfier
-                                                        0// TODO: uniqueID
-                                                        );
-                    qApp->postEvent(window_, te);
+                    QTabletEvent te(QEvent::TabletMove,
+                                    window_point,
+                                    new_point,
+                                    QTabletEvent::Stylus,
+                                    QTabletEvent::Pen,
+                                    pkt.pkNormalPressure/qreal(preRange),
+                                    0,// TODO: xTilt
+                                    0,// TODO: yTilt
+                                    // tangentialPressure
+                                    pkt.pkTangentPressure/qreal(tpreRange),
+                                    0.0,// TODO: rotation
+                                    pkt.pkZ,// z
+                                    Qt::NoModifier, // TODO: get modfier
+                                    0// TODO: uniqueID
+                                    );
+                    qApp->sendEvent(window_, &te);
                     qDebug()<<"TabletMove";
                 }
             }
