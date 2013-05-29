@@ -44,6 +44,7 @@ void ConfigureDialog::readSettings()
     tryIpv6 = settings.value("global/ipv6", false).toBool();
     msg_notify = settings.value("chat/msg_notify", false).toBool();
     auto_disable_ime = settings.value("canvas/auto_disable_ime", false).toBool();
+    enable_tablet = settings.value("canvas/enable_tablet", false).toBool();
 }
 
 void ConfigureDialog::initLanguageList()
@@ -104,6 +105,7 @@ void ConfigureDialog::initUi()
     ui->ipv6CheckBox->setChecked(tryIpv6);
     ui->msg_notify_checkbox->setChecked(msg_notify);
     ui->auto_disable_ime_checkbox->setChecked(auto_disable_ime);
+    ui->enable_tablet->setChecked(enable_tablet);
 }
 
 void ConfigureDialog::acceptConfigure()
@@ -151,12 +153,12 @@ void ConfigureDialog::acceptConfigure()
             ShortcutManager::ShortcutType newType =
                     ShortcutManager::ShortcutType(shortcutItem->data(2, Qt::UserRole).toInt());
             if (oldSequence != newSequence || oldType != newType) //we compare old sequence with new one
-                                                                    //to see if we need restart and set new value.
+                //to see if we need restart and set new value.
             {
                 needRestart = true;
                 manager.setShortcut(shortcutItem->data(0, Qt::UserRole).toString(),
-                                            newSequence,
-                                            newType);
+                                    newSequence,
+                                    newType);
             }
         }
     }
@@ -176,6 +178,16 @@ void ConfigureDialog::acceptConfigure()
                           ui->auto_disable_ime_checkbox->isChecked());
         needRestart = true;
     }
+
+    //save tablet settings
+    if (ui->enable_tablet->isChecked() != enable_tablet)
+    {
+        settings.setValue("canvas/enable_tablet",
+                          ui->enable_tablet->isChecked());
+        needRestart = true;
+    }
+
+    settings.sync();
 
     //see if we need to restart
     if (needRestart)

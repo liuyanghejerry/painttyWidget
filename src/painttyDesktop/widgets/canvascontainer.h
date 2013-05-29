@@ -23,6 +23,8 @@ public:
 signals:
     void scaled(qreal factor);
     void rectChanged(const QRect&);
+    // caveat, work around for wacom tablet
+    void tabletDetected();
 
 public slots:
     void setScaleFactor(qreal factor);
@@ -37,7 +39,9 @@ private:
     bool smoothScaleFlag;
     qreal calculateFactor(qreal current, bool zoomIn);
     void setScaleFactorInternal(qreal factor, const QPoint scaleCenter = QPoint());
+    // caveat, work around for wacom tablet
     TabletSupport* tbl_spt;
+    bool enable_tablet;
 
 protected:
     void wheelEvent(QWheelEvent *event);

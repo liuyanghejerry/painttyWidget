@@ -130,6 +130,8 @@ void MainWindow::init()
             ui->centralWidget,
             static_cast<void (CanvasContainer::*)(const QPointF&)>
             (&CanvasContainer::centerOn));
+    connect(ui->centralWidget, &CanvasContainer::tabletDetected,
+            ui->canvas, &Canvas::foundTablet);
 
     layerWidgetInit();
     colorGridInit();

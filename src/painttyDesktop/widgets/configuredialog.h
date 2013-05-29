@@ -27,6 +27,7 @@ private:
     bool tryIpv6;
     bool msg_notify;
     bool auto_disable_ime;
+    bool enable_tablet;
 
     void readSettings();
     void initLanguageList();

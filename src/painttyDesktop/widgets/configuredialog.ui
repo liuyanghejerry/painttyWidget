@@ -16,6 +16,9 @@
   <layout class="QVBoxLayout">
    <item>
     <widget class="QTabWidget" name="configureTab">
+     <property name="currentIndex">
+      <number>2</number>
+     </property>
      <widget class="QWidget" name="generalTab">
       <attribute name="title">
        <string>General</string>
@@ -109,20 +112,21 @@
        <item>
         <widget class="QCheckBox" name="auto_disable_ime_checkbox">
          <property name="text">
-          <string>Disable IME when painting</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
+          <string>Disable IME when painting (Windows exclusive)</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QCheckBox" name="msg_notify_checkbox">
          <property name="text">
-          <string>Message Notification</string>
+          <string>Message Notification (Windows exclusive)</string>
          </property>
-         <property name="checked">
-          <bool>true</bool>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="enable_tablet">
+         <property name="text">
+          <string>Enable Wacom Tablet (Windows exclusive)</string>
          </property>
         </widget>
        </item>

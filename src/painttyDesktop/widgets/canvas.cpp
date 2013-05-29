@@ -59,6 +59,7 @@ Canvas::Canvas(QWidget *parent) :
     setAttribute(Qt::WA_StaticContents);
     inPicker = false;
     drawing = false;
+    disableMouse_ = false;
     opacity = 1.0;
     brush_ = BrushPointer(new Brush);
     updateCursor();
@@ -475,7 +476,10 @@ void Canvas::onNewData(const QByteArray & array)
         point.setY(point_j["y"].toInt());
         layerName = map["layer"].toString();
         QVariantMap brushInfo = map["brush"].toMap();
-        qreal pressure = map["pressure"].toDouble();
+        qreal pressure = 1.0;
+        if(map.contains("pressure")){
+            pressure = map["pressure"].toDouble();
+        }
         QString clientid = map["clientid"].toString();
 
         remoteDrawPoint(point, brushInfo,
@@ -495,7 +499,10 @@ void Canvas::onNewData(const QByteArray & array)
         end.setY(end_j["y"].toInt());
         layerName = map["layer"].toString();
         QVariantMap brushInfo = map["brush"].toMap();
-        qreal pressure = map["pressure"].toDouble();
+        qreal pressure = 1.0;
+        if(map.contains("pressure")){
+            pressure = map["pressure"].toDouble();
+        }
         QString clientid = map["clientid"].toString();
 
         remoteDrawLine(start, end,
@@ -703,6 +710,9 @@ void Canvas::focusOutEvent(QFocusEvent *)
 
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
+    if(disableMouse_){
+        return;
+    }
     if (event->button() == Qt::LeftButton) {
         lastPoint = event->pos();
         if(inPicker){
@@ -715,6 +725,9 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 
 void Canvas::mouseMoveEvent(QMouseEvent *event)
 {
+    if(disableMouse_){
+        return;
+    }
     if ((event->buttons() & Qt::LeftButton)){
         if(inPicker){
             pickColor(event->pos());
@@ -730,6 +743,9 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
 
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
+    if(disableMouse_){
+        return;
+    }
     if (event->button() == Qt::LeftButton) {
         if(inPicker){
             pickColor(event->pos());
@@ -812,4 +828,9 @@ QSize Canvas::sizeHint() const
 QSize Canvas::minimumSizeHint() const
 {
     return canvasSize;
+}
+
+void Canvas::foundTablet()
+{
+    disableMouse_ = true;
 }

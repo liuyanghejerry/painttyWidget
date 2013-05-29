@@ -6,6 +6,7 @@
 #include <QSlider>
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QSettings>
 #include <qmath.h>
 #include <QDebug>
 
@@ -32,13 +33,21 @@ CanvasContainer::CanvasContainer(QWidget *parent) :
             rc);
     connect(verticalScrollBar(), &QScrollBar::valueChanged,
             rc);
-    if(tbl_spt->hasDevice()){
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    enable_tablet = settings.value("canvas/enable_tablet", false)
+            .toBool();
+
+    if(enable_tablet && tbl_spt->hasDevice()){
+        emit tabletDetected();
         tbl_spt->start();
     }
 }
 CanvasContainer::~CanvasContainer()
 {
-    tbl_spt->stop();
+    if(enable_tablet)
+        tbl_spt->stop();
     delete tbl_spt;
 }
 
@@ -210,7 +219,7 @@ void CanvasContainer::mouseMoveEvent(QMouseEvent *event)
 
 void CanvasContainer::tabletEvent(QTabletEvent *event)
 {
-    if(!proxy->widget())
+    if(!proxy->widget() || !enable_tablet)
         return;
     // TODO: simplify
     QPointF global_pos = event->globalPosF();

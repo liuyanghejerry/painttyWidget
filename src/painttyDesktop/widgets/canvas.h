@@ -44,6 +44,7 @@ public slots:
     void layerSelected(const QString &name);
     void changeBrush(const QString &name);
     void onColorPicker(bool in);
+    void foundTablet();
 
 signals:
     void sendData(const QByteArray &);
@@ -86,6 +87,7 @@ private:
 
     bool inPicker;
     bool drawing;
+    bool disableMouse_;
     QSize canvasSize;
     LayerManager layers;
     QPixmap image;
