@@ -105,12 +105,13 @@ void Brush::makeStencil()
     QColor color(mainColor);
     for(int i=0;i<100;++i){
         qreal value = i/100.0;
-        color.setAlphaF(1-easing.valueForProgress(value));
+        color.setAlphaF((1-easing.valueForProgress(value))*0.5);
         gradient.setColorAt(value, color);
     }
     gradient.setColorAt(1, Qt::transparent);
     gradient.setCenterRadius(width_/2);
-    gradient.setFocalRadius(width_/2*hardness_/100.0 -1);
+    int r_h = hardness_*0.7; // make it soft to fake an Anti-aliasing effect
+    gradient.setFocalRadius(width_/2*r_h/100.0 -1);
     QBrush brush(gradient);
     QPen pen(brush, width_);
     painter.setPen(pen);
