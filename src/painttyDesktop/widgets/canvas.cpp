@@ -78,7 +78,7 @@ Canvas::Canvas(QWidget *parent) :
     Singleton<BrushManager>::instance().addBrush(p2);
     Singleton<BrushManager>::instance().addBrush(p3);
     Singleton<BrushManager>::instance().addBrush(p4);
-    setJitterCorrectionLevel(10);
+    setJitterCorrectionLevel(5);
 }
 
 /*!
@@ -138,13 +138,13 @@ void Canvas::setJitterCorrectionLevel(int value)
     jitterCorrectionLevel_ = qBound(0, value, 10);
     jitterCorrectionLevel_internal_ =
             qBound(0.0,
-                   jitterCorrectionLevel_ / 10.0 * 0.99 + 0.7,
-                   0.95);
+                   jitterCorrectionLevel_ / 10.0 * 0.99 + 0.85,
+                   0.99);
 }
 
 void Canvas::tryJitterCorrection()
 {
-    if(stackPoints.length() <3)
+    if(stackPoints.length() < qBound(3, jitterCorrectionLevel_, 10) )
         return;
 
     int amount = stackPoints.length();
@@ -184,7 +184,7 @@ void Canvas::tryJitterCorrection()
         }
     }
     // you can see the correction rate.
-    qDebug()<<"correction rate: "<<qreal(redudent)/amount *100<<"%";
+    qDebug()<<"correction rate: "<<qreal(amount-redudent)/amount *100<<"%";
 }
 
 /*!
