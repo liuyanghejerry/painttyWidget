@@ -7,6 +7,7 @@
 #include <QTabletEvent>
 #include <QSettings>
 #include <QApplication>
+#include <QtCore/qmath.h>
 
 #include "../../common/common.h"
 #include "../../common/network/commandsocket.h"
@@ -54,7 +55,9 @@ Canvas::Canvas(QWidget *parent) :
     image(canvasSize),
     layerNameCounter(0),
     historySize_(0),
-    shareColor_(true)
+    shareColor_(true),
+    jitterCorrection_(true),
+    jitterCorrectionLevel_(3)
 {
     setAttribute(Qt::WA_StaticContents);
     inPicker = false;
@@ -75,6 +78,7 @@ Canvas::Canvas(QWidget *parent) :
     Singleton<BrushManager>::instance().addBrush(p2);
     Singleton<BrushManager>::instance().addBrush(p3);
     Singleton<BrushManager>::instance().addBrush(p4);
+    setJitterCorrectionLevel(10);
 }
 
 /*!
@@ -112,6 +116,75 @@ QPixmap Canvas::allCanvas()
 void Canvas::setHistorySize(quint64 s)
 {
     historySize_ = s;
+}
+
+int Canvas::jitterCorrectionLevel() const
+{
+    return jitterCorrectionLevel_;
+}
+
+bool Canvas::isJitterCorrectionEnabled() const
+{
+    return jitterCorrection_;
+}
+
+void Canvas::setJitterCorrectionEnabled(bool correct)
+{
+    jitterCorrection_ = correct;
+}
+
+void Canvas::setJitterCorrectionLevel(int value)
+{
+    jitterCorrectionLevel_ = qBound(0, value, 10);
+    jitterCorrectionLevel_internal_ =
+            qBound(0.0,
+                   jitterCorrectionLevel_ / 10.0 * 0.99 + 0.7,
+                   0.95);
+}
+
+void Canvas::tryJitterCorrection()
+{
+    if(stackPoints.length() <3)
+        return;
+
+    int amount = stackPoints.length();
+    int redudent = amount;
+
+    auto should_correct = [this, &redudent](const QPoint& p1,
+            const QPoint& p2,
+            const QPoint& p3) -> bool
+    {
+        QLine l1(p1, p2);
+        QLine l2(p2, p3);
+        QLine l3(p3, p1);
+        // l3^2 = l1^2 + l2^2 + 2*l1*l2*cos(a), where cos(a) is our goal
+        qreal len3 = l3.dx()*l3.dx() + l3.dy()*l3.dy();
+        len3 = qSqrt(len3);
+        qreal len2 = l2.dx()*l2.dx() + l2.dy()*l2.dy();
+        len2 = qSqrt(len2);
+        qreal len1 = l1.dx()*l1.dx() + l1.dy()*l1.dy();
+        len1 = qSqrt(len1);
+
+        qreal cosa = (len3*len3 - len2*len2 - len1*len1) / (2*len1*len2);
+
+        if(cosa < jitterCorrectionLevel_internal_ ){
+            redudent--;
+            return true;
+        }else{
+            return false;
+        }
+
+    };
+
+    for(int i=0;i<stackPoints.length()-3;++i){
+        if(should_correct(stackPoints[i],
+                          stackPoints[i+1],
+                          stackPoints[i+2])){
+            stackPoints.removeAt(i+1);
+        }
+    }
+    // you can see the correction rate.
+    qDebug()<<"correction rate: "<<qreal(redudent)/amount *100<<"%";
 }
 
 /*!
@@ -717,6 +790,7 @@ void Canvas::mousePressEvent(QMouseEvent *event)
         if(inPicker){
         }else{
             drawing = true;
+            stackPoints.push_back(lastPoint);
             drawPoint(lastPoint);
         }
     }
@@ -732,8 +806,21 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
             pickColor(event->pos());
         }else{
             if(drawing){
-                drawLineTo(event->pos());
-                lastPoint = event->pos();
+                if(jitterCorrection_){
+                    if(stackPoints.length() < qBound(3, jitterCorrectionLevel_, 10)){
+                        stackPoints.push_back(event->pos());
+                    }else{
+                        tryJitterCorrection();
+                        for(auto &p: stackPoints){
+                            drawLineTo(p);
+                            lastPoint = p;
+                        }
+                        stackPoints.clear();
+                    }
+                }else{
+                    drawLineTo(event->pos());
+                    lastPoint = event->pos();
+                }
             }
         }
     }
@@ -751,6 +838,7 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
         }else{
             if(drawing){
                 drawing = false;
+                stackPoints.clear();
                 updateCursor();
             }
         }

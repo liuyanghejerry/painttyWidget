@@ -20,12 +20,16 @@ public:
     int layerNum(){return layerNameCounter;}
     QPixmap currentCanvas();
     QPixmap allCanvas();
-    void setHistorySize(quint64 s);
+    int jitterCorrectionLevel() const;
+    bool isJitterCorrectionEnabled() const;
 
     virtual QSize sizeHint () const;
     virtual QSize minimumSizeHint () const;
 
 public slots:
+    void setHistorySize(quint64 s);
+    void setJitterCorrectionEnabled(bool correct);
+    void setJitterCorrectionLevel(int value);
     void setShareColor(bool b);
     void setBrushColor(const QColor &newColor);
     void setBrushWidth(int newWidth);
@@ -79,6 +83,7 @@ private:
     void drawPoint(const QPoint &point, qreal pressure=1.0);
     void pickColor(const QPoint &point);
     void updateCursor();
+    void tryJitterCorrection();
 
     BrushPointer brushFactory(const QString &name);
 
@@ -93,10 +98,14 @@ private:
     QPixmap image;
     QPixmap *currentImage;
     QPoint lastPoint;
+    QList<QPoint> stackPoints;
     int layerNameCounter;
     BrushPointer brush_;
     quint64 historySize_;
     bool shareColor_;
+    bool jitterCorrection_;
+    int jitterCorrectionLevel_;
+    qreal jitterCorrectionLevel_internal_;
     QHash<QString, BrushPointer> remoteBrush;
     QHash<QString, BrushPointer> localBrush;
 };
