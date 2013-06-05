@@ -159,13 +159,6 @@
      </item>
     </layout>
    </item>
-   <item>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Note: We're still in alpha test, and only provide 50 rooms.</string>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
  <resources/>
