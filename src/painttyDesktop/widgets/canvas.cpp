@@ -60,7 +60,6 @@ Canvas::Canvas(QWidget *parent) :
     inPicker = false;
     drawing = false;
     disableMouse_ = false;
-    opacity = 1.0;
     brush_ = BrushPointer(new Brush);
     updateCursor();
 
@@ -735,7 +734,6 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
             if(drawing){
                 drawLineTo(event->pos());
                 lastPoint = event->pos();
-                qDebug()<<"mouse drawing";
             }
         }
     }
@@ -765,7 +763,6 @@ void Canvas::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     QRect dirtyRect = event->rect();
     if(dirtyRect.isEmpty())return;
-    //    painter.setOpacity(opacity);
     layers.combineLayers(&image, dirtyRect);
 
     painter.drawPixmap(dirtyRect, image, dirtyRect);
@@ -793,7 +790,6 @@ void Canvas::resizeEvent(QResizeEvent *event)
     QSize newSize = event->size();
     canvasSize = newSize;
     layers.resizeLayers(newSize);
-    //    resizeImage(&image, newSize);
     QPixmap newImage(newSize);
     newImage.fill(Qt::transparent);
     QPainter painter(&newImage);

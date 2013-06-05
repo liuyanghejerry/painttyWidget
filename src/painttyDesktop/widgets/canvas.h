@@ -93,14 +93,12 @@ private:
     QPixmap image;
     QPixmap *currentImage;
     QPoint lastPoint;
-    qreal opacity;
     int layerNameCounter;
     BrushPointer brush_;
     quint64 historySize_;
     bool shareColor_;
     QHash<QString, BrushPointer> remoteBrush;
     QHash<QString, BrushPointer> localBrush;
-//    QSharedPointer<ColorPicker> colorPicker;
 };
 
 #endif // CANVAS_H
