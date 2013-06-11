@@ -38,5 +38,6 @@
         <file>iconset/ui/sketch-2.png</file>
         <file>iconset/ui/sketch-3.png</file>
         <file>iconset/ui/sketch-4.png</file>
+        <file>iconset/ui/picker-cursor-1.png</file>
     </qresource>
 </RCC>

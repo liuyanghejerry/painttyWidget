@@ -286,7 +286,7 @@ void Canvas::onColorPicker(bool in)
     if(in){
         inPicker = true;
         QPixmap icon = QPixmap(":/iconset/ui/picker-cursor.png");
-        setCursor(QCursor(icon, 0, icon.height()));
+        setCursor(QCursor(icon, 11, 20));
     }else{
         inPicker = false;
         updateCursor();
