@@ -99,6 +99,8 @@ Canvas::Canvas(QWidget *parent) :
             backend_, &CanvasBackend::onDataBlock);
     connect(this, &Canvas::newInternalData,
             backend_, &CanvasBackend::onIncomingData);
+    connect(this, &Canvas::paintActionComplete,
+            backend_, &CanvasBackend::commit);
 }
 
 /*!
@@ -802,7 +804,7 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
                 drawing = false;
                 stackPoints.clear();
                 updateCursor();
-                backend_->commit();
+                emit paintActionComplete();
             }
         }
     }
@@ -887,6 +889,8 @@ CanvasBackend::CanvasBackend(QObject *parent)
 {
     QTimer *sendTimer = new QTimer(this);
     sendTimer->setInterval(1000*10);
+    connect(sendTimer, &QTimer::timeout,
+            this, &CanvasBackend::commit);
 }
 
 void CanvasBackend::commit()
