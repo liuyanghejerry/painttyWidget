@@ -219,6 +219,7 @@ void CanvasContainer::mouseMoveEvent(QMouseEvent *event)
 
 void CanvasContainer::tabletEvent(QTabletEvent *event)
 {
+    emit tabletDetected();
     if(!proxy->widget() || !enable_tablet)
         return;
     // TODO: simplify
@@ -280,8 +281,8 @@ void CanvasContainer::tabletEvent(QTabletEvent *event)
                         event->modifiers(),
                         event->uniqueId()
                         );
-    qApp->sendEvent(proxy->widget(), &event2);
     event->accept();
+    qApp->sendEvent(proxy->widget(), &event2);
 }
 
 bool CanvasContainer::eventFilter(QObject *object, QEvent *event)

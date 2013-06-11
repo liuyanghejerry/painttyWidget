@@ -6,9 +6,9 @@
 #include <QDebug>
 
 TabletSupport::TabletSupport(QWidget *window):
-    wintab_module(nullptr),
-    window_(window),
-    logContext(nullptr)
+      wintab_module(nullptr),
+      window_(window),
+      logContext(nullptr)
 {
     if(!loadWintab()) {
         return;
@@ -51,7 +51,6 @@ TabletSupport::TabletSupport(QWidget *window):
     tabapis.context_ = callFunc().ptrWTOpenA(handle,
                                              (LPLOGCONTEXTA)logContext,
                                              true);
-    qDebug()<<deviceString();
 }
 
 TabletSupport::~TabletSupport()
@@ -71,7 +70,7 @@ void TabletSupport::start()
 
 void TabletSupport::stop()
 {
-    if(tabapis.context_){
+if(tabapis.context_){
         callFunc().ptrWTClose(tabapis.context_);
     }
     auto dispacher = QAbstractEventDispatcher::instance(window_->thread());
@@ -227,7 +226,6 @@ bool TabletSupport::nativeEventFilter(const QByteArray &eventType,
             }
 
             QPointF window_point = window_->mapFromGlobal(new_point.toPoint());
-
             auto preRange_s = normalPressureInfo();
             int preRange = preRange_s.axMax - preRange_s.axMin +1;
             auto tpreRange_s = tangentialPressureInfo();
@@ -257,7 +255,7 @@ bool TabletSupport::nativeEventFilter(const QByteArray &eventType,
                                 0// TODO: uniqueID
                                 );
                 qApp->sendEvent(window_, &te);
-                qDebug()<<"TabletPress";
+//                qDebug()<<"TabletPress";
             }else if(btn_state == TBN_UP){
                 QTabletEvent te(QEvent::TabletRelease,
                                 window_point,
@@ -275,7 +273,7 @@ bool TabletSupport::nativeEventFilter(const QByteArray &eventType,
                                 0// TODO: uniqueID
                                 );
                 qApp->sendEvent(window_, &te);
-                qDebug()<<"TabletRelease";
+//                qDebug()<<"TabletRelease";
             }else{
                 if( !new_point.isNull() ){
                     QTabletEvent te(QEvent::TabletMove,
@@ -294,9 +292,10 @@ bool TabletSupport::nativeEventFilter(const QByteArray &eventType,
                                     0// TODO: uniqueID
                                     );
                     qApp->sendEvent(window_, &te);
-                    qDebug()<<"TabletMove";
+//                    qDebug()<<"TabletMove";
                 }
             }
+            return true;
             break;
         }
     }
