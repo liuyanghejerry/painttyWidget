@@ -90,6 +90,7 @@ Canvas::Canvas(QWidget *parent) :
             this, &Canvas::remoteDrawLine);
     connect(backend_, &CanvasBackend::remoteDrawPoint,
             this, &Canvas::remoteDrawPoint);
+    worker_->start();
 }
 
 /*!
@@ -100,6 +101,7 @@ Canvas::Canvas(QWidget *parent) :
 
 Canvas::~Canvas()
 {
+    delete backend_;
 }
 
 QPixmap Canvas::currentCanvas()
@@ -904,7 +906,6 @@ void CanvasBackend::onIncomingData(const QByteArray& data)
 {
     QVariantMap m = fromJson(data).toMap();
     QString action = m["action"].toString().toLower();
-    qDebug()<<m;
 
     auto drawPoint = [this](const QVariantMap& m){
         QPoint point;
