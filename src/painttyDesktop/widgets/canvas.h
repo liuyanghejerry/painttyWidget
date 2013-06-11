@@ -8,6 +8,8 @@
 
 typedef QSharedPointer<AbstractBrush> BrushPointer;
 
+class CanvasBackend;
+
 class Canvas : public QWidget
 {
     Q_OBJECT
@@ -65,6 +67,7 @@ protected:
     void focusInEvent(QFocusEvent * event);
     void focusOutEvent(QFocusEvent * event);
 
+private slots:
     void remoteDrawPoint(const QPoint &point,
                          const QVariantMap &brushInfo,
                          const QString &layer,
@@ -87,9 +90,6 @@ private:
 
     BrushPointer brushFactory(const QString &name);
 
-    QByteArray toJson(const QVariant &m);
-    QVariant fromJson(const QByteArray &d);
-
     bool inPicker;
     bool drawing;
     bool disableMouse_;
@@ -108,6 +108,36 @@ private:
     qreal jitterCorrectionLevel_internal_;
     QHash<QString, BrushPointer> remoteBrush;
     QHash<QString, BrushPointer> localBrush;
+    CanvasBackend* backend_;
+    QThread *worker_;
+};
+
+class CanvasBackend : public QObject
+{
+    Q_OBJECT
+public:
+    CanvasBackend(QObject *parent = nullptr);
+    void commit();
+public slots:
+    void onDataBlock(const QVariantMap& d);
+    void onIncomingData(const QByteArray& d);
+signals:
+    void newDataGroup(const QByteArray& d);
+    void remoteDrawPoint(const QPoint &point,
+                         const QVariantMap &brushInfo,
+                         const QString &layer,
+                         const QString clientid,
+                         const qreal pressure=1.0);
+    void remoteDrawLine(const QPoint &start,
+                        const QPoint &end,
+                        const QVariantMap &brushInfo,
+                        const QString &layer,
+                        const QString clientid,
+                        const qreal pressure=1.0);
+private:
+    QVariantList tempStore;
+    QByteArray toJson(const QVariant &m);
+    QVariant fromJson(const QByteArray &d);
 };
 
 #endif // CANVAS_H

@@ -7,6 +7,7 @@
 #include <QTabletEvent>
 #include <QSettings>
 #include <QApplication>
+#include <QTimer>
 #include <QtCore/qmath.h>
 
 #include "../../common/common.h"
@@ -57,7 +58,9 @@ Canvas::Canvas(QWidget *parent) :
     historySize_(0),
     shareColor_(true),
     jitterCorrection_(true),
-    jitterCorrectionLevel_(3)
+    jitterCorrectionLevel_(3),
+    backend_(new CanvasBackend(0)),
+    worker_(new QThread(this))
 {
     setAttribute(Qt::WA_StaticContents);
     inPicker = false;
@@ -79,6 +82,14 @@ Canvas::Canvas(QWidget *parent) :
     Singleton<BrushManager>::instance().addBrush(p3);
     Singleton<BrushManager>::instance().addBrush(p4);
     setJitterCorrectionLevel(5);
+
+    backend_->moveToThread(worker_);
+    connect(backend_, &CanvasBackend::newDataGroup,
+            this, &Canvas::sendData);
+    connect(backend_, &CanvasBackend::remoteDrawLine,
+            this, &Canvas::remoteDrawLine);
+    connect(backend_, &CanvasBackend::remoteDrawPoint,
+            this, &Canvas::remoteDrawPoint);
 }
 
 /*!
@@ -338,8 +349,7 @@ void Canvas::drawLineTo(const QPoint &endPoint, qreal pressure)
     bigMap.insert("info", map);
     bigMap.insert("action", "drawline");
 
-    QByteArray tmp = toJson(QVariant(bigMap));
-    emit sendData(tmp);
+    backend_->onDataBlock(bigMap);
 }
 
 /*!
@@ -382,8 +392,7 @@ void Canvas::drawPoint(const QPoint &point, qreal pressure)
     bigMap.insert("info", map);
     bigMap.insert("action", "drawpoint");
 
-    QByteArray tmp = toJson(QVariant(bigMap));
-    emit sendData(tmp);
+    backend_->onDataBlock(bigMap);
 }
 
 void Canvas::pickColor(const QPoint &point)
@@ -535,63 +544,7 @@ void Canvas::onNewData(const QByteArray & array)
             emit historyComplete();
         }
     }
-    QVariantMap m = fromJson(array).toMap();
-    QString action = m["action"].toString().toLower();
-
-    if(action == "drawpoint"){
-        QPoint point;
-        QString layerName;
-
-        QVariantMap map = m["info"].toMap();
-        QVariantMap point_j = map["point"].toMap();
-        point.setX(point_j["x"].toInt());
-        point.setY(point_j["y"].toInt());
-        layerName = map["layer"].toString();
-        QVariantMap brushInfo = map["brush"].toMap();
-        qreal pressure = 1.0;
-        if(map.contains("pressure")){
-            pressure = map["pressure"].toDouble();
-        }
-        QString clientid = map["clientid"].toString();
-
-        remoteDrawPoint(point, brushInfo,
-                        layerName, clientid,
-                        pressure);
-    }else if(action == "drawline"){
-        QPoint start;
-        QPoint end;
-        QString layerName;
-
-        QVariantMap map = m["info"].toMap();
-        QVariantMap start_j = map["start"].toMap();
-        start.setX(start_j["x"].toInt());
-        start.setY(start_j["y"].toInt());
-        QVariantMap end_j = map["end"].toMap();
-        end.setX(end_j["x"].toInt());
-        end.setY(end_j["y"].toInt());
-        layerName = map["layer"].toString();
-        QVariantMap brushInfo = map["brush"].toMap();
-        qreal pressure = 1.0;
-        if(map.contains("pressure")){
-            pressure = map["pressure"].toDouble();
-        }
-        QString clientid = map["clientid"].toString();
-
-        remoteDrawLine(start, end,
-                       brushInfo, layerName,
-                       clientid, pressure);
-
-    }
-}
-
-QByteArray Canvas::toJson(const QVariant &m)
-{
-    return QJsonDocument::fromVariant(m).toJson();
-}
-
-QVariant Canvas::fromJson(const QByteArray &d)
-{
-    return QJsonDocument::fromJson(d).toVariant();
+    backend_->onIncomingData(array);
 }
 
 /* Layer */
@@ -840,6 +793,7 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
                 drawing = false;
                 stackPoints.clear();
                 updateCursor();
+                backend_->commit();
             }
         }
     }
@@ -917,4 +871,116 @@ QSize Canvas::minimumSizeHint() const
 void Canvas::foundTablet()
 {
     disableMouse_ = true;
+}
+
+CanvasBackend::CanvasBackend(QObject *parent)
+    :QObject(parent)
+{
+    QTimer *sendTimer = new QTimer(this);
+    sendTimer->setInterval(1000*10);
+}
+
+void CanvasBackend::commit()
+{
+    if(tempStore.length()){
+        QVariantMap doc;
+        doc.insert("action", "block");
+        doc.insert("block", tempStore);
+        auto data = toJson(QVariant(doc));
+        emit newDataGroup(data);
+        tempStore.clear();
+    }
+}
+
+void CanvasBackend::onDataBlock(const QVariantMap& d)
+{
+    tempStore.append(d);
+    if(tempStore.length() >=10 ){
+        commit();
+    }
+}
+
+void CanvasBackend::onIncomingData(const QByteArray& data)
+{
+    QVariantMap m = fromJson(data).toMap();
+    QString action = m["action"].toString().toLower();
+    qDebug()<<m;
+
+    auto drawPoint = [this](const QVariantMap& m){
+        QPoint point;
+        QString layerName;
+
+        QVariantMap map = m["info"].toMap();
+        QVariantMap point_j = map["point"].toMap();
+        point.setX(point_j["x"].toInt());
+        point.setY(point_j["y"].toInt());
+        layerName = map["layer"].toString();
+        QVariantMap brushInfo = map["brush"].toMap();
+        qreal pressure = 1.0;
+        if(map.contains("pressure")){
+            pressure = map["pressure"].toDouble();
+        }
+        QString clientid = map["clientid"].toString();
+
+        emit remoteDrawPoint(point, brushInfo,
+                             layerName, clientid,
+                             pressure);
+    };
+
+    auto drawLine = [this](const QVariantMap& m){
+        QPoint start;
+        QPoint end;
+        QString layerName;
+
+        QVariantMap map = m["info"].toMap();
+        QVariantMap start_j = map["start"].toMap();
+        start.setX(start_j["x"].toInt());
+        start.setY(start_j["y"].toInt());
+        QVariantMap end_j = map["end"].toMap();
+        end.setX(end_j["x"].toInt());
+        end.setY(end_j["y"].toInt());
+        layerName = map["layer"].toString();
+        QVariantMap brushInfo = map["brush"].toMap();
+        qreal pressure = 1.0;
+        if(map.contains("pressure")){
+            pressure = map["pressure"].toDouble();
+        }
+        QString clientid = map["clientid"].toString();
+
+        emit remoteDrawLine(start, end,
+                            brushInfo, layerName,
+                            clientid, pressure);
+    };
+
+    auto dataBlock = [&drawPoint,
+            &drawLine](const QVariantMap& m){
+        QVariantList list = m["block"].toList();
+        for(auto &item: list){
+            QVariantMap singleData = item.toMap();
+            QString action = singleData["action"].toString().toLower();
+            if(action == "drawpoint"){
+                drawPoint(singleData);
+            }else if(action == "drawline"){
+                drawLine(singleData);
+            }
+        }
+    };
+
+    if(action == "drawpoint"){
+        drawPoint(m);
+    }else if(action == "drawline"){
+        drawLine(m);
+    }else if(action == "block"){
+        dataBlock(m);
+    }
+}
+
+QByteArray CanvasBackend::toJson(const QVariant &m)
+{
+    return QJsonDocument::fromVariant(m).toJson();
+}
+
+QVariant CanvasBackend::fromJson(const QByteArray &d)
+{
+    return QJsonDocument::fromJson(d).toVariant();
 }
