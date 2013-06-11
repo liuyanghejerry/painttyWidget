@@ -35,6 +35,7 @@ public slots:
 private slots:
     void onCmdServerConnected();
     void onCmdServerData(const QByteArray &array);
+    void onNewRoomRespnse(const QJsonObject &m);
     void loadNick();
     void saveNick();
     void openConfigure();
@@ -44,6 +45,16 @@ protected:
     void closeEvent(QCloseEvent *e);
     
 private:
+    enum State{
+        Init,
+        Ready,
+        Connecting,
+        Connected,
+        RequestingList,
+        RequestingNewRoom,
+        Error
+    };
+
     Ui::RoomListDialog *ui;
     int dataPort_;
     int msgPort_;
@@ -57,6 +68,7 @@ private:
     QHash<QString, QJsonObject> roomsInfo;
     Router<> managerSocketRouter_;
     QByteArray clientId_;
+    State state_;
     void tableInit();
     void socketInit();
     QByteArray loadClientId();

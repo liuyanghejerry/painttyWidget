@@ -22,6 +22,7 @@
 #include "newroomwindow.h"
 #include "../misc/singleton.h"
 #include "configuredialog.h"
+#include "../misc/errortable.h"
 
 RoomListDialog::RoomListDialog(QWidget *parent) :
     QDialog(parent),
@@ -30,7 +31,8 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
     msgPort_(0),
     historySize_(0),
     socket(nullptr),
-    newRoomWindow(new NewRoomWindow(this))
+    newRoomWindow(new NewRoomWindow(this)),
+    state_(Init)
 {
     ui->setupUi(this);
     connect(ui->pushButton_5, &QPushButton::clicked,
@@ -63,6 +65,7 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
                                .arg("?")
                                .arg("?"));
     tableInit();
+    state_ = Ready;
     socketInit();
     timer = new QTimer(this);
     connect(timer,&QTimer::timeout,
@@ -115,6 +118,7 @@ void RoomListDialog::socketInit()
 
     socket->connectToHost(addr,
                           GlobalDef::HOST_MGR_PORT);
+    state_ = Connecting;
     managerSocketRouter_.regHandler("response",
                                     "roomlist",
                                     std::bind(&RoomListDialog::onManagerResponseRoomlist,
@@ -122,8 +126,8 @@ void RoomListDialog::socketInit()
                                               std::placeholders::_1));
     managerSocketRouter_.regHandler("response",
                                     "newroom",
-                                    std::bind(&NewRoomWindow::onServerResponse,
-                                              newRoomWindow,
+                                    std::bind(&RoomListDialog::onNewRoomRespnse,
+                                              this,
                                               std::placeholders::_1));
 }
 
@@ -162,6 +166,11 @@ void RoomListDialog::requestJoin()
 
 void RoomListDialog::requestRoomList()
 {
+    if(!socket->isConnected()){
+        //TODO
+        state_ = Error;
+    }
+    state_ = RequestingList;
     QJsonObject map;
     map.insert("request", QString("roomlist"));
 
@@ -173,6 +182,10 @@ void RoomListDialog::requestRoomList()
 
 void RoomListDialog::requestNewRoom(const QJsonObject &m)
 {
+    if(socket->isConnected()){
+        //TODO
+        state_ = RequestingNewRoom;
+    }
     QJsonObject map;
     map["request"] = QString("newroom");
     map["info"] = m;
@@ -253,6 +266,7 @@ void RoomListDialog::onManagerResponseRoomlist(const QJsonObject &obj)
     roomsInfo = tmpRoomsInfo;
     ui->progressBar->setValue(100);
     ui->tableWidget->setSortingEnabled(true);
+    state_ = Connected;
 }
 
 void RoomListDialog::onServerClosed()
@@ -262,6 +276,7 @@ void RoomListDialog::onServerClosed()
                           tr("Sorry, server has closed.") );
     ui->tableWidget->clearContents();
     ui->tableWidget->setRowCount(0);
+    state_ = Error;
 }
 
 void RoomListDialog::onCmdServerConnected()
@@ -352,6 +367,52 @@ void RoomListDialog::onCmdServerData(const QByteArray &array)
                        <<Singleton<CommandSocket>::instance().clientId();
             }
             accept();
+        }
+    }
+}
+
+void RoomListDialog::onNewRoomRespnse(const QJsonObject &m)
+{
+    if(m["result"].toBool()){
+        newRoomWindow->complete();
+        QString msg = tr("Succeed!");
+        QMessageBox::information(newRoomWindow, tr("Go get your room!"),
+                                 msg,
+                                 QMessageBox::Ok);
+        if(m.contains("info")){
+            QJsonObject info = m.value("info").toObject();
+            //            int cmdPort = info.value("cmdPort").toInt();
+            //            QString password = info.value("password").toString();
+            QString key = info.value("key").toString();
+
+            QCryptographicHash hash(QCryptographicHash::Md5);
+            hash.addData(newRoomWindow->roomName().toUtf8());
+            QString hashed_name = hash.result().toHex();
+            QSettings settings(GlobalDef::SETTINGS_NAME,
+                               QSettings::defaultFormat(),
+                               qApp);
+            settings.setValue("rooms/"+hashed_name, key);
+            settings.sync();
+        }
+        newRoomWindow->accept();
+    }
+
+    if(!m.contains("errcode")){
+        return;
+    }else{
+        int errcode = m["errcode"].toDouble();
+        QString errmsg = tr("Error: %1, %2\n"
+                            "Do you want to retry?")
+                .arg(errcode).arg(ErrorTable::toString(errcode));
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::critical(newRoomWindow, tr("Error!"),
+                                      errmsg,
+                                      QMessageBox::Retry|
+                                      QMessageBox::Abort);
+        if(reply == QMessageBox::Retry){
+            newRoomWindow->onOk();
+        }else{
+            return;
         }
     }
 }

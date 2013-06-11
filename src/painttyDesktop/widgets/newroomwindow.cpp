@@ -38,50 +38,14 @@ NewRoomWindow::~NewRoomWindow()
     delete ui;
 }
 
-void NewRoomWindow::onServerResponse(const QJsonObject &m)
+QString NewRoomWindow::roomName() const
 {
-    if(m["result"].toBool()){
-        ui->progressBar->setValue(100);
-        QString msg = tr("Succeed!");
-        QMessageBox::information(this, tr("Go get your room!"),
-                                 msg,
-                                 QMessageBox::Ok);
-        if(m.contains("info")){
-            QJsonObject info = m.value("info").toObject();
-            //            int cmdPort = info.value("cmdPort").toInt();
-            //            QString password = info.value("password").toString();
-            QString key = info.value("key").toString();
+    return ui->lineEdit->text();
+}
 
-            QCryptographicHash hash(QCryptographicHash::Md5);
-            hash.addData(ui->lineEdit->text().toUtf8());
-            QString hashed_name = hash.result().toHex();
-            QSettings settings(GlobalDef::SETTINGS_NAME,
-                               QSettings::defaultFormat(),
-                               qApp);
-            settings.setValue("rooms/"+hashed_name, key);
-            settings.sync();
-        }
-        this->accept();
-    }
-
-    if(!m.contains("errcode")){
-        return;
-    }else{
-        int errcode = m["errcode"].toDouble();
-        QString errmsg = tr("Error: %1, %2\n"
-                            "Do you want to retry?")
-                .arg(errcode).arg(ErrorTable::toString(errcode));
-        QMessageBox::StandardButton reply;
-        reply = QMessageBox::critical(this, tr("Error!"),
-                                      errmsg,
-                                      QMessageBox::Retry|
-                                      QMessageBox::Abort);
-        if(reply == QMessageBox::Retry){
-            this->onOk();
-        }else{
-            return;
-        }
-    }
+void NewRoomWindow::complete()
+{
+    ui->progressBar->setValue(100);
 }
 
 void NewRoomWindow::onOk()

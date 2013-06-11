@@ -16,13 +16,14 @@ class NewRoomWindow : public QDialog
 public:
     explicit NewRoomWindow(QWidget *parent = 0);
     ~NewRoomWindow();
+    QString roomName() const;
+    void complete();
 signals:
     void newRoom(const QJsonObject &m);
 public slots:
-    void onServerResponse(const QJsonObject &m);
-private slots:
     void onOk();
     void onCancel();
+private slots:
     void onNameChanged(const QString &name);
     
 private:
