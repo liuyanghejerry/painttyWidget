@@ -639,28 +639,6 @@ void Canvas::layerSelected(const QString &name)
 
 /* Event control */
 
-void Canvas::tabletEvent(QTabletEvent *ev)
-{
-    //TODO: fully support tablet
-    qDebug()<<"tablet Event";
-    qreal pressure = ev->pressure();
-    if(pressure < 0.000001){
-        drawing = false;
-        ev->accept();
-        return;
-    }
-    //    pen->setWidthF(pressure*10);
-    if(!drawing){
-        lastPoint = ev->pos();
-        drawing = true;
-        drawPoint(lastPoint, pressure);
-    }else{
-        drawLineTo(ev->pos(), pressure);
-        lastPoint = ev->pos();
-    }
-    ev->accept();
-}
-
 void Canvas::focusInEvent(QFocusEvent *)
 {
     QSettings settings(GlobalDef::SETTINGS_NAME,

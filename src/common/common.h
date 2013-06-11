@@ -7,7 +7,7 @@
 namespace GlobalDef
 {
 
-const static char CLIENT_VER[] = "0.31";
+const static char CLIENT_VER[] = "0.32";
 const static char CLIENT_TYPE[] = "alpha";
 static const char UPDATER_VERSION[] = "0.11";
 
