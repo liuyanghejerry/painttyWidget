@@ -57,6 +57,8 @@ signals:
     void pickColorComplete();
     void newBrushSettings(const QVariantMap &map);
     void historyComplete();
+    void newPaintAction(const QVariantMap &m);
+    void newInternalData(const QByteArray &);
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);

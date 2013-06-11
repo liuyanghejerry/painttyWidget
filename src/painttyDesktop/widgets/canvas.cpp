@@ -83,6 +83,7 @@ Canvas::Canvas(QWidget *parent) :
     Singleton<BrushManager>::instance().addBrush(p4);
     setJitterCorrectionLevel(5);
 
+    worker_->start();
     backend_->moveToThread(worker_);
     connect(backend_, &CanvasBackend::newDataGroup,
             this, &Canvas::sendData);
@@ -90,7 +91,14 @@ Canvas::Canvas(QWidget *parent) :
             this, &Canvas::remoteDrawLine);
     connect(backend_, &CanvasBackend::remoteDrawPoint,
             this, &Canvas::remoteDrawPoint);
-    worker_->start();
+    connect(this, &Canvas::destroyed,
+            backend_, &CanvasBackend::deleteLater);
+    connect(this, &Canvas::destroyed,
+            worker_, &QThread::terminate);
+    connect(this, &Canvas::newPaintAction,
+            backend_, &CanvasBackend::onDataBlock);
+    connect(this, &Canvas::newInternalData,
+            backend_, &CanvasBackend::onIncomingData);
 }
 
 /*!
@@ -101,7 +109,6 @@ Canvas::Canvas(QWidget *parent) :
 
 Canvas::~Canvas()
 {
-    delete backend_;
 }
 
 QPixmap Canvas::currentCanvas()
@@ -351,7 +358,7 @@ void Canvas::drawLineTo(const QPoint &endPoint, qreal pressure)
     bigMap.insert("info", map);
     bigMap.insert("action", "drawline");
 
-    backend_->onDataBlock(bigMap);
+    emit newPaintAction(bigMap);
 }
 
 /*!
@@ -394,7 +401,7 @@ void Canvas::drawPoint(const QPoint &point, qreal pressure)
     bigMap.insert("info", map);
     bigMap.insert("action", "drawpoint");
 
-    backend_->onDataBlock(bigMap);
+    emit newPaintAction(bigMap);
 }
 
 void Canvas::pickColor(const QPoint &point)
@@ -546,7 +553,7 @@ void Canvas::onNewData(const QByteArray & array)
             emit historyComplete();
         }
     }
-    backend_->onIncomingData(array);
+    emit newInternalData(array);
 }
 
 /* Layer */
