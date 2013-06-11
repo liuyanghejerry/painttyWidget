@@ -32,9 +32,15 @@ void IconCheckBox::paintEvent (QPaintEvent *)
     QSize icon_size = iconSize();
 
     if(isChecked()){
-        painter.drawPixmap(0,0,icon().pixmap(icon_size,QIcon::Normal,QIcon::On));
+        painter.drawPixmap(0,0,
+                           icon().pixmap(icon_size,
+                                         QIcon::Normal,
+                                         QIcon::On));
     }else if(isDown()){
-        painter.drawPixmap(0,0,icon().pixmap(icon_size,QIcon::Active,QIcon::On));
+        painter.drawPixmap(0,0,
+                           icon().pixmap(icon_size,
+                                         QIcon::Active,
+                                         QIcon::On));
     }
 
     //draw 3d box
