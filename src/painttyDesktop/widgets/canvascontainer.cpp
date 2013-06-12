@@ -219,6 +219,9 @@ void CanvasContainer::mouseMoveEvent(QMouseEvent *event)
 
 void CanvasContainer::tabletEvent(QTabletEvent *event)
 {
+    if(!enable_tablet){
+        return;
+    }
     emit tabletDetected();
     if(!proxy->widget() || !enable_tablet)
         return;
