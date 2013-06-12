@@ -113,6 +113,7 @@ private:
     QHash<QString, BrushPointer> localBrush;
     CanvasBackend* backend_;
     QThread *worker_;
+    bool enable_tablet;
 };
 
 class CanvasBackend : public QObject

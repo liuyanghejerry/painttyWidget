@@ -83,6 +83,12 @@ Canvas::Canvas(QWidget *parent) :
     Singleton<BrushManager>::instance().addBrush(p4);
     setJitterCorrectionLevel(5);
 
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    enable_tablet = settings.value("canvas/enable_tablet", false)
+            .toBool();
+
     worker_->start();
     backend_->moveToThread(worker_);
     connect(backend_, &CanvasBackend::newDataGroup,
@@ -694,6 +700,9 @@ void Canvas::layerSelected(const QString &name)
 
 void Canvas::tabletEvent(QTabletEvent *ev)
 {
+    if(!enable_tablet) {
+        return;
+    }
     //TODO: fully support tablet
     qreal pressure = ev->pressure();
     QPoint pos = ev->pos();
