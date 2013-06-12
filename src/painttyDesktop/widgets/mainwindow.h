@@ -22,14 +22,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
-    explicit MainWindow(const QSize& canvasSize, QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    void init();
-    void socketInit(int dataPort, int msgPort);
-    void setNickName(const QString &name);
-    void setRoomName(const QString &name);
-    void setHistorySize(const quint64 &size);
-    void setCanvasSize(const QSize &size);
+
 public slots:
     void exportAllToFile();
     void exportVisibleToFile();
@@ -52,12 +47,14 @@ signals:
 protected:
     void closeEvent( QCloseEvent * event ) ;
 private:
+    void init();
     void stylize();
     void layerWidgetInit();
     void colorGridInit();
     void viewInit();
     void toolbarInit();
     void shortcutInit();
+    void socketInit();
     void cmdSocketRouterInit();
     QVariant getRoomKey();
     void requestOnlinelist();
@@ -69,10 +66,6 @@ private:
     MessageSocket msgSocket;
     DataSocket dataSocket;
 
-    QString nickName_;
-    QString roomName_;
-    quint64 historySize_;
-    QSize canvasSize_;
     QByteArray defaultView;
     QAction *lastBrushAction;
     RegularRouter cmdRouter_;

@@ -51,11 +51,11 @@
 
 Canvas::Canvas(QWidget *parent) :
     QWidget(parent),
-    canvasSize(3240,2160),
+    canvasSize(Singleton<CommandSocket>::instance().canvasSize()),
     layers(canvasSize),
     image(canvasSize),
     layerNameCounter(0),
-    historySize_(0),
+    historySize_(Singleton<CommandSocket>::instance().historySize()),
     shareColor_(true),
     jitterCorrection_(true),
     jitterCorrectionLevel_(3),
@@ -108,9 +108,13 @@ Canvas::Canvas(QWidget *parent) :
     connect(this, &Canvas::paintActionComplete,
             backend_, &CanvasBackend::commit);
 
+    // TODO: proper use of signal requestSortedMembers,
+    // instead of using QTimer
     QTimer *t = new QTimer(this);
 
-    qRegisterMetaType<CanvasBackend::MemberSectionIndex>("CanvasBackend::MemberSectionIndex");
+    typedef CanvasBackend::MemberSectionIndex CM;
+
+    qRegisterMetaType<CM>("CanvasBackend::MemberSectionIndex");
     qRegisterMetaType< QList<CanvasBackend::MemberSection> >("QList<MemberSection>");
 
     connect(backend_, &CanvasBackend::membersSorted,
@@ -121,7 +125,6 @@ Canvas::Canvas(QWidget *parent) :
             backend_, &CanvasBackend::clearMembers);
     connect(t, &QTimer::timeout,
             [this](){
-        typedef CanvasBackend::MemberSectionIndex CM;
         emit requestSortedMembers(CM::Count, true);
     });
     t->start(5000);
@@ -157,11 +160,6 @@ QPixmap Canvas::allCanvas()
         painter.drawPixmap(0, 0, *im);
     }
     return exp;
-}
-
-void Canvas::setHistorySize(quint64 s)
-{
-    historySize_ = s;
 }
 
 int Canvas::jitterCorrectionLevel() const

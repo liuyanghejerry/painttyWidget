@@ -39,13 +39,11 @@
 #include "../misc/singleton.h"
 #include "../misc/shortcutmanager.h"
 
-MainWindow::MainWindow(const QSize& canvasSize, QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     msgSocket(this),
     dataSocket(this),
-    historySize_(0),
-    canvasSize_(canvasSize),
     lastBrushAction(nullptr),
     brushSettingControl_(nullptr),
     toolbar_(nullptr),
@@ -53,8 +51,11 @@ MainWindow::MainWindow(const QSize& canvasSize, QWidget *parent) :
     colorPickerButton_(nullptr)
 {
     ui->setupUi(this);
-    ui->canvas->resize(canvasSize_);
+//    auto&& roomName = Singleton<CommandSocket>::instance().roomName();
+//    setWindowTitle(roomName+tr(" - Mr.Paint"));
+//    ui->canvas->resize(Singleton<CommandSocket>::instance().canvasSize());
     defaultView = saveState();
+    init();
 }
 
 MainWindow::~MainWindow()
@@ -78,6 +79,10 @@ void MainWindow::stylize()
 
 void MainWindow::init()
 {
+    auto&& roomName = Singleton<CommandSocket>::instance().roomName();
+    setWindowTitle(roomName+tr(" - Mr.Paint"));
+    ui->canvas->resize(Singleton<CommandSocket>::instance().canvasSize());
+
     ui->centralWidget->setBackgroundRole(QPalette::Dark);
     ui->centralWidget->setCanvas(ui->canvas);
     ui->canvas->setDisabled(true);
@@ -137,9 +142,9 @@ void MainWindow::init()
     colorGridInit();
     toolbarInit();
     viewInit();
-
     shortcutInit();
     //    stylize();
+    socketInit();
 
     QTimer *t = new QTimer(this);
     t->setInterval(5000);
@@ -355,7 +360,8 @@ void MainWindow::toolbarInit()
 QVariant MainWindow::getRoomKey()
 {
     QCryptographicHash hash(QCryptographicHash::Md5);
-    hash.addData(roomName_.toUtf8());
+    auto&& roomName = Singleton<CommandSocket>::instance().roomName();
+    hash.addData(roomName.toUtf8());
     QString hashed_name = hash.result().toHex();
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
@@ -440,7 +446,7 @@ void MainWindow::shortcutInit()
     });
 }
 
-void MainWindow::socketInit(int dataPort, int msgPort)
+void MainWindow::socketInit()
 {
     connect(&msgSocket,&MessageSocket::connected,
             this,&MainWindow::onServerConnected);
@@ -470,7 +476,6 @@ void MainWindow::socketInit(int dataPort, int msgPort)
         requestCheckout();
     }
 
-    ui->canvas->setHistorySize(historySize_);
     ui->textEdit->insertPlainText(tr("Connecting to server...\n"));
     QHostAddress addr;
     if(LocalNetworkInterface::supportIpv6()){
@@ -480,31 +485,11 @@ void MainWindow::socketInit(int dataPort, int msgPort)
         addr = GlobalDef::HOST_ADDR[0];
         qDebug()<<"using ipv4 address to connect server";
     }
-    msgSocket.connectToHost(addr, msgPort);
-    dataSocket.connectToHost(addr, dataPort);
-}
-
-void MainWindow::setNickName(const QString &name)
-{
-    nickName_ = name;
-}
-
-void MainWindow::setRoomName(const QString &name)
-{
-    roomName_ = name;
-    setWindowTitle(name+tr(" - Mr.Paint"));
-}
-
-void MainWindow::setHistorySize(const quint64 &size)
-{
-    qDebug()<<"set Histroy size: "<<size;
-    historySize_ = size;
-}
-
-void MainWindow::setCanvasSize(const QSize &size)
-{
-    canvasSize_ = size;
-    ui->canvas->resize(canvasSize_);
+    auto& cmdInstance = Singleton<CommandSocket>::instance();
+    msgSocket.connectToHost(addr,
+                            cmdInstance.msgPort());
+    dataSocket.connectToHost(addr,
+                             cmdInstance.dataPort());
 }
 
 void MainWindow::onServerConnected()
@@ -558,7 +543,8 @@ void MainWindow::onCommandResponseClose(const QJsonObject &m)
         // wait for close now.
         // of course, delete the key. it's useless.
         QCryptographicHash hash(QCryptographicHash::Md5);
-        hash.addData(roomName_.toUtf8());
+        auto&& roomName = Singleton<CommandSocket>::instance().roomName();
+        hash.addData(roomName.toUtf8());
         QString hashed_name = hash.result().toHex();
         QSettings settings(GlobalDef::SETTINGS_NAME,
                            QSettings::defaultFormat(),
@@ -686,7 +672,8 @@ void MainWindow::onSendPressed()
         qDebug()<<"Warnning: text too long or empty.";
         return;
     }
-    string.prepend(nickName_+": ");
+    string.prepend(Singleton<CommandSocket>::instance().userName()
+                   + ": ");
     string.append('\n');
     emit sendMessage(string);
 

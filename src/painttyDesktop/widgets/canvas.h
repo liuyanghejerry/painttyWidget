@@ -71,7 +71,6 @@ public:
     virtual QSize minimumSizeHint () const;
 
 public slots:
-    void setHistorySize(quint64 s);
     void setJitterCorrectionEnabled(bool correct);
     void setJitterCorrectionLevel(int value);
     void setShareColor(bool b);
