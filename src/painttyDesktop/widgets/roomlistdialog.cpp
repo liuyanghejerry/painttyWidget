@@ -46,9 +46,11 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
     connect(ui->pushButton_2,&QPushButton::clicked,
             this, &RoomListDialog::requestJoin);
     connect(ui->tableWidget,&QTableWidget::cellDoubleClicked,
-            this,&RoomListDialog::requestJoin);
+            this, &RoomListDialog::requestJoin);
     connect(ui->checkBox, &QCheckBox::clicked,
-            this,&RoomListDialog::filterRoomList);
+            this, &RoomListDialog::filterRoomList);
+    connect(ui->search_box, &QLineEdit::textChanged,
+            this, &RoomListDialog::filterRoomList);
 
     connect(ui->pushButton, &QPushButton::clicked,
             newRoomWindow, &NewRoomWindow::show);
@@ -412,6 +414,7 @@ void RoomListDialog::onNewRoomRespnse(const QJsonObject &m)
 
 void RoomListDialog::filterRoomList()
 {
+    QString&& searchText = ui->search_box->text();
     QTableWidgetItem *item = 0;
     int row = 0;
     int column = 0;
@@ -427,6 +430,10 @@ void RoomListDialog::filterRoomList()
             if(info["maxload"] == info["currentload"]){
                 continue;
             }
+        }
+
+        if(!name.contains(searchText)){
+            continue;
         }
 
         if(row >= ui->tableWidget->rowCount())
