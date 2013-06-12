@@ -48,6 +48,11 @@ void NewRoomWindow::complete()
     ui->progressBar->setValue(100);
 }
 
+void NewRoomWindow::failed()
+{
+    ui->progressBar->setValue(0);
+}
+
 void NewRoomWindow::onOk()
 {
     QString s = ui->lineEdit->text();

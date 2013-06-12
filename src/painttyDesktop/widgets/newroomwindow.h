@@ -18,6 +18,7 @@ public:
     ~NewRoomWindow();
     QString roomName() const;
     void complete();
+    void failed();
 signals:
     void newRoom(const QJsonObject &m);
 public slots:

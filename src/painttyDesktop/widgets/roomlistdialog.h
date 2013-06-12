@@ -33,6 +33,7 @@ public slots:
     void onServerClosed();
     void filterRoomList();
 private slots:
+    void onManagerServerConnected();
     void onCmdServerConnected();
     void onCmdServerData(const QByteArray &array);
     void onNewRoomRespnse(const QJsonObject &m);
@@ -46,13 +47,16 @@ protected:
     
 private:
     enum State{
+        Error = -999,
         Init,
         Ready,
-        Connecting,
-        Connected,
+        ManagerConnecting = 0,
+        ManagerConnected,
         RequestingList,
         RequestingNewRoom,
-        Error
+        RoomConnecting,
+        RoomConnected,
+        RoomJoined
     };
 
     Ui::RoomListDialog *ui;

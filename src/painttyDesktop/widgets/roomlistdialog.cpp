@@ -104,7 +104,7 @@ void RoomListDialog::socketInit()
     connect(socket,&Socket::newData,
             this,&RoomListDialog::onServerData);
     connect(socket,&Socket::connected,
-            this,&RoomListDialog::requestRoomList);
+            this,&RoomListDialog::onManagerServerConnected);
     connect(socket,&Socket::disconnected,
             this,&RoomListDialog::onServerClosed);
     QHostAddress addr;
@@ -118,7 +118,7 @@ void RoomListDialog::socketInit()
 
     socket->connectToHost(addr,
                           GlobalDef::HOST_MGR_PORT);
-    state_ = Connecting;
+    state_ = ManagerConnecting;
     managerSocketRouter_.regHandler("response",
                                     "roomlist",
                                     std::bind(&RoomListDialog::onManagerResponseRoomlist,
@@ -133,6 +133,10 @@ void RoomListDialog::socketInit()
 
 void RoomListDialog::requestJoin()
 {
+    if(state_ < 1){
+        return;
+    }
+    state_ = RoomConnecting;
     Singleton<CommandSocket>::instance().close();
     ui->lineEdit->setText(ui->lineEdit->text().trimmed());
     nickName_ = ui->lineEdit->text();
@@ -166,37 +170,58 @@ void RoomListDialog::requestJoin()
 
 void RoomListDialog::requestRoomList()
 {
-    if(!socket->isConnected()){
-        //TODO
+    if(state_ < 1){
+        return;
+    }else if(state_ == ManagerConnecting){
+        QMessageBox::critical(newRoomWindow, tr("Error!"),
+                              tr("Cannot connect to server.\n" \
+                                 "If this situation continues," \
+                                 " you should consider <a href='http://mrspaint.com'>update</a> manually."),
+                              QMessageBox::Ok);
         state_ = Error;
-    }
-    state_ = RequestingList;
-    QJsonObject map;
-    map.insert("request", QString("roomlist"));
+        return;
+    }else if(state_ == ManagerConnected){
+        state_ = RequestingList;
+        QJsonObject map;
+        map.insert("request", QString("roomlist"));
 
-    QJsonDocument doc;
-    doc.setObject(map);
-    socket->sendData(doc.toJson());
-    ui->progressBar->setRange(0,0);
+        QJsonDocument doc;
+        doc.setObject(map);
+        socket->sendData(doc.toJson());
+        ui->progressBar->setRange(0,0);
+    }else{
+        qDebug()<<"Unexpected State in requestRoomList"<<state_;
+    }
 }
 
 void RoomListDialog::requestNewRoom(const QJsonObject &m)
 {
-    if(socket->isConnected()){
-        //TODO
+    if(state_ < 1){
+        return;
+    }else if(state_ == ManagerConnecting){
+        QMessageBox::critical(newRoomWindow, tr("Error!"),
+                              tr("Cannot connect to server.\n" \
+                                 "If this situation continues," \
+                                 " you should consider <a href='http://mrspaint.com'>update</a> manually."),
+                              QMessageBox::Ok);
+        state_ = Error;
+        return;
+    }else if(state_ == ManagerConnected){
         state_ = RequestingNewRoom;
+        QJsonObject map;
+        map["request"] = QString("newroom");
+        map["info"] = m;
+        // TODO: add owner info
+
+        QJsonDocument doc;
+        doc.setObject(map);
+
+        socket->sendData(doc.toJson());
+        ui->progressBar->setRange(0,0);
+        //TODO: auto connect to room
+    }else{
+        qDebug()<<"Unexpected State in requestNewRoom"<<state_;
     }
-    QJsonObject map;
-    map["request"] = QString("newroom");
-    map["info"] = m;
-    // TODO: add owner info
-
-    QJsonDocument doc;
-    doc.setObject(map);
-
-    socket->sendData(doc.toJson());
-    ui->progressBar->setRange(0,0);
-    //TODO: auto connect to room
 }
 
 void RoomListDialog::onServerData(const QByteArray &array)
@@ -206,6 +231,7 @@ void RoomListDialog::onServerData(const QByteArray &array)
 
 void RoomListDialog::onManagerResponseRoomlist(const QJsonObject &obj)
 {
+    state_ = ManagerConnected;
     if(!obj["result"].toBool())
         return;
     QJsonArray list;
@@ -266,21 +292,28 @@ void RoomListDialog::onManagerResponseRoomlist(const QJsonObject &obj)
     roomsInfo = tmpRoomsInfo;
     ui->progressBar->setValue(100);
     ui->tableWidget->setSortingEnabled(true);
-    state_ = Connected;
+}
+
+void RoomListDialog::onManagerServerConnected()
+{
+    state_ = ManagerConnected;
+    ui->progressBar->setValue(100);
+    requestRoomList();
 }
 
 void RoomListDialog::onServerClosed()
 {
+    state_ = Error;
     QMessageBox::critical(this,
                           tr("Connection"),
                           tr("Sorry, server has closed.") );
     ui->tableWidget->clearContents();
     ui->tableWidget->setRowCount(0);
-    state_ = Error;
 }
 
 void RoomListDialog::onCmdServerConnected()
 {
+    state_ = RoomConnected;
     int current = roomsInfo[roomName_].value("currentload").toDouble();
     int max = roomsInfo[roomName_].value("maxload").toDouble();
 
@@ -366,13 +399,18 @@ void RoomListDialog::onCmdServerData(const QByteArray &array)
                 qDebug()<<"clientid assign"
                        <<Singleton<CommandSocket>::instance().clientId();
             }
+            state_ = RoomJoined;
             accept();
+            return;
         }
+    state_ = ManagerConnected;
+    ui->progressBar->setValue(100);
     }
 }
 
 void RoomListDialog::onNewRoomRespnse(const QJsonObject &m)
 {
+    state_ = ManagerConnected;
     if(m["result"].toBool()){
         newRoomWindow->complete();
         QString msg = tr("Succeed!");
@@ -395,7 +433,9 @@ void RoomListDialog::onNewRoomRespnse(const QJsonObject &m)
             settings.sync();
         }
         newRoomWindow->accept();
+        return;
     }
+    newRoomWindow->failed();
 
     if(!m.contains("errcode")){
         return;
@@ -503,8 +543,14 @@ void RoomListDialog::hideEvent(QHideEvent *)
 
 void RoomListDialog::showEvent(QShowEvent *)
 {
-    requestRoomList();
-    timer->start(10000);
+    if(state_ == RoomJoined){
+        state_ = ManagerConnected;
+        ui->progressBar->setValue(100);
+        requestRoomList();
+        timer->start(10000);
+    }else{
+        qDebug()<<"Unexpcted State in showEvent"<<state_;
+    }
 }
 
 void RoomListDialog::closeEvent(QCloseEvent *e)
