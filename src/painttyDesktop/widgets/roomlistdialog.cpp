@@ -528,6 +528,7 @@ void RoomListDialog::saveNick()
     settings.setValue("global/personal/nick",
                       name.toUtf8());
     settings.sync();
+    Singleton<CommandSocket>::instance().setUserName(name);
 }
 
 void RoomListDialog::openConfigure()
@@ -539,6 +540,7 @@ void RoomListDialog::openConfigure()
 void RoomListDialog::hideEvent(QHideEvent *)
 {
     timer->stop();
+    saveNick();
 }
 
 void RoomListDialog::showEvent(QShowEvent *)

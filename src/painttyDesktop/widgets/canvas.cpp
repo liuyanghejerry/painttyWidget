@@ -107,6 +107,24 @@ Canvas::Canvas(QWidget *parent) :
             backend_, &CanvasBackend::onIncomingData);
     connect(this, &Canvas::paintActionComplete,
             backend_, &CanvasBackend::commit);
+
+    QTimer *t = new QTimer(this);
+
+    qRegisterMetaType<CanvasBackend::MemberSectionIndex>("CanvasBackend::MemberSectionIndex");
+    qRegisterMetaType< QList<CanvasBackend::MemberSection> >("QList<MemberSection>");
+
+    connect(backend_, &CanvasBackend::membersSorted,
+            this, &Canvas::onMembersSorted);
+    connect(this, &Canvas::requestSortedMembers,
+            backend_, &CanvasBackend::requestMembers);
+    connect(this, &Canvas::requestClearMembers,
+            backend_, &CanvasBackend::clearMembers);
+    connect(t, &QTimer::timeout,
+            [this](){
+        typedef CanvasBackend::MemberSectionIndex CM;
+        emit requestSortedMembers(CM::Count, true);
+    });
+    t->start(5000);
 }
 
 /*!
@@ -361,6 +379,8 @@ void Canvas::drawLineTo(const QPoint &endPoint, qreal pressure)
     map.insert("layer", QVariant(currentLayer()));
     map.insert("clientid",
                Singleton<CommandSocket>::instance().clientId());
+    map.insert("name",
+               Singleton<CommandSocket>::instance().userName());
 
     QVariantMap bigMap;
     bigMap.insert("info", map);
@@ -404,6 +424,8 @@ void Canvas::drawPoint(const QPoint &point, qreal pressure)
     map.insert("point", QVariant(point_j));
     map.insert("clientid",
                QVariant(Singleton<CommandSocket>::instance().clientId()));
+    map.insert("name",
+               Singleton<CommandSocket>::instance().userName());
 
     QVariantMap bigMap;
     bigMap.insert("info", map);
@@ -564,6 +586,16 @@ void Canvas::onNewData(const QByteArray & array)
     emit newInternalData(array);
 }
 
+void Canvas::onMembersSorted(const QList<CanvasBackend::MemberSection>& list)
+{
+    qDebug()<<"Sorted Members: "<<endl;
+    for(auto &elm: list){
+        qDebug()<<std::get<0>(elm)<<", "
+               <<std::get<1>(elm)<<", "
+              <<std::get<2>(elm)<<endl;
+    }
+}
+
 /* Layer */
 
 /*!
@@ -617,6 +649,7 @@ void Canvas::clearLayer(const QString &name)
 
 void Canvas::clearAllLayer()
 {
+    emit requestClearMembers();
     layers.clearAllLayer();
     update();
 }
@@ -917,6 +950,10 @@ void CanvasBackend::commit()
 void CanvasBackend::onDataBlock(const QVariantMap& d)
 {
     tempStore.append(d);
+    QVariantMap info = d["info"].toMap();
+    QString author = info["name"].toString();
+    QString clientid = info["clientid"].toString();
+    upsertMember(clientid, author);
     if(tempStore.length() >=10 ){
         commit();
     }
@@ -943,6 +980,11 @@ void CanvasBackend::onIncomingData(const QByteArray& data)
         }
         QString clientid = map["clientid"].toString();
 
+        if(map.contains("name")){
+            QString author = map["name"].toString();
+            upsertMember(clientid, author);
+        }
+
         emit remoteDrawPoint(point, brushInfo,
                              layerName, clientid,
                              pressure);
@@ -967,6 +1009,11 @@ void CanvasBackend::onIncomingData(const QByteArray& data)
             pressure = map["pressure"].toDouble();
         }
         QString clientid = map["clientid"].toString();
+
+        if(map.contains("name")){
+            QString author = map["name"].toString();
+            upsertMember(clientid, author);
+        }
 
         emit remoteDrawLine(start, end,
                             brushInfo, layerName,
@@ -993,6 +1040,61 @@ void CanvasBackend::onIncomingData(const QByteArray& data)
         drawLine(m);
     }else if(action == "block"){
         dataBlock(m);
+    }
+}
+
+void CanvasBackend::requestMembers(MemberSectionIndex index,
+                                   bool mergeSameName)
+{
+    qDebug()<<"Members requested!";
+    using MSI = MemberSectionIndex;
+    using MS = MemberSection;
+    using MSL = QList<MS>;
+
+    MSL list = memberHistory_.values();
+    qSort(list.begin(), list.end(), [index](const MS &e1,
+          const MS &e2) {
+        // Note, std::get<> never receive dynamic index.
+        // And that's why we have to use switch :(
+        switch (index){
+        case Name:
+            return std::get<Name>(e1) < std::get<Name>(e2);
+            break;
+        default: // fall-through
+        case Count:
+            return std::get<Count>(e1) < std::get<Count>(e2);
+            break;
+        }
+    });
+
+    if(mergeSameName){
+        QHash<QString, MS> list2;
+        for(const MS &elem: list){
+            QString author = std::get<Name>(elem);
+            if(list2.contains(author)){
+                std::get<Count>(list2[author]) += std::get<Count>(elem);
+            }else{
+                list2.insert(author, elem);
+            }
+        }
+        list = list2.values();
+    }
+    emit membersSorted(list);
+}
+
+void CanvasBackend::clearMembers()
+{
+    memberHistory_.clear();
+}
+
+void CanvasBackend::upsertMember(const QString& id, const QString& name)
+{
+    qDebug()<<"Member upserted";
+    using MSI = MemberSectionIndex;
+    if( memberHistory_.contains(id) ) {
+        std::get<MSI::Count>( memberHistory_[id] )++;
+    }else{
+        memberHistory_[id] = MemberSection(id, name, 1);
     }
 }
 
