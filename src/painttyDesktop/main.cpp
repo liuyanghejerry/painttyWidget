@@ -8,6 +8,8 @@
 #include "../common/common.h"
 #include "widgets/mainwindow.h"
 #include "widgets/roomlistdialog.h"
+#include "network/commandsocket.h"
+#include "misc/singleton.h"
 
 namespace mainOnly
 {
@@ -118,12 +120,7 @@ int main(int argc, char *argv[])
     mainOnly::runUpdater();
     while( !exitCode && dialog->exec() ) {
         dialog->hide();
-        MainWindow w(dialog->canvasSize());
-        w.init();
-        w.setNickName(dialog->nick());
-        w.setRoomName(dialog->roomName());
-        w.setHistorySize(dialog->historySize());
-        w.socketInit(dialog->dataPort(), dialog->msgPort());
+        MainWindow w;
 #ifdef Q_OS_MACX
         w.showFullScreen();
 #else

@@ -39,13 +39,12 @@
 #include "../misc/singleton.h"
 #include "../misc/shortcutmanager.h"
 
-MainWindow::MainWindow(const QSize& canvasSize, QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     msgSocket(this),
     dataSocket(this),
     historySize_(0),
-    canvasSize_(canvasSize),
     lastBrushAction(nullptr),
     brushSettingControl_(nullptr),
     toolbar_(nullptr),
@@ -53,8 +52,11 @@ MainWindow::MainWindow(const QSize& canvasSize, QWidget *parent) :
     colorPickerButton_(nullptr)
 {
     ui->setupUi(this);
-    ui->canvas->resize(canvasSize_);
+    setCanvasSize();
+    setNickName();
+    setHistorySize();
     defaultView = saveState();
+    init();
 }
 
 MainWindow::~MainWindow()
@@ -137,9 +139,9 @@ void MainWindow::init()
     colorGridInit();
     toolbarInit();
     viewInit();
-
     shortcutInit();
     //    stylize();
+    socketInit();
 
     QTimer *t = new QTimer(this);
     t->setInterval(5000);
@@ -440,7 +442,7 @@ void MainWindow::shortcutInit()
     });
 }
 
-void MainWindow::socketInit(int dataPort, int msgPort)
+void MainWindow::socketInit()
 {
     connect(&msgSocket,&MessageSocket::connected,
             this,&MainWindow::onServerConnected);
@@ -480,30 +482,33 @@ void MainWindow::socketInit(int dataPort, int msgPort)
         addr = GlobalDef::HOST_ADDR[0];
         qDebug()<<"using ipv4 address to connect server";
     }
-    msgSocket.connectToHost(addr, msgPort);
-    dataSocket.connectToHost(addr, dataPort);
+    auto& cmdInstance = Singleton<CommandSocket>::instance();
+    msgSocket.connectToHost(addr,
+                            cmdInstance.msgPort());
+    dataSocket.connectToHost(addr,
+                             cmdInstance.dataPort());
 }
 
-void MainWindow::setNickName(const QString &name)
+void MainWindow::setNickName()
 {
-    nickName_ = name;
+    nickName_ = Singleton<CommandSocket>::instance().userName();
 }
 
-void MainWindow::setRoomName(const QString &name)
+void MainWindow::setRoomName()
 {
-    roomName_ = name;
-    setWindowTitle(name+tr(" - Mr.Paint"));
+    roomName_ = Singleton<CommandSocket>::instance().roomName();
+    setWindowTitle(roomName_+tr(" - Mr.Paint"));
 }
 
-void MainWindow::setHistorySize(const quint64 &size)
+void MainWindow::setHistorySize()
 {
-    qDebug()<<"set Histroy size: "<<size;
-    historySize_ = size;
+    historySize_ = Singleton<CommandSocket>::instance().historySize();
+    qDebug()<<"set Histroy size: "<<historySize_;
 }
 
-void MainWindow::setCanvasSize(const QSize &size)
+void MainWindow::setCanvasSize()
 {
-    canvasSize_ = size;
+    canvasSize_ = Singleton<CommandSocket>::instance().canvasSize();
     ui->canvas->resize(canvasSize_);
 }
 

@@ -19,12 +19,7 @@ class RoomListDialog : public QDialog
 public:
     explicit RoomListDialog(QWidget *parent = 0);
     ~RoomListDialog();
-    QString roomName() const;
-    QString nick() const;
-    int historySize() const;
-    QSize canvasSize() const {return canvasSize_;}
-    int dataPort() const {return dataPort_;}
-    int msgPort() const {return msgPort_;}
+
 public slots:
     void requestJoin();
     void requestNewRoom(const QJsonObject &m);
@@ -40,11 +35,18 @@ private slots:
     void loadNick();
     void saveNick();
     void openConfigure();
+    void commitToGlobal();
 protected:
     void hideEvent(QHideEvent *);
     void showEvent(QShowEvent *);
     void closeEvent(QCloseEvent *e);
     
+    QString roomName() const;
+    QString nick() const;
+    int historySize() const;
+    QSize canvasSize() const {return canvasSize_;}
+    int dataPort() const {return dataPort_;}
+    int msgPort() const {return msgPort_;}
 private:
     enum State{
         Error = -999,

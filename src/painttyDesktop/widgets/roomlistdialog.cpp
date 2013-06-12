@@ -528,13 +528,24 @@ void RoomListDialog::saveNick()
     settings.setValue("global/personal/nick",
                       name.toUtf8());
     settings.sync();
-    Singleton<CommandSocket>::instance().setUserName(name);
+    commitToGlobal();
 }
 
 void RoomListDialog::openConfigure()
 {
     ConfigureDialog w;
     w.exec();
+}
+
+void RoomListDialog::commitToGlobal()
+{
+    auto &instance = Singleton<CommandSocket>::instance();
+    instance.setUserName(this->nick());
+    instance.setCanvasSize(this->canvasSize());
+    instance.setHistorySize(this->historySize());
+    instance.setRoomName(this->roomName());
+    instance.setMsgPort(this->msgPort());
+    instance.setDataPort(this->dataPort());
 }
 
 void RoomListDialog::hideEvent(QHideEvent *)
