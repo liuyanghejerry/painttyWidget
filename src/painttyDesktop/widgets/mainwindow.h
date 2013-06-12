@@ -56,6 +56,10 @@ private:
     void shortcutInit();
     void socketInit();
     void cmdSocketRouterInit();
+    void setNickName();
+    void setRoomName();
+    void setHistorySize();
+    void setCanvasSize();
     QVariant getRoomKey();
     void requestOnlinelist();
     void requestCheckout();
