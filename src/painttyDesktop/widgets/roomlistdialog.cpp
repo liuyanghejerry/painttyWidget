@@ -234,64 +234,17 @@ void RoomListDialog::onManagerResponseRoomlist(const QJsonObject &obj)
     state_ = ManagerConnected;
     if(!obj["result"].toBool())
         return;
-    QJsonArray list;
-    QTableWidgetItem *item = 0;
-    list = obj["roomlist"].toArray();
-    QJsonValue info;
-    int row = 0;
-    int column = 0;
-    int members = 0;
-    ui->progressBar->setMaximum(100);
-    ui->tableWidget->clearContents();
-    ui->tableWidget->setRowCount(0);
+    QJsonArray list = obj["roomlist"].toArray();
     QHash<QString, QJsonObject> tmpRoomsInfo;
-    ui->tableWidget->clearContents();
-    ui->tableWidget->setSortingEnabled(false);
-    foreach(info, list){
+    for(auto info: list){
         QJsonObject m = info.toObject();
         QString name = m["name"].toString();
         tmpRoomsInfo.insert(name, m);
-        if(ui->checkBox->isChecked()){
-            //Don't show it if room is full
-            if(m["maxload"] == m["currentload"]){
-                continue;
-            }
-        }
-
-        if(row >= ui->tableWidget->rowCount())
-            ui->tableWidget->insertRow(0);
-        column = 0;
-
-        item = new QTableWidgetItem(name);
-        item->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget->setItem(0, column++, item);
-
-        bool isPrivate = m["private"].toBool();
-        item = new QTableWidgetItem(
-                    isPrivate?tr("Private"):tr("Public"));
-        item->setTextAlignment(Qt::AlignCenter);
-        ui->tableWidget->setItem(0, column++, item);
-
-        item = new QTableWidgetItem;
-        item->setTextAlignment(Qt::AlignCenter);
-        item->setData(Qt::DisplayRole, m["currentload"].toDouble());
-        ui->tableWidget->setItem(0, column++, item);
-        members += m["currentload"].toDouble();
-
-        item = new QTableWidgetItem;
-        item->setTextAlignment(Qt::AlignCenter);
-        item->setData(Qt::DisplayRole, m["maxload"].toDouble());
-        ui->tableWidget->setItem(0, column++, item);
-
-        row++;
-        ui->progressBar->setValue(100*row/list.count());
     }
-    ui->counter_label->setText(tr("Rooms: %1, Members: %2")
-                               .arg(list.count())
-                               .arg(members));
     roomsInfo = tmpRoomsInfo;
+    filterRoomList();
     ui->progressBar->setValue(100);
-    ui->tableWidget->setSortingEnabled(true);
+
 }
 
 void RoomListDialog::onManagerServerConnected()
@@ -459,8 +412,55 @@ void RoomListDialog::onNewRoomRespnse(const QJsonObject &m)
 
 void RoomListDialog::filterRoomList()
 {
-    //TODO: change to local filter
-    requestRoomList();
+    QTableWidgetItem *item = 0;
+    int row = 0;
+    int column = 0;
+    int members = 0;
+    ui->progressBar->setMaximum(100);
+    ui->tableWidget->clearContents();
+    ui->tableWidget->setRowCount(0);
+    ui->tableWidget->setSortingEnabled(false);
+    for(auto& info: roomsInfo){
+        QString name = info["name"].toString();
+        if(ui->checkBox->isChecked()){
+            //Don't show it if room is full
+            if(info["maxload"] == info["currentload"]){
+                continue;
+            }
+        }
+
+        if(row >= ui->tableWidget->rowCount())
+            ui->tableWidget->insertRow(0);
+        column = 0;
+
+        item = new QTableWidgetItem(name);
+        item->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->setItem(0, column++, item);
+
+        bool isPrivate = info["private"].toBool();
+        item = new QTableWidgetItem(
+                    isPrivate?tr("Private"):tr("Public"));
+        item->setTextAlignment(Qt::AlignCenter);
+        ui->tableWidget->setItem(0, column++, item);
+
+        item = new QTableWidgetItem;
+        item->setTextAlignment(Qt::AlignCenter);
+        item->setData(Qt::DisplayRole, info["currentload"].toDouble());
+        ui->tableWidget->setItem(0, column++, item);
+        members += info["currentload"].toDouble();
+
+        item = new QTableWidgetItem;
+        item->setTextAlignment(Qt::AlignCenter);
+        item->setData(Qt::DisplayRole, info["maxload"].toDouble());
+        ui->tableWidget->setItem(0, column++, item);
+
+        row++;
+//        ui->progressBar->setValue(100*row/roomsInfo.count());
+    }
+    ui->counter_label->setText(tr("Rooms: %1, Members: %2")
+                               .arg(row)
+                               .arg(members));
+    ui->tableWidget->setSortingEnabled(true);
 }
 
 QString RoomListDialog::roomName() const

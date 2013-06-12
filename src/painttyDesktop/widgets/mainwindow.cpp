@@ -351,10 +351,7 @@ void MainWindow::toolbarInit()
             brushSettingWidget, &BrushSettingsWidget::hardnessUp);
 
     brushSettingControl_ = brushSettingWidget;
-
     brushSettingToolbar->addWidget(brushSettingWidget);
-
-    //TODO: locking before complete connect
 }
 
 QVariant MainWindow::getRoomKey()
