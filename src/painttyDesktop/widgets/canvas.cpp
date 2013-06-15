@@ -129,6 +129,10 @@ Canvas::Canvas(QWidget *parent) :
         emit requestSortedMembers(CM::Count, true);
     });
     t->start(5000);
+
+    if(historySize_ > 0){
+        this->setEnabled(true);
+    }
 }
 
 /*!
