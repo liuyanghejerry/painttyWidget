@@ -20,14 +20,23 @@ public:
         Count
     };
 
+    enum BlockLevel {
+        NONE = 0,
+        LOW = 5,
+        MEDIUM = 10,
+        HIGH = 20
+    };
+
     CanvasBackend(QObject *parent = nullptr);
     void commit();
+    BlockLevel blockLevel() const;
 public slots:
     void onDataBlock(const QVariantMap& d);
     void onIncomingData(const QByteArray& d);
     void requestMembers(MemberSectionIndex index,
                         bool mergeSameName = false);
     void clearMembers();
+    void setBlockLevel(const BlockLevel le);
 signals:
     void newDataGroup(const QByteArray& d);
     void remoteDrawPoint(const QPoint &point,
@@ -43,6 +52,7 @@ signals:
                         const qreal pressure=1.0);
     void membersSorted(QList<MemberSection> list);
 private:
+    BlockLevel blocklevel_;
     QVariantList tempStore;
     // Warning, access memberHistory_ across thread
     // via member functions is not thread-safe
@@ -101,9 +111,11 @@ signals:
     void newPaintAction(const QVariantMap &m);
     void paintActionComplete();
     void newInternalData(const QByteArray &);
-    void requestSortedMembers(CanvasBackend::MemberSectionIndex index,
-                              bool mergeSameName);
+    void requestSortedMembers(CanvasBackend::MemberSectionIndex index
+                               = CanvasBackend::MemberSectionIndex::Count,
+                              bool mergeSameName = true);
     void requestClearMembers();
+    void canvasExported(const QPixmap& pic);
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
@@ -134,6 +146,7 @@ private:
     void pickColor(const QPoint &point);
     void updateCursor();
     void tryJitterCorrection();
+    void appendAuthorSignature(QPixmap &target);
 
     BrushPointer brushFactory(const QString &name);
 
@@ -158,6 +171,7 @@ private:
     CanvasBackend* backend_;
     QThread *worker_;
     bool enable_tablet;
+    QList<CanvasBackend::MemberSection> author_list_;
 };
 
 #endif // CANVAS_H

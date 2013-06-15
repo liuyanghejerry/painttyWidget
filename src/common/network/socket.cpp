@@ -11,6 +11,7 @@ Socket::Socket(QObject *parent) :
 {
     socket = new QTcpSocket(this);
     socket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
+    socket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
     connect(socket,&QTcpSocket::readyRead,
             this,&Socket::onReceipt);
     connect(socket, &QTcpSocket::connected,

@@ -8,6 +8,7 @@
 #include <QSettings>
 #include <QApplication>
 #include <QTimer>
+#include <QStaticText>
 #include <QtCore/qmath.h>
 
 #include "../../common/common.h"
@@ -144,6 +145,7 @@ QPixmap Canvas::currentCanvas()
 {
     QPixmap pmp = image;
     layers.combineLayers(&pmp);
+    appendAuthorSignature(pmp);
     return pmp;
 }
 
@@ -159,7 +161,39 @@ QPixmap Canvas::allCanvas()
         im = l->imagePtr();
         painter.drawPixmap(0, 0, *im);
     }
+    appendAuthorSignature(exp);
     return exp;
+}
+
+void Canvas::appendAuthorSignature(QPixmap& target)
+{
+    using CBMSI = CanvasBackend::MemberSectionIndex;
+    int textSize = qMin(target.size().height(), target.width());
+//    textSize = qBound(20, int(textSize * 0.1), 100);
+    textSize = int(textSize * 0.5);
+    QPixmap tmp(target.size());
+    tmp.fill(Qt::white);
+    QPainter painter(&tmp);
+    QPen textPen;
+    textPen.setColor(Qt::black);
+    textPen.setWidth(textSize);
+    painter.setPen(textPen);
+    QPoint rightCorner = this->rect().bottomRight();
+    //
+    QStaticText text;
+    QString authors("BY ");
+    text.setTextFormat(Qt::PlainText);
+
+    for(auto& item: author_list_){
+        QString name = std::get<CBMSI::Name>(item);
+        authors += name + "\n";
+    }
+    text.setText(authors);
+    rightCorner -= QPoint(text.size().width(),
+                          text.size().height());
+    painter.drawStaticText(rightCorner, text);
+    tmp.save("abc.png");
+
 }
 
 int Canvas::jitterCorrectionLevel() const
@@ -586,12 +620,13 @@ void Canvas::onNewData(const QByteArray & array)
 
 void Canvas::onMembersSorted(const QList<CanvasBackend::MemberSection>& list)
 {
-    qDebug()<<"Sorted Members: "<<endl;
-    for(auto &elm: list){
-        qDebug()<<std::get<0>(elm)<<", "
-               <<std::get<1>(elm)<<", "
-              <<std::get<2>(elm)<<endl;
-    }
+//    qDebug()<<"Sorted Members: "<<endl;
+//    for(auto &elm: list){
+//        qDebug()<<std::get<0>(elm)<<", "
+//               <<std::get<1>(elm)<<", "
+//              <<std::get<2>(elm)<<endl;
+//    }
+    author_list_ = list;
 }
 
 /* Layer */
@@ -925,7 +960,8 @@ void Canvas::foundTablet()
 }
 
 CanvasBackend::CanvasBackend(QObject *parent)
-    :QObject(parent)
+    :QObject(parent),
+      blocklevel_(NONE)
 {
     QTimer *sendTimer = new QTimer(this);
     sendTimer->setInterval(1000*10);
@@ -935,25 +971,49 @@ CanvasBackend::CanvasBackend(QObject *parent)
 
 void CanvasBackend::commit()
 {
-    if(tempStore.length()){
-        QVariantMap doc;
-        doc.insert("action", "block");
-        doc.insert("block", tempStore);
-        auto data = toJson(QVariant(doc));
-        emit newDataGroup(data);
-        tempStore.clear();
+    if(blocklevel_ == NONE){
+        while(!tempStore.isEmpty()){
+            QVariant element = tempStore.takeFirst();
+            auto data = toJson(element);
+            emit newDataGroup(data);
+        }
+    }else{
+        if(!tempStore.isEmpty()){
+            QVariantMap doc;
+            doc.insert("action", "block");
+            doc.insert("block", tempStore);
+            auto data = toJson(QVariant(doc));
+            emit newDataGroup(data);
+            tempStore.clear();
+        }
     }
+}
+
+void CanvasBackend::setBlockLevel(const BlockLevel le)
+{
+    blocklevel_ = le;
+}
+
+CanvasBackend::BlockLevel CanvasBackend::blockLevel() const
+{
+    return blocklevel_;
 }
 
 void CanvasBackend::onDataBlock(const QVariantMap& d)
 {
     tempStore.append(d);
+
     QVariantMap info = d["info"].toMap();
     QString author = info["name"].toString();
     QString clientid = info["clientid"].toString();
     upsertMember(clientid, author);
-    if(tempStore.length() >=10 ){
+
+    if(blocklevel_ == NONE){
         commit();
+    }else{
+        if(tempStore.length() >= blocklevel_ ){
+            commit();
+        }
     }
 }
 
@@ -1087,7 +1147,6 @@ void CanvasBackend::clearMembers()
 
 void CanvasBackend::upsertMember(const QString& id, const QString& name)
 {
-    qDebug()<<"Member upserted";
     using MSI = MemberSectionIndex;
     if( memberHistory_.contains(id) ) {
         std::get<MSI::Count>( memberHistory_[id] )++;
