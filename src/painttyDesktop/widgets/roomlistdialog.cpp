@@ -305,7 +305,11 @@ void RoomListDialog::onCmdServerConnected()
     QJsonDocument doc;
     doc.setObject(map);
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
+    auto array = doc.toJson(QJsonDocument::Compact);
+#else
     auto array = doc.toJson();
+#endif
 
     Singleton<CommandSocket>::instance().sendData(array);
     ui->progressBar->setRange(0, 0);

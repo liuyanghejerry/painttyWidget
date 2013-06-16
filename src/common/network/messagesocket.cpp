@@ -23,7 +23,12 @@ void MessageSocket::sendMessage(const QString &content)
     QJsonDocument doc;
     map.insert("content", content);
     doc.setObject(map);
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
+    QByteArray buffer = doc.toJson(QJsonDocument::Compact);
+#else
     QByteArray buffer = doc.toJson();
+#endif
 
     this->sendData(buffer);
 }

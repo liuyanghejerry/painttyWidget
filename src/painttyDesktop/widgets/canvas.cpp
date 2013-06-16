@@ -173,7 +173,7 @@ void Canvas::appendAuthorSignature(QPixmap& target)
 {
     using CBMSI = CanvasBackend::MemberSectionIndex;
     int textSize = qMin(target.size().height(), target.width());
-//    textSize = qBound(20, int(textSize * 0.1), 100);
+    //    textSize = qBound(20, int(textSize * 0.1), 100);
     textSize = int(textSize * 0.5);
     QPixmap tmp(target.size());
     tmp.fill(Qt::white);
@@ -624,12 +624,12 @@ void Canvas::onNewData(const QByteArray & array)
 
 void Canvas::onMembersSorted(const QList<CanvasBackend::MemberSection>& list)
 {
-//    qDebug()<<"Sorted Members: "<<endl;
-//    for(auto &elm: list){
-//        qDebug()<<std::get<0>(elm)<<", "
-//               <<std::get<1>(elm)<<", "
-//              <<std::get<2>(elm)<<endl;
-//    }
+    //    qDebug()<<"Sorted Members: "<<endl;
+    //    for(auto &elm: list){
+    //        qDebug()<<std::get<0>(elm)<<", "
+    //               <<std::get<1>(elm)<<", "
+    //              <<std::get<2>(elm)<<endl;
+    //    }
     author_list_ = list;
 }
 
@@ -965,7 +965,7 @@ void Canvas::foundTablet()
 
 CanvasBackend::CanvasBackend(QObject *parent)
     :QObject(parent),
-      blocklevel_(NONE)
+      blocklevel_(LOW)
 {
     QTimer *sendTimer = new QTimer(this);
     sendTimer->setInterval(1000*10);
@@ -1161,7 +1161,11 @@ void CanvasBackend::upsertMember(const QString& id, const QString& name)
 
 QByteArray CanvasBackend::toJson(const QVariant &m)
 {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
+    return QJsonDocument::fromVariant(m).toJson(QJsonDocument::Compact);
+#else
     return QJsonDocument::fromVariant(m).toJson();
+#endif
 }
 
 QVariant CanvasBackend::fromJson(const QByteArray &d)

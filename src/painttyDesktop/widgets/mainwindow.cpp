@@ -386,7 +386,12 @@ void MainWindow::requestOnlinelist()
     obj.insert("clientid", Singleton<CommandSocket>::instance().clientId());
     doc.setObject(obj);
     qDebug()<<"clientid: "<<Singleton<CommandSocket>::instance().clientId();
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
+    Singleton<CommandSocket>::instance().sendData(doc.toJson(QJsonDocument::Compact));
+#else
     Singleton<CommandSocket>::instance().sendData(doc.toJson());
+#endif
 }
 
 void MainWindow::requestCheckout()
@@ -397,7 +402,12 @@ void MainWindow::requestCheckout()
     obj.insert("key", getRoomKey().toString());
     doc.setObject(obj);
     qDebug()<<"checkout with key: "<<getRoomKey();
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
+    Singleton<CommandSocket>::instance().sendData(doc.toJson(QJsonDocument::Compact));
+#else
     Singleton<CommandSocket>::instance().sendData(doc.toJson());
+#endif
 }
 
 void MainWindow::shortcutInit()
@@ -654,7 +664,12 @@ void MainWindow::onNewMessage(const QString &content)
 
 QByteArray MainWindow::toJson(const QVariant &m)
 {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
+    return QJsonDocument::fromVariant(m).toJson(QJsonDocument::Compact);
+#else
     return QJsonDocument::fromVariant(m).toJson();
+#endif
+
 }
 
 QVariant MainWindow::fromJson(const QByteArray &d)
