@@ -189,7 +189,11 @@ void RoomListDialog::requestRoomList()
 
         QJsonDocument doc;
         doc.setObject(map);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
+        socket->sendData(doc.toJson(QJsonDocument::Compact));
+#else
         socket->sendData(doc.toJson());
+#endif
         ui->progressBar->setRange(0,0);
     }else{
         qDebug()<<"Unexpected State in requestRoomList"<<state_;
@@ -218,12 +222,25 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
         QJsonDocument doc;
         doc.setObject(map);
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
+        socket->sendData(doc.toJson(QJsonDocument::Compact));
+#else
         socket->sendData(doc.toJson());
+#endif
+
         ui->progressBar->setRange(0,0);
-        //TODO: auto connect to room
+        wantedRoomName_ = m["name"].toString();
+        wantedPassword_ = m["password"].toString();
+        // TODO: don't require password when join
     }else{
         qDebug()<<"Unexpected State in requestNewRoom"<<state_;
     }
+}
+
+void RoomListDialog::joinRoomByPort(const int &p)
+{
+    QHostAddress address = socket->address();
+    Singleton<CommandSocket>::instance().connectToHost(address, p);
 }
 
 void RoomListDialog::onServerData(const QByteArray &array)
@@ -362,8 +379,8 @@ void RoomListDialog::onCmdServerData(const QByteArray &array)
             accept();
             return;
         }
-    state_ = ManagerConnected;
-    ui->progressBar->setValue(100);
+        state_ = ManagerConnected;
+        ui->progressBar->setValue(100);
     }
 }
 
@@ -376,10 +393,10 @@ void RoomListDialog::onNewRoomRespnse(const QJsonObject &m)
         QMessageBox::information(newRoomWindow, tr("Go get your room!"),
                                  msg,
                                  QMessageBox::Ok);
+        int cmdPort = 0;
         if(m.contains("info")){
             QJsonObject info = m.value("info").toObject();
-            //            int cmdPort = info.value("cmdPort").toInt();
-            //            QString password = info.value("password").toString();
+            cmdPort = info.value("port").toDouble();
             QString key = info.value("key").toString();
 
             QCryptographicHash hash(QCryptographicHash::Md5);
@@ -392,6 +409,25 @@ void RoomListDialog::onNewRoomRespnse(const QJsonObject &m)
             settings.sync();
         }
         newRoomWindow->accept();
+
+        if(cmdPort){
+            // Since full new room info comes later,
+            // we must fake it to join it now
+            roomName_ = wantedRoomName_;
+            QJsonObject fakeRoom;
+            fakeRoom.insert("name", roomName_);
+            // new room is faked to be empty
+            fakeRoom.insert("currentload", 0);
+            fakeRoom.insert("cmdport", cmdPort);
+            fakeRoom.insert("maxload", 8);
+            if(wantedPassword_.isEmpty()){
+                fakeRoom.insert("private", false);
+            }else{
+                fakeRoom.insert("private", true);
+            }
+            roomsInfo.insert(roomName_, fakeRoom);
+            joinRoomByPort(cmdPort);
+        }
         return;
     }
     newRoomWindow->failed();
@@ -466,7 +502,7 @@ void RoomListDialog::filterRoomList()
         ui->tableWidget->setItem(0, column++, item);
 
         row++;
-//        ui->progressBar->setValue(100*row/roomsInfo.count());
+        //        ui->progressBar->setValue(100*row/roomsInfo.count());
     }
     ui->counter_label->setText(tr("Rooms: %1, Members: %2")
                                .arg(row)
@@ -572,6 +608,8 @@ void RoomListDialog::showEvent(QShowEvent *)
         ui->progressBar->setValue(100);
         requestRoomList();
         timer->start(10000);
+    }else if(state_ == ManagerConnecting ){
+        // do nothing
     }else{
         qDebug()<<"Unexpcted State in showEvent"<<state_;
     }

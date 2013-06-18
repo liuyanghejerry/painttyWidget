@@ -158,4 +158,8 @@ void Socket::onReceipt()
 void Socket::close()
 {
     socket->disconnectFromHost();
+    if(socket->state() != QAbstractSocket::UnconnectedState
+            && socket->bytesToWrite()) {
+        socket->waitForDisconnected(60*1000);
+    }
 }

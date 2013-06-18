@@ -47,6 +47,7 @@ protected:
     QSize canvasSize() const {return canvasSize_;}
     int dataPort() const {return dataPort_;}
     int msgPort() const {return msgPort_;}
+    void joinRoomByPort(const int &p);
 private:
     enum State{
         Error = -999,
@@ -68,6 +69,8 @@ private:
     QSize canvasSize_;
     Socket *socket;
     QString roomName_;
+    QString wantedRoomName_;
+    QString wantedPassword_;
     QString nickName_;
     QTimer *timer;
     NewRoomWindow *newRoomWindow;

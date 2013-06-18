@@ -60,9 +60,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    msgSocket.close();
-    dataSocket.close();
-    Singleton<CommandSocket>::instance().close();
+//    msgSocket.close();
+//    dataSocket.close();
+//    Singleton<CommandSocket>::instance().close();
     delete ui;
 }
 
@@ -863,6 +863,16 @@ void MainWindow::deleteLayer(const QString &name)
 
 void MainWindow::closeEvent( QCloseEvent * event )
 {
+    QMessageBox msgBox;
+    msgBox.setText(tr("Waiting for sync, please do not close.\n"\
+                   "This will cost you 1 minute at most."));
+    msgBox.setStandardButtons(QMessageBox::NoButton);
+    msgBox.setWindowModality(Qt::ApplicationModal);
+    msgBox.setModal(true);
+    msgBox.setWindowFlags(Qt::WindowTitleHint
+                          | Qt::CustomizeWindowHint);
+    msgBox.show();
+
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
                        qApp);
@@ -871,6 +881,12 @@ void MainWindow::closeEvent( QCloseEvent * event )
     settings.setValue("mainwindow/view",
                       saveState());
     settings.sync();
+
+    msgSocket.close();
+    dataSocket.close();
+    Singleton<CommandSocket>::instance().close();
+    msgBox.close();
+
     event->accept();
 }
 
