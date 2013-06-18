@@ -47,7 +47,9 @@ protected:
     QSize canvasSize() const {return canvasSize_;}
     int dataPort() const {return dataPort_;}
     int msgPort() const {return msgPort_;}
-    void joinRoomByPort(const int &p);
+    void connectRoomByPort(const int &p);
+    void tryJoinRoomManually();
+    void tryJoinRoomAutomated();
 private:
     enum State{
         Error = -999,

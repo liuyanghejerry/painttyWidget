@@ -139,6 +139,8 @@ void RoomListDialog::requestJoin()
         return;
     }
     state_ = RoomConnecting;
+    wantedRoomName_.clear();
+    wantedPassword_.clear();
     Singleton<CommandSocket>::instance().close();
     ui->lineEdit->setText(ui->lineEdit->text().trimmed());
     nickName_ = ui->lineEdit->text();
@@ -231,16 +233,84 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
         ui->progressBar->setRange(0,0);
         wantedRoomName_ = m["name"].toString();
         wantedPassword_ = m["password"].toString();
-        // TODO: don't require password when join
     }else{
         qDebug()<<"Unexpected State in requestNewRoom"<<state_;
     }
 }
 
-void RoomListDialog::joinRoomByPort(const int &p)
+void RoomListDialog::connectRoomByPort(const int &p)
 {
     QHostAddress address = socket->address();
     Singleton<CommandSocket>::instance().connectToHost(address, p);
+}
+
+void RoomListDialog::tryJoinRoomManually()
+{
+    int current = roomsInfo[roomName_].value("currentload").toDouble();
+    int max = roomsInfo[roomName_].value("maxload").toDouble();
+
+    if(current >= max){
+        QMessageBox::critical(this,
+                              tr("Full loaded"),
+                              tr("Cannot join a full loaded room."),
+                              QMessageBox::Close);
+        return;
+    }
+    bool isPrivate = roomsInfo[roomName_].value("private").toBool();
+    QString passwd;
+    if(isPrivate){
+        bool isOk = false;
+        passwd = QInputDialog::getText(this,
+                                       tr("Password"),
+                                       tr("This is a private room, please input password:"),
+                                       QLineEdit::PasswordEchoOnEdit,
+                                       QString(),
+                                       &isOk);
+        if(!isOk) {
+            return;
+        }
+        passwd.truncate(16);
+    }
+
+
+    QJsonObject map;
+    map.insert("request", QString("login"));
+    map.insert("name", nickName_);
+    map.insert("password", passwd);
+    map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
+
+    QJsonDocument doc;
+    doc.setObject(map);
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
+    auto array = doc.toJson(QJsonDocument::Compact);
+#else
+    auto array = doc.toJson();
+#endif
+
+    Singleton<CommandSocket>::instance().sendData(array);
+    ui->progressBar->setRange(0, 0);
+}
+
+void RoomListDialog::tryJoinRoomAutomated()
+{
+    QJsonObject map;
+    map.insert("request", QString("login"));
+    map.insert("name", nickName_);
+    map.insert("password", wantedPassword_);
+    map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
+
+    QJsonDocument doc;
+    doc.setObject(map);
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
+    auto array = doc.toJson(QJsonDocument::Compact);
+#else
+    auto array = doc.toJson();
+#endif
+
+    Singleton<CommandSocket>::instance().sendData(array);
+    ui->progressBar->setRange(0, 0);
 }
 
 void RoomListDialog::onServerData(const QByteArray &array)
@@ -286,50 +356,11 @@ void RoomListDialog::onServerClosed()
 void RoomListDialog::onCmdServerConnected()
 {
     state_ = RoomConnected;
-    int current = roomsInfo[roomName_].value("currentload").toDouble();
-    int max = roomsInfo[roomName_].value("maxload").toDouble();
-
-    if(current >= max){
-        QMessageBox::critical(this,
-                              tr("Full loaded"),
-                              tr("Cannot join a full loaded room."),
-                              QMessageBox::Close);
-        return;
+    if(wantedRoomName_.isEmpty()){
+        tryJoinRoomManually();
+    }else{
+        tryJoinRoomAutomated();
     }
-    bool isPrivate = roomsInfo[roomName_].value("private").toBool();
-    QString passwd;
-    if(isPrivate){
-        bool isOk = false;
-        passwd = QInputDialog::getText(this,
-                                       tr("Password"),
-                                       tr("This is a private room, please input password:"),
-                                       QLineEdit::PasswordEchoOnEdit,
-                                       QString(),
-                                       &isOk);
-        if(!isOk) {
-            return;
-        }
-        passwd.truncate(16);
-    }
-
-
-    QJsonObject map;
-    map.insert("request", QString("login"));
-    map.insert("name", nickName_);
-    map.insert("password", passwd);
-    map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
-
-    QJsonDocument doc;
-    doc.setObject(map);
-
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
-    auto array = doc.toJson(QJsonDocument::Compact);
-#else
-    auto array = doc.toJson();
-#endif
-
-    Singleton<CommandSocket>::instance().sendData(array);
-    ui->progressBar->setRange(0, 0);
 }
 
 void RoomListDialog::onCmdServerData(const QByteArray &array)
@@ -414,19 +445,7 @@ void RoomListDialog::onNewRoomRespnse(const QJsonObject &m)
             // Since full new room info comes later,
             // we must fake it to join it now
             roomName_ = wantedRoomName_;
-            QJsonObject fakeRoom;
-            fakeRoom.insert("name", roomName_);
-            // new room is faked to be empty
-            fakeRoom.insert("currentload", 0);
-            fakeRoom.insert("cmdport", cmdPort);
-            fakeRoom.insert("maxload", 8);
-            if(wantedPassword_.isEmpty()){
-                fakeRoom.insert("private", false);
-            }else{
-                fakeRoom.insert("private", true);
-            }
-            roomsInfo.insert(roomName_, fakeRoom);
-            joinRoomByPort(cmdPort);
+            connectRoomByPort(cmdPort);
         }
         return;
     }
