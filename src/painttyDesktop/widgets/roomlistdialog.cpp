@@ -133,6 +133,20 @@ void RoomListDialog::socketInit()
                                               std::placeholders::_1));
 }
 
+bool RoomListDialog::collectUserInfo()
+{
+    ui->lineEdit->setText(ui->lineEdit->text().trimmed());
+    nickName_ = ui->lineEdit->text();
+    if(nickName_.isEmpty()){
+        QMessageBox::warning( this,
+                              tr("Warning"),
+                              tr("You must have a valid nick name."),
+                              QMessageBox::Close);
+        return false;
+    }
+    return true;
+}
+
 void RoomListDialog::requestJoin()
 {
     if(state_ < 1){
@@ -142,13 +156,7 @@ void RoomListDialog::requestJoin()
     wantedRoomName_.clear();
     wantedPassword_.clear();
     Singleton<CommandSocket>::instance().close();
-    ui->lineEdit->setText(ui->lineEdit->text().trimmed());
-    nickName_ = ui->lineEdit->text();
-    if(nickName_.isEmpty()){
-        QMessageBox::warning( this,
-                              tr("Warning"),
-                              tr("You must have a valid nick name."),
-                              QMessageBox::Close);
+    if(!collectUserInfo()){
         return;
     }
     QList<QTableWidgetItem *> list = ui->tableWidget->selectedItems();
@@ -294,6 +302,9 @@ void RoomListDialog::tryJoinRoomManually()
 
 void RoomListDialog::tryJoinRoomAutomated()
 {
+    if(!collectUserInfo()){
+        return;
+    }
     QJsonObject map;
     map.insert("request", QString("login"));
     map.insert("name", nickName_);
@@ -308,7 +319,7 @@ void RoomListDialog::tryJoinRoomAutomated()
 #else
     auto array = doc.toJson();
 #endif
-
+    qDebug()<<"try auto join room: "<<array;
     Singleton<CommandSocket>::instance().sendData(array);
     ui->progressBar->setRange(0, 0);
 }

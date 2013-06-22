@@ -43,6 +43,7 @@ protected:
     
     QString roomName() const;
     QString nick() const;
+    bool collectUserInfo();
     int historySize() const;
     QSize canvasSize() const {return canvasSize_;}
     int dataPort() const {return dataPort_;}
