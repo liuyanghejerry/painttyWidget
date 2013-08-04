@@ -146,7 +146,7 @@ private:
     void pickColor(const QPoint &point);
     void updateCursor();
     void tryJitterCorrection();
-    void appendAuthorSignature(QPixmap &target);
+    QPixmap appendAuthorSignature(QPixmap target);
 
     BrushPointer brushFactory(const QString &name);
 

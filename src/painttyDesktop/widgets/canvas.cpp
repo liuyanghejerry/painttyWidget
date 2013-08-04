@@ -149,8 +149,7 @@ QPixmap Canvas::currentCanvas()
 {
     QPixmap pmp = image;
     layers.combineLayers(&pmp);
-    appendAuthorSignature(pmp);
-    return pmp;
+    return appendAuthorSignature(pmp);
 }
 
 QPixmap Canvas::allCanvas()
@@ -165,39 +164,50 @@ QPixmap Canvas::allCanvas()
         im = l->imagePtr();
         painter.drawPixmap(0, 0, *im);
     }
-    appendAuthorSignature(exp);
-    return exp;
+    return appendAuthorSignature(exp);
 }
 
-void Canvas::appendAuthorSignature(QPixmap& target)
+QPixmap Canvas::appendAuthorSignature(QPixmap target)
 {
+    // TODO: make all numbers configurable
     using CBMSI = CanvasBackend::MemberSectionIndex;
     int textSize = qMin(target.size().height(), target.width());
-    //    textSize = qBound(20, int(textSize * 0.1), 100);
-    textSize = int(textSize * 0.5);
-    QPixmap tmp(target.size());
-    tmp.fill(Qt::white);
-    QPainter painter(&tmp);
+    textSize = qBound(10, int(textSize * 0.02), 100);
+
+    QPainter painter(&target);
     QPen textPen;
+    // TODO: use contrast color to render text
     textPen.setColor(Qt::black);
-    textPen.setWidth(textSize);
+    painter.setOpacity(0.4);
     painter.setPen(textPen);
-    QPoint rightCorner = this->rect().bottomRight();
-    //
+
     QStaticText text;
-    QString authors("BY ");
-    text.setTextFormat(Qt::PlainText);
+    QString authors;
+    text.setTextFormat(Qt::RichText);
+    QTextOption textOp;
+    textOp.setAlignment(Qt::AlignRight);
+    text.setTextOption(textOp);
 
     for(auto& item: author_list_){
         QString name = std::get<CBMSI::Name>(item);
-        authors += name + "\n";
+        authors += QString("BY ") + name + "<br/>";
     }
+
     text.setText(authors);
+
+    QFont textFont(QGuiApplication::font());
+    textFont.setPointSize(textSize);
+    painter.setFont(textFont);
+    text.prepare(QTransform(), textFont);
+
+    QPoint rightCorner = target.rect().bottomRight();
+    QPoint padding(20, 20);
     rightCorner -= QPoint(text.size().width(),
                           text.size().height());
-    painter.drawStaticText(rightCorner, text);
-    tmp.save("abc.png");
+    rightCorner -= padding;
 
+    painter.drawStaticText(rightCorner, text);
+    return target;
 }
 
 int Canvas::jitterCorrectionLevel() const
