@@ -32,6 +32,7 @@
 #include "configuredialog.h"
 #include "brushsettingswidget.h"
 #include "../../common/network/commandsocket.h"
+#include "../../common/network/clientsocket.h"
 #include "../../common/network/localnetworkinterface.h"
 #include "../paintingTools/brush/brushmanager.h"
 #include "../../common/common.h"
@@ -42,8 +43,6 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    msgSocket(this),
-    dataSocket(this),
     lastBrushAction(nullptr),
     brushSettingControl_(nullptr),
     toolbar_(nullptr),
@@ -145,7 +144,7 @@ void MainWindow::init()
     t->start();
 }
 
-void MainWindow::cmdSocketRouterInit()
+void MainWindow::cmdRouterInit()
 {
     cmdRouter_.regHandler("action",
                           "close",
@@ -447,29 +446,21 @@ void MainWindow::shortcutInit()
 
 void MainWindow::socketInit()
 {
-    connect(&msgSocket,&MessageSocket::connected,
-            this,&MainWindow::onServerConnected);
-    connect(&msgSocket,&MessageSocket::disconnected,
-            this,&MainWindow::onServerDisconnected);
-    connect(&msgSocket,
-            static_cast<void (MessageSocket::*)(QString)>
-            (&MessageSocket::newMessage),
-            this,&MainWindow::onNewMessage);
-    connect(this,&MainWindow::sendMessage,
-            &msgSocket,&MessageSocket::sendMessage);
+    auto& client_socket = Singleton<ClientSocket>::instance();
 
-    connect(&dataSocket,&DataSocket::connected,
-            this,&MainWindow::onServerConnected);
-    connect(&dataSocket,&DataSocket::newData,
-            ui->canvas,&Canvas::onNewData);
-    connect(ui->canvas,&Canvas::sendData,
-            &dataSocket,&DataSocket::sendData);
-    connect(&dataSocket,&DataSocket::disconnected,
-            this,&MainWindow::onServerDisconnected);
+    connect(&client_socket, &ClientSocket::newMessage,
+            this, &MainWindow::onNewMessage);
+    connect(this, &MainWindow::sendMessage,
+            &client_socket, &ClientSocket::sendMessage);
 
-    connect(&Singleton<CommandSocket>::instance(), &CommandSocket::newData,
-            this, &MainWindow::onCmdServerData);
-    cmdSocketRouterInit();
+    connect(&client_socket, &ClientSocket::dataPack,
+            ui->canvas, &Canvas::onNewData);
+    connect(ui->canvas, &Canvas::sendData,
+            &client_socket, &ClientSocket::sendData);
+
+    connect(&client_socket, &ClientSocket::cmdPack,
+            this, &MainWindow::onCmdData);
+    cmdRouterInit();
     // checkout if client is room owner
     if(!getRoomKey().isNull()){
         requestCheckout();
@@ -484,23 +475,15 @@ void MainWindow::socketInit()
         addr = GlobalDef::HOST_ADDR[0];
         qDebug()<<"using ipv4 address to connect server";
     }
-    auto& cmdInstance = Singleton<CommandSocket>::instance();
-    msgSocket.connectToHost(addr,
-                            cmdInstance.msgPort());
-    dataSocket.connectToHost(addr,
-                             cmdInstance.dataPort());
 }
 
 void MainWindow::onServerConnected()
 {
-    if(dataSocket.isConnected() && msgSocket.isConnected()){
-        ui->textEdit->insertPlainText(tr("Server Connected.\n"));
-        ui->canvas->setEnabled(true);
-        ui->layerWidget->setEnabled(true);
-        ui->lineEdit->setEnabled(true);
-        ui->pushButton->setEnabled(true);
-        //        ui->colorPicker->setEnabled(true);
-    }
+    ui->textEdit->insertPlainText(tr("Server Connected.\n"));
+    ui->canvas->setEnabled(true);
+    ui->layerWidget->setEnabled(true);
+    ui->lineEdit->setEnabled(true);
+    ui->pushButton->setEnabled(true);
 }
 
 void MainWindow::onServerDisconnected()
@@ -514,7 +497,7 @@ void MainWindow::onCmdServerDisconnected()
     //
 }
 
-void MainWindow::onCmdServerData(const QByteArray &data)
+void MainWindow::onCmdData(const QJsonObject &data)
 {
     cmdRouter_.onData(data);
 }
@@ -874,9 +857,7 @@ void MainWindow::closeEvent( QCloseEvent * event )
                       saveState());
     settings.sync();
 
-    msgSocket.close();
-    dataSocket.close();
-    Singleton<CommandSocket>::instance().close();
+    Singleton<ClientSocket>::instance().close();
     msgBox.close();
 
     event->accept();

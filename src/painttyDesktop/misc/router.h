@@ -9,7 +9,7 @@
 
 // name space for default handler type
 namespace RouterZone{
-    typedef std::function<void (const QJsonObject&)> DefaultHandler;
+typedef std::function<void (const QJsonObject&)> DefaultHandler;
 }
 
 
@@ -51,10 +51,8 @@ public:
         }
     }
 
-    void onData(const QByteArray &bytes)
+    void onData(const QJsonObject &obj)
     {
-        auto doc = QJsonDocument::fromJson(bytes);
-        auto obj = doc.object();
         auto rules = records_.keys();
         qDebug()<<obj;
         for(auto item: rules){
@@ -78,5 +76,45 @@ private:
     typedef QHash<QString, RouterFunc_> FuncTable;
     QHash<QString, FuncTable > records_;
 };
+
+//typedef QPair<QString, QString> RouterRule;
+//typedef QList<RouterRule> RouterItem;
+
+//template<typename RouterFunc = RouterZone::DefaultHandler>
+//class Router
+//{
+//public:
+//    void addItem(const RouterItem& item, const RouterFunc& func)
+//    {
+//        items_.insert(item, func);
+//    }
+
+//    void removeItem(const RouterItem& rule)
+//    {
+//        items_.remove(rule);
+//    }
+
+//    void onData(const QByteArray &bytes)
+//    {
+//        auto doc = QJsonDocument::fromJson(bytes);
+//        auto obj = doc.object();
+//        auto router_items = items_.keys();
+//        for(auto router_item: router_items){
+//            for(auto router_rule: router_item){
+//                QString rule_key = router_rule.first;
+//                QString rule_value = router_rule.second;
+//                if(obj.contains(rule_key)){
+//                    if(obj.value(rule_key).toString() == rule_value){
+//                        auto& func = items_.value(router_item);
+//                        func(obj);
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+//private:
+//    QHash<RouterItem, RouterFunc> items_;
+//};
 
 #endif // ROUTER_H

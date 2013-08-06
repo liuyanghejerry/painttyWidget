@@ -24,13 +24,13 @@ public slots:
     void requestJoin();
     void requestNewRoom(const QJsonObject &m);
     void requestRoomList();
-    void onServerData(const QByteArray &array);
-    void onServerClosed();
+    void onManagerData(const QJsonObject &array);
+    void onManagerServerClosed();
     void filterRoomList();
 private slots:
     void onManagerServerConnected();
     void onCmdServerConnected();
-    void onCmdServerData(const QByteArray &array);
+    void onCmdData(const QJsonObject &map);
     void onNewRoomRespnse(const QJsonObject &m);
     void loadNick();
     void saveNick();
@@ -70,7 +70,6 @@ private:
     int msgPort_;
     quint64 historySize_;
     QSize canvasSize_;
-    Socket *socket;
     QString roomName_;
     QString wantedRoomName_;
     QString wantedPassword_;
@@ -82,6 +81,7 @@ private:
     QByteArray clientId_;
     State state_;
     void tableInit();
+    void connectToManager();
     void socketInit();
     QByteArray loadClientId();
     void onManagerResponseRoomlist(const QJsonObject &obj);

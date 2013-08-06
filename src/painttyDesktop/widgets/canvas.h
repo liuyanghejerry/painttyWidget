@@ -31,7 +31,7 @@ public:
     BlockLevel blockLevel() const;
 public slots:
     void onDataBlock(const QVariantMap& d);
-    void onIncomingData(const QByteArray& d);
+    void onIncomingData(const QJsonObject &d);
     void requestMembers(MemberSectionIndex index,
                         bool mergeSameName = false);
     void clearMembers();
@@ -86,7 +86,7 @@ public slots:
     void setBrushColor(const QColor &newColor);
     void setBrushWidth(int newWidth);
     void setBrushHardness(int h);
-    void onNewData(const QByteArray & data);
+    void onNewData(const QJsonObject &data);
     void addLayer(const QString &name);
     bool deleteLayer(const QString &name);
     void clearLayer(const QString &name);
@@ -108,7 +108,7 @@ signals:
     void historyComplete();
     void newPaintAction(const QVariantMap &m);
     void paintActionComplete();
-    void newInternalData(const QByteArray &);
+    void newInternalData(const QJsonObject &);
     void requestSortedMembers(CanvasBackend::MemberSectionIndex index
                                = CanvasBackend::MemberSectionIndex::Count,
                               bool mergeSameName = true);

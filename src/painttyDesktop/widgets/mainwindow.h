@@ -55,7 +55,7 @@ private:
     void toolbarInit();
     void shortcutInit();
     void socketInit();
-    void cmdSocketRouterInit();
+    void cmdRouterInit();
     void setNickName();
     void setRoomName();
     void setHistorySize();
@@ -67,8 +67,6 @@ private:
     static QVariant fromJson(const QByteArray &d);
 
     Ui::MainWindow *ui;
-    MessageSocket msgSocket;
-    DataSocket dataSocket;
 
     QByteArray defaultView;
     QAction *lastBrushAction;
@@ -88,7 +86,7 @@ private slots:
     void onBrushSettingsChanged(const QVariantMap &m);
     void onColorPickerPressed(bool c);
     void onCmdServerDisconnected();
-    void onCmdServerData(const QByteArray &data);
+    void onCmdData(const QJsonObject &data);
     void onPanoramaRefresh();
     void onCommandActionClose(const QJsonObject &);
     void onCommandResponseClose(const QJsonObject &m);

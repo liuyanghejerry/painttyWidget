@@ -77,7 +77,8 @@ SOURCES += main.cpp\
     misc/platformextend.cpp \
     misc/shortcutmanager.cpp \
     widgets/configuredialog.cpp\
-    widgets/shortcutgrabberedit.cpp
+    widgets/shortcutgrabberedit.cpp \
+    ../common/network/clientsocket.cpp
 
 
 HEADERS  += widgets/mainwindow.h \
@@ -126,7 +127,8 @@ HEADERS  += widgets/mainwindow.h \
     misc/call_once.h \
     misc/shortcutmanager.h \
     widgets/configuredialog.h\
-    widgets/shortcutgrabberedit.h
+    widgets/shortcutgrabberedit.h \
+    ../common/network/clientsocket.h
 
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \

@@ -2,6 +2,7 @@
 #include <QHash>
 #include <QSharedPointer>
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QStyleOption>
 #include <QMouseEvent>
 #include <QTabletEvent>
@@ -124,9 +125,9 @@ Canvas::Canvas(QWidget *parent) :
     });
     t->start(5000);
 
-    if(historySize_ > 0){
-        this->setEnabled(true);
-    }
+//    if(historySize_ > 0){
+//        this->setEnabled(true);
+//    }
 }
 
 /*!
@@ -606,23 +607,24 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
     update();
 }
 
-void Canvas::onNewData(const QByteArray & array)
+void Canvas::onNewData(const QJsonObject & array)
 {
-    static quint64 h_size = 0;
-    if(historySize_) {
-        h_size += array.size();
-        if(h_size < historySize_){
-            this->setDisabled(true);
-            //            qDebug()<<"History: "<<historySize_
-            //                   <<"Loaded: "<<h_size;
-        }else{
-            qDebug()<<"History"<<historySize_<<"bytes loaded!";
-            historySize_ = 0;
-            h_size = 0;
-            this->setEnabled(true);
-            emit historyComplete();
-        }
-    }
+    // TODO: re-build history detection
+//    static quint64 h_size = 0;
+//    if(historySize_) {
+//        h_size += array.size();
+//        if(h_size < historySize_){
+//            this->setDisabled(true);
+//            //            qDebug()<<"History: "<<historySize_
+//            //                   <<"Loaded: "<<h_size;
+//        }else{
+//            qDebug()<<"History"<<historySize_<<"bytes loaded!";
+//            historySize_ = 0;
+//            h_size = 0;
+//            this->setEnabled(true);
+//            emit historyComplete();
+//        }
+//    }
     emit newInternalData(array);
 }
 
@@ -1020,10 +1022,9 @@ void CanvasBackend::onDataBlock(const QVariantMap& d)
     }
 }
 
-void CanvasBackend::onIncomingData(const QByteArray& data)
+void CanvasBackend::onIncomingData(const QJsonObject& obj)
 {
-    QVariantMap m = fromJson(data).toMap();
-    QString action = m["action"].toString().toLower();
+    QString action = obj.value("action").toString().toLower();
 
     auto drawPoint = [this](const QVariantMap& m){
         QPoint point;
@@ -1096,11 +1097,11 @@ void CanvasBackend::onIncomingData(const QByteArray& data)
     };
 
     if(action == "drawpoint"){
-        drawPoint(m);
+        drawPoint(obj.toVariantMap());
     }else if(action == "drawline"){
-        drawLine(m);
+        drawLine(obj.toVariantMap());
     }else if(action == "block"){
-        dataBlock(m);
+        dataBlock(obj.toVariantMap());
     }
 }
 

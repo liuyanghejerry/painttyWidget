@@ -17,7 +17,7 @@
 #include <QCryptographicHash>
 
 #include "../../common/common.h"
-#include "../../common/network/commandsocket.h"
+#include "../../common/network/clientsocket.h"
 #include "../../common/network/localnetworkinterface.h"
 #include "newroomwindow.h"
 #include "../misc/singleton.h"
@@ -27,10 +27,7 @@
 RoomListDialog::RoomListDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::RoomListDialog),
-    dataPort_(0),
-    msgPort_(0),
     historySize_(0),
-    socket(nullptr),
     newRoomWindow(new NewRoomWindow(this)),
     state_(Init)
 {
@@ -58,10 +55,6 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
             this,&RoomListDialog::requestNewRoom);
     connect(newRoomWindow, &NewRoomWindow::finished,
             this,&RoomListDialog::requestRoomList);
-    connect(&Singleton<CommandSocket>::instance(), &CommandSocket::connected,
-            this, &RoomListDialog::onCmdServerConnected);
-    connect(&Singleton<CommandSocket>::instance(), &CommandSocket::newData,
-            this, &RoomListDialog::onCmdServerData);
 
     ui->counter_label->setText(tr("Rooms: %1, Members: %2")
                                .arg("?")
@@ -70,9 +63,6 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
     state_ = Ready;
     socketInit();
     timer = new QTimer(this);
-    connect(timer,&QTimer::timeout,
-            this,&RoomListDialog::requestRoomList);
-    timer->start(10000);
     loadNick();
     clientId_ = loadClientId();
 
@@ -80,11 +70,11 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
 
 RoomListDialog::~RoomListDialog()
 {
-    disconnect(socket,&Socket::disconnected,
-               this,&RoomListDialog::onServerClosed);
-    socket->close();
+    auto& socket = Singleton<ClientSocket>::instance();
+    disconnect(&socket, &ClientSocket::disconnected,
+               this,&RoomListDialog::onManagerServerClosed);
+    socket.close();
     delete ui;
-    delete socket;
 }
 
 void RoomListDialog::tableInit()
@@ -99,16 +89,18 @@ void RoomListDialog::tableInit()
     ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
 }
 
-void RoomListDialog::socketInit()
+void RoomListDialog::connectToManager()
 {
+    state_ = ManagerConnecting;
     ui->progressBar->setRange(0,0);
-    socket = new Socket;
-    connect(socket,&Socket::newData,
-            this,&RoomListDialog::onServerData);
-    connect(socket,&Socket::connected,
-            this,&RoomListDialog::onManagerServerConnected);
-    connect(socket,&Socket::disconnected,
-            this,&RoomListDialog::onServerClosed);
+    auto& client_socket = Singleton<ClientSocket>::instance();
+
+    connect(&client_socket, &ClientSocket::managerPack,
+            this, &RoomListDialog::onManagerData);
+    connect(&client_socket, &ClientSocket::connected,
+            this, &RoomListDialog::onManagerServerConnected);
+    connect(&client_socket, &ClientSocket::disconnected,
+            this, &RoomListDialog::onManagerServerClosed);
     QHostAddress addr;
     if(LocalNetworkInterface::supportIpv6()){
         addr = GlobalDef::HOST_ADDR[1];
@@ -118,9 +110,13 @@ void RoomListDialog::socketInit()
         qDebug()<<"using ipv4 address to connect server";
     }
 
-    socket->connectToHost(addr,
-                          GlobalDef::HOST_MGR_PORT);
-    state_ = ManagerConnecting;
+    client_socket.connectToHost(addr,
+                                GlobalDef::HOST_MGR_PORT);
+}
+
+void RoomListDialog::socketInit()
+{
+    connectToManager();
     managerSocketRouter_.regHandler("response",
                                     "roomlist",
                                     std::bind(&RoomListDialog::onManagerResponseRoomlist,
@@ -155,7 +151,7 @@ void RoomListDialog::requestJoin()
     state_ = RoomConnecting;
     wantedRoomName_.clear();
     wantedPassword_.clear();
-    Singleton<CommandSocket>::instance().close();
+    Singleton<ClientSocket>::instance().close();
     if(!collectUserInfo()){
         return;
     }
@@ -174,9 +170,9 @@ void RoomListDialog::requestJoin()
     }
     //    QHostAddress address(
     //                roomsInfo[roomName].value("serverAddress").toString());
-    QHostAddress address = socket->address();
+    QHostAddress address = Singleton<ClientSocket>::instance().address();
     int cmdPort = roomsInfo[roomName_].value("cmdport").toDouble();
-    Singleton<CommandSocket>::instance().connectToHost(address, cmdPort);
+    Singleton<ClientSocket>::instance().connectToHost(address, cmdPort);
 
 }
 
@@ -200,9 +196,9 @@ void RoomListDialog::requestRoomList()
         QJsonDocument doc;
         doc.setObject(map);
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
-        socket->sendData(doc.toJson(QJsonDocument::Compact));
+        Singleton<ClientSocket>::instance().sendData(doc.toJson(QJsonDocument::Compact));
 #else
-        socket->sendData(doc.toJson());
+        Singleton<ClientSocket>::instance().sendData(doc.toJson());
 #endif
         ui->progressBar->setRange(0,0);
     }else{
@@ -233,9 +229,9 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
         doc.setObject(map);
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
-        socket->sendData(doc.toJson(QJsonDocument::Compact));
+        Singleton<ClientSocket>::instance().sendData(doc.toJson(QJsonDocument::Compact));
 #else
-        socket->sendData(doc.toJson());
+        Singleton<ClientSocket>::instance().sendData(doc.toJson());
 #endif
 
         ui->progressBar->setRange(0,0);
@@ -248,8 +244,20 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
 
 void RoomListDialog::connectRoomByPort(const int &p)
 {
-    QHostAddress address = socket->address();
-    Singleton<CommandSocket>::instance().connectToHost(address, p);
+    auto& client_socket = Singleton<ClientSocket>::instance();
+
+    disconnect(&client_socket, &ClientSocket::connected,
+               this, &RoomListDialog::onManagerServerConnected);
+    disconnect(&client_socket, &ClientSocket::disconnected,
+               this, &RoomListDialog::onManagerServerClosed);
+
+    connect(&client_socket, &ClientSocket::connected,
+            this, &RoomListDialog::onCmdServerConnected);
+    connect(&client_socket, &ClientSocket::cmdPack,
+            this, &RoomListDialog::onCmdData);
+
+    QHostAddress address = client_socket.address();
+    client_socket.connectToHost(address, p);
 }
 
 void RoomListDialog::tryJoinRoomManually()
@@ -296,7 +304,7 @@ void RoomListDialog::tryJoinRoomManually()
     auto array = doc.toJson();
 #endif
 
-    Singleton<CommandSocket>::instance().sendData(array);
+    Singleton<ClientSocket>::instance().sendData(array);
     ui->progressBar->setRange(0, 0);
 }
 
@@ -320,11 +328,11 @@ void RoomListDialog::tryJoinRoomAutomated()
     auto array = doc.toJson();
 #endif
     qDebug()<<"try auto join room: "<<array;
-    Singleton<CommandSocket>::instance().sendData(array);
+    Singleton<ClientSocket>::instance().sendData(array);
     ui->progressBar->setRange(0, 0);
 }
 
-void RoomListDialog::onServerData(const QByteArray &array)
+void RoomListDialog::onManagerData(const QJsonObject &array)
 {
     managerSocketRouter_.onData(array);
 }
@@ -352,9 +360,12 @@ void RoomListDialog::onManagerServerConnected()
     state_ = ManagerConnected;
     ui->progressBar->setValue(100);
     requestRoomList();
+    connect(timer,&QTimer::timeout,
+            this,&RoomListDialog::requestRoomList);
+    timer->start(10000);
 }
 
-void RoomListDialog::onServerClosed()
+void RoomListDialog::onManagerServerClosed()
 {
     state_ = Error;
     QMessageBox::critical(this,
@@ -374,9 +385,8 @@ void RoomListDialog::onCmdServerConnected()
     }
 }
 
-void RoomListDialog::onCmdServerData(const QByteArray &array)
+void RoomListDialog::onCmdData(const QJsonObject &map)
 {
-    QJsonObject map  = QJsonDocument::fromJson(array).object();
     QString response = map["response"].toString();
 
     if(response == "login"){
@@ -397,13 +407,9 @@ void RoomListDialog::onCmdServerData(const QByteArray &array)
             if(!map.contains("info"))
                 return;
             QJsonObject info = map["info"].toObject();
-            if(!info.contains("dataport")
-                    || !info.contains("msgport")
-                    || !info.contains("historysize")){
+            if(!info.contains("historysize")){
                 return;
             }
-            dataPort_ = info["dataport"].toDouble();
-            msgPort_ = info["msgport"].toDouble();
             historySize_ = info["historysize"].toDouble();
             if(info.contains("size")){
                 QJsonObject sizeMap = info["size"].toObject();
@@ -413,9 +419,9 @@ void RoomListDialog::onCmdServerData(const QByteArray &array)
             }
             if(info.contains("clientid")){
                 QString clientid = info["clientid"].toString();
-                Singleton<CommandSocket>::instance().setClientId(clientid);
+                Singleton<ClientSocket>::instance().setClientId(clientid);
                 qDebug()<<"clientid assign"
-                       <<Singleton<CommandSocket>::instance().clientId();
+                       <<Singleton<ClientSocket>::instance().clientId();
             }
             state_ = RoomJoined;
             accept();
@@ -616,13 +622,11 @@ void RoomListDialog::openConfigure()
 
 void RoomListDialog::commitToGlobal()
 {
-    auto &instance = Singleton<CommandSocket>::instance();
+    auto &instance = Singleton<ClientSocket>::instance();
     instance.setUserName(this->nick());
     instance.setCanvasSize(this->canvasSize());
     instance.setHistorySize(this->historySize());
     instance.setRoomName(this->roomName());
-    instance.setMsgPort(this->msgPort());
-    instance.setDataPort(this->dataPort());
 }
 
 void RoomListDialog::hideEvent(QHideEvent *)
@@ -633,16 +637,7 @@ void RoomListDialog::hideEvent(QHideEvent *)
 
 void RoomListDialog::showEvent(QShowEvent *)
 {
-    if(state_ == RoomJoined){
-        state_ = ManagerConnected;
-        ui->progressBar->setValue(100);
-        requestRoomList();
-        timer->start(10000);
-    }else if(state_ == ManagerConnecting ){
-        // do nothing
-    }else{
-        qDebug()<<"Unexpcted State in showEvent"<<state_;
-    }
+    connectToManager();
 }
 
 void RoomListDialog::closeEvent(QCloseEvent *e)
