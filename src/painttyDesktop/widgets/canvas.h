@@ -4,7 +4,6 @@
 #include <QWidget>
 #include "../paintingTools/brush/abstractbrush.h"
 #include "../misc/layermanager.h"
-//#include "../misc/tabletsupport.h"
 
 typedef QSharedPointer<AbstractBrush> BrushPointer;
 
