@@ -11,15 +11,13 @@
 #include <QDebug>
 
 #include "../../common/common.h"
-#include "../misc/platformextend.h"
 
 using GlobalDef::MAX_SCALE_FACTOR;
 using GlobalDef::MIN_SCALE_FACTOR;
 
 CanvasContainer::CanvasContainer(QWidget *parent) :
     QGraphicsView(parent), proxy(0),
-    smoothScaleFlag(true),
-    tbl_spt(new TabletSupport(this))
+    smoothScaleFlag(true)
 {
     setCacheMode(QGraphicsView::CacheBackground);
     setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -33,22 +31,9 @@ CanvasContainer::CanvasContainer(QWidget *parent) :
             rc);
     connect(verticalScrollBar(), &QScrollBar::valueChanged,
             rc);
-    QSettings settings(GlobalDef::SETTINGS_NAME,
-                       QSettings::defaultFormat(),
-                       qApp);
-    enable_tablet = settings.value("canvas/enable_tablet", false)
-            .toBool();
-
-    if(enable_tablet && tbl_spt->hasDevice()){
-        emit tabletDetected();
-        tbl_spt->start();
-    }
 }
 CanvasContainer::~CanvasContainer()
 {
-    if(enable_tablet)
-        tbl_spt->stop();
-    delete tbl_spt;
 }
 
 void CanvasContainer::setCanvas(QWidget *canvas)
@@ -215,77 +200,6 @@ void CanvasContainer::mouseMoveEvent(QMouseEvent *event)
         moveStartPoint = event->pos();
     }
     QGraphicsView::mouseMoveEvent(event);
-}
-
-void CanvasContainer::tabletEvent(QTabletEvent *event)
-{
-    if(!enable_tablet){
-        return;
-    }
-    emit tabletDetected();
-    if(!proxy->widget() || !enable_tablet)
-        return;
-    // TODO: simplify
-    QPointF global_pos = event->globalPosF();
-    // exclude the scroll bar
-    int bottom = 0;
-    int right = 0;
-    if(horizontalScrollBar()->value()){ // we have horizontal scrollbar
-        bottom = horizontalScrollBar()->height();
-    }
-    if(verticalScrollBar()->value()){ // we have vertical scrollbar
-        right = verticalScrollBar()->width();
-    }
-    QRect re = this->visibleRegion().boundingRect();
-    re.setRight(re.right() - right);
-    re.setBottom(re.bottom() - bottom);
-    if(!re.contains(event->globalPos() - this->pos())){
-        return;
-    }
-
-    QPointF view_pos = this->mapFromGlobal(global_pos.toPoint());
-    QPointF canvas_pos;
-
-    if(this->currentScaleFactor() < 1.0){
-        canvas_pos = view_pos;
-
-        // caculate offsets
-        QPointF plus;
-        if(horizontalScrollBar()->value()){
-            int v = horizontalScrollBar()->value()
-                    - horizontalScrollBar()->minimum();
-            plus.setX( v );
-        }
-        if(verticalScrollBar()->value()){
-            int v = verticalScrollBar()->value()
-                    - verticalScrollBar()->minimum();
-            plus.setY( v );
-        }
-        canvas_pos += plus;
-        canvas_pos /= this->currentScaleFactor();
-    }else{
-        canvas_pos = proxy->mapFromParent(view_pos);
-        canvas_pos += QPointF(horizontalScrollBar()->value(),
-                              verticalScrollBar()->value())
-                /this->currentScaleFactor();
-    }
-
-    QTabletEvent event2(event->type(),
-                        canvas_pos,
-                        event->globalPosF(),
-                        event->device(),
-                        event->pointerType(),
-                        event->pressure(),
-                        event->xTilt(),
-                        event->yTilt(),
-                        event->tangentialPressure(),
-                        event->rotation(),
-                        event->z(),
-                        event->modifiers(),
-                        event->uniqueId()
-                        );
-    event->accept();
-    qApp->sendEvent(proxy->widget(), &event2);
 }
 
 bool CanvasContainer::eventFilter(QObject *object, QEvent *event)

@@ -39,15 +39,11 @@ private:
     bool smoothScaleFlag;
     qreal calculateFactor(qreal current, bool zoomIn);
     void setScaleFactorInternal(qreal factor, const QPoint scaleCenter = QPoint());
-    // caveat, work around for wacom tablet
-    TabletSupport* tbl_spt;
-    bool enable_tablet;
 
 protected:
     void wheelEvent(QWheelEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
-    void tabletEvent(QTabletEvent *event);
     bool eventFilter(QObject *object, QEvent *event);
 };
 

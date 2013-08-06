@@ -101,7 +101,6 @@ public slots:
     void layerSelected(const QString &name);
     void changeBrush(const QString &name);
     void onColorPicker(bool in);
-    void foundTablet();
 
 signals:
     void sendData(const QByteArray &);
@@ -122,7 +121,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *event);
-    void tabletEvent(QTabletEvent *ev);
+//    void tabletEvent(QTabletEvent *ev);
     void focusInEvent(QFocusEvent * event);
     void focusOutEvent(QFocusEvent * event);
 
@@ -170,7 +169,6 @@ private:
     QHash<QString, BrushPointer> localBrush;
     CanvasBackend* backend_;
     QThread *worker_;
-    bool enable_tablet;
     QList<CanvasBackend::MemberSection> author_list_;
 };
 

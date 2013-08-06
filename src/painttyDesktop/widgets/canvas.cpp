@@ -84,12 +84,6 @@ Canvas::Canvas(QWidget *parent) :
     Singleton<BrushManager>::instance().addBrush(p4);
     setJitterCorrectionLevel(5);
 
-    QSettings settings(GlobalDef::SETTINGS_NAME,
-                       QSettings::defaultFormat(),
-                       qApp);
-    enable_tablet = settings.value("canvas/enable_tablet", false)
-            .toBool();
-
     worker_->start();
     backend_->moveToThread(worker_);
     connect(backend_, &CanvasBackend::newDataGroup,
@@ -777,41 +771,41 @@ void Canvas::layerSelected(const QString &name)
 }
 
 /* Event control */
+// FIXME: uncomment below when Qt support tablet
+//void Canvas::tabletEvent(QTabletEvent *ev)
+//{
+//    if(!enable_tablet) {
+//        return;
+//    }
+//    //TODO: fully support tablet
+//    qreal pressure = ev->pressure();
+//    QPoint pos = ev->pos();
 
-void Canvas::tabletEvent(QTabletEvent *ev)
-{
-    if(!enable_tablet) {
-        return;
-    }
-    //TODO: fully support tablet
-    qreal pressure = ev->pressure();
-    QPoint pos = ev->pos();
-
-    switch(ev->type()){
-    case QEvent::TabletPress:
-        if(!drawing){
-            lastPoint = pos;
-            drawPoint(pos, pressure);
-            drawing = true;
-        }
-        break;
-    case QEvent::TabletMove:
-        if(drawing && lastPoint != pos){
-            drawLineTo(pos, pressure);
-            lastPoint = pos;
-        }
-        break;
-    case QEvent::TabletRelease:
-        if(drawing){
-            drawing = false;
-            updateCursor();
-        }
-        break;
-    default:
-        break;
-    }
-    ev->accept();
-}
+//    switch(ev->type()){
+//    case QEvent::TabletPress:
+//        if(!drawing){
+//            lastPoint = pos;
+//            drawPoint(pos, pressure);
+//            drawing = true;
+//        }
+//        break;
+//    case QEvent::TabletMove:
+//        if(drawing && lastPoint != pos){
+//            drawLineTo(pos, pressure);
+//            lastPoint = pos;
+//        }
+//        break;
+//    case QEvent::TabletRelease:
+//        if(drawing){
+//            drawing = false;
+//            updateCursor();
+//        }
+//        break;
+//    default:
+//        break;
+//    }
+//    ev->accept();
+//}
 
 void Canvas::focusInEvent(QFocusEvent *)
 {
@@ -966,11 +960,6 @@ QSize Canvas::sizeHint() const
 QSize Canvas::minimumSizeHint() const
 {
     return canvasSize;
-}
-
-void Canvas::foundTablet()
-{
-    disableMouse_ = true;
 }
 
 CanvasBackend::CanvasBackend(QObject *parent)

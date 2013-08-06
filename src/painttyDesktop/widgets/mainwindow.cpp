@@ -51,18 +51,12 @@ MainWindow::MainWindow(QWidget *parent) :
     colorPickerButton_(nullptr)
 {
     ui->setupUi(this);
-//    auto&& roomName = Singleton<CommandSocket>::instance().roomName();
-//    setWindowTitle(roomName+tr(" - Mr.Paint"));
-//    ui->canvas->resize(Singleton<CommandSocket>::instance().canvasSize());
     defaultView = saveState();
     init();
 }
 
 MainWindow::~MainWindow()
 {
-//    msgSocket.close();
-//    dataSocket.close();
-//    Singleton<CommandSocket>::instance().close();
     delete ui;
 }
 
@@ -135,8 +129,6 @@ void MainWindow::init()
             ui->centralWidget,
             static_cast<void (CanvasContainer::*)(const QPointF&)>
             (&CanvasContainer::centerOn));
-    connect(ui->centralWidget, &CanvasContainer::tabletDetected,
-            ui->canvas, &Canvas::foundTablet);
 
     layerWidgetInit();
     colorGridInit();

@@ -31,8 +31,3 @@ bool PlatformExtend::setIMEState(QWidget *widget, bool st)
     // returns non-zero when success
     return ImmSetOpenStatus(hImc, st);
 }
-
-bool PlatformExtend::supportTablet()
-{
-    return true;
-}

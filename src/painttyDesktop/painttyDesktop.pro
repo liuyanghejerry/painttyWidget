@@ -13,15 +13,12 @@ win32 {
     RC_FILE = app.rc
     LIBS += -limm32
     SOURCES += misc/tabletsupport_win32.cpp
-    HEADERS += misc/pktdef.h \
-                misc/wintab.h \
-                misc/tabletsupport_win32.h \
-                misc/WinTabAPI.h
+    HEADERS += misc/pktdef.h
 }
 
 !win32 {
     SOURCES += misc/tabletsupport_dummy.cpp
-    HEADERS += misc/tabletsupport_dummy.h
+    HEADERS +=
 }
 
 mac {
