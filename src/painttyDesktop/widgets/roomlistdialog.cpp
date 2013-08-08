@@ -101,6 +101,7 @@ void RoomListDialog::connectToManager()
             this, &RoomListDialog::onManagerServerConnected);
     connect(&client_socket, &ClientSocket::disconnected,
             this, &RoomListDialog::onManagerServerClosed);
+    client_socket.setPoolEnabled(false);
     QHostAddress addr;
     if(LocalNetworkInterface::supportIpv6()){
         addr = GlobalDef::HOST_ADDR[1];
@@ -116,7 +117,6 @@ void RoomListDialog::connectToManager()
 
 void RoomListDialog::socketInit()
 {
-    connectToManager();
     managerSocketRouter_.regHandler("response",
                                     "roomlist",
                                     std::bind(&RoomListDialog::onManagerResponseRoomlist,
@@ -151,7 +151,7 @@ void RoomListDialog::requestJoin()
     state_ = RoomConnecting;
     wantedRoomName_.clear();
     wantedPassword_.clear();
-    Singleton<ClientSocket>::instance().close();
+//    Singleton<ClientSocket>::instance().close();
     if(!collectUserInfo()){
         return;
     }
@@ -170,10 +170,9 @@ void RoomListDialog::requestJoin()
     }
     //    QHostAddress address(
     //                roomsInfo[roomName].value("serverAddress").toString());
-    QHostAddress address = Singleton<ClientSocket>::instance().address();
-    int cmdPort = roomsInfo[roomName_].value("cmdport").toDouble();
-    Singleton<ClientSocket>::instance().connectToHost(address, cmdPort);
-
+//    QHostAddress address = Singleton<ClientSocket>::instance().address();
+    int port = roomsInfo[roomName_].value("port").toDouble();
+    connectRoomByPort(port);
 }
 
 void RoomListDialog::requestRoomList()
@@ -192,6 +191,7 @@ void RoomListDialog::requestRoomList()
         state_ = RequestingList;
         QJsonObject map;
         map.insert("request", QString("roomlist"));
+        map.insert("type", QString("manager"));
 
         QJsonDocument doc;
         doc.setObject(map);
@@ -222,6 +222,7 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
         state_ = RequestingNewRoom;
         QJsonObject map;
         map["request"] = QString("newroom");
+        map["type"] = QString("manager");
         map["info"] = m;
         // TODO: add owner info
 
@@ -257,6 +258,8 @@ void RoomListDialog::connectRoomByPort(const int &p)
             this, &RoomListDialog::onCmdData);
 
     QHostAddress address = client_socket.address();
+    client_socket.close();
+    qDebug()<<"start connecting room";
     client_socket.connectToHost(address, p);
 }
 
@@ -291,6 +294,7 @@ void RoomListDialog::tryJoinRoomManually()
 
     QJsonObject map;
     map.insert("request", QString("login"));
+    map.insert("type", QString("command"));
     map.insert("name", nickName_);
     map.insert("password", passwd);
     map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
@@ -315,6 +319,7 @@ void RoomListDialog::tryJoinRoomAutomated()
     }
     QJsonObject map;
     map.insert("request", QString("login"));
+    map.insert("type", QString("command"));
     map.insert("name", nickName_);
     map.insert("password", wantedPassword_);
     map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
@@ -387,6 +392,8 @@ void RoomListDialog::onCmdServerConnected()
 
 void RoomListDialog::onCmdData(const QJsonObject &map)
 {
+    auto& client_socket = Singleton<ClientSocket>::instance();
+    client_socket.setPoolEnabled(true);
     QString response = map["response"].toString();
 
     if(response == "login"){
@@ -424,6 +431,11 @@ void RoomListDialog::onCmdData(const QJsonObject &map)
                        <<Singleton<ClientSocket>::instance().clientId();
             }
             state_ = RoomJoined;
+
+            disconnect(&client_socket, &ClientSocket::connected,
+                    this, &RoomListDialog::onCmdServerConnected);
+            disconnect(&client_socket, &ClientSocket::cmdPack,
+                    this, &RoomListDialog::onCmdData);
             accept();
             return;
         }
@@ -441,10 +453,10 @@ void RoomListDialog::onNewRoomRespnse(const QJsonObject &m)
         QMessageBox::information(newRoomWindow, tr("Go get your room!"),
                                  msg,
                                  QMessageBox::Ok);
-        int cmdPort = 0;
+        int port = 0;
         if(m.contains("info")){
             QJsonObject info = m.value("info").toObject();
-            cmdPort = info.value("port").toDouble();
+            port = info.value("port").toDouble();
             QString key = info.value("key").toString();
 
             QCryptographicHash hash(QCryptographicHash::Md5);
@@ -458,11 +470,11 @@ void RoomListDialog::onNewRoomRespnse(const QJsonObject &m)
         }
         newRoomWindow->accept();
 
-        if(cmdPort){
+        if(port){
             // Since full new room info comes later,
             // we must fake it to join it now
             roomName_ = wantedRoomName_;
-            connectRoomByPort(cmdPort);
+            connectRoomByPort(port);
         }
         return;
     }

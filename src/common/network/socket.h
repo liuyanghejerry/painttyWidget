@@ -40,7 +40,6 @@ protected:
     bool commandStarted;
     QTcpSocket *socket;
     bool compressed_;
-    
 };
 
 #endif // SOCKET_H

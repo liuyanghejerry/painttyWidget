@@ -20,13 +20,11 @@ public:
     void addRule(const QString &rule)
     {
         records_.insert(rule, FuncTable());
-        qDebug()<<"Rule"<<rule<<"added to Router";
     }
 
     void removeRule(const QString &rule)
     {
         records_.remove(rule);
-        qDebug()<<"Rule"<<rule<<"removed from Router";
     }
 
     void regHandler(const QString &rule,
@@ -37,8 +35,6 @@ public:
             addRule(rule);
         }
         records_[rule].insert(request, func);
-        qDebug()<<"A function handler of"<<request
-               <<"registered to rule"<<rule;
     }
 
     void unregHandler(const QString &rule,
@@ -46,8 +42,6 @@ public:
     {
         if(records_.contains(rule)){
             records_[rule].remove(request);
-            qDebug()<<"Function handler for"<<request
-                   <<"unregistered from rule"<<rule;
         }
     }
 
@@ -60,14 +54,9 @@ public:
             if(obj.contains(item)){
                 auto request = obj.value(item).toString();
                 if(records_[item].contains(request)){
-                    qDebug()<<"Request"<<request
-                           <<"handled in Rule"<<item;
                     auto func = records_[item][request];
                     func(obj);
                     break;
-                }else{
-                    qDebug()<<"Request"<<request
-                           <<"not handnled in Rule"<<item;
                 }
             }
         }
@@ -76,45 +65,5 @@ private:
     typedef QHash<QString, RouterFunc_> FuncTable;
     QHash<QString, FuncTable > records_;
 };
-
-//typedef QPair<QString, QString> RouterRule;
-//typedef QList<RouterRule> RouterItem;
-
-//template<typename RouterFunc = RouterZone::DefaultHandler>
-//class Router
-//{
-//public:
-//    void addItem(const RouterItem& item, const RouterFunc& func)
-//    {
-//        items_.insert(item, func);
-//    }
-
-//    void removeItem(const RouterItem& rule)
-//    {
-//        items_.remove(rule);
-//    }
-
-//    void onData(const QByteArray &bytes)
-//    {
-//        auto doc = QJsonDocument::fromJson(bytes);
-//        auto obj = doc.object();
-//        auto router_items = items_.keys();
-//        for(auto router_item: router_items){
-//            for(auto router_rule: router_item){
-//                QString rule_key = router_rule.first;
-//                QString rule_value = router_rule.second;
-//                if(obj.contains(rule_key)){
-//                    if(obj.value(rule_key).toString() == rule_value){
-//                        auto& func = items_.value(router_item);
-//                        func(obj);
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-//private:
-//    QHash<RouterItem, RouterFunc> items_;
-//};
 
 #endif // ROUTER_H

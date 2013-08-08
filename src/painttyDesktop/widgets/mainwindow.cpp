@@ -31,7 +31,6 @@
 #include "aboutdialog.h"
 #include "configuredialog.h"
 #include "brushsettingswidget.h"
-#include "../../common/network/commandsocket.h"
 #include "../../common/network/clientsocket.h"
 #include "../../common/network/localnetworkinterface.h"
 #include "../paintingTools/brush/brushmanager.h"
@@ -72,16 +71,17 @@ void MainWindow::stylize()
 
 void MainWindow::init()
 {
-    auto&& roomName = Singleton<CommandSocket>::instance().roomName();
+    auto& client_socket = Singleton<ClientSocket>::instance();
+    auto&& roomName = client_socket.roomName();
     setWindowTitle(roomName+tr(" - Mr.Paint"));
-    ui->canvas->resize(Singleton<CommandSocket>::instance().canvasSize());
+    ui->canvas->resize(client_socket.canvasSize());
 
     ui->centralWidget->setBackgroundRole(QPalette::Dark);
     ui->centralWidget->setCanvas(ui->canvas);
-    ui->canvas->setDisabled(true);
-    ui->layerWidget->setDisabled(true);
-    ui->lineEdit->setDisabled(true);
-    ui->pushButton->setDisabled(true);
+//    ui->canvas->setDisabled(true);
+//    ui->layerWidget->setDisabled(true);
+//    ui->lineEdit->setDisabled(true);
+//    ui->pushButton->setDisabled(true);
 
     connect(ui->panorama, &PanoramaWidget::scaled,
             ui->centralWidget, &CanvasContainer::setScaleFactor);
@@ -348,7 +348,7 @@ void MainWindow::toolbarInit()
 QVariant MainWindow::getRoomKey()
 {
     QCryptographicHash hash(QCryptographicHash::Md5);
-    auto&& roomName = Singleton<CommandSocket>::instance().roomName();
+    auto&& roomName = Singleton<ClientSocket>::instance().roomName();
     hash.addData(roomName.toUtf8());
     QString hashed_name = hash.result().toHex();
     QSettings settings(GlobalDef::SETTINGS_NAME,
@@ -374,14 +374,15 @@ void MainWindow::requestOnlinelist()
     QJsonDocument doc;
     QJsonObject obj;
     obj.insert("request", QString("onlinelist"));
-    obj.insert("clientid", Singleton<CommandSocket>::instance().clientId());
+    obj.insert("type", QString("command"));
+    obj.insert("clientid", Singleton<ClientSocket>::instance().clientId());
     doc.setObject(obj);
-    qDebug()<<"clientid: "<<Singleton<CommandSocket>::instance().clientId();
+    qDebug()<<"clientid: "<<Singleton<ClientSocket>::instance().clientId();
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
-    Singleton<CommandSocket>::instance().sendData(doc.toJson(QJsonDocument::Compact));
+    Singleton<ClientSocket>::instance().sendData(doc.toJson(QJsonDocument::Compact));
 #else
-    Singleton<CommandSocket>::instance().sendData(doc.toJson());
+    Singleton<ClientSocket>::instance().sendData(doc.toJson());
 #endif
 }
 
@@ -390,14 +391,15 @@ void MainWindow::requestCheckout()
     QJsonDocument doc;
     QJsonObject obj;
     obj.insert("request", QString("checkout"));
+    obj.insert("type", QString("command"));
     obj.insert("key", getRoomKey().toString());
     doc.setObject(obj);
     qDebug()<<"checkout with key: "<<getRoomKey();
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
-    Singleton<CommandSocket>::instance().sendData(doc.toJson(QJsonDocument::Compact));
+    Singleton<ClientSocket>::instance().sendData(doc.toJson(QJsonDocument::Compact));
 #else
-    Singleton<CommandSocket>::instance().sendData(doc.toJson());
+    Singleton<ClientSocket>::instance().sendData(doc.toJson());
 #endif
 }
 
@@ -433,7 +435,7 @@ void MainWindow::shortcutInit()
             return;
         }
         map.insert("key", r_key);
-        Singleton<CommandSocket>::instance().sendData(toJson(QVariant(map)));
+        Singleton<ClientSocket>::instance().sendData(toJson(QVariant(map)));
     });
     connect(ui->actionAll_Layers, &QAction::triggered,
             this, &MainWindow::clearAllLayer);
@@ -446,6 +448,7 @@ void MainWindow::shortcutInit()
 
 void MainWindow::socketInit()
 {
+    qDebug()<<"socketInit in MainWindow";
     auto& client_socket = Singleton<ClientSocket>::instance();
 
     connect(&client_socket, &ClientSocket::newMessage,
@@ -460,41 +463,24 @@ void MainWindow::socketInit()
 
     connect(&client_socket, &ClientSocket::cmdPack,
             this, &MainWindow::onCmdData);
+    connect(&client_socket, &ClientSocket::disconnected,
+            this, &MainWindow::onServerDisconnected);
     cmdRouterInit();
+    auto fff = [](){
+        Singleton<ClientSocket>::instance().setPoolEnabled(false);
+    };
+    GlobalDef::deferJob<decltype(fff)>(fff);
+
     // checkout if client is room owner
     if(!getRoomKey().isNull()){
         requestCheckout();
     }
-
-    ui->textEdit->insertPlainText(tr("Connecting to server...\n"));
-    QHostAddress addr;
-    if(LocalNetworkInterface::supportIpv6()){
-        addr = GlobalDef::HOST_ADDR[1];
-        qDebug()<<"using ipv6 address to connect server";
-    }else{
-        addr = GlobalDef::HOST_ADDR[0];
-        qDebug()<<"using ipv4 address to connect server";
-    }
-}
-
-void MainWindow::onServerConnected()
-{
-    ui->textEdit->insertPlainText(tr("Server Connected.\n"));
-    ui->canvas->setEnabled(true);
-    ui->layerWidget->setEnabled(true);
-    ui->lineEdit->setEnabled(true);
-    ui->pushButton->setEnabled(true);
 }
 
 void MainWindow::onServerDisconnected()
 {
     ui->textEdit->insertPlainText(tr("Server Connection Failed.\n"));
     ui->canvas->setEnabled(false);
-}
-
-void MainWindow::onCmdServerDisconnected()
-{
-    //
 }
 
 void MainWindow::onCmdData(const QJsonObject &data)
@@ -525,7 +511,7 @@ void MainWindow::onCommandResponseClose(const QJsonObject &m)
         // wait for close now.
         // of course, delete the key. it's useless.
         QCryptographicHash hash(QCryptographicHash::Md5);
-        auto&& roomName = Singleton<CommandSocket>::instance().roomName();
+        auto&& roomName = Singleton<ClientSocket>::instance().roomName();
         hash.addData(roomName.toUtf8());
         QString hashed_name = hash.result().toHex();
         QSettings settings(GlobalDef::SETTINGS_NAME,
@@ -659,7 +645,7 @@ void MainWindow::onSendPressed()
         qDebug()<<"Warnning: text too long or empty.";
         return;
     }
-    string.prepend(Singleton<CommandSocket>::instance().userName()
+    string.prepend(Singleton<ClientSocket>::instance().userName()
                    + ": ");
     string.append('\n');
     emit sendMessage(string);
@@ -797,9 +783,10 @@ void MainWindow::clearLayer(const QString &name)
         ui->canvas->clearLayer(name);
         QVariantMap map;
         map.insert("request", "clear");
+        map.insert("type", "command");
         map.insert("key", getRoomKey());
         map.insert("layer", name);
-        Singleton<CommandSocket>::instance().sendData(toJson(QVariant(map)));
+        Singleton<ClientSocket>::instance().sendData(toJson(QVariant(map)));
     }
 
 }
@@ -825,8 +812,9 @@ void MainWindow::clearAllLayer()
             return;
         }
         map.insert("request", "clearall");
+        map.insert("type", "command");
         map.insert("key", getRoomKey());
-        Singleton<CommandSocket>::instance().sendData(toJson(QVariant(map)));
+        Singleton<ClientSocket>::instance().sendData(toJson(QVariant(map)));
     }
 }
 

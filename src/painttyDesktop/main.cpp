@@ -8,7 +8,6 @@
 #include "../common/common.h"
 #include "widgets/mainwindow.h"
 #include "widgets/roomlistdialog.h"
-#include "network/commandsocket.h"
 #include "misc/singleton.h"
 
 namespace mainOnly

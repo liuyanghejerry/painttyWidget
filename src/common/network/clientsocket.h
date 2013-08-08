@@ -4,6 +4,7 @@
 #include "socket.h"
 #include "../misc/router.h"
 #include <QSize>
+class QTimer;
 
 class ClientSocket : public Socket
 {
@@ -20,6 +21,8 @@ public:
     QSize canvasSize() const;
     void setHistorySize(int size);
     int historySize() const;
+    void setPoolEnabled(bool on);
+    bool isPoolEnabled();
 signals:
     void dataPack(const QJsonObject&);
     void msgPack(const QJsonObject&);
@@ -28,7 +31,6 @@ signals:
     void newMessage(const QString&);
     
 public slots:
-    void onNewMessage(const QJsonObject &map);
     void sendMessage(const QString &content);
 private:
     QVariantMap info_;
@@ -37,7 +39,15 @@ private:
     QSize canvassize_;
     int historysize_;
     Router<> router_;
-    void dispatch(const QByteArray& bytes);
+    QList<QByteArray> pool_;
+    bool poolEnabled_;
+    QTimer *timer_;
+    const static int WAIT_TIME = 1000;
+private slots:
+    void onPending(const QByteArray& bytes);
+    void processPending();
+    bool dispatch(const QByteArray& bytes);
+    void onNewMessage(const QJsonObject &map);
 };
 
 #endif // CLIENTSOCKET_H

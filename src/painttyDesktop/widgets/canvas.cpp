@@ -13,7 +13,7 @@
 #include <QtCore/qmath.h>
 
 #include "../../common/common.h"
-#include "../../common/network/commandsocket.h"
+#include "../../common/network/clientsocket.h"
 #include "../paintingTools/brush/brushmanager.h"
 #include "../paintingTools/brush/brush.h"
 #include "../paintingTools/brush/sketchbrush.h"
@@ -53,11 +53,11 @@
 
 Canvas::Canvas(QWidget *parent) :
     QWidget(parent),
-    canvasSize(Singleton<CommandSocket>::instance().canvasSize()),
+    canvasSize(Singleton<ClientSocket>::instance().canvasSize()),
     layers(canvasSize),
     image(canvasSize),
     layerNameCounter(0),
-    historySize_(Singleton<CommandSocket>::instance().historySize()),
+    historySize_(Singleton<ClientSocket>::instance().historySize()),
     shareColor_(true),
     jitterCorrection_(true),
     jitterCorrectionLevel_(3),
@@ -419,13 +419,14 @@ void Canvas::drawLineTo(const QPoint &endPoint, qreal pressure)
     map.insert("pressure", QVariant(double(pressure)));
     map.insert("layer", QVariant(currentLayer()));
     map.insert("clientid",
-               Singleton<CommandSocket>::instance().clientId());
+               Singleton<ClientSocket>::instance().clientId());
     map.insert("name",
-               Singleton<CommandSocket>::instance().userName());
+               Singleton<ClientSocket>::instance().userName());
 
     QVariantMap bigMap;
     bigMap.insert("info", map);
     bigMap.insert("action", "drawline");
+    bigMap.insert("type", "data");
 
     emit newPaintAction(bigMap);
 }
@@ -464,13 +465,14 @@ void Canvas::drawPoint(const QPoint &point, qreal pressure)
     map.insert("layer", QVariant(currentLayer()));
     map.insert("point", QVariant(point_j));
     map.insert("clientid",
-               QVariant(Singleton<CommandSocket>::instance().clientId()));
+               QVariant(Singleton<ClientSocket>::instance().clientId()));
     map.insert("name",
-               Singleton<CommandSocket>::instance().userName());
+               Singleton<ClientSocket>::instance().userName());
 
     QVariantMap bigMap;
     bigMap.insert("info", map);
     bigMap.insert("action", "drawpoint");
+    bigMap.insert("type", "data");
 
     emit newPaintAction(bigMap);
 }
@@ -986,6 +988,7 @@ void CanvasBackend::commit()
         if(!tempStore.isEmpty()){
             QVariantMap doc;
             doc.insert("action", "block");
+            doc.insert("type", "data");
             doc.insert("block", tempStore);
             auto data = toJson(QVariant(doc));
             emit newDataGroup(data);

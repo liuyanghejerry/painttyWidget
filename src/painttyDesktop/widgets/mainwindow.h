@@ -3,8 +3,6 @@
 
 #include <QMainWindow>
 
-#include "../../common/network/messagesocket.h"
-#include "../../common/network/datasocket.h"
 #include "../misc/router.h"
 
 class QToolButton;
@@ -76,7 +74,6 @@ private:
     QActionGroup *brushActionGroup_;
     QToolButton *colorPickerButton_;
 private slots:
-    void onServerConnected();
     void onServerDisconnected();
     void onNewMessage(const QString &content);
     void onSendPressed();
@@ -85,7 +82,6 @@ private slots:
     void onBrushTypeChange();
     void onBrushSettingsChanged(const QVariantMap &m);
     void onColorPickerPressed(bool c);
-    void onCmdServerDisconnected();
     void onCmdData(const QJsonObject &data);
     void onPanoramaRefresh();
     void onCommandActionClose(const QJsonObject &);

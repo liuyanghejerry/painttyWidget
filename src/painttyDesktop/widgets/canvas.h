@@ -102,6 +102,7 @@ public slots:
     void onColorPicker(bool in);
 
 signals:
+    void ready();
     void sendData(const QByteArray &);
     void pickColorComplete();
     void newBrushSettings(const QVariantMap &map);

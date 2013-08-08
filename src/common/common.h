@@ -2,7 +2,11 @@
 #define COMMON_H
 
 #include <QtGlobal>
+#include <QMetaMethod>
 #include <QString>
+#include <QTimer>
+#include <type_traits>
+#include <QDebug>
 
 namespace GlobalDef
 {
@@ -14,8 +18,8 @@ static const char UPDATER_VERSION[] = "0.11";
 const static char SETTINGS_NAME[] = "mrpaint.ini";
 
 #ifdef PAINTTY_DEV
-const static QString HOST_ADDR_IPV4("192.168.1.107");
-const static QString HOST_ADDR_IPV6("192.168.1.107");
+const static QString HOST_ADDR_IPV4("192.168.1.110");
+const static QString HOST_ADDR_IPV6("192.168.1.110");
 const static QString UPDATER_ADDR_IPV4("42.121.85.47");
 const static QString UPDATER_ADDR_IPV6("42.121.85.47");
 const static int HOST_MGR_PORT = 7070;
@@ -51,6 +55,24 @@ static const char* DOWNLOAD_URL = "http://mrspaint.oss.aliyuncs.com/%E8%8C%B6%E7
 #ifdef PAINTTY_DESKTOP
 const qreal MAX_SCALE_FACTOR = 5.0;
 const qreal MIN_SCALE_FACTOR = 0.125;
+
+template<typename Func>
+void deferJob(Func f, int ms=2000)
+{
+    if( std::is_function<decltype(f)>::value
+            || std::is_object<decltype(f)>::value){
+        QTimer* t = new QTimer;
+        t->setSingleShot(true);
+        QObject::connect(t, &QTimer::timeout,
+                [&f, t](){
+            qDebug()<<"deferJob";
+            f();
+            t->deleteLater();
+        });
+        t->start(ms);
+    }
+}
+
 #endif
 
 } // namespace GlobalDef

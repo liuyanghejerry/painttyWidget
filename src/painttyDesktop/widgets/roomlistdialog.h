@@ -46,8 +46,6 @@ protected:
     bool collectUserInfo();
     int historySize() const;
     QSize canvasSize() const {return canvasSize_;}
-    int dataPort() const {return dataPort_;}
-    int msgPort() const {return msgPort_;}
     void connectRoomByPort(const int &p);
     void tryJoinRoomManually();
     void tryJoinRoomAutomated();
@@ -66,8 +64,6 @@ private:
     };
 
     Ui::RoomListDialog *ui;
-    int dataPort_;
-    int msgPort_;
     quint64 historySize_;
     QSize canvasSize_;
     QString roomName_;

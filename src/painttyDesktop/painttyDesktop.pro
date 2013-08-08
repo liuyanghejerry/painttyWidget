@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-#DEFINES += PAINTTY_DEV
+DEFINES += PAINTTY_DEV
 QT       += core gui network widgets
 
 DEFINES += PAINTTY_DESKTOP
@@ -12,12 +12,12 @@ DEFINES += PAINTTY_DESKTOP
 win32 {
     RC_FILE = app.rc
     LIBS += -limm32
-    SOURCES += misc/tabletsupport_win32.cpp
-    HEADERS += misc/pktdef.h
+    SOURCES +=
+    HEADERS +=
 }
 
 !win32 {
-    SOURCES += misc/tabletsupport_dummy.cpp
+    SOURCES +=
     HEADERS +=
 }
 
@@ -37,7 +37,6 @@ SOURCES += main.cpp\
     widgets/mainwindow.cpp \
     widgets/canvas.cpp \
     misc/layermanager.cpp \
-    ../common/network/messagesocket.cpp \
     widgets/colorwheel.cpp \
     widgets/roomlistdialog.cpp \
     ../common/network/socket.cpp \
@@ -57,7 +56,6 @@ SOURCES += main.cpp\
     widgets/colorspinboxgroup.cpp \
     widgets/colorbox.cpp \
     widgets/newroomwindow.cpp \
-    ../common/network/commandsocket.cpp \
     widgets/aboutdialog.cpp \
     misc/singleshortcut.cpp \
     widgets/canvascontainer.cpp \
@@ -84,8 +82,6 @@ SOURCES += main.cpp\
 HEADERS  += widgets/mainwindow.h \
     widgets/canvas.h \
     misc/layermanager.h \
-    ../common/network/messagesocket.h \
-    ../common/network/datasocket.h \
     widgets/colorwheel.h \
     widgets/roomlistdialog.h \
     ../common/network/socket.h \
@@ -105,7 +101,6 @@ HEADERS  += widgets/mainwindow.h \
     widgets/colorspinboxgroup.h \
     widgets/colorbox.h \
     widgets/newroomwindow.h \
-    ../common/network/commandsocket.h \
     widgets/aboutdialog.h \
     ../common/common.h \
     misc/singleshortcut.h \
