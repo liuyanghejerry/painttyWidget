@@ -23,6 +23,7 @@ public:
     int historySize() const;
     void setPoolEnabled(bool on);
     bool isPoolEnabled();
+    void reset();
 signals:
     void dataPack(const QJsonObject&);
     void msgPack(const QJsonObject&);

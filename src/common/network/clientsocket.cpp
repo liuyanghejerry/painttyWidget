@@ -181,3 +181,15 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
     }
 }
 
+void ClientSocket::reset()
+{
+    poolEnabled_ = false;
+    username_.clear();
+    info_.clear();
+    roomname_.clear();
+    canvassize_ = QSize();
+    historysize_ = 0;
+    router_.clear();
+    timer_->start(WAIT_TIME);
+    pool_.clear();
+}

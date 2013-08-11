@@ -55,6 +55,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    Singleton<ClientSocket>::instance().reset();
+    Singleton<ClientSocket>::instance().close();
     delete ui;
 }
 

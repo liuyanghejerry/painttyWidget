@@ -45,6 +45,11 @@ public:
         }
     }
 
+    void clear()
+    {
+        records_.clear();
+    }
+
     void onData(const QJsonObject &obj)
     {
         auto rules = records_.keys();

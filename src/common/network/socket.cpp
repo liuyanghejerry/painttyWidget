@@ -7,7 +7,7 @@ Socket::Socket(QObject *parent) :
     dataSize(0),
     historySize(0),
     commandStarted(false),
-    compressed_(true)
+    compressed_(false)
 {
     socket = new QTcpSocket(this);
     socket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
@@ -144,6 +144,7 @@ void Socket::onReceipt()
                     emit newData(tmp);
                 }else{
                     qDebug()<<"bad input";
+                    qDebug()<<info.right(info.length()-1).toHex();
                 }
             }else{
                 emit newData(info.right(info.length()-1));

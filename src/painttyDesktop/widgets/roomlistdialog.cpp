@@ -151,7 +151,6 @@ void RoomListDialog::requestJoin()
     state_ = RoomConnecting;
     wantedRoomName_.clear();
     wantedPassword_.clear();
-//    Singleton<ClientSocket>::instance().close();
     if(!collectUserInfo()){
         return;
     }
@@ -170,7 +169,7 @@ void RoomListDialog::requestJoin()
     }
     //    QHostAddress address(
     //                roomsInfo[roomName].value("serverAddress").toString());
-//    QHostAddress address = Singleton<ClientSocket>::instance().address();
+    //    QHostAddress address = Singleton<ClientSocket>::instance().address();
     int port = roomsInfo[roomName_].value("port").toDouble();
     connectRoomByPort(port);
 }
@@ -246,19 +245,19 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
 void RoomListDialog::connectRoomByPort(const int &p)
 {
     auto& client_socket = Singleton<ClientSocket>::instance();
+    QHostAddress address = client_socket.address();
 
     disconnect(&client_socket, &ClientSocket::connected,
                this, &RoomListDialog::onManagerServerConnected);
     disconnect(&client_socket, &ClientSocket::disconnected,
                this, &RoomListDialog::onManagerServerClosed);
+    client_socket.close();
 
     connect(&client_socket, &ClientSocket::connected,
             this, &RoomListDialog::onCmdServerConnected);
     connect(&client_socket, &ClientSocket::cmdPack,
             this, &RoomListDialog::onCmdData);
 
-    QHostAddress address = client_socket.address();
-    client_socket.close();
     qDebug()<<"start connecting room";
     client_socket.connectToHost(address, p);
 }
@@ -433,9 +432,9 @@ void RoomListDialog::onCmdData(const QJsonObject &map)
             state_ = RoomJoined;
 
             disconnect(&client_socket, &ClientSocket::connected,
-                    this, &RoomListDialog::onCmdServerConnected);
+                       this, &RoomListDialog::onCmdServerConnected);
             disconnect(&client_socket, &ClientSocket::cmdPack,
-                    this, &RoomListDialog::onCmdData);
+                       this, &RoomListDialog::onCmdData);
             accept();
             return;
         }
