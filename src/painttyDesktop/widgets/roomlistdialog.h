@@ -37,8 +37,8 @@ private slots:
     void openConfigure();
     void commitToGlobal();
 protected:
-    void hideEvent(QHideEvent *);
-    void showEvent(QShowEvent *);
+    void hideEvent(QHideEvent *e);
+    void showEvent(QShowEvent *e);
     void closeEvent(QCloseEvent *e);
     
     QString roomName() const;
@@ -64,6 +64,7 @@ private:
     };
 
     Ui::RoomListDialog *ui;
+    static const int REFRESH_TIME = 10000;
     quint64 historySize_;
     QSize canvasSize_;
     QString roomName_;

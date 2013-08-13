@@ -216,7 +216,7 @@ ShortcutDelegate::ShortcutDelegate(QObject *parent) :
 {
 }
 
-QWidget* ShortcutDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+QWidget* ShortcutDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &/*option*/, const QModelIndex &index) const
 {
     if (!index.isValid() || !index.parent().isValid() || !index.column())
         return 0;

@@ -1112,7 +1112,7 @@ void CanvasBackend::requestMembers(MemberSectionIndex index,
                                    bool mergeSameName)
 {
     qDebug()<<"Members requested!";
-    using MSI = MemberSectionIndex;
+//    using MSI = MemberSectionIndex;
     using MS = MemberSection;
     using MSL = QList<MS>;
 

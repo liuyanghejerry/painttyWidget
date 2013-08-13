@@ -28,6 +28,7 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::RoomListDialog),
     historySize_(0),
+    timer(new QTimer(this)),
     newRoomWindow(new NewRoomWindow(this)),
     state_(Init)
 {
@@ -56,13 +57,15 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
     connect(newRoomWindow, &NewRoomWindow::finished,
             this,&RoomListDialog::requestRoomList);
 
+    connect(timer,&QTimer::timeout,
+            this,&RoomListDialog::requestRoomList);
+
     ui->counter_label->setText(tr("Rooms: %1, Members: %2")
                                .arg("?")
                                .arg("?"));
     tableInit();
     state_ = Ready;
     socketInit();
-    timer = new QTimer(this);
     loadNick();
     clientId_ = loadClientId();
 
@@ -71,8 +74,12 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
 RoomListDialog::~RoomListDialog()
 {
     auto& socket = Singleton<ClientSocket>::instance();
+    disconnect(&socket, &ClientSocket::connected,
+               this, &RoomListDialog::onManagerServerConnected);
     disconnect(&socket, &ClientSocket::disconnected,
-               this,&RoomListDialog::onManagerServerClosed);
+               this, &RoomListDialog::onManagerServerClosed);
+    disconnect(&socket, &ClientSocket::managerPack,
+            this, &RoomListDialog::onManagerData);
     socket.close();
     delete ui;
 }
@@ -251,6 +258,8 @@ void RoomListDialog::connectRoomByPort(const int &p)
                this, &RoomListDialog::onManagerServerConnected);
     disconnect(&client_socket, &ClientSocket::disconnected,
                this, &RoomListDialog::onManagerServerClosed);
+    disconnect(&client_socket, &ClientSocket::managerPack,
+            this, &RoomListDialog::onManagerData);
     client_socket.close();
 
     connect(&client_socket, &ClientSocket::connected,
@@ -364,9 +373,7 @@ void RoomListDialog::onManagerServerConnected()
     state_ = ManagerConnected;
     ui->progressBar->setValue(100);
     requestRoomList();
-    connect(timer,&QTimer::timeout,
-            this,&RoomListDialog::requestRoomList);
-    timer->start(10000);
+    timer->start(REFRESH_TIME);
 }
 
 void RoomListDialog::onManagerServerClosed()
@@ -382,6 +389,7 @@ void RoomListDialog::onManagerServerClosed()
 void RoomListDialog::onCmdServerConnected()
 {
     state_ = RoomConnected;
+    timer->stop();
     if(wantedRoomName_.isEmpty()){
         tryJoinRoomManually();
     }else{
@@ -640,15 +648,16 @@ void RoomListDialog::commitToGlobal()
     instance.setRoomName(this->roomName());
 }
 
-void RoomListDialog::hideEvent(QHideEvent *)
+void RoomListDialog::hideEvent(QHideEvent *e)
 {
-    timer->stop();
     saveNick();
+    QDialog::hideEvent(e);
 }
 
-void RoomListDialog::showEvent(QShowEvent *)
+void RoomListDialog::showEvent(QShowEvent *e)
 {
     connectToManager();
+    QDialog::showEvent(e);
 }
 
 void RoomListDialog::closeEvent(QCloseEvent *e)
