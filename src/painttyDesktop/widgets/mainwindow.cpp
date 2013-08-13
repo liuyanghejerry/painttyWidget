@@ -347,7 +347,7 @@ void MainWindow::toolbarInit()
     brushSettingToolbar->addWidget(brushSettingWidget);
 }
 
-QVariant MainWindow::getRoomKey()
+QString MainWindow::getRoomKey()
 {
     QCryptographicHash hash(QCryptographicHash::Md5);
     auto&& roomName = Singleton<ClientSocket>::instance().roomName();
@@ -361,48 +361,32 @@ QVariant MainWindow::getRoomKey()
         // Tell user that he's not owner
         qDebug()<<"hashed_name"<<hashed_name
                <<" key cannot found!";
-        return QVariant();
+        return QString();
     }
     QVariant key = settings.value("rooms/"+hashed_name);
-    if(key.isNull()){
-        // Tell user that he's not owner
-        return QVariant();
-    }
-    return key;
+    return key.toString();
 }
 
 void MainWindow::requestOnlinelist()
 {
-    QJsonDocument doc;
     QJsonObject obj;
     obj.insert("request", QString("onlinelist"));
     obj.insert("type", QString("command"));
     obj.insert("clientid", Singleton<ClientSocket>::instance().clientId());
-    doc.setObject(obj);
     qDebug()<<"clientid: "<<Singleton<ClientSocket>::instance().clientId();
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
-    Singleton<ClientSocket>::instance().sendData(doc.toJson(QJsonDocument::Compact));
-#else
-    Singleton<ClientSocket>::instance().sendData(doc.toJson());
-#endif
+    Singleton<ClientSocket>::instance().sendCmdPack(obj);
 }
 
 void MainWindow::requestCheckout()
 {
-    QJsonDocument doc;
     QJsonObject obj;
     obj.insert("request", QString("checkout"));
     obj.insert("type", QString("command"));
-    obj.insert("key", getRoomKey().toString());
-    doc.setObject(obj);
+    obj.insert("key", getRoomKey());
     qDebug()<<"checkout with key: "<<getRoomKey();
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
-    Singleton<ClientSocket>::instance().sendData(doc.toJson(QJsonDocument::Compact));
-#else
-    Singleton<ClientSocket>::instance().sendData(doc.toJson());
-#endif
+    Singleton<ClientSocket>::instance().sendCmdPack(obj);
 }
 
 void MainWindow::shortcutInit()
@@ -425,10 +409,10 @@ void MainWindow::shortcutInit()
             &QApplication::aboutQt);
     connect(ui->actionClose_Room, &QAction::triggered,
             [&](){
-        QVariantMap map;
-        QVariant r_key = getRoomKey();
-        map.insert("request", "close");
-        if(r_key.isNull()){
+        QJsonObject obj;
+        QString r_key = getRoomKey();
+        obj.insert("request", QString("close"));
+        if(r_key.isEmpty()){
             QMessageBox::warning(this,
                                  tr("Sorry"),
                                  tr("Only room owner is authorized "
@@ -436,8 +420,8 @@ void MainWindow::shortcutInit()
                                     "It seems you're not room manager."));
             return;
         }
-        map.insert("key", r_key);
-        Singleton<ClientSocket>::instance().sendData(toJson(QVariant(map)));
+        obj.insert("key", r_key);
+        Singleton<ClientSocket>::instance().sendCmdPack(obj);
     });
     connect(ui->actionAll_Layers, &QAction::triggered,
             this, &MainWindow::clearAllLayer);
@@ -461,7 +445,7 @@ void MainWindow::socketInit()
     connect(&client_socket, &ClientSocket::dataPack,
             ui->canvas, &Canvas::onNewData);
     connect(ui->canvas, &Canvas::sendData,
-            &client_socket, &ClientSocket::sendData);
+            &client_socket, &ClientSocket::sendDataPack);
 
     connect(&client_socket, &ClientSocket::cmdPack,
             this, &MainWindow::onCmdData);
@@ -783,12 +767,12 @@ void MainWindow::clearLayer(const QString &name)
                                         QMessageBox::Yes|QMessageBox::No);
     if(result == QMessageBox::Yes){
         ui->canvas->clearLayer(name);
-        QVariantMap map;
-        map.insert("request", "clear");
-        map.insert("type", "command");
+        QJsonObject map;
+        map.insert("request", QString("clear"));
+        map.insert("type", QString("command"));
         map.insert("key", getRoomKey());
         map.insert("layer", name);
-        Singleton<ClientSocket>::instance().sendData(toJson(QVariant(map)));
+        Singleton<ClientSocket>::instance().sendCmdPack(map);
     }
 
 }
@@ -803,9 +787,9 @@ void MainWindow::clearAllLayer()
                                            "Do you really want to do so?"),
                                         QMessageBox::Yes|QMessageBox::No);
     if(result == QMessageBox::Yes){
-        QVariantMap map;
-        QVariant r_key = getRoomKey();
-        if(r_key.isNull()){
+        QJsonObject map;
+        QString r_key = getRoomKey();
+        if(r_key.isEmpty()){
             QMessageBox::warning(this,
                                  tr("Sorry"),
                                  tr("Only room owner is authorized "
@@ -813,10 +797,10 @@ void MainWindow::clearAllLayer()
                                     "It seems you're not room manager."));
             return;
         }
-        map.insert("request", "clearall");
-        map.insert("type", "command");
+        map.insert("request", QString("clearall"));
+        map.insert("type", QString("command"));
         map.insert("key", getRoomKey());
-        Singleton<ClientSocket>::instance().sendData(toJson(QVariant(map)));
+        Singleton<ClientSocket>::instance().sendCmdPack(map);
     }
 }
 

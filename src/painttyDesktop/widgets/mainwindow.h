@@ -58,7 +58,7 @@ private:
     void setRoomName();
     void setHistorySize();
     void setCanvasSize();
-    QVariant getRoomKey();
+    QString getRoomKey();
     void requestOnlinelist();
     void requestCheckout();
     static QByteArray toJson(const QVariant &m);

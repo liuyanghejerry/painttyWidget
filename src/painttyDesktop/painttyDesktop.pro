@@ -123,7 +123,8 @@ HEADERS  += widgets/mainwindow.h \
     misc/shortcutmanager.h \
     widgets/configuredialog.h\
     widgets/shortcutgrabberedit.h \
-    ../common/network/clientsocket.h
+    ../common/network/clientsocket.h \
+    misc/binary.h
 
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \

@@ -199,13 +199,7 @@ void RoomListDialog::requestRoomList()
         map.insert("request", QString("roomlist"));
         map.insert("type", QString("manager"));
 
-        QJsonDocument doc;
-        doc.setObject(map);
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
-        Singleton<ClientSocket>::instance().sendData(doc.toJson(QJsonDocument::Compact));
-#else
-        Singleton<ClientSocket>::instance().sendData(doc.toJson());
-#endif
+        Singleton<ClientSocket>::instance().sendManagerPack(map);
         ui->progressBar->setRange(0,0);
     }else{
         qDebug()<<"Unexpected State in requestRoomList"<<state_;
@@ -232,14 +226,7 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
         map["info"] = m;
         // TODO: add owner info
 
-        QJsonDocument doc;
-        doc.setObject(map);
-
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
-        Singleton<ClientSocket>::instance().sendData(doc.toJson(QJsonDocument::Compact));
-#else
-        Singleton<ClientSocket>::instance().sendData(doc.toJson());
-#endif
+        Singleton<ClientSocket>::instance().sendManagerPack(map);
 
         ui->progressBar->setRange(0,0);
         wantedRoomName_ = m["name"].toString();
@@ -307,16 +294,7 @@ void RoomListDialog::tryJoinRoomManually()
     map.insert("password", passwd);
     map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
 
-    QJsonDocument doc;
-    doc.setObject(map);
-
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
-    auto array = doc.toJson(QJsonDocument::Compact);
-#else
-    auto array = doc.toJson();
-#endif
-
-    Singleton<ClientSocket>::instance().sendData(array);
+    Singleton<ClientSocket>::instance().sendManagerPack(map);
     ui->progressBar->setRange(0, 0);
 }
 
@@ -332,16 +310,8 @@ void RoomListDialog::tryJoinRoomAutomated()
     map.insert("password", wantedPassword_);
     map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
 
-    QJsonDocument doc;
-    doc.setObject(map);
-
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
-    auto array = doc.toJson(QJsonDocument::Compact);
-#else
-    auto array = doc.toJson();
-#endif
-    qDebug()<<"try auto join room: "<<array;
-    Singleton<ClientSocket>::instance().sendData(array);
+    qDebug()<<"try auto join room";
+    Singleton<ClientSocket>::instance().sendCmdPack(map);
     ui->progressBar->setRange(0, 0);
 }
 
