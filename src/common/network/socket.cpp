@@ -7,7 +7,7 @@ Socket::Socket(QObject *parent) :
     dataSize(0),
     historySize(0),
     commandStarted(false),
-    compressed_(false)
+    compressed_(true)
 {
     socket = new QTcpSocket(this);
     socket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
@@ -62,7 +62,7 @@ bool Socket::compressed()
     return compressed_;
 }
 
-void Socket::connectToHost(const QHostAddress & address, quint16 port)
+void Socket::connectToHost(const QHostAddress& address, quint16 port)
 {
     socket->connectToHost(address, port);
 }
@@ -129,6 +129,7 @@ void Socket::onReceipt()
         historySize += 4;
         dataSize= (uchar(c1) << 24) + (uchar(c2) << 16)
                 + (uchar(c3) << 8) + uchar(c4);
+        qDebug()<<"dataSize"<<dataSize;
         /* Recursive call to write less code =) */
         onReceipt();
     } else {
@@ -147,6 +148,7 @@ void Socket::onReceipt()
                     qDebug()<<info.right(info.length()-1).toHex();
                 }
             }else{
+                qDebug()<<"fetched"<<info.size();
                 emit newData(info.right(info.length()-1));
             }
             commandStarted = false;
@@ -163,4 +165,7 @@ void Socket::close()
             && socket->bytesToWrite()) {
         socket->waitForDisconnected(60*1000);
     }
+    historySize = 0;
+    commandStarted = false;
+    dataSize = 0;
 }

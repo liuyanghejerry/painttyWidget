@@ -6,15 +6,15 @@
 
 ClientSocket::ClientSocket(QObject *parent) :
     Socket(parent),
+    historysize_(0),
+    counted_history_(0),
     poolEnabled_(false),
     timer_(new QTimer(this))
 {
     connect(this, &ClientSocket::newData,
             this, &ClientSocket::onPending);
     connect(timer_, &QTimer::timeout,
-            [this](){
-        this->processPending();
-    });
+            this, &ClientSocket::processPending);
     timer_->start(WAIT_TIME);
 }
 
@@ -77,6 +77,7 @@ QSize ClientSocket::canvasSize() const
 void ClientSocket::setHistorySize(int size)
 {
     historysize_ = size;
+    counted_history_ = 0;
 }
 
 int ClientSocket::historySize() const
@@ -113,7 +114,9 @@ void ClientSocket::onPending(const QByteArray& bytes)
 {
     if(poolEnabled_){
         pool_.append(bytes);
+        qDebug()<<"Package pooled"<<bytes;
     }else{
+        qDebug()<<"Package parsered"<<bytes;
         if(pool_.count()){
             pool_.append(bytes);
             processPending();
@@ -134,6 +137,17 @@ void ClientSocket::processPending()
     }
 }
 
+void ClientSocket::tryIncHistory(int s)
+{
+    if(historysize_){
+        counted_history_ += s;
+        if(counted_history_ >= historysize_){
+            historysize_ = 0;
+            emit historyLoaded(counted_history_);
+        }
+    }
+}
+
 bool ClientSocket::dispatch(const QByteArray& bytes)
 {
     auto doc = QJsonDocument::fromJson(bytes);
@@ -145,6 +159,7 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
     if(j_type == "data"){
         static const auto sig = QMetaMethod::fromSignal(&ClientSocket::dataPack);
         if(isSignalConnected(sig)){
+            tryIncHistory(bytes.count());
             emit dataPack(obj);
             return true;
         }else{
@@ -153,6 +168,7 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
     }else if(j_type == "message"){
         static const auto sig = QMetaMethod::fromSignal(&ClientSocket::newMessage);
         if(isSignalConnected(sig)){
+            tryIncHistory(bytes.count());
             emit msgPack(obj);
             onNewMessage(obj);
             return true;
@@ -189,6 +205,7 @@ void ClientSocket::reset()
     roomname_.clear();
     canvassize_ = QSize();
     historysize_ = 0;
+    counted_history_ = 0;
     router_.clear();
     timer_->start(WAIT_TIME);
     pool_.clear();

@@ -12,7 +12,7 @@ class Socket : public QObject
 public:
     explicit Socket(QObject *parent = 0);
     ~Socket();
-    void connectToHost(const QHostAddress & address, quint16 port);
+    void connectToHost(const QHostAddress& address, quint16 port);
     void connectToHost(const QString & hostName, quint16 port);
     bool isConnected();
     QHostAddress address();

@@ -30,6 +30,7 @@ signals:
     void cmdPack(const QJsonObject&);
     void managerPack(const QJsonObject&);
     void newMessage(const QString&);
+    void historyLoaded(int s_size);
     
 public slots:
     void sendMessage(const QString &content);
@@ -39,6 +40,7 @@ private:
     QString roomname_;
     QSize canvassize_;
     int historysize_;
+    int counted_history_;
     Router<> router_;
     QList<QByteArray> pool_;
     bool poolEnabled_;
@@ -49,6 +51,7 @@ private slots:
     void processPending();
     bool dispatch(const QByteArray& bytes);
     void onNewMessage(const QJsonObject &map);
+    void tryIncHistory(int s);
 };
 
 #endif // CLIENTSOCKET_H
