@@ -127,7 +127,7 @@ ClientSocket::ParserResult ClientSocket::parserPack(const QByteArray &data)
     if(isCompressed){
         QByteArray tmp = qUncompress(data_without_header);
         if(tmp.isEmpty()){
-            qDebug()<<"bad input";
+            qDebug()<<"bad input"<<data_without_header.toHex();
         }
         return ParserResult(pack_type, tmp);
     }else{
@@ -186,9 +186,9 @@ void ClientSocket::tryIncHistory(int s)
 
 bool ClientSocket::dispatch(const QByteArray& bytes)
 {
-    QByteArray data = bytes.right(bytes.length()-4);
+    QByteArray data;
     PACK_TYPE p_type;
-    std::tie(p_type, data) = parserPack(data);
+    std::tie(p_type, data) = parserPack(bytes);
     if(data.isEmpty()){
         return true;
     }

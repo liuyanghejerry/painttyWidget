@@ -291,7 +291,7 @@ void RoomListDialog::tryJoinRoomManually()
     map.insert("password", passwd);
     map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
 
-    Singleton<ClientSocket>::instance().sendManagerPack(map);
+    Singleton<ClientSocket>::instance().sendCmdPack(map);
     ui->progressBar->setRange(0, 0);
 }
 
@@ -356,6 +356,7 @@ void RoomListDialog::onManagerServerClosed()
 
 void RoomListDialog::onCmdServerConnected()
 {
+    qDebug()<<"Room connected";
     state_ = RoomConnected;
     timer->stop();
     if(wantedRoomName_.isEmpty()){
@@ -367,8 +368,9 @@ void RoomListDialog::onCmdServerConnected()
 
 void RoomListDialog::onCmdData(const QJsonObject &map)
 {
+    qDebug()<<"onCmdData"<<map;
     auto& client_socket = Singleton<ClientSocket>::instance();
-    client_socket.setPoolEnabled(true);
+//    client_socket.setPoolEnabled(true);
     QString response = map["response"].toString();
 
     if(response == "login"){
