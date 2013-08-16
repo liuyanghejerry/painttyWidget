@@ -19,8 +19,6 @@ public:
     int port();
     quint64 pastSize();
     void clearPastSize();
-    void setCompressed(bool b);
-    bool compressed();
     QString errorString() const;
     
 signals:
@@ -39,7 +37,6 @@ protected:
     quint64 historySize;
     bool commandStarted;
     QTcpSocket *socket;
-    bool compressed_;
 };
 
 #endif // SOCKET_H

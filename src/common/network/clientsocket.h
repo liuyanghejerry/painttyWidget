@@ -2,6 +2,7 @@
 #define CLIENTSOCKET_H
 
 #include "socket.h"
+#include "../misc/binary.h"
 #include "../misc/router.h"
 #include <QSize>
 class QTimer;
@@ -9,7 +10,17 @@ class QTimer;
 class ClientSocket : public Socket
 {
     Q_OBJECT
+
+    enum PACK_TYPE : unsigned char {
+        MANAGER = binL<0>::value,
+        COMMAND = binL<1>::value,
+        DATA = binL<10>::value,
+        MESSAGE = binL<11>::value
+    };
+
+    typedef std::tuple<PACK_TYPE, QByteArray> ParserResult;
 public:
+
     explicit ClientSocket(QObject *parent = 0);
     void setClientId(const QString &id);
     QString clientId() const;
@@ -31,9 +42,14 @@ signals:
     void managerPack(const QJsonObject&);
     void newMessage(const QString&);
     void historyLoaded(int s_size);
+    // internal use
+    void newPack(PACK_TYPE t, const QByteArray& bytes);
     
 public slots:
     void sendMessage(const QString &content);
+    void sendDataPack(const QByteArray &content);
+    void sendCmdPack(const QJsonObject &content);
+    void sendManagerPack(const QJsonObject &content);
 private:
     QVariantMap info_;
     QString username_;
@@ -46,7 +62,10 @@ private:
     bool poolEnabled_;
     QTimer *timer_;
     const static int WAIT_TIME = 1000;
+    QByteArray jsonToArray(const QJsonObject&);
 private slots:
+    ParserResult parserPack(const QByteArray& data);
+    QByteArray assamblePack(bool compress, PACK_TYPE pt, const QByteArray& bytes);
     void onPending(const QByteArray& bytes);
     void processPending();
     bool dispatch(const QByteArray& bytes);

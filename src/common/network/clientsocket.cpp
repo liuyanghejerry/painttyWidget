@@ -1,8 +1,11 @@
 #include "clientsocket.h"
+#include "../misc/binary.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMetaMethod>
 #include <QTimer>
+
+using std::tuple;
 
 ClientSocket::ClientSocket(QObject *parent) :
     Socket(parent),
@@ -88,18 +91,8 @@ int ClientSocket::historySize() const
 void ClientSocket::sendMessage(const QString &content)
 {
     QJsonObject map;
-    QJsonDocument doc;
     map.insert("content", content);
-    map.insert("type", QString("message"));
-    doc.setObject(map);
-
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
-    QByteArray buffer = doc.toJson(QJsonDocument::Compact);
-#else
-    QByteArray buffer = doc.toJson();
-#endif
-
-    this->sendData(buffer);
+    this->sendData(assamblePack(true, MESSAGE, jsonToArray(map)));
 }
 
 void ClientSocket::onNewMessage(const QJsonObject &map)
@@ -108,6 +101,48 @@ void ClientSocket::onNewMessage(const QJsonObject &map)
 
     QString string = map["content"].toString();
     emit newMessage(string);
+}
+
+void ClientSocket::sendDataPack(const QByteArray &content)
+{
+    this->sendData(assamblePack(true, DATA, content));
+}
+
+void ClientSocket::sendCmdPack(const QJsonObject &content)
+{
+    this->sendData(assamblePack(true, COMMAND, jsonToArray(content)));
+}
+
+void ClientSocket::sendManagerPack(const QJsonObject &content)
+{
+    this->sendData(assamblePack(true, MANAGER, jsonToArray(content)));
+}
+
+
+ClientSocket::ParserResult ClientSocket::parserPack(const QByteArray &data)
+{
+    bool isCompressed = data[0] & 0x1;
+    PACK_TYPE pack_type = PACK_TYPE(data[0] & binL<110>::value >> 0x1);
+    QByteArray data_without_header = data.right(data.length()-1);
+    if(isCompressed){
+        QByteArray tmp = qUncompress(data_without_header);
+        if(tmp.isEmpty()){
+            qDebug()<<"bad input";
+        }
+        return ParserResult(pack_type, tmp);
+    }else{
+        qDebug()<<"fetched"<<data_without_header.size();
+        return ParserResult(pack_type, data_without_header);
+    }
+}
+
+QByteArray ClientSocket::assamblePack(bool compress, PACK_TYPE pt, const QByteArray& bytes)
+{
+    QByteArray result(bytes.length()+1, 0);
+    char header = (compress & 0x1) | (pt << 0x1);
+    result.append(header);
+    result.append(bytes);
+    return result;
 }
 
 void ClientSocket::onPending(const QByteArray& bytes)
@@ -150,51 +185,64 @@ void ClientSocket::tryIncHistory(int s)
 
 bool ClientSocket::dispatch(const QByteArray& bytes)
 {
-    auto doc = QJsonDocument::fromJson(bytes);
-    QJsonObject obj = doc.object();
-    if(!obj.contains("type")){
+    QByteArray data;
+    PACK_TYPE p_type;
+    std::tie(p_type, data) = parserPack(bytes);
+    if(data.isEmpty()){
         return true;
     }
-    QString j_type = obj.value("type").toString();
-    if(j_type == "data"){
-        static const auto sig = QMetaMethod::fromSignal(&ClientSocket::dataPack);
-        if(isSignalConnected(sig)){
+    auto doc = QJsonDocument::fromJson(bytes);
+    QJsonObject obj = doc.object();
+
+    static const auto sig_d = QMetaMethod::fromSignal(&ClientSocket::dataPack);
+    static const auto sig_m = QMetaMethod::fromSignal(&ClientSocket::newMessage);
+    static const auto sig_c = QMetaMethod::fromSignal(&ClientSocket::cmdPack);
+    static const auto sig_n = QMetaMethod::fromSignal(&ClientSocket::managerPack);
+
+    bool ret = true;
+
+    switch(p_type){
+    case DATA:
+        if(isSignalConnected(sig_d)){
             tryIncHistory(bytes.count());
             emit dataPack(obj);
-            return true;
+            ret = true;
         }else{
-            return false;
+            ret = false;
         }
-    }else if(j_type == "message"){
-        static const auto sig = QMetaMethod::fromSignal(&ClientSocket::newMessage);
-        if(isSignalConnected(sig)){
+        break;
+    case MESSAGE:
+        if(isSignalConnected(sig_m)){
             tryIncHistory(bytes.count());
             emit msgPack(obj);
             onNewMessage(obj);
-            return true;
+            ret = true;
         }else{
-            return false;
+            ret = false;
         }
-    }else if(j_type == "command"){
-        static const auto sig = QMetaMethod::fromSignal(&ClientSocket::cmdPack);
-        if(isSignalConnected(sig)){
+        break;
+    case COMMAND:
+        if(isSignalConnected(sig_c)){
             emit cmdPack(obj);
-            return true;
+            ret = true;
         }else{
-            return false;
+            ret = false;
         }
-    }else if(j_type == "manager"){
-        static const auto sig = QMetaMethod::fromSignal(&ClientSocket::managerPack);
-        if(isSignalConnected(sig)){
+        break;
+    case MANAGER:
+        if(isSignalConnected(sig_n)){
             emit managerPack(obj);
-            return true;
+            ret = true;
         }else{
-            return false;
+            ret = false;
         }
-    }else{
-        qWarning()<<"unexpcted json type"<<j_type;
-        return true;
+        break;
+    default:
+        qWarning()<<"unexpcted json type"<<p_type;
+        ret = true;
+        break;
     }
+    return ret;
 }
 
 void ClientSocket::reset()
@@ -209,4 +257,17 @@ void ClientSocket::reset()
     router_.clear();
     timer_->start(WAIT_TIME);
     pool_.clear();
+}
+
+QByteArray ClientSocket::jsonToArray(const QJsonObject& obj)
+{
+    QJsonDocument doc;
+    doc.setObject(obj);
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
+    QByteArray buffer = doc.toJson(QJsonDocument::Compact);
+#else
+    QByteArray buffer = doc.toJson();
+#endif
+    return buffer;
 }
