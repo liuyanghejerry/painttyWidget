@@ -122,7 +122,7 @@ void ClientSocket::sendManagerPack(const QJsonObject &content)
 ClientSocket::ParserResult ClientSocket::parserPack(const QByteArray &data)
 {
     bool isCompressed = data[0] & 0x1;
-    PACK_TYPE pack_type = PACK_TYPE(data[0] & binL<110>::value >> 0x1);
+    PACK_TYPE pack_type = PACK_TYPE((data[0] & binL<110>::value) >> 0x1);
     QByteArray data_without_header = data.right(data.length()-1);
     if(isCompressed){
         QByteArray tmp = qUncompress(data_without_header);
@@ -131,17 +131,20 @@ ClientSocket::ParserResult ClientSocket::parserPack(const QByteArray &data)
         }
         return ParserResult(pack_type, tmp);
     }else{
-        qDebug()<<"fetched"<<data_without_header.size();
         return ParserResult(pack_type, data_without_header);
     }
 }
 
 QByteArray ClientSocket::assamblePack(bool compress, PACK_TYPE pt, const QByteArray& bytes)
 {
-    QByteArray result(bytes.length()+1, 0);
+    auto body = bytes;
+    if(compress){
+        body = qCompress(bytes);
+    }
+    QByteArray result;
     char header = (compress & 0x1) | (pt << 0x1);
     result.append(header);
-    result.append(bytes);
+    result.append(body);
     return result;
 }
 
@@ -149,9 +152,7 @@ void ClientSocket::onPending(const QByteArray& bytes)
 {
     if(poolEnabled_){
         pool_.append(bytes);
-        qDebug()<<"Package pooled"<<bytes;
     }else{
-        qDebug()<<"Package parsered"<<bytes;
         if(pool_.count()){
             pool_.append(bytes);
             processPending();
@@ -185,13 +186,13 @@ void ClientSocket::tryIncHistory(int s)
 
 bool ClientSocket::dispatch(const QByteArray& bytes)
 {
-    QByteArray data;
+    QByteArray data = bytes.right(bytes.length()-4);
     PACK_TYPE p_type;
-    std::tie(p_type, data) = parserPack(bytes);
+    std::tie(p_type, data) = parserPack(data);
     if(data.isEmpty()){
         return true;
     }
-    auto doc = QJsonDocument::fromJson(bytes);
+    auto doc = QJsonDocument::fromJson(data);
     QJsonObject obj = doc.object();
 
     static const auto sig_d = QMetaMethod::fromSignal(&ClientSocket::dataPack);
@@ -200,6 +201,7 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
     static const auto sig_n = QMetaMethod::fromSignal(&ClientSocket::managerPack);
 
     bool ret = true;
+    qDebug()<<"dispatch"<<p_type<<obj;
 
     switch(p_type){
     case DATA:

@@ -197,7 +197,6 @@ void RoomListDialog::requestRoomList()
         state_ = RequestingList;
         QJsonObject map;
         map.insert("request", QString("roomlist"));
-        map.insert("type", QString("manager"));
 
         Singleton<ClientSocket>::instance().sendManagerPack(map);
         ui->progressBar->setRange(0,0);
@@ -222,7 +221,6 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
         state_ = RequestingNewRoom;
         QJsonObject map;
         map["request"] = QString("newroom");
-        map["type"] = QString("manager");
         map["info"] = m;
         // TODO: add owner info
 
@@ -289,7 +287,6 @@ void RoomListDialog::tryJoinRoomManually()
 
     QJsonObject map;
     map.insert("request", QString("login"));
-    map.insert("type", QString("command"));
     map.insert("name", nickName_);
     map.insert("password", passwd);
     map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
@@ -305,7 +302,6 @@ void RoomListDialog::tryJoinRoomAutomated()
     }
     QJsonObject map;
     map.insert("request", QString("login"));
-    map.insert("type", QString("command"));
     map.insert("name", nickName_);
     map.insert("password", wantedPassword_);
     map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
@@ -317,6 +313,7 @@ void RoomListDialog::tryJoinRoomAutomated()
 
 void RoomListDialog::onManagerData(const QJsonObject &array)
 {
+    qDebug()<<"onManagerData"<<array;
     managerSocketRouter_.onData(array);
 }
 
@@ -340,6 +337,7 @@ void RoomListDialog::onManagerResponseRoomlist(const QJsonObject &obj)
 
 void RoomListDialog::onManagerServerConnected()
 {
+    qDebug()<<"Manager connected";
     state_ = ManagerConnected;
     ui->progressBar->setValue(100);
     requestRoomList();
