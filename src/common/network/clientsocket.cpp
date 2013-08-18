@@ -253,9 +253,6 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
         ret = true;
         break;
     }
-    if(!ret){
-        qDebug()<<"dispatch failed due to dangling signal";
-    }
     return ret;
 }
 

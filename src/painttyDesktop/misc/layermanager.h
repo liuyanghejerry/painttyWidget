@@ -41,6 +41,7 @@ public:
     void combineLayers(QPixmap *p, const QRect &rect = QRect());
 
 private:
+    Q_DISABLE_COPY(LayerManager)
     void moveTo(int, int);
 
     QList<QString> layerLinks;

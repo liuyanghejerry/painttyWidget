@@ -30,6 +30,7 @@ public slots:
     bool saveToConfigure();
     
 private:
+    Q_DISABLE_COPY(ShortcutManager)
     QVariantMap shortcut_conf;
     QVariantMap default_conf;
     // each item in QVariantMap has scheme:

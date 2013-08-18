@@ -51,6 +51,7 @@ public slots:
     void sendCmdPack(const QJsonObject &content);
     void sendManagerPack(const QJsonObject &content);
 private:
+    Q_DISABLE_COPY(ClientSocket)
     QString clientid_;
     QString username_;
     QString roomname_;

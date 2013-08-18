@@ -59,6 +59,8 @@ protected:
                           qreal &,
                           qreal pressure=1.0);
     virtual void updateCursor(int w);
+private:
+    Q_DISABLE_COPY(AbstractBrush)
 };
 
 #endif // ABSTRACTBRUSH_H

@@ -21,6 +21,7 @@ signals:
 public slots:
     void setEnabled(bool e);
 private:
+    Q_DISABLE_COPY(SingleShortcut)
     QKeySequence key_;
     bool enabled_;
     

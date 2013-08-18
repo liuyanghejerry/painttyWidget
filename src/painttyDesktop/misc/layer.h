@@ -28,6 +28,7 @@ public:
     QString name();
     void rename(const QString &new_name);
 private:
+    Q_DISABLE_COPY(Layer)
     bool lock_;
     bool hide_;
     bool select_;

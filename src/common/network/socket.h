@@ -37,6 +37,8 @@ protected:
     quint64 historySize;
     bool commandStarted;
     QTcpSocket *socket;
+private:
+    Q_DISABLE_COPY(Socket)
 };
 
 #endif // SOCKET_H

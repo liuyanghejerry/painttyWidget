@@ -106,6 +106,14 @@ bool runUpdater()
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    auto msg_pattern = "["\
+            "%{if-debug}D%{endif}"\
+            "%{if-warning}W%{endif}"\
+            "%{if-critical}C%{endif}"\
+            "%{if-fatal}F%{endif}]"\
+            "%{file}:%{line} - %{message}";
+    qSetMessagePattern(msg_pattern);
+
 #ifdef Q_OS_MACX
     QDir::setCurrent(a.applicationDirPath());
 #endif

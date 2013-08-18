@@ -1011,8 +1011,6 @@ void CanvasBackend::onIncomingData(const QJsonObject& obj)
         QVariantMap map = m["info"].toMap();
         QString clientid = map["clientid"].toString();
         // don't draw your own move from remote
-        qDebug()<<"my clientid"<<Singleton<ClientSocket>::instance().clientId()
-               <<"remote clientid"<<clientid;
         if(clientid == Singleton<ClientSocket>::instance().clientId()){
             return;
         }
