@@ -27,7 +27,6 @@
 RoomListDialog::RoomListDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::RoomListDialog),
-    historySize_(0),
     timer(new QTimer(this)),
     newRoomWindow(new NewRoomWindow(this)),
     state_(Init)
@@ -65,7 +64,7 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
                                .arg("?"));
     tableInit();
     state_ = Ready;
-    socketInit();
+    routerInit();
     loadNick();
     clientId_ = loadClientId();
 
@@ -122,7 +121,7 @@ void RoomListDialog::connectToManager()
                                 GlobalDef::HOST_MGR_PORT);
 }
 
-void RoomListDialog::socketInit()
+void RoomListDialog::routerInit()
 {
     managerSocketRouter_.regHandler("response",
                                     "roomlist",
@@ -313,7 +312,7 @@ void RoomListDialog::tryJoinRoomAutomated()
 
 void RoomListDialog::onManagerData(const QJsonObject &array)
 {
-    qDebug()<<"onManagerData"<<array;
+//    qDebug()<<"onManagerData"<<array;
     managerSocketRouter_.onData(array);
 }
 
@@ -370,7 +369,7 @@ void RoomListDialog::onCmdData(const QJsonObject &map)
 {
     qDebug()<<"onCmdData"<<map;
     auto& client_socket = Singleton<ClientSocket>::instance();
-//    client_socket.setPoolEnabled(true);
+    client_socket.setPoolEnabled(true);
     QString response = map["response"].toString();
 
     if(response == "login"){
@@ -394,18 +393,18 @@ void RoomListDialog::onCmdData(const QJsonObject &map)
             if(!info.contains("historysize")){
                 return;
             }
-            historySize_ = info["historysize"].toDouble();
+            client_socket.setHistorySize(info["historysize"].toDouble());
             if(info.contains("size")){
                 QJsonObject sizeMap = info["size"].toObject();
                 int width = sizeMap["width"].toDouble();
                 int height = sizeMap["height"].toDouble();
-                canvasSize_ = QSize(width, height);
+                client_socket.setCanvasSize(QSize(width, height));
             }
             if(info.contains("clientid")){
                 QString clientid = info["clientid"].toString();
-                Singleton<ClientSocket>::instance().setClientId(clientid);
+                client_socket.setClientId(clientid);
                 qDebug()<<"clientid assign"
-                       <<Singleton<ClientSocket>::instance().clientId();
+                       <<clientid;
             }
             state_ = RoomJoined;
 
@@ -545,11 +544,6 @@ QString RoomListDialog::nick() const
     return nickName_;
 }
 
-int RoomListDialog::historySize() const
-{
-    return historySize_;
-}
-
 QByteArray RoomListDialog::loadClientId()
 {
     QSettings settings(GlobalDef::SETTINGS_NAME,
@@ -613,8 +607,6 @@ void RoomListDialog::commitToGlobal()
 {
     auto &instance = Singleton<ClientSocket>::instance();
     instance.setUserName(this->nick());
-    instance.setCanvasSize(this->canvasSize());
-    instance.setHistorySize(this->historySize());
     instance.setRoomName(this->roomName());
 }
 

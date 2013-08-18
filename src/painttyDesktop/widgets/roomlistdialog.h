@@ -44,8 +44,6 @@ protected:
     QString roomName() const;
     QString nick() const;
     bool collectUserInfo();
-    int historySize() const;
-    QSize canvasSize() const {return canvasSize_;}
     void connectRoomByPort(const int &p);
     void tryJoinRoomManually();
     void tryJoinRoomAutomated();
@@ -65,8 +63,6 @@ private:
 
     Ui::RoomListDialog *ui;
     static const int REFRESH_TIME = 10000;
-    quint64 historySize_;
-    QSize canvasSize_;
     QString roomName_;
     QString wantedRoomName_;
     QString wantedPassword_;
@@ -79,7 +75,7 @@ private:
     State state_;
     void tableInit();
     void connectToManager();
-    void socketInit();
+    void routerInit();
     QByteArray loadClientId();
     void onManagerResponseRoomlist(const QJsonObject &obj);
 };

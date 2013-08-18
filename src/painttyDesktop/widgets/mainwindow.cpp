@@ -432,18 +432,12 @@ void MainWindow::shortcutInit()
 
 void MainWindow::socketInit()
 {
-    qDebug()<<"socketInit in MainWindow";
     auto& client_socket = Singleton<ClientSocket>::instance();
 
     connect(&client_socket, &ClientSocket::newMessage,
             this, &MainWindow::onNewMessage);
     connect(this, &MainWindow::sendMessage,
             &client_socket, &ClientSocket::sendMessage);
-
-    connect(&client_socket, &ClientSocket::dataPack,
-            ui->canvas, &Canvas::onNewData);
-    connect(ui->canvas, &Canvas::sendData,
-            &client_socket, &ClientSocket::sendDataPack);
 
     connect(&client_socket, &ClientSocket::cmdPack,
             this, &MainWindow::onCmdData);
@@ -554,7 +548,7 @@ void MainWindow::onCommandActionClearAll(const QJsonObject &)
 void MainWindow::onCommandResponseOnlinelist(const QJsonObject &o)
 {
     QJsonArray list = o.value("onlinelist").toArray();
-    qDebug()<<list;
+//    qDebug()<<list;
     MemberList l;
     for(int i=0;i<list.count();++i){
         QJsonObject obj = list[i].toObject();
@@ -633,14 +627,6 @@ void MainWindow::onSendPressed()
                    + ": ");
     string.append('\n');
     emit sendMessage(string);
-
-    QTextCursor c = ui->textEdit->textCursor();
-    c.movePosition(QTextCursor::End);
-    ui->textEdit->setTextCursor(c);
-    ui->textEdit->insertPlainText(string);
-    ui->textEdit->verticalScrollBar()
-            ->setValue(ui->textEdit->verticalScrollBar()
-                       ->maximum());
     ui->lineEdit->clear();
 }
 

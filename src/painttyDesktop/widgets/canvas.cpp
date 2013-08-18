@@ -67,12 +67,12 @@ Canvas::Canvas(QWidget *parent) :
     setAttribute(Qt::WA_StaticContents);
     inPicker = false;
     drawing = false;
-    disableMouse_ = false;
     brush_ = BrushPointer(new Brush);
     updateCursor();
 
     setMouseTracking(true);
     setFocusPolicy(Qt::WheelFocus); // necessary for IME control
+    qDebug()<<"Canvas Size is "<<canvasSize;
     resize(canvasSize);
 
     BrushPointer p1(new Brush);
@@ -87,8 +87,6 @@ Canvas::Canvas(QWidget *parent) :
 
     worker_->start();
     backend_->moveToThread(worker_);
-    connect(backend_, &CanvasBackend::newDataGroup,
-            this, &Canvas::sendData);
     connect(backend_, &CanvasBackend::remoteDrawLine,
             this, &Canvas::remoteDrawLine);
     connect(backend_, &CanvasBackend::remoteDrawPoint,
@@ -99,8 +97,6 @@ Canvas::Canvas(QWidget *parent) :
             worker_, &QThread::terminate);
     connect(this, &Canvas::newPaintAction,
             backend_, &CanvasBackend::onDataBlock);
-    connect(this, &Canvas::newInternalData,
-            backend_, &CanvasBackend::onIncomingData);
     connect(this, &Canvas::paintActionComplete,
             backend_, &CanvasBackend::commit);
 
@@ -124,10 +120,6 @@ Canvas::Canvas(QWidget *parent) :
         emit requestSortedMembers(CM::Count, true);
     });
     t->start(5000);
-
-//    if(historySize_ > 0){
-//        this->setEnabled(true);
-//    }
 }
 
 /*!
@@ -609,35 +601,8 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
     update();
 }
 
-void Canvas::onNewData(const QJsonObject & array)
-{
-    // TODO: re-build history detection
-//    static quint64 h_size = 0;
-//    if(historySize_) {
-//        h_size += array.size();
-//        if(h_size < historySize_){
-//            this->setDisabled(true);
-//            //            qDebug()<<"History: "<<historySize_
-//            //                   <<"Loaded: "<<h_size;
-//        }else{
-//            qDebug()<<"History"<<historySize_<<"bytes loaded!";
-//            historySize_ = 0;
-//            h_size = 0;
-//            this->setEnabled(true);
-//            emit historyComplete();
-//        }
-//    }
-    emit newInternalData(array);
-}
-
 void Canvas::onMembersSorted(const QList<CanvasBackend::MemberSection>& list)
 {
-    //    qDebug()<<"Sorted Members: "<<endl;
-    //    for(auto &elm: list){
-    //        qDebug()<<std::get<0>(elm)<<", "
-    //               <<std::get<1>(elm)<<", "
-    //              <<std::get<2>(elm)<<endl;
-    //    }
     author_list_ = list;
 }
 
@@ -833,9 +798,6 @@ void Canvas::focusOutEvent(QFocusEvent *)
 
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
-    if(disableMouse_){
-        return;
-    }
     if (event->button() == Qt::LeftButton) {
         lastPoint = event->pos();
         if(inPicker){
@@ -849,9 +811,6 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 
 void Canvas::mouseMoveEvent(QMouseEvent *event)
 {
-    if(disableMouse_){
-        return;
-    }
     if ((event->buttons() & Qt::LeftButton)){
         if(inPicker){
             pickColor(event->pos());
@@ -879,9 +838,6 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
 
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
-    if(disableMouse_){
-        return;
-    }
     if (event->button() == Qt::LeftButton) {
         if(inPicker){
             pickColor(event->pos());
@@ -927,6 +883,9 @@ void Canvas::paintEvent(QPaintEvent *event)
 
 void Canvas::resizeEvent(QResizeEvent *event)
 {
+    // NOTE: only to stop unexpected resize
+    if(event->size() != canvasSize)
+        return;
     QSize newSize = event->size();
     canvasSize = newSize;
     layers.resizeLayers(newSize);
@@ -974,6 +933,22 @@ CanvasBackend::CanvasBackend(QObject *parent)
     sendTimer->setInterval(1000*10);
     connect(sendTimer, &QTimer::timeout,
             this, &CanvasBackend::commit);
+    auto& client_socket = Singleton<ClientSocket>::instance();
+
+    connect(&client_socket, &ClientSocket::dataPack,
+            this, &CanvasBackend::onIncomingData);
+    connect(this, &CanvasBackend::newDataGroup,
+            &client_socket, &ClientSocket::sendDataPack);
+}
+
+CanvasBackend::~CanvasBackend()
+{
+    auto& client_socket = Singleton<ClientSocket>::instance();
+
+    disconnect(&client_socket, &ClientSocket::dataPack,
+            this, &CanvasBackend::onIncomingData);
+    disconnect(this, &CanvasBackend::newDataGroup,
+            &client_socket, &ClientSocket::sendDataPack);
 }
 
 void CanvasBackend::commit()
@@ -1034,6 +1009,14 @@ void CanvasBackend::onIncomingData(const QJsonObject& obj)
         QString layerName;
 
         QVariantMap map = m["info"].toMap();
+        QString clientid = map["clientid"].toString();
+        // don't draw your own move from remote
+        qDebug()<<"my clientid"<<Singleton<ClientSocket>::instance().clientId()
+               <<"remote clientid"<<clientid;
+        if(clientid == Singleton<ClientSocket>::instance().clientId()){
+            return;
+        }
+
         QVariantMap point_j = map["point"].toMap();
         point.setX(point_j["x"].toInt());
         point.setY(point_j["y"].toInt());
@@ -1043,7 +1026,6 @@ void CanvasBackend::onIncomingData(const QJsonObject& obj)
         if(map.contains("pressure")){
             pressure = map["pressure"].toDouble();
         }
-        QString clientid = map["clientid"].toString();
 
         if(map.contains("name")){
             QString author = map["name"].toString();
@@ -1061,6 +1043,13 @@ void CanvasBackend::onIncomingData(const QJsonObject& obj)
         QString layerName;
 
         QVariantMap map = m["info"].toMap();
+
+        QString clientid = map["clientid"].toString();
+        // don't draw your own move from remote
+        if(clientid == Singleton<ClientSocket>::instance().clientId()){
+            return;
+        }
+
         QVariantMap start_j = map["start"].toMap();
         start.setX(start_j["x"].toInt());
         start.setY(start_j["y"].toInt());
@@ -1073,7 +1062,6 @@ void CanvasBackend::onIncomingData(const QJsonObject& obj)
         if(map.contains("pressure")){
             pressure = map["pressure"].toDouble();
         }
-        QString clientid = map["clientid"].toString();
 
         if(map.contains("name")){
             QString author = map["name"].toString();

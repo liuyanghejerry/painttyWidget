@@ -25,9 +25,11 @@ void ClientSocket::setPoolEnabled(bool on)
 {
     poolEnabled_ = on;
     if(!poolEnabled_){
+//        qDebug()<<"set pool off";
         timer_->start(WAIT_TIME);
         processPending();
     }else{
+//        qDebug()<<"set pool on";
         timer_->stop();
     }
 }
@@ -39,12 +41,12 @@ bool ClientSocket::isPoolEnabled()
 
 void ClientSocket::setClientId(const QString &id)
 {
-    info_.insert("clientid", id);
+    clientid_ = id;
 }
 
 QString ClientSocket::clientId() const
 {
-    return info_.value("clientid").toString();
+    return clientid_;
 }
 
 void ClientSocket::setUserName(const QString &name)
@@ -164,6 +166,7 @@ void ClientSocket::onPending(const QByteArray& bytes)
 
 void ClientSocket::processPending()
 {
+//    qDebug()<<"process pending";
     while(!pool_.isEmpty()){
         if(dispatch(pool_.first())){
             pool_.pop_front();
@@ -186,6 +189,7 @@ void ClientSocket::tryIncHistory(int s)
 
 bool ClientSocket::dispatch(const QByteArray& bytes)
 {
+//    qDebug()<<"try to dispatch";
     QByteArray data;
     PACK_TYPE p_type;
     std::tie(p_type, data) = parserPack(bytes);
@@ -201,10 +205,11 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
     static const auto sig_n = QMetaMethod::fromSignal(&ClientSocket::managerPack);
 
     bool ret = true;
-    qDebug()<<"dispatch"<<p_type<<obj;
+//    qDebug()<<"dispatch"<<p_type<<obj;
 
     switch(p_type){
     case DATA:
+//        qDebug()<<"data pack";
         if(isSignalConnected(sig_d)){
             tryIncHistory(bytes.count());
             emit dataPack(obj);
@@ -214,6 +219,7 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
         }
         break;
     case MESSAGE:
+//        qDebug()<<"message pack";
         if(isSignalConnected(sig_m)){
             tryIncHistory(bytes.count());
             emit msgPack(obj);
@@ -224,6 +230,7 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
         }
         break;
     case COMMAND:
+//        qDebug()<<"command pack";
         if(isSignalConnected(sig_c)){
             emit cmdPack(obj);
             ret = true;
@@ -232,7 +239,9 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
         }
         break;
     case MANAGER:
+//        qDebug()<<"manager pack";
         if(isSignalConnected(sig_n)){
+//            qDebug()<<obj;
             emit managerPack(obj);
             ret = true;
         }else{
@@ -244,6 +253,9 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
         ret = true;
         break;
     }
+    if(!ret){
+        qDebug()<<"dispatch failed due to dangling signal";
+    }
     return ret;
 }
 
@@ -251,7 +263,7 @@ void ClientSocket::reset()
 {
     poolEnabled_ = false;
     username_.clear();
-    info_.clear();
+    clientid_.clear();
     roomname_.clear();
     canvassize_ = QSize();
     historysize_ = 0;

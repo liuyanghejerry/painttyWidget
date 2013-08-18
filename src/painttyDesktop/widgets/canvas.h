@@ -27,6 +27,7 @@ public:
     };
 
     CanvasBackend(QObject *parent = nullptr);
+    ~CanvasBackend();
     void commit();
     BlockLevel blockLevel() const;
 public slots:
@@ -86,7 +87,6 @@ public slots:
     void setBrushColor(const QColor &newColor);
     void setBrushWidth(int newWidth);
     void setBrushHardness(int h);
-    void onNewData(const QJsonObject &data);
     void addLayer(const QString &name);
     bool deleteLayer(const QString &name);
     void clearLayer(const QString &name);
@@ -102,14 +102,11 @@ public slots:
     void onColorPicker(bool in);
 
 signals:
-    void ready();
-    void sendData(const QByteArray &);
     void pickColorComplete();
     void newBrushSettings(const QVariantMap &map);
     void historyComplete();
     void newPaintAction(const QVariantMap &m);
     void paintActionComplete();
-    void newInternalData(const QJsonObject &);
     void requestSortedMembers(CanvasBackend::MemberSectionIndex index
                                = CanvasBackend::MemberSectionIndex::Count,
                               bool mergeSameName = true);
@@ -151,7 +148,6 @@ private:
 
     bool inPicker;
     bool drawing;
-    bool disableMouse_;
     QSize canvasSize;
     LayerManager layers;
     QPixmap image;

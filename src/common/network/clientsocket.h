@@ -51,7 +51,7 @@ public slots:
     void sendCmdPack(const QJsonObject &content);
     void sendManagerPack(const QJsonObject &content);
 private:
-    QVariantMap info_;
+    QString clientid_;
     QString username_;
     QString roomname_;
     QSize canvassize_;

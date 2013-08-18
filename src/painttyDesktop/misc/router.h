@@ -5,7 +5,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QHash>
-#include <QDebug>
 
 // name space for default handler type
 namespace RouterZone{
@@ -53,9 +52,7 @@ public:
     void onData(const QJsonObject &obj)
     {
         auto rules = records_.keys();
-        qDebug()<<obj;
         for(auto item: rules){
-            qDebug()<<item;
             if(obj.contains(item)){
                 auto request = obj.value(item).toString();
                 if(records_[item].contains(request)){
