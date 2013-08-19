@@ -31,6 +31,7 @@ public slots:
 protected slots:
     void onReceipt();
 protected:
+    QByteArray pack(const QByteArray &content);
     quint32 dataSize;
     bool commandStarted;
     QTcpSocket *socket;

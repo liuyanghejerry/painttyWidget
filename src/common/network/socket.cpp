@@ -55,25 +55,31 @@ bool Socket::isConnected()
     return (socket->state() == QAbstractSocket::ConnectedState);
 }
 
+QByteArray Socket::pack(const QByteArray &content)
+{
+    auto result = content;
+    quint32 length = content.length();
+    uchar c1, c2, c3, c4;
+    c1 = length & 0xFF;
+    length >>= 8;
+    c2 = length & 0xFF;
+    length >>= 8;
+    c3 = length & 0xFF;
+    length >>= 8;
+    c4 = length & 0xFF;
+
+    result.prepend(c1);
+    result.prepend(c2);
+    result.prepend(c3);
+    result.prepend(c4);
+
+    return result;
+}
+
 void Socket::sendData(const QByteArray &content)
 {
     if(socket->state() == QAbstractSocket::ConnectedState){
-
-        quint32 length = content.length();
-        uchar c1, c2, c3, c4;
-        c1 = length & 0xFF;
-        length >>= 8;
-        c2 = length & 0xFF;
-        length >>= 8;
-        c3 = length & 0xFF;
-        length >>= 8;
-        c4 = length & 0xFF;
-
-        socket->putChar(c4);
-        socket->putChar(c3);
-        socket->putChar(c2);
-        socket->putChar(c1);
-        socket->write(content);
+        socket->write(pack(content));
     }
 }
 

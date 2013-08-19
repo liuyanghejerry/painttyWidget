@@ -24,6 +24,7 @@ ArchiveFile::ArchiveFile(const QString& name,
     if(!isGood){
         qWarning()<<"Cannot open archive file:"<<filename;
     }
+    // TODO: try to render content if not empty
 }
 
 ArchiveFile::~ArchiveFile()

@@ -409,12 +409,13 @@ void MainWindow::requestArchiveSign()
 
 void MainWindow::requestArchive()
 {
+    auto& socket = Singleton<ClientSocket>::instance();
     QJsonObject obj;
     obj.insert("request", QString("archive"));
-    obj.insert("start", (int)Singleton<ClientSocket>::instance().archiveSize());
+    obj.insert("start", (int)socket.archiveSize());
     qDebug()<<"request archive"<<obj;
 
-    Singleton<ClientSocket>::instance().sendCmdPack(obj);
+    socket.sendCmdPack(obj);
 }
 
 void MainWindow::shortcutInit()

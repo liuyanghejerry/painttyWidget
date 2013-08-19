@@ -230,7 +230,7 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
         if(isSignalConnected(sig_d)){
             emit dataPack(obj);
             leftDataLength_ -= bytes.length()+4;
-            archive_->appendData(bytes);
+            archive_->appendData(pack(bytes));
             if(leftDataLength_ <= 0){
                 emit historyLoaded(schedualDataLength_);
             }
