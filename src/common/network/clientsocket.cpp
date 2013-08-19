@@ -1,5 +1,6 @@
 #include "clientsocket.h"
 #include "../misc/binary.h"
+#include "../misc/archivefile.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMetaMethod>
@@ -7,12 +8,27 @@
 
 using std::tuple;
 
+
+static QByteArray jsonToBuffer(const QJsonObject& obj)
+{
+    QJsonDocument doc;
+    doc.setObject(obj);
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
+    QByteArray buffer = doc.toJson(QJsonDocument::Compact);
+#else
+    QByteArray buffer = doc.toJson();
+#endif
+    return buffer;
+}
+
 ClientSocket::ClientSocket(QObject *parent) :
     Socket(parent),
-    historysize_(0),
-    counted_history_(0),
+    schedualDataLength_(0),
+    leftDataLength_(0),
     poolEnabled_(false),
-    timer_(new QTimer(this))
+    timer_(new QTimer(this)),
+    archive_(nullptr)
 {
     connect(this, &ClientSocket::newData,
             this, &ClientSocket::onPending);
@@ -25,11 +41,9 @@ void ClientSocket::setPoolEnabled(bool on)
 {
     poolEnabled_ = on;
     if(!poolEnabled_){
-//        qDebug()<<"set pool off";
         timer_->start(WAIT_TIME);
         processPending();
     }else{
-//        qDebug()<<"set pool on";
         timer_->stop();
     }
 }
@@ -37,6 +51,33 @@ void ClientSocket::setPoolEnabled(bool on)
 bool ClientSocket::isPoolEnabled()
 {
     return poolEnabled_;
+}
+
+void ClientSocket::setSchedualDataLength(quint64 length)
+{
+    leftDataLength_ = schedualDataLength_ = length;
+}
+
+QString ClientSocket::archiveSignature() const
+{
+    return archiveSignature_;
+}
+
+void ClientSocket::setArchiveSignature(const QString &as)
+{
+    if(archiveSignature_.isEmpty()){
+        archive_ = new ArchiveFile(roomName(), as, this);
+    }else{
+        if(archiveSignature_ != as){
+            archive_->reset(as);
+        }
+    }
+    archiveSignature_ = as;
+}
+
+quint64 ClientSocket::archiveSize() const
+{
+    return archive_->size();
 }
 
 void ClientSocket::setClientId(const QString &id)
@@ -79,22 +120,11 @@ QSize ClientSocket::canvasSize() const
     return canvassize_;
 }
 
-void ClientSocket::setHistorySize(int size)
-{
-    historysize_ = size;
-    counted_history_ = 0;
-}
-
-int ClientSocket::historySize() const
-{
-    return historysize_;
-}
-
 void ClientSocket::sendMessage(const QString &content)
 {
     QJsonObject map;
     map.insert("content", content);
-    this->sendData(assamblePack(true, MESSAGE, jsonToArray(map)));
+    this->sendData(assamblePack(true, MESSAGE, jsonToBuffer(map)));
 }
 
 void ClientSocket::onNewMessage(const QJsonObject &map)
@@ -112,12 +142,12 @@ void ClientSocket::sendDataPack(const QByteArray &content)
 
 void ClientSocket::sendCmdPack(const QJsonObject &content)
 {
-    this->sendData(assamblePack(true, COMMAND, jsonToArray(content)));
+    this->sendData(assamblePack(true, COMMAND, jsonToBuffer(content)));
 }
 
 void ClientSocket::sendManagerPack(const QJsonObject &content)
 {
-    this->sendData(assamblePack(true, MANAGER, jsonToArray(content)));
+    this->sendData(assamblePack(true, MANAGER, jsonToBuffer(content)));
 }
 
 
@@ -166,7 +196,7 @@ void ClientSocket::onPending(const QByteArray& bytes)
 
 void ClientSocket::processPending()
 {
-//    qDebug()<<"process pending";
+    //    qDebug()<<"process pending";
     while(!pool_.isEmpty()){
         if(dispatch(pool_.first())){
             pool_.pop_front();
@@ -176,20 +206,9 @@ void ClientSocket::processPending()
     }
 }
 
-void ClientSocket::tryIncHistory(int s)
-{
-    if(historysize_){
-        counted_history_ += s;
-        if(counted_history_ >= historysize_){
-            historysize_ = 0;
-            emit historyLoaded(counted_history_);
-        }
-    }
-}
-
 bool ClientSocket::dispatch(const QByteArray& bytes)
 {
-//    qDebug()<<"try to dispatch";
+    //    qDebug()<<"try to dispatch";
     QByteArray data;
     PACK_TYPE p_type;
     std::tie(p_type, data) = parserPack(bytes);
@@ -205,23 +224,23 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
     static const auto sig_n = QMetaMethod::fromSignal(&ClientSocket::managerPack);
 
     bool ret = true;
-//    qDebug()<<"dispatch"<<p_type<<obj;
 
     switch(p_type){
     case DATA:
-//        qDebug()<<"data pack";
         if(isSignalConnected(sig_d)){
-            tryIncHistory(bytes.count());
             emit dataPack(obj);
+            leftDataLength_ -= bytes.length()+4;
+            archive_->appendData(bytes);
+            if(leftDataLength_ <= 0){
+                emit historyLoaded(schedualDataLength_);
+            }
             ret = true;
         }else{
             ret = false;
         }
         break;
     case MESSAGE:
-//        qDebug()<<"message pack";
         if(isSignalConnected(sig_m)){
-            tryIncHistory(bytes.count());
             emit msgPack(obj);
             onNewMessage(obj);
             ret = true;
@@ -230,7 +249,6 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
         }
         break;
     case COMMAND:
-//        qDebug()<<"command pack";
         if(isSignalConnected(sig_c)){
             emit cmdPack(obj);
             ret = true;
@@ -239,9 +257,8 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
         }
         break;
     case MANAGER:
-//        qDebug()<<"manager pack";
         if(isSignalConnected(sig_n)){
-//            qDebug()<<obj;
+            //            qDebug()<<obj;
             emit managerPack(obj);
             ret = true;
         }else{
@@ -263,22 +280,8 @@ void ClientSocket::reset()
     clientid_.clear();
     roomname_.clear();
     canvassize_ = QSize();
-    historysize_ = 0;
-    counted_history_ = 0;
     router_.clear();
     timer_->start(WAIT_TIME);
     pool_.clear();
 }
 
-QByteArray ClientSocket::jsonToArray(const QJsonObject& obj)
-{
-    QJsonDocument doc;
-    doc.setObject(obj);
-
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
-    QByteArray buffer = doc.toJson(QJsonDocument::Compact);
-#else
-    QByteArray buffer = doc.toJson();
-#endif
-    return buffer;
-}

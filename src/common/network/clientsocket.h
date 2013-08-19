@@ -6,6 +6,7 @@
 #include "../misc/router.h"
 #include <QSize>
 class QTimer;
+class ArchiveFile;
 
 class ClientSocket : public Socket
 {
@@ -30,11 +31,14 @@ public:
     QString roomName() const;
     void setCanvasSize(const QSize &size);
     QSize canvasSize() const;
-    void setHistorySize(int size);
-    int historySize() const;
     void setPoolEnabled(bool on);
     bool isPoolEnabled();
+    void setSchedualDataLength(quint64 length);
     void reset();
+    QString archiveSignature() const;
+    void setArchiveSignature(const QString &as);
+    quint64 archiveSize() const;
+
 signals:
     void dataPack(const QJsonObject&);
     void msgPack(const QJsonObject&);
@@ -56,14 +60,15 @@ private:
     QString username_;
     QString roomname_;
     QSize canvassize_;
-    int historysize_;
-    int counted_history_;
+    quint64 schedualDataLength_;
+    quint64 leftDataLength_;
+    QString archiveSignature_;
     Router<> router_;
     QList<QByteArray> pool_;
     bool poolEnabled_;
     QTimer *timer_;
+    ArchiveFile* archive_;
     const static int WAIT_TIME = 1000;
-    QByteArray jsonToArray(const QJsonObject&);
 private slots:
     ParserResult parserPack(const QByteArray& data);
     QByteArray assamblePack(bool compress, PACK_TYPE pt, const QByteArray& bytes);
@@ -71,7 +76,6 @@ private slots:
     void processPending();
     bool dispatch(const QByteArray& bytes);
     void onNewMessage(const QJsonObject &map);
-    void tryIncHistory(int s);
 };
 
 #endif // CLIENTSOCKET_H

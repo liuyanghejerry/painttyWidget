@@ -5,7 +5,6 @@
 Socket::Socket(QObject *parent) :
     QObject(parent),
     dataSize(0),
-    historySize(0),
     commandStarted(false)
 {
     socket = new QTcpSocket(this);
@@ -36,19 +35,9 @@ int Socket::port()
     return socket->peerPort();
 }
 
-quint64 Socket::pastSize()
-{
-    return historySize;
-}
-
 QString Socket::errorString() const
 {
     return socket->errorString();
-}
-
-void Socket::clearPastSize()
-{
-    historySize = 0;
 }
 
 void Socket::connectToHost(const QHostAddress& address, quint16 port)
@@ -103,7 +92,6 @@ void Socket::onReceipt()
         char c1, c2, c3, c4;
         socket->getChar(&c1), socket->getChar(&c2);
         socket->getChar(&c3), socket->getChar(&c4);
-        historySize += 4;
         dataSize= (uchar(c1) << 24) + (uchar(c2) << 16)
                 + (uchar(c3) << 8) + uchar(c4);
         /* Recursive call to write less code =) */
@@ -112,7 +100,6 @@ void Socket::onReceipt()
         /* Checking if the command is complete! */
         if (socket->bytesAvailable() >= dataSize) {
             QByteArray info = socket->read(dataSize);
-            historySize += dataSize;
             emit newData(info);
             commandStarted = false;
             /* Recursive call to spare code =), there may be still data pending */
@@ -128,7 +115,6 @@ void Socket::close()
             && socket->bytesToWrite()) {
         socket->waitForDisconnected(60*1000);
     }
-    historySize = 0;
     commandStarted = false;
     dataSize = 0;
 }

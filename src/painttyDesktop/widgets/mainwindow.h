@@ -61,8 +61,8 @@ private:
     QString getRoomKey();
     void requestOnlinelist();
     void requestCheckout();
-    static QByteArray toJson(const QVariant &m);
-    static QVariant fromJson(const QByteArray &d);
+    void requestArchiveSign();
+    void requestArchive();
 
     Ui::MainWindow *ui;
 
@@ -91,6 +91,8 @@ private slots:
     void onCommandActionClearAll(const QJsonObject &);
     void onCommandResponseOnlinelist(const QJsonObject &o);
     void onActionNotify(const QJsonObject &o);
+    void onResponseArchiveSign(const QJsonObject &o);
+    void onResponseArchive(const QJsonObject &o);
 
 };
 

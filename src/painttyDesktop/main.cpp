@@ -14,21 +14,6 @@ namespace mainOnly
 {
 QPalette& rePalette(QPalette &p)
 {
-    //    p.setColor(QPalette::Window, QColor::fromRgb(54, 86, 60));
-    //    p.setColor(QPalette::WindowText, QColor::fromRgb(168, 216, 185));
-    //    p.setColor(QPalette::Base, QColor::fromRgb(34, 125, 81));
-    //    p.setColor(QPalette::AlternateBase, QColor::fromRgb(27, 129, 62));
-    //    p.setColor(QPalette::ToolTipBase, QColor::fromRgb(27, 129, 62));
-    //    p.setColor(QPalette::ToolTipText, QColor::fromRgb(54, 86, 60));
-
-    //    p.setColor(QPalette::Text, QColor::fromRgb(54, 86, 60));
-    //    p.setColor(QPalette::Button, QColor::fromRgb(168, 216, 185));
-    //    p.setColor(QPalette::ButtonText, QColor::fromRgb(0, 0, 0));
-    //    p.setColor(QPalette::BrightText, QColor::fromRgb(168, 216, 185));
-    //    p.setColor(QPalette::Highlight, QColor::fromRgb(168, 216, 185));
-    //    p.setColor(QPalette::HighlightedText, QColor::fromRgb(54, 86, 60));
-
-    // TODO: new palette, Cthulhu Rises
     p.setColor(QPalette::ToolTipText, QColor::fromRgb(85, 51, 51));
     p.setColor(QPalette::WindowText, QColor::fromRgb(85, 51, 51));
     p.setColor(QPalette::Text, QColor::fromRgb(85, 51, 51));
@@ -101,11 +86,8 @@ bool runUpdater()
     return true;
 }
 
-} // namespace mainOnly
-
-int main(int argc, char *argv[])
+void adjustLog()
 {
-    QApplication a(argc, argv);
     auto msg_pattern = "["\
             "%{if-debug}D%{endif}"\
             "%{if-warning}W%{endif}"\
@@ -113,6 +95,14 @@ int main(int argc, char *argv[])
             "%{if-fatal}F%{endif}]"\
             "%{file}:%{line} - %{message}";
     qSetMessagePattern(msg_pattern);
+}
+
+} // namespace mainOnly
+
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    mainOnly::adjustLog();
 
 #ifdef Q_OS_MACX
     QDir::setCurrent(a.applicationDirPath());
@@ -134,7 +124,7 @@ int main(int argc, char *argv[])
         w.showMaximized();
 #endif
         exitCode = a.exec();
-        qDebug()<<"exit code: "<<exitCode;
+//        qDebug()<<"exit code: "<<exitCode;
     }
 
     delete dialog;

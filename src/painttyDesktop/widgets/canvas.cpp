@@ -57,7 +57,6 @@ Canvas::Canvas(QWidget *parent) :
     layers(canvasSize),
     image(canvasSize),
     layerNameCounter(0),
-    historySize_(Singleton<ClientSocket>::instance().historySize()),
     shareColor_(true),
     jitterCorrection_(true),
     jitterCorrectionLevel_(3),

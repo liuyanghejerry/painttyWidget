@@ -156,7 +156,6 @@ private:
     QList<QPoint> stackPoints;
     int layerNameCounter;
     BrushPointer brush_;
-    quint64 historySize_;
     bool shareColor_;
     bool jitterCorrection_;
     int jitterCorrectionLevel_;

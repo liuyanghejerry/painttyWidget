@@ -36,6 +36,7 @@
 #include "../misc/platformextend.h"
 #include "../misc/singleton.h"
 #include "../misc/shortcutmanager.h"
+#include "../misc/errortable.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -179,6 +180,16 @@ void MainWindow::cmdRouterInit()
     cmdRouter_.regHandler("action",
                           "notify",
                           std::bind(&MainWindow::onActionNotify,
+                                    this,
+                                    std::placeholders::_1));
+    cmdRouter_.regHandler("response",
+                          "archivesign",
+                          std::bind(&MainWindow::onResponseArchiveSign,
+                                    this,
+                                    std::placeholders::_1));
+    cmdRouter_.regHandler("response",
+                          "archive",
+                          std::bind(&MainWindow::onResponseArchive,
                                     this,
                                     std::placeholders::_1));
 }
@@ -387,6 +398,25 @@ void MainWindow::requestCheckout()
     Singleton<ClientSocket>::instance().sendCmdPack(obj);
 }
 
+void MainWindow::requestArchiveSign()
+{
+    QJsonObject obj;
+    obj.insert("request", QString("archivesign"));
+    qDebug()<<"request archive signature";
+
+    Singleton<ClientSocket>::instance().sendCmdPack(obj);
+}
+
+void MainWindow::requestArchive()
+{
+    QJsonObject obj;
+    obj.insert("request", QString("archive"));
+    obj.insert("start", (int)Singleton<ClientSocket>::instance().archiveSize());
+    qDebug()<<"request archive"<<obj;
+
+    Singleton<ClientSocket>::instance().sendCmdPack(obj);
+}
+
 void MainWindow::shortcutInit()
 {
     connect(ui->action_Quit, &QAction::triggered,
@@ -444,8 +474,9 @@ void MainWindow::socketInit()
     connect(&client_socket, &ClientSocket::disconnected,
             this, &MainWindow::onServerDisconnected);
     cmdRouterInit();
-    auto fff = [](){
+    auto fff = [this](){
         Singleton<ClientSocket>::instance().setPoolEnabled(false);
+        requestArchiveSign();
     };
     GlobalDef::deferJob<decltype(fff)>(fff);
 
@@ -540,8 +571,9 @@ void MainWindow::onCommandResponseCheckout(const QJsonObject &m)
     }
 }
 
-void MainWindow::onCommandActionClearAll(const QJsonObject &)
+void MainWindow::onCommandActionClearAll(const QJsonObject &obj)
 {
+    qDebug()<<"on action clearall"<<obj;
     ui->canvas->clearAllLayer();
 }
 
@@ -582,6 +614,57 @@ void MainWindow::onActionNotify(const QJsonObject &o)
     qDebug()<<"notified with: "<<o;
 }
 
+void MainWindow::onResponseArchiveSign(const QJsonObject &o)
+{
+    qDebug()<<"onResponseArchiveSign"<<o;
+    if(!o.contains("result") || !o.contains("signature")){
+        return;
+    }
+    int errcode = 800;
+    if(!o.value("result").toBool()){
+        errcode = o.value("errcode").toDouble();
+        QMessageBox::critical(this,
+                              tr("Error"),
+                              tr("Sorry, an error occurred.\n"
+                                 "Error: %1, %2").arg(errcode)
+                              .arg(ErrorTable::toString(errcode)));
+        return;
+    }
+
+    QString signature = o.value("signature").toString();
+
+    auto& socket = Singleton<ClientSocket>::instance();
+    socket.setArchiveSignature(signature);
+//    if(socket.archiveSignature() != signature){
+//        //
+//    }
+    requestArchive();
+}
+
+void MainWindow::onResponseArchive(const QJsonObject &o)
+{
+    qDebug()<<"onResponseArchive"<<o;
+    if(!o.contains("result")|| !o.contains("datalength")){
+        return;
+    }
+    int errcode = 900;
+    if(!o.value("result").toBool()){
+        errcode = o.value("errcode").toDouble();
+        QMessageBox::critical(this,
+                              tr("Error"),
+                              tr("Sorry, an error occurred.\n"
+                                 "Error: %1, %2").arg(errcode)
+                              .arg(ErrorTable::toString(errcode)));
+        return;
+    }
+
+    quint64 datalength = o.value("datalength").toDouble();
+
+    // TODO: re-match signature and receive archive data
+    auto& socket = Singleton<ClientSocket>::instance();
+    socket.setSchedualDataLength(datalength);
+}
+
 void MainWindow::onNewMessage(const QString &content)
 {
     QTextCursor c = ui->textEdit->textCursor();
@@ -591,7 +674,6 @@ void MainWindow::onNewMessage(const QString &content)
     ui->textEdit->verticalScrollBar()
             ->setValue(ui->textEdit->verticalScrollBar()
                        ->maximum());
-    qDebug()<<"new message with: "<<content;
 
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
@@ -599,21 +681,6 @@ void MainWindow::onNewMessage(const QString &content)
     bool msg_notify = settings.value("chat/msg_notify").toBool();
     if(!this->isActiveWindow() && msg_notify)
         PlatformExtend::notify(this);
-}
-
-QByteArray MainWindow::toJson(const QVariant &m)
-{
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 1, 0))
-    return QJsonDocument::fromVariant(m).toJson(QJsonDocument::Compact);
-#else
-    return QJsonDocument::fromVariant(m).toJson();
-#endif
-
-}
-
-QVariant MainWindow::fromJson(const QByteArray &d)
-{
-    return QJsonDocument::fromJson(d).toVariant();
 }
 
 void MainWindow::onSendPressed()

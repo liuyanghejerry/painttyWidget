@@ -393,7 +393,7 @@ void RoomListDialog::onCmdData(const QJsonObject &map)
             if(!info.contains("historysize")){
                 return;
             }
-            client_socket.setHistorySize(info["historysize"].toDouble());
+            client_socket.setSchedualDataLength(info["historysize"].toDouble());
             if(info.contains("size")){
                 QJsonObject sizeMap = info["size"].toObject();
                 int width = sizeMap["width"].toDouble();
