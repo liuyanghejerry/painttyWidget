@@ -78,7 +78,8 @@ SOURCES += main.cpp\
     widgets/shortcutgrabberedit.cpp \
     ../common/network/clientsocket.cpp \
     misc/archivefile.cpp \
-    ../common/network/packparser.cpp
+    ../common/network/packparser.cpp \
+    widgets/clearlineedit.cpp
 
 
 HEADERS  += widgets/mainwindow.h \
@@ -127,7 +128,8 @@ HEADERS  += widgets/mainwindow.h \
     widgets/shortcutgrabberedit.h \
     ../common/network/clientsocket.h \
     misc/archivefile.h \
-    ../common/network/packparser.h
+    ../common/network/packparser.h \
+    widgets/clearlineedit.h
 
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \

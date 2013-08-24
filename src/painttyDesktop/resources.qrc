@@ -40,5 +40,7 @@
         <file>iconset/ui/picker-cursor-1.png</file>
         <file>iconset/visibility-off.png</file>
         <file>iconset/visibility-on.png</file>
+        <file>iconset/ui/cross_16x16.png</file>
+        <file>iconset/ui/cross_32x32.png</file>
     </qresource>
 </RCC>

@@ -69,7 +69,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="search_box">
+         <widget class="ClearLineEdit" name="search_box">
           <property name="placeholderText">
            <string>Room Name Contains...</string>
           </property>
@@ -194,6 +194,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ClearLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>clearlineedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
