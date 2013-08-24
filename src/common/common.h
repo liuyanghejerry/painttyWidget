@@ -11,15 +11,15 @@
 namespace GlobalDef
 {
 
-const static char CLIENT_VER[] = "0.31";
+const static char CLIENT_VER[] = "0.40";
 const static char CLIENT_TYPE[] = "alpha";
 static const char UPDATER_VERSION[] = "0.11";
 
 const static char SETTINGS_NAME[] = "mrpaint.ini";
 
 #ifdef PAINTTY_DEV
-const static QString HOST_ADDR_IPV4("192.168.1.105");
-const static QString HOST_ADDR_IPV6("192.168.1.105");
+const static QString HOST_ADDR_IPV4("192.168.1.109");
+const static QString HOST_ADDR_IPV6("192.168.1.109");
 const static QString UPDATER_ADDR_IPV4("42.121.85.47");
 const static QString UPDATER_ADDR_IPV6("42.121.85.47");
 const static int HOST_MGR_PORT = 7070;

@@ -2,7 +2,8 @@
 #define CLIENTSOCKET_H
 
 #include "socket.h"
-#include "../misc/binary.h"
+#include "../../common/binary.h"
+//#include "../../common/network/packparser.h"
 #include "../misc/router.h"
 #include <QSize>
 class QTimer;
@@ -54,20 +55,22 @@ public slots:
     void sendDataPack(const QByteArray &content);
     void sendCmdPack(const QJsonObject &content);
     void sendManagerPack(const QJsonObject &content);
+    void close() Q_DECL_OVERRIDE;
 private:
     Q_DISABLE_COPY(ClientSocket)
+//    PackParser parser_;
     QString clientid_;
     QString username_;
     QString roomname_;
     QSize canvassize_;
     quint64 schedualDataLength_;
     quint64 leftDataLength_;
-    QString archiveSignature_;
     Router<> router_;
     QList<QByteArray> pool_;
     bool poolEnabled_;
     QTimer *timer_;
     ArchiveFile* archive_;
+    bool no_save_;
     const static int WAIT_TIME = 1000;
 private slots:
     ParserResult parserPack(const QByteArray& data);

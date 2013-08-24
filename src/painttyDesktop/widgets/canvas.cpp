@@ -12,6 +12,7 @@
 #include <QStaticText>
 #include <QtCore/qmath.h>
 
+
 #include "../../common/common.h"
 #include "../../common/network/clientsocket.h"
 #include "../paintingTools/brush/brushmanager.h"

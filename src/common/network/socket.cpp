@@ -1,6 +1,8 @@
 #include "socket.h"
 
 #include <QTcpSocket>
+#include <QBuffer>
+#include <QApplication>
 
 Socket::Socket(QObject *parent) :
     QObject(parent),
@@ -17,7 +19,7 @@ Socket::Socket(QObject *parent) :
     connect(socket, &QTcpSocket::disconnected,
             this,&Socket::disconnected);
     connect(socket, SIGNAL(error(QAbstractSocket::SocketError)),
-                this,SIGNAL(error(QAbstractSocket::SocketError)));
+            this,SIGNAL(error(QAbstractSocket::SocketError)));
 }
 
 Socket::~Socket()
@@ -76,6 +78,34 @@ QByteArray Socket::pack(const QByteArray &content)
     return result;
 }
 
+void Socket::unpack(const QByteArray &content)
+{
+    if(content.size() < 4)
+        return;
+    QBuffer buffer;
+    buffer.setData(content);
+    buffer.open(QBuffer::ReadWrite);
+
+    while(buffer.size() > 4){
+
+        char c1, c2, c3, c4;
+        buffer.getChar(&c1);
+        buffer.getChar(&c2);
+        buffer.getChar(&c3);
+        buffer.getChar(&c4);
+        quint32 dataSize= (uchar(c1) << 24) + (uchar(c2) << 16)
+                + (uchar(c3) << 8) + uchar(c4);
+        if(buffer.bytesAvailable() >= dataSize){
+            QByteArray info = buffer.read(dataSize);
+            emit newData(info);
+            QApplication::processEvents();
+        }else{
+            qDebug()<<"incomplete pack"<<dataSize<<buffer.readAll().toHex();
+            break;
+        }
+    }
+}
+
 void Socket::sendData(const QByteArray &content)
 {
     if(socket->state() == QAbstractSocket::ConnectedState){
@@ -119,6 +149,7 @@ void Socket::close()
     socket->disconnectFromHost();
     if(socket->state() != QAbstractSocket::UnconnectedState
             && socket->bytesToWrite()) {
+        socket->waitForBytesWritten(3*1000);
         socket->waitForDisconnected(60*1000);
     }
     commandStarted = false;

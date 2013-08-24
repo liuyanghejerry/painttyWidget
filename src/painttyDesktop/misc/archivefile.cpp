@@ -8,61 +8,123 @@ ArchiveFile::ArchiveFile(const QString& name,
                          const QString& signature,
                          QObject *parent) :
     QObject(parent),
-    signature_(signature)
+    signature_(signature),
+    backend_(nullptr)
 {
-    auto isGood = QDir::current().mkpath("cache");
-    if(!isGood){
-        qWarning()<<"Cannot create path: cache";
-    }
-    QCryptographicHash crypto(QCryptographicHash::Sha1);
-    crypto.addData(name.toUtf8());
-    QString filename = QString("%1%2")
-            .arg("cache/")
-            .arg(QString::fromUtf8(crypto.result().toHex()));
-    backend_ = new QFile(filename, this);
-    isGood = backend_->open(QIODevice::ReadWrite|QIODevice::Append);
-    if(!isGood){
-        qWarning()<<"Cannot open archive file:"<<filename;
-    }
-    // TODO: try to render content if not empty
+    if(!name.isEmpty())
+        setName(name);
+}
+
+ArchiveFile::ArchiveFile(QObject *parent) :
+    ArchiveFile(QString(), QString(), parent)
+{
 }
 
 ArchiveFile::~ArchiveFile()
 {
-    if(backend_->isOpen()){
+    if(backend_ && backend_->isOpen()){
+        backend_->flush();
         backend_->waitForBytesWritten(3000);
         backend_->close();
     }
 }
 
+QByteArray ArchiveFile::readAll() const
+{
+    if(!backend_)
+        return QByteArray();
+    backend_->flush();
+    backend_->seek(0);
+    return backend_->readAll();
+}
+
 void ArchiveFile::appendData(const QByteArray &data)
 {
+    if(!backend_)
+        return;
+    backend_->seek(backend_->size());
     backend_->write(data);
 }
 
 void ArchiveFile::setSignature(const QString& sign)
 {
+    if(!signature_.isEmpty())
+        prune();
     signature_ = sign;
 }
 
-void ArchiveFile::reset(const QString& sign)
+void ArchiveFile::flush()
 {
-    prune();
-    setSignature(sign);
+    if(!backend_)
+        return;
+    backend_->flush();
 }
 
 void ArchiveFile::prune()
 {
+    if(!backend_)
+        return;
     backend_->resize(0);
+    backend_->seek(0);
 }
 
 void ArchiveFile::remove()
 {
+    if(!backend_)
+        return;
     backend_->close();
     backend_->remove();
 }
 
-quint64 ArchiveFile::size()
+quint64 ArchiveFile::size() const
 {
+    if(!backend_)
+        return 0;
     return backend_->size();
+}
+
+QString ArchiveFile::name() const
+{
+    return name_;
+}
+
+void ArchiveFile::setName(const QString &name)
+{
+    if(name.isEmpty() || name_ == name)
+        return;
+    name_ = name;
+    createFile();
+}
+
+QString ArchiveFile::signature() const
+{
+    return signature_;
+}
+
+bool ArchiveFile::createFile()
+{
+    auto isGood = QDir::current().mkpath("cache");
+    if(!isGood){
+        qWarning()<<"Cannot create path: cache";
+        return isGood;
+    }
+    QCryptographicHash crypto(QCryptographicHash::Sha1);
+    crypto.addData(name_.toUtf8());
+    QString filename = QString("%1%2")
+            .arg("cache/")
+            .arg(QString::fromUtf8(crypto.result().toHex()));
+
+    if(backend_){
+        if(backend_->isOpen())
+            backend_->close();
+        backend_->deleteLater();
+        backend_ = nullptr;
+    }
+
+    backend_ = new QFile(filename, this);
+    isGood = backend_->open(QIODevice::ReadWrite);
+    if(!isGood){
+        qWarning()<<"Cannot open archive file:"<<filename;
+    }
+    return isGood;
 }

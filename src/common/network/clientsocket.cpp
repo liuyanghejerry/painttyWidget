@@ -1,5 +1,5 @@
 #include "clientsocket.h"
-#include "../misc/binary.h"
+#include "../../common/binary.h"
 #include "../misc/archivefile.h"
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -28,7 +28,8 @@ ClientSocket::ClientSocket(QObject *parent) :
     leftDataLength_(0),
     poolEnabled_(false),
     timer_(new QTimer(this)),
-    archive_(nullptr)
+    archive_(new ArchiveFile(this)),
+    no_save_(false)
 {
     connect(this, &ClientSocket::newData,
             this, &ClientSocket::onPending);
@@ -60,19 +61,15 @@ void ClientSocket::setSchedualDataLength(quint64 length)
 
 QString ClientSocket::archiveSignature() const
 {
-    return archiveSignature_;
+    return archive_->signature();
 }
 
 void ClientSocket::setArchiveSignature(const QString &as)
 {
-    if(archiveSignature_.isEmpty()){
-        archive_ = new ArchiveFile(roomName(), as, this);
-    }else{
-        if(archiveSignature_ != as){
-            archive_->reset(as);
-        }
-    }
-    archiveSignature_ = as;
+    archive_->setSignature(as);
+    no_save_ = true;
+    unpack(archive_->readAll());
+    no_save_ = false;
 }
 
 quint64 ClientSocket::archiveSize() const
@@ -103,6 +100,7 @@ QString ClientSocket::userName() const
 void ClientSocket::setRoomName(const QString &name)
 {
     roomname_ = name;
+    archive_->setName(name);
 }
 
 QString ClientSocket::roomName() const
@@ -150,6 +148,13 @@ void ClientSocket::sendManagerPack(const QJsonObject &content)
     this->sendData(assamblePack(true, MANAGER, jsonToBuffer(content)));
 }
 
+void ClientSocket::close()
+{
+    if(archive_){
+        archive_->flush();
+    }
+    Socket::close();
+}
 
 ClientSocket::ParserResult ClientSocket::parserPack(const QByteArray &data)
 {
@@ -230,7 +235,8 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
         if(isSignalConnected(sig_d)){
             emit dataPack(obj);
             leftDataLength_ -= bytes.length()+4;
-            archive_->appendData(pack(bytes));
+            if(!no_save_)
+                archive_->appendData(pack(bytes));
             if(leftDataLength_ <= 0){
                 emit historyLoaded(schedualDataLength_);
             }

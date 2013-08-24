@@ -27,11 +27,12 @@ signals:
     
 public slots:
     void sendData(const QByteArray &data);
-    void close();
+    virtual void close();
 protected slots:
     void onReceipt();
 protected:
     QByteArray pack(const QByteArray &content);
+    void unpack(const QByteArray &content);
     quint32 dataSize;
     bool commandStarted;
     QTcpSocket *socket;
