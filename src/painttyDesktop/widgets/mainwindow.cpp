@@ -138,11 +138,7 @@ void MainWindow::init()
     //    stylize();
     socketInit();
 
-    QTimer *t = new QTimer(this);
-    t->setInterval(5000);
-    connect(t, &QTimer::timeout,
-            this, &MainWindow::requestOnlinelist);
-    t->start();
+
 }
 
 void MainWindow::cmdRouterInit()
@@ -478,13 +474,17 @@ void MainWindow::socketInit()
     auto fff = [this](){
         Singleton<ClientSocket>::instance().setPoolEnabled(false);
         requestArchiveSign();
+
+        // checkout if client is room owner
+        if(!getRoomKey().isNull()){
+            requestCheckout();
+        }
     };
     GlobalDef::deferJob<decltype(fff)>(fff);
-
-    // checkout if client is room owner
-    if(!getRoomKey().isNull()){
-        requestCheckout();
-    }
+    QTimer *t = new QTimer(this);
+    connect(t, &QTimer::timeout,
+            this, &MainWindow::requestOnlinelist);
+    t->start(5000);
 }
 
 void MainWindow::onServerDisconnected()

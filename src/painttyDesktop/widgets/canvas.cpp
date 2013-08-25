@@ -72,17 +72,17 @@ Canvas::Canvas(QWidget *parent) :
 
     setMouseTracking(true);
     setFocusPolicy(Qt::WheelFocus); // necessary for IME control
-    qDebug()<<"Canvas Size is "<<canvasSize;
     resize(canvasSize);
 
+    auto& brush_manager = Singleton<BrushManager>::instance();
     BrushPointer p1(new Brush);
     BrushPointer p2(new Pencil);
     BrushPointer p3(new SketchBrush);
     BrushPointer p4(new Eraser);
-    Singleton<BrushManager>::instance().addBrush(p1);
-    Singleton<BrushManager>::instance().addBrush(p2);
-    Singleton<BrushManager>::instance().addBrush(p3);
-    Singleton<BrushManager>::instance().addBrush(p4);
+    brush_manager.addBrush(p1);
+    brush_manager.addBrush(p2);
+    brush_manager.addBrush(p3);
+    brush_manager.addBrush(p4);
     setJitterCorrectionLevel(5);
 
     worker_->start();
@@ -120,6 +120,10 @@ Canvas::Canvas(QWidget *parent) :
         emit requestSortedMembers(CM::Count, true);
     });
     t->start(5000);
+    this->setEnabled(false);
+    connect(&Singleton<ClientSocket>::instance(),
+            &ClientSocket::historyLoaded,
+            this, &Canvas::setEnabled);
 }
 
 /*!
@@ -878,6 +882,7 @@ void Canvas::paintEvent(QPaintEvent *event)
     opt.init(this);
     style()->drawPrimitive(QStyle::PE_Widget,
                            &opt, &painter, this);
+    QCoreApplication::processEvents();
 
 }
 

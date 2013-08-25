@@ -27,6 +27,7 @@ ClearLineEdit::ClearLineEdit(QWidget *parent)
         clearButton->setVisible(!text.isEmpty());
     });
 
+    // invoke method after layout inited. more like defer call
     QMetaObject::invokeMethod(clearButton, "hide", Qt::QueuedConnection);
 }
 
