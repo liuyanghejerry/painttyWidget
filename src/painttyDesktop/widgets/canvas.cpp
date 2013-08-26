@@ -120,9 +120,12 @@ Canvas::Canvas(QWidget *parent) :
         emit requestSortedMembers(CM::Count, true);
     });
     t->start(5000);
-    this->setEnabled(false);
-    connect(&Singleton<ClientSocket>::instance(),
-            &ClientSocket::historyLoaded,
+    auto& client_socket = Singleton<ClientSocket>::instance();
+    if(client_socket.schedualDataLength()){
+        this->setEnabled(false);
+    }
+    connect(&client_socket,
+            &ClientSocket::archiveLoaded,
             this, &Canvas::setEnabled);
 }
 
@@ -267,7 +270,7 @@ void Canvas::tryJitterCorrection()
         }
     }
     // you can see the correction rate.
-    qDebug()<<"correction rate: "<<qreal(amount-redudent)/amount *100<<"%";
+//    qDebug()<<"correction rate: "<<qreal(amount-redudent)/amount *100<<"%";
 }
 
 /*!
@@ -400,6 +403,10 @@ void Canvas::drawLineTo(const QPoint &endPoint, qreal pressure)
 
     update();
 
+    static int times = 0;
+    times++;
+    qDebug()<<"drawLineTo"<<times;
+
     QVariantMap start_j;
     start_j.insert("x", this->lastPoint.x());
     start_j.insert("y", this->lastPoint.y());
@@ -449,6 +456,10 @@ void Canvas::drawPoint(const QPoint &point, qreal pressure)
     int rad = (brush_->width() / 2) + 2;
     update(QRect(lastPoint, point).normalized()
            .adjusted(-rad, -rad, +rad, +rad));
+
+    static int times = 0;
+    times++;
+    qDebug()<<"drawPoint"<<times;
 
     QVariantMap point_j;
     point_j.insert("x", point.x());
@@ -882,8 +893,6 @@ void Canvas::paintEvent(QPaintEvent *event)
     opt.init(this);
     style()->drawPrimitive(QStyle::PE_Widget,
                            &opt, &painter, this);
-    QCoreApplication::processEvents();
-
 }
 
 void Canvas::resizeEvent(QResizeEvent *event)
@@ -932,7 +941,7 @@ QSize Canvas::minimumSizeHint() const
 
 CanvasBackend::CanvasBackend(QObject *parent)
     :QObject(parent),
-      blocklevel_(LOW)
+      blocklevel_(NONE)
 {
     QTimer *sendTimer = new QTimer(this);
     sendTimer->setInterval(1000*10);
@@ -943,7 +952,8 @@ CanvasBackend::CanvasBackend(QObject *parent)
     connect(&client_socket, &ClientSocket::dataPack,
             this, &CanvasBackend::onIncomingData);
     connect(this, &CanvasBackend::newDataGroup,
-            &client_socket, &ClientSocket::sendDataPack);
+            &client_socket, static_cast<void (ClientSocket::*)(const QByteArray&)>
+            (&ClientSocket::sendDataPack));
 }
 
 CanvasBackend::~CanvasBackend()
@@ -953,7 +963,8 @@ CanvasBackend::~CanvasBackend()
     disconnect(&client_socket, &ClientSocket::dataPack,
             this, &CanvasBackend::onIncomingData);
     disconnect(this, &CanvasBackend::newDataGroup,
-            &client_socket, &ClientSocket::sendDataPack);
+               &client_socket, static_cast<void (ClientSocket::*)(const QByteArray&)>
+               (&ClientSocket::sendDataPack));
 }
 
 void CanvasBackend::commit()
@@ -968,7 +979,6 @@ void CanvasBackend::commit()
         if(!tempStore.isEmpty()){
             QVariantMap doc;
             doc.insert("action", "block");
-            doc.insert("type", "data");
             doc.insert("block", tempStore);
             auto data = toJson(QVariant(doc));
             emit newDataGroup(data);
@@ -996,6 +1006,10 @@ void CanvasBackend::onDataBlock(const QVariantMap& d)
     QString clientid = info["clientid"].toString();
     upsertMember(clientid, author);
 
+    static int times = 0;
+    times++;
+    qDebug()<<"onDataBlock"<<times;
+
     if(blocklevel_ == NONE){
         commit();
     }else{
@@ -1008,6 +1022,10 @@ void CanvasBackend::onDataBlock(const QVariantMap& d)
 void CanvasBackend::onIncomingData(const QJsonObject& obj)
 {
     QString action = obj.value("action").toString().toLower();
+
+    static int times = 0;
+    times++;
+    qDebug()<<"onIncomingData"<<times;
 
     auto drawPoint = [this](const QVariantMap& m){
         QPoint point;
@@ -1103,9 +1121,8 @@ void CanvasBackend::requestMembers(MemberSectionIndex index,
                                    bool mergeSameName)
 {
     qDebug()<<"Members requested!";
-//    using MSI = MemberSectionIndex;
-    using MS = MemberSection;
-    using MSL = QList<MS>;
+    typedef MemberSection MS;
+    typedef QList<MS> MSL;
 
     MSL list = memberHistory_.values();
     qSort(list.begin(), list.end(), [index](const MS &e1,

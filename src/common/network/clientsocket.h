@@ -35,10 +35,12 @@ public:
     void setPoolEnabled(bool on);
     bool isPoolEnabled();
     void setSchedualDataLength(quint64 length);
+    quint64 schedualDataLength();
     void reset();
     QString archiveSignature() const;
     void setArchiveSignature(const QString &as);
     quint64 archiveSize() const;
+    void setRoomCloseFlag();
 
 signals:
     void dataPack(const QJsonObject&);
@@ -46,13 +48,14 @@ signals:
     void cmdPack(const QJsonObject&);
     void managerPack(const QJsonObject&);
     void newMessage(const QString&);
-    void historyLoaded(int s_size);
+    void archiveLoaded(int s_size);
     // internal use
     void newPack(PACK_TYPE t, const QByteArray& bytes);
     
 public slots:
     void sendMessage(const QString &content);
     void sendDataPack(const QByteArray &content);
+    void sendDataPack(const QJsonObject &content);
     void sendCmdPack(const QJsonObject &content);
     void sendManagerPack(const QJsonObject &content);
     void close() Q_DECL_OVERRIDE;
@@ -71,6 +74,7 @@ private:
     QTimer *timer_;
     ArchiveFile* archive_;
     bool no_save_;
+    bool remove_after_close_;
     const static int WAIT_TIME = 1000;
 private slots:
     ParserResult parserPack(const QByteArray& data);

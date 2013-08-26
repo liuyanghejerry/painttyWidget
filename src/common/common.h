@@ -18,11 +18,11 @@ static const char UPDATER_VERSION[] = "0.11";
 const static char SETTINGS_NAME[] = "mrpaint.ini";
 
 #ifdef PAINTTY_DEV
-const static QString HOST_ADDR_IPV4("192.168.1.109");
-const static QString HOST_ADDR_IPV6("192.168.1.109");
+const static QString HOST_ADDR_IPV4("192.81.128.133");
+const static QString HOST_ADDR_IPV6("192.81.128.133");
 const static QString UPDATER_ADDR_IPV4("42.121.85.47");
 const static QString UPDATER_ADDR_IPV6("42.121.85.47");
-const static int HOST_MGR_PORT = 7070;
+const static int HOST_MGR_PORT = 7575;
 const static int UPDATER_PORT = 7071;
 #else
 const static QString HOST_ADDR_IPV4("192.81.128.133");

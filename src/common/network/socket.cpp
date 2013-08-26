@@ -86,7 +86,7 @@ void Socket::unpack(const QByteArray &content)
     buffer.setData(content);
     buffer.open(QBuffer::ReadWrite);
 
-    while(buffer.size() > 4){
+    while(buffer.bytesAvailable() > 4){
 
         char c1, c2, c3, c4;
         buffer.getChar(&c1);
@@ -99,8 +99,9 @@ void Socket::unpack(const QByteArray &content)
             QByteArray info = buffer.read(dataSize);
             emit newData(info);
             QApplication::processEvents();
+            dataSize = 0;
         }else{
-            qDebug()<<"incomplete pack"<<dataSize<<buffer.readAll().toHex();
+            qDebug()<<"incomplete pack"<<dataSize<<buffer.bytesAvailable();
             break;
         }
     }
@@ -137,6 +138,7 @@ void Socket::onReceipt()
         if (socket->bytesAvailable() >= dataSize) {
             QByteArray info = socket->read(dataSize);
             emit newData(info);
+            QApplication::processEvents();
             commandStarted = false;
             /* Recursive call to spare code =), there may be still data pending */
             onReceipt();
@@ -146,12 +148,11 @@ void Socket::onReceipt()
 
 void Socket::close()
 {
-    socket->disconnectFromHost();
     if(socket->state() != QAbstractSocket::UnconnectedState
             && socket->bytesToWrite()) {
-        socket->waitForBytesWritten(3*1000);
-        socket->waitForDisconnected(60*1000);
+        socket->waitForBytesWritten(10*1000);
     }
+    socket->disconnectFromHost();
     commandStarted = false;
     dataSize = 0;
 }

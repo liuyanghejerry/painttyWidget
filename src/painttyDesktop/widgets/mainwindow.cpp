@@ -506,6 +506,7 @@ void MainWindow::onCommandActionClose(const QJsonObject &)
                             "closed the room. This room will close"
                             " when everyone leaves.\n"
                             "Save your work if you like it!"));
+    Singleton<ClientSocket>::instance().setRoomCloseFlag();
 }
 
 void MainWindow::onCommandResponseClose(const QJsonObject &m)
@@ -575,6 +576,10 @@ void MainWindow::onCommandResponseCheckout(const QJsonObject &m)
 void MainWindow::onCommandActionClearAll(const QJsonObject &obj)
 {
     qDebug()<<"on action clearall"<<obj;
+    if(obj.contains("signature")){
+        auto&& s = obj.value("signature").toString();
+        Singleton<ClientSocket>::instance().setArchiveSignature(s);
+    }
     ui->canvas->clearAllLayer();
 }
 
@@ -636,9 +641,6 @@ void MainWindow::onResponseArchiveSign(const QJsonObject &o)
 
     auto& socket = Singleton<ClientSocket>::instance();
     socket.setArchiveSignature(signature);
-//    if(socket.archiveSignature() != signature){
-//        //
-//    }
     requestArchive();
 }
 

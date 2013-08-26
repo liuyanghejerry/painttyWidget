@@ -29,7 +29,8 @@ ClientSocket::ClientSocket(QObject *parent) :
     poolEnabled_(false),
     timer_(new QTimer(this)),
     archive_(new ArchiveFile(this)),
-    no_save_(false)
+    no_save_(false),
+    remove_after_close_(false)
 {
     connect(this, &ClientSocket::newData,
             this, &ClientSocket::onPending);
@@ -59,6 +60,11 @@ void ClientSocket::setSchedualDataLength(quint64 length)
     leftDataLength_ = schedualDataLength_ = length;
 }
 
+quint64 ClientSocket::schedualDataLength()
+{
+    return schedualDataLength_;
+}
+
 QString ClientSocket::archiveSignature() const
 {
     return archive_->signature();
@@ -75,6 +81,11 @@ void ClientSocket::setArchiveSignature(const QString &as)
 quint64 ClientSocket::archiveSize() const
 {
     return archive_->size();
+}
+
+void ClientSocket::setRoomCloseFlag()
+{
+    remove_after_close_ = true;
 }
 
 void ClientSocket::setClientId(const QString &id)
@@ -138,6 +149,11 @@ void ClientSocket::sendDataPack(const QByteArray &content)
     this->sendData(assamblePack(true, DATA, content));
 }
 
+void ClientSocket::sendDataPack(const QJsonObject &content)
+{
+    this->sendData(assamblePack(true, DATA, jsonToBuffer(content)));
+}
+
 void ClientSocket::sendCmdPack(const QJsonObject &content)
 {
     this->sendData(assamblePack(true, COMMAND, jsonToBuffer(content)));
@@ -152,6 +168,9 @@ void ClientSocket::close()
 {
     if(archive_){
         archive_->flush();
+    }
+    if(remove_after_close_){
+        archive_->remove();
     }
     Socket::close();
 }
@@ -238,7 +257,7 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
             if(!no_save_)
                 archive_->appendData(pack(bytes));
             if(leftDataLength_ <= 0){
-                emit historyLoaded(schedualDataLength_);
+                emit archiveLoaded(schedualDataLength_);
             }
             ret = true;
         }else{

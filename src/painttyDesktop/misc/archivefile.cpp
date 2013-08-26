@@ -1,7 +1,10 @@
 #include "archivefile.h"
+#include "../../common/common.h"
+#include <QApplication>
 #include <QFile>
 #include <QDir>
 #include <QCryptographicHash>
+#include <QSettings>
 #include <QDebug>
 
 ArchiveFile::ArchiveFile(const QString& name,
@@ -48,9 +51,20 @@ void ArchiveFile::appendData(const QByteArray &data)
 
 void ArchiveFile::setSignature(const QString& sign)
 {
-    if(!signature_.isEmpty())
+    qDebug()<<"old sign"<<signature_<<"new"<<sign;
+    if(!signature_.isEmpty() && sign != signature_)
         prune();
     signature_ = sign;
+
+    QCryptographicHash crypto(QCryptographicHash::Sha1);
+    crypto.addData(name_.toUtf8());
+    auto&& hash = crypto.result().toHex();
+
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    settings.setValue("archives/"+hash, signature_);
+    settings.sync();
 }
 
 void ArchiveFile::flush()
@@ -64,6 +78,7 @@ void ArchiveFile::prune()
 {
     if(!backend_)
         return;
+    qDebug()<<"File pruned";
     backend_->resize(0);
     backend_->seek(0);
 }
@@ -110,9 +125,10 @@ bool ArchiveFile::createFile()
     }
     QCryptographicHash crypto(QCryptographicHash::Sha1);
     crypto.addData(name_.toUtf8());
+    auto hash = crypto.result().toHex();
     QString filename = QString("%1%2")
             .arg("cache/")
-            .arg(QString::fromUtf8(crypto.result().toHex()));
+            .arg(QString::fromUtf8(hash));
 
     if(backend_){
         if(backend_->isOpen())
@@ -126,5 +142,14 @@ bool ArchiveFile::createFile()
     if(!isGood){
         qWarning()<<"Cannot open archive file:"<<filename;
     }
+
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    if(settings.contains("archives/"+hash)){
+        auto&& saved_sign = settings.value("archives/"+hash).toString();
+        signature_ = saved_sign;
+    }
+
     return isGood;
 }
