@@ -164,7 +164,7 @@ QPixmap Canvas::allCanvas()
 QPixmap Canvas::appendAuthorSignature(QPixmap target)
 {
     // TODO: make all numbers configurable
-    using CBMSI = CanvasBackend::MemberSectionIndex;
+    typedef CanvasBackend::MemberSectionIndex CBMSI;
     int textSize = qMin(target.size().height(), target.width());
     textSize = qBound(10, int(textSize * 0.02), 100);
 
@@ -1162,7 +1162,7 @@ void CanvasBackend::clearMembers()
 
 void CanvasBackend::upsertMember(const QString& id, const QString& name)
 {
-    using MSI = MemberSectionIndex;
+    typedef MemberSectionIndex MSI;
     if( memberHistory_.contains(id) ) {
         std::get<MSI::Count>( memberHistory_[id] )++;
     }else{

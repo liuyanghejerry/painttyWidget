@@ -19,7 +19,8 @@ ArchiveFile::ArchiveFile(const QString& name,
 }
 
 ArchiveFile::ArchiveFile(QObject *parent) :
-    ArchiveFile(QString(), QString(), parent)
+    QObject(parent),
+    backend_(nullptr)
 {
 }
 
