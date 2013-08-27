@@ -16,7 +16,20 @@ public:
         DATA = binL<10>::value,
         MESSAGE = binL<11>::value
     };
-    typedef std::tuple<PACK_TYPE, QByteArray> ParserResult;
+    //    typedef std::tuple<PACK_TYPE, QByteArray> ParserResult;
+
+    struct ParserResult
+    {
+        ParserResult(PACK_TYPE t, const QByteArray& d):
+            pack_type(t),
+            pack_data(d)
+        {
+        }
+
+        PACK_TYPE pack_type;
+        QByteArray pack_data;
+
+    };
 
     explicit PackParser(QObject *parent = 0);
     QByteArray assamblePack(bool compress,

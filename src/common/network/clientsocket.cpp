@@ -235,7 +235,10 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
     //    qDebug()<<"try to dispatch";
     QByteArray data;
     PACK_TYPE p_type;
-    std::tie(p_type, data) = parserPack(bytes);
+//    std::tie(p_type, data) = parserPack(bytes);
+    auto re = parserPack(bytes);
+    p_type = re.pack_type;
+    data = re.pack_data;
     if(data.isEmpty()){
         return true;
     }
