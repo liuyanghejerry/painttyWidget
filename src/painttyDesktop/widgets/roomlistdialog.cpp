@@ -290,6 +290,15 @@ void RoomListDialog::tryJoinRoomManually()
     map.insert("password", passwd);
     map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
 
+    auto& client_socket = Singleton<ClientSocket>::instance();
+    QHostAddress address = client_socket.address();
+
+    QString url = ClientSocket::genRoomUrl(address.toString(),
+                                           client_socket.port(),
+                                           passwd);
+    qDebug()<<"URL:"<<url;
+    ClientSocket::decodeRoomUrl(url+"#asdasd111#");
+
     Singleton<ClientSocket>::instance().sendCmdPack(map);
     ui->progressBar->setRange(0, 0);
 }

@@ -54,6 +54,20 @@ public:
     quint64 archiveSize() const;
     void setRoomCloseFlag();
 
+    static QString genRoomUrl(const QString& addr,
+                              const quint16 port,
+                              const QString& passwd=QString());
+    struct RoomUrl
+    {
+        QString scheme;
+        QString addr;
+        quint16 port;
+        QString passwd;
+        QString misc;
+    };
+
+    static RoomUrl decodeRoomUrl(const QString& url);
+
 signals:
     void dataPack(const QJsonObject&);
     void msgPack(const QJsonObject&);

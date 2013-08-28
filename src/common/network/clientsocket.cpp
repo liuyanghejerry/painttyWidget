@@ -5,6 +5,7 @@
 #include <QJsonObject>
 #include <QMetaMethod>
 #include <QTimer>
+#include <QRegularExpression>
 
 using std::tuple;
 
@@ -235,7 +236,7 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
     //    qDebug()<<"try to dispatch";
     QByteArray data;
     PACK_TYPE p_type;
-//    std::tie(p_type, data) = parserPack(bytes);
+    //    std::tie(p_type, data) = parserPack(bytes);
     auto re = parserPack(bytes);
     p_type = re.pack_type;
     data = re.pack_data;
@@ -313,3 +314,59 @@ void ClientSocket::reset()
     pool_.clear();
 }
 
+
+QString ClientSocket::genRoomUrl(const QString& addr,
+                                 const quint16 port,
+                                 const QString& passwd)
+{
+    QString raw_url;
+    if(passwd.isEmpty()){
+        raw_url = QString("%1@%2").arg(port).arg(addr);
+    }else{
+        raw_url = QString("%1@%2:%3").arg(port).arg(addr).arg(passwd);
+    }
+    return QString("paintty://")+QString::fromUtf8(raw_url.toUtf8().toBase64());
+}
+
+ClientSocket::RoomUrl ClientSocket::decodeRoomUrl(const QString& url)
+{
+    QRegularExpression re("([A-Za-z]+)://([A-Za-z0-9\\+\\/\\=]+)[#]*(.*)");
+    QRegularExpressionMatch match = re.match(url);
+    if(!match.hasMatch()){
+        qWarning()<<"Invalid url"<<url;
+        return RoomUrl();
+    }
+    RoomUrl url_struct;
+
+    url_struct.scheme = match.captured(1);
+    QString decoded_url = QByteArray::fromBase64(match.captured(2).toUtf8());
+
+    url_struct.port = decoded_url.section("@", 0, 0).toInt(0, 10);
+    QString leftpart = decoded_url.section("@", 1, 1);
+    url_struct.addr = leftpart.section(":", 0, 0);
+    url_struct.passwd = leftpart.section(":", 1, 1);
+    url_struct.misc = match.captured(3);
+
+    //    RoomUrl url_struct {
+    //        .scheme = scheme,
+    //        .addr = addr,
+    //        .port = port,
+    //        .passwd = passwd,
+    //        .misc = QString()
+    //    };
+
+    if( url_struct.scheme.isEmpty()
+            ||url_struct.addr.isEmpty()
+            ||!url_struct.port ){
+        qWarning()<<"Invalid url"<<decoded_url;
+    }else{
+        qDebug()<<"Valid url"
+               <<url_struct.scheme
+              <<url_struct.port
+             <<url_struct.addr
+            <<url_struct.passwd
+           <<url_struct.misc;
+    }
+
+    return url_struct;
+}
