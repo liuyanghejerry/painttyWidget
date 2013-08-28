@@ -142,43 +142,48 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="64"/>
-        <location filename="../widgets/configuredialog.ui" line="85"/>
+        <location filename="../widgets/configuredialog.ui" line="63"/>
+        <source>Clear Cache</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.ui" line="71"/>
+        <location filename="../widgets/configuredialog.ui" line="92"/>
         <source>Shortcut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="80"/>
+        <location filename="../widgets/configuredialog.ui" line="87"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="90"/>
+        <location filename="../widgets/configuredialog.ui" line="97"/>
         <source>Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="98"/>
+        <location filename="../widgets/configuredialog.ui" line="105"/>
         <source>Double click the shortcut and press your shortcut keys.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="109"/>
+        <location filename="../widgets/configuredialog.ui" line="116"/>
         <source>Experimental Fetures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="115"/>
+        <location filename="../widgets/configuredialog.ui" line="122"/>
         <source>Disable IME when painting (Windows exclusive)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="122"/>
+        <location filename="../widgets/configuredialog.ui" line="129"/>
         <source>Message Notification (Windows exclusive)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="129"/>
+        <location filename="../widgets/configuredialog.ui" line="136"/>
         <source>Enable Wacom Tablet (Windows exclusive)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -203,19 +208,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="195"/>
-        <location filename="../widgets/configuredialog.cpp" line="208"/>
+        <location filename="../widgets/configuredialog.cpp" line="200"/>
+        <location filename="../widgets/configuredialog.cpp" line="213"/>
         <source>Restart</source>
         <translation type="unfinished">再起動</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="196"/>
+        <location filename="../widgets/configuredialog.cpp" line="201"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="209"/>
+        <location filename="../widgets/configuredialog.cpp" line="214"/>
         <source>New settings will be applied on next start.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1039,16 +1044,16 @@ Use this software only when you accept it.</source>
 <context>
     <name>ShortcutDelegate</name>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="228"/>
-        <location filename="../widgets/configuredialog.cpp" line="249"/>
-        <location filename="../widgets/configuredialog.cpp" line="268"/>
+        <location filename="../widgets/configuredialog.cpp" line="233"/>
+        <location filename="../widgets/configuredialog.cpp" line="254"/>
+        <location filename="../widgets/configuredialog.cpp" line="273"/>
         <source>Immediately</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="229"/>
-        <location filename="../widgets/configuredialog.cpp" line="251"/>
-        <location filename="../widgets/configuredialog.cpp" line="270"/>
+        <location filename="../widgets/configuredialog.cpp" line="234"/>
+        <location filename="../widgets/configuredialog.cpp" line="256"/>
+        <location filename="../widgets/configuredialog.cpp" line="275"/>
         <source>When Release</source>
         <translation type="unfinished"></translation>
     </message>

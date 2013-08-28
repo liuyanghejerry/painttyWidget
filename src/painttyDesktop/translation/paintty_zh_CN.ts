@@ -160,38 +160,43 @@
         <translation>尝试使用IPv6连接服务器</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="64"/>
-        <location filename="../widgets/configuredialog.ui" line="85"/>
+        <location filename="../widgets/configuredialog.ui" line="63"/>
+        <source>Clear Cache</source>
+        <translation>清除缓存</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.ui" line="71"/>
+        <location filename="../widgets/configuredialog.ui" line="92"/>
         <source>Shortcut</source>
         <translation>快捷键</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="80"/>
+        <location filename="../widgets/configuredialog.ui" line="87"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="90"/>
+        <location filename="../widgets/configuredialog.ui" line="97"/>
         <source>Type</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="98"/>
+        <location filename="../widgets/configuredialog.ui" line="105"/>
         <source>Double click the shortcut and press your shortcut keys.</source>
         <translation>双击要修改的快捷键，然后按下您要设置的按键。</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="115"/>
+        <location filename="../widgets/configuredialog.ui" line="122"/>
         <source>Disable IME when painting (Windows exclusive)</source>
         <translation>绘画时禁用输入法（Windows）</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="122"/>
+        <location filename="../widgets/configuredialog.ui" line="129"/>
         <source>Message Notification (Windows exclusive)</source>
         <translation>消息提示（Windows）</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="129"/>
+        <location filename="../widgets/configuredialog.ui" line="136"/>
         <source>Enable Wacom Tablet (Windows exclusive)</source>
         <translation>支持绘图板（暂不可用）</translation>
     </message>
@@ -200,7 +205,7 @@
         <translation type="obsolete">提示：我们目前还没有加入快捷键的编辑功能（赶进度神马的</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="109"/>
+        <location filename="../widgets/configuredialog.ui" line="116"/>
         <source>Experimental Fetures</source>
         <translation>试验特性</translation>
     </message>
@@ -237,20 +242,20 @@
         <translation>松开后触发</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="195"/>
-        <location filename="../widgets/configuredialog.cpp" line="208"/>
+        <location filename="../widgets/configuredialog.cpp" line="200"/>
+        <location filename="../widgets/configuredialog.cpp" line="213"/>
         <source>Restart</source>
         <translation>重新启动</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="196"/>
+        <location filename="../widgets/configuredialog.cpp" line="201"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation>程序必须重新启动才可以应用一些新的设置。
 是否立即重新启动？</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="209"/>
+        <location filename="../widgets/configuredialog.cpp" line="214"/>
         <source>New settings will be applied on next start.</source>
         <translation>新设置将在下次启动程序时生效。</translation>
     </message>
@@ -1191,16 +1196,16 @@ Use this software only when you accept it.</source>
 <context>
     <name>ShortcutDelegate</name>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="228"/>
-        <location filename="../widgets/configuredialog.cpp" line="249"/>
-        <location filename="../widgets/configuredialog.cpp" line="268"/>
+        <location filename="../widgets/configuredialog.cpp" line="233"/>
+        <location filename="../widgets/configuredialog.cpp" line="254"/>
+        <location filename="../widgets/configuredialog.cpp" line="273"/>
         <source>Immediately</source>
         <translation>立即触发</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="229"/>
-        <location filename="../widgets/configuredialog.cpp" line="251"/>
-        <location filename="../widgets/configuredialog.cpp" line="270"/>
+        <location filename="../widgets/configuredialog.cpp" line="234"/>
+        <location filename="../widgets/configuredialog.cpp" line="256"/>
+        <location filename="../widgets/configuredialog.cpp" line="275"/>
         <source>When Release</source>
         <translation>松开后触发</translation>
     </message>

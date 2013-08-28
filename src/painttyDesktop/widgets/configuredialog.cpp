@@ -106,6 +106,11 @@ void ConfigureDialog::initUi()
     ui->msg_notify_checkbox->setChecked(msg_notify);
     ui->auto_disable_ime_checkbox->setChecked(auto_disable_ime);
     ui->enable_tablet->setChecked(enable_tablet);
+    connect(ui->clearCache, &QPushButton::clicked,
+            [](){
+        QDir cacheDir("cache");
+        cacheDir.removeRecursively();
+    });
 }
 
 void ConfigureDialog::acceptConfigure()
