@@ -59,7 +59,7 @@ Canvas::Canvas(QWidget *parent) :
     image(canvasSize),
     layerNameCounter(0),
     shareColor_(true),
-    jitterCorrection_(true),
+    jitterCorrection_(false),
     jitterCorrectionLevel_(3),
     backend_(new CanvasBackend(0)),
     worker_(new QThread(this))
@@ -403,10 +403,6 @@ void Canvas::drawLineTo(const QPoint &endPoint, qreal pressure)
 
     update();
 
-    static int times = 0;
-    times++;
-    qDebug()<<"drawLineTo"<<times;
-
     QVariantMap start_j;
     start_j.insert("x", this->lastPoint.x());
     start_j.insert("y", this->lastPoint.y());
@@ -456,10 +452,6 @@ void Canvas::drawPoint(const QPoint &point, qreal pressure)
     int rad = (brush_->width() / 2) + 2;
     update(QRect(lastPoint, point).normalized()
            .adjusted(-rad, -rad, +rad, +rad));
-
-    static int times = 0;
-    times++;
-    qDebug()<<"drawPoint"<<times;
 
     QVariantMap point_j;
     point_j.insert("x", point.x());
@@ -941,7 +933,7 @@ QSize Canvas::minimumSizeHint() const
 
 CanvasBackend::CanvasBackend(QObject *parent)
     :QObject(parent),
-      blocklevel_(NONE)
+      blocklevel_(MEDIUM)
 {
     QTimer *sendTimer = new QTimer(this);
     sendTimer->setInterval(1000*10);
@@ -997,7 +989,7 @@ CanvasBackend::BlockLevel CanvasBackend::blockLevel() const
     return blocklevel_;
 }
 
-void CanvasBackend::onDataBlock(const QVariantMap& d)
+void CanvasBackend::onDataBlock(const QVariantMap d)
 {
     tempStore.append(d);
 
@@ -1005,10 +997,6 @@ void CanvasBackend::onDataBlock(const QVariantMap& d)
     QString author = info["name"].toString();
     QString clientid = info["clientid"].toString();
     upsertMember(clientid, author);
-
-    static int times = 0;
-    times++;
-    qDebug()<<"onDataBlock"<<times;
 
     if(blocklevel_ == NONE){
         commit();
@@ -1022,10 +1010,6 @@ void CanvasBackend::onDataBlock(const QVariantMap& d)
 void CanvasBackend::onIncomingData(const QJsonObject& obj)
 {
     QString action = obj.value("action").toString().toLower();
-
-    static int times = 0;
-    times++;
-    qDebug()<<"onIncomingData"<<times;
 
     auto drawPoint = [this](const QVariantMap& m){
         QPoint point;

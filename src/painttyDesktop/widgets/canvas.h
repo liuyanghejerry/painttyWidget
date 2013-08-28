@@ -31,7 +31,7 @@ public:
     void commit();
     BlockLevel blockLevel() const;
 public slots:
-    void onDataBlock(const QVariantMap& d);
+    void onDataBlock(const QVariantMap d);
     void onIncomingData(const QJsonObject &d);
     void requestMembers(MemberSectionIndex index,
                         bool mergeSameName = false);
@@ -105,7 +105,7 @@ signals:
     void pickColorComplete();
     void newBrushSettings(const QVariantMap &map);
     void historyComplete();
-    void newPaintAction(const QVariantMap &m);
+    void newPaintAction(const QVariantMap m);
     void paintActionComplete();
     void requestSortedMembers(CanvasBackend::MemberSectionIndex index
                                = CanvasBackend::MemberSectionIndex::Count,
