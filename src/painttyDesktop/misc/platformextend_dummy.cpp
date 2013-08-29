@@ -9,8 +9,3 @@ bool PlatformExtend::setIMEState(QWidget *, bool st)
 {
     return st;
 }
-
-bool PlatformExtend::supportTablet()
-{
-    return false;
-}
