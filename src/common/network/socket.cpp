@@ -27,12 +27,12 @@ Socket::~Socket()
     socket->close();
 }
 
-QHostAddress Socket::address()
+QHostAddress Socket::address() const
 {
     return socket->peerAddress();
 }
 
-int Socket::port()
+int Socket::port() const
 {
     return socket->peerPort();
 }

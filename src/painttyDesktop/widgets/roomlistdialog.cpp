@@ -32,6 +32,16 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
     state_(Init)
 {
     ui->setupUi(this);
+    connect(ui->pushButton_6, &QPushButton::clicked,
+            [this](){
+        bool ok;
+        QString text = QInputDialog::getText(this, tr("Room Url"),
+                                             tr("Input room url:"), QLineEdit::Normal,
+                                             "paintty://", &ok);
+        if (ok && !text.isEmpty()){
+            connectRoomByUrl(text);
+        }
+    });
     connect(ui->pushButton_5, &QPushButton::clicked,
             this, &RoomListDialog::openConfigure);
     connect(ui->pushButton_4,&QPushButton::clicked,
@@ -78,7 +88,7 @@ RoomListDialog::~RoomListDialog()
     disconnect(&socket, &ClientSocket::disconnected,
                this, &RoomListDialog::onManagerServerClosed);
     disconnect(&socket, &ClientSocket::managerPack,
-            this, &RoomListDialog::onManagerData);
+               this, &RoomListDialog::onManagerData);
     socket.close();
     delete ui;
 }
@@ -243,7 +253,7 @@ void RoomListDialog::connectRoomByPort(const int &p)
     disconnect(&client_socket, &ClientSocket::disconnected,
                this, &RoomListDialog::onManagerServerClosed);
     disconnect(&client_socket, &ClientSocket::managerPack,
-            this, &RoomListDialog::onManagerData);
+               this, &RoomListDialog::onManagerData);
     client_socket.close();
 
     connect(&client_socket, &ClientSocket::connected,
@@ -281,6 +291,7 @@ void RoomListDialog::tryJoinRoomManually()
             return;
         }
         passwd.truncate(16);
+        wantedPassword_ = passwd;
     }
 
 
@@ -289,15 +300,6 @@ void RoomListDialog::tryJoinRoomManually()
     map.insert("name", nickName_);
     map.insert("password", passwd);
     map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
-
-    auto& client_socket = Singleton<ClientSocket>::instance();
-    QHostAddress address = client_socket.address();
-
-    QString url = ClientSocket::genRoomUrl(address.toString(),
-                                           client_socket.port(),
-                                           passwd);
-    qDebug()<<"URL:"<<url;
-    ClientSocket::decodeRoomUrl(url+"#asdasd111#");
 
     Singleton<ClientSocket>::instance().sendCmdPack(map);
     ui->progressBar->setRange(0, 0);
@@ -319,9 +321,54 @@ void RoomListDialog::tryJoinRoomAutomated()
     ui->progressBar->setRange(0, 0);
 }
 
+void RoomListDialog::tryJoinRoomByUrl(const ClientSocket::RoomUrl& url)
+{
+    if(!collectUserInfo()){
+        return;
+    }
+    QJsonObject map;
+    map.insert("request", QString("login"));
+    map.insert("name", nickName_);
+    map.insert("password", url.passwd);
+    map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
+
+    qDebug()<<"try auto join room via url";
+    Singleton<ClientSocket>::instance().sendCmdPack(map);
+    ui->progressBar->setRange(0, 0);
+}
+
+void RoomListDialog::connectRoomByUrl(const QString& url)
+{
+    auto& client_socket = Singleton<ClientSocket>::instance();
+    auto decoded_addr = client_socket.decodeRoomUrl(url);
+
+    disconnect(&client_socket, &ClientSocket::connected,
+               this, &RoomListDialog::onManagerServerConnected);
+    disconnect(&client_socket, &ClientSocket::disconnected,
+               this, &RoomListDialog::onManagerServerClosed);
+    disconnect(&client_socket, &ClientSocket::managerPack,
+               this, &RoomListDialog::onManagerData);
+    client_socket.close();
+
+    connect(&client_socket, &ClientSocket::connected,
+            [this, decoded_addr](){
+        disconnect(&Singleton<ClientSocket>::instance(), &ClientSocket::connected,
+                   0, 0);
+        qDebug()<<"Room connected";
+        state_ = RoomConnected;
+        timer->stop();
+        tryJoinRoomByUrl(decoded_addr);
+    });
+    connect(&client_socket, &ClientSocket::cmdPack,
+            this, &RoomListDialog::onCmdData);
+
+    qDebug()<<"start connecting room via url";
+    client_socket.connectToHost(QHostAddress(decoded_addr.addr),
+                                decoded_addr.port);
+}
+
 void RoomListDialog::onManagerData(const QJsonObject &array)
 {
-//    qDebug()<<"onManagerData"<<array;
     managerSocketRouter_.onData(array);
 }
 
@@ -415,7 +462,14 @@ void RoomListDialog::onCmdData(const QJsonObject &map)
                 qDebug()<<"clientid assign"
                        <<clientid;
             }
+            if(info.contains("name")){
+                QString name = info["name"].toString();
+                client_socket.setRoomName(name);
+                qDebug()<<"room name assign"
+                       <<name;
+            }
             state_ = RoomJoined;
+            client_socket.setPasswd(wantedPassword_);
 
             disconnect(&client_socket, &ClientSocket::connected,
                        this, &RoomListDialog::onCmdServerConnected);
@@ -543,16 +597,6 @@ void RoomListDialog::filterRoomList()
     ui->tableWidget->setSortingEnabled(true);
 }
 
-QString RoomListDialog::roomName() const
-{
-    return roomName_;
-}
-
-QString RoomListDialog::nick() const
-{
-    return nickName_;
-}
-
 QByteArray RoomListDialog::loadClientId()
 {
     QSettings settings(GlobalDef::SETTINGS_NAME,
@@ -603,20 +647,13 @@ void RoomListDialog::saveNick()
     settings.setValue("global/personal/nick",
                       name.toUtf8());
     settings.sync();
-    commitToGlobal();
+    Singleton<ClientSocket>::instance().setUserName(nickName_);
 }
 
 void RoomListDialog::openConfigure()
 {
     ConfigureDialog w;
     w.exec();
-}
-
-void RoomListDialog::commitToGlobal()
-{
-    auto &instance = Singleton<ClientSocket>::instance();
-    instance.setUserName(this->nick());
-    instance.setRoomName(this->roomName());
 }
 
 void RoomListDialog::hideEvent(QHideEvent *e)

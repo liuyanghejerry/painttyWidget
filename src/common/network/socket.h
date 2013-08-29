@@ -15,8 +15,8 @@ public:
     void connectToHost(const QHostAddress& address, quint16 port);
     void connectToHost(const QString & hostName, quint16 port);
     bool isConnected();
-    QHostAddress address();
-    int port();
+    QHostAddress address() const;
+    int port() const;
     QString errorString() const;
     
 signals:

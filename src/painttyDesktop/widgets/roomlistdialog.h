@@ -4,13 +4,15 @@
 #include <QDialog>
 
 #include "../misc/router.h"
+#include "../network/clientsocket.h"
 
-class Socket;
 class NewRoomWindow;
 
 namespace Ui {
 class RoomListDialog;
 }
+
+// TODO: re-arrange APIs
 
 class RoomListDialog : public QDialog
 {
@@ -24,29 +26,29 @@ public slots:
     void requestJoin();
     void requestNewRoom(const QJsonObject &m);
     void requestRoomList();
-    void onManagerData(const QJsonObject &array);
-    void onManagerServerClosed();
     void filterRoomList();
+    void connectRoomByUrl(const QString& url);
 private slots:
     void onManagerServerConnected();
+    void onManagerResponseRoomlist(const QJsonObject &obj);
+    void onManagerData(const QJsonObject &array);
+    void onManagerServerClosed();
     void onCmdServerConnected();
     void onCmdData(const QJsonObject &map);
     void onNewRoomRespnse(const QJsonObject &m);
     void loadNick();
     void saveNick();
     void openConfigure();
-    void commitToGlobal();
 protected:
     void hideEvent(QHideEvent *e);
     void showEvent(QShowEvent *e);
     void closeEvent(QCloseEvent *e);
     
-    QString roomName() const;
-    QString nick() const;
     bool collectUserInfo();
     void connectRoomByPort(const int &p);
     void tryJoinRoomManually();
     void tryJoinRoomAutomated();
+    void tryJoinRoomByUrl(const ClientSocket::RoomUrl& url);
 private:
     enum State{
         Error = -999,
@@ -77,7 +79,6 @@ private:
     void connectToManager();
     void routerInit();
     QByteArray loadClientId();
-    void onManagerResponseRoomlist(const QJsonObject &obj);
 };
 
 #endif // ROOMLISTDIALOG_H

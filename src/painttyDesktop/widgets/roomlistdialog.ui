@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>512</width>
+    <width>553</width>
     <height>446</height>
    </rect>
   </property>
@@ -166,6 +166,13 @@
       <widget class="QPushButton" name="pushButton_2">
        <property name="text">
         <string>Join</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_6">
+       <property name="text">
+        <string>Join By Address</string>
        </property>
       </widget>
      </item>

@@ -29,6 +29,7 @@
 #include "aboutdialog.h"
 #include "configuredialog.h"
 #include "brushsettingswidget.h"
+#include "roomsharebar.h"
 #include "../../common/network/clientsocket.h"
 #include "../../common/network/localnetworkinterface.h"
 #include "../paintingTools/brush/brushmanager.h"
@@ -350,6 +351,14 @@ void MainWindow::toolbarInit()
 
     brushSettingControl_ = brushSettingWidget;
     brushSettingToolbar->addWidget(brushSettingWidget);
+
+    // for room share
+    QToolBar* roomShareToolbar = new QToolBar(tr("Room Share"), this);
+    brushSettingToolbar->setObjectName("RoomShareToolbar");
+    this->addToolBar(Qt::TopToolBarArea, roomShareToolbar);
+    RoomShareBar* rsb = new RoomShareBar(this);
+    rsb->setAddress(Singleton<ClientSocket>::instance().toAddress());
+    roomShareToolbar->addWidget(rsb);
 }
 
 QString MainWindow::getRoomKey()

@@ -89,6 +89,13 @@ void ClientSocket::setRoomCloseFlag()
     remove_after_close_ = true;
 }
 
+QString ClientSocket::toAddress() const
+{
+    return this->genRoomUrl(this->address().toString(),
+                            this->port(),
+                            this->passwd());
+}
+
 void ClientSocket::setClientId(const QString &id)
 {
     clientid_ = id;
@@ -128,6 +135,16 @@ void ClientSocket::setCanvasSize(const QSize &size)
 QSize ClientSocket::canvasSize() const
 {
     return canvassize_;
+}
+
+QString ClientSocket::passwd() const
+{
+    return passwd_;
+}
+
+void ClientSocket::setPasswd(const QString &passwd)
+{
+    passwd_ = passwd;
 }
 
 void ClientSocket::sendMessage(const QString &content)
@@ -346,14 +363,6 @@ ClientSocket::RoomUrl ClientSocket::decodeRoomUrl(const QString& url)
     url_struct.addr = leftpart.section(":", 0, 0);
     url_struct.passwd = leftpart.section(":", 1, 1);
     url_struct.misc = match.captured(3);
-
-    //    RoomUrl url_struct {
-    //        .scheme = scheme,
-    //        .addr = addr,
-    //        .port = port,
-    //        .passwd = passwd,
-    //        .misc = QString()
-    //    };
 
     if( url_struct.scheme.isEmpty()
             ||url_struct.addr.isEmpty()

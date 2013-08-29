@@ -44,6 +44,8 @@ public:
     QString roomName() const;
     void setCanvasSize(const QSize &size);
     QSize canvasSize() const;
+    QString passwd() const;
+    void setPasswd(const QString &passwd);
     void setPoolEnabled(bool on);
     bool isPoolEnabled();
     void setSchedualDataLength(quint64 length);
@@ -53,6 +55,7 @@ public:
     void setArchiveSignature(const QString &as);
     quint64 archiveSize() const;
     void setRoomCloseFlag();
+    QString toAddress() const;
 
     static QString genRoomUrl(const QString& addr,
                               const quint16 port,
@@ -67,6 +70,8 @@ public:
     };
 
     static RoomUrl decodeRoomUrl(const QString& url);
+
+
 
 signals:
     void dataPack(const QJsonObject&);
@@ -92,6 +97,7 @@ private:
     QString username_;
     QString roomname_;
     QSize canvassize_;
+    QString passwd_;
     quint64 schedualDataLength_;
     quint64 leftDataLength_;
     Router<> router_;
