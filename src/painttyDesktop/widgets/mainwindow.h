@@ -8,6 +8,7 @@
 class QToolButton;
 class BrushSettingsWidget;
 class QActionGroup;
+class QScriptEngine;
 
 typedef Router<> RegularRouter;
 
@@ -39,6 +40,10 @@ public slots:
     void deleteLayer(const QString &name);
     void clearLayer(const QString &name);
     void clearAllLayer();
+
+    /* script */
+    QString evaluateScript(const QString& script);
+    void runScript(const QString& script);
 signals:
     void sendMessage(QString);
     void brushColorChange(const QColor &color);
@@ -54,6 +59,7 @@ private:
     void shortcutInit();
     void socketInit();
     void cmdRouterInit();
+    void scriptInit();
     void setNickName();
     void setRoomName();
     void setHistorySize();
@@ -73,6 +79,7 @@ private:
     QToolBar *toolbar_;
     QActionGroup *brushActionGroup_;
     QToolButton *colorPickerButton_;
+    QScriptEngine* scriptEngine_;
 private slots:
     void onServerDisconnected();
     void onNewMessage(const QString &content);

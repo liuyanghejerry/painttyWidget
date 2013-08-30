@@ -21,6 +21,7 @@
 #include <QRegularExpression>
 #include <QProcess>
 #include <QTimer>
+#include <QScriptEngine>
 
 #include "../misc/singleshortcut.h"
 #include "layerwidget.h"
@@ -47,7 +48,8 @@ MainWindow::MainWindow(QWidget *parent) :
     brushSettingControl_(nullptr),
     toolbar_(nullptr),
     brushActionGroup_(nullptr),
-    colorPickerButton_(nullptr)
+    colorPickerButton_(nullptr),
+    scriptEngine_(nullptr)
 {
     ui->setupUi(this);
     defaultView = saveState();
@@ -139,7 +141,7 @@ void MainWindow::init()
     shortcutInit();
     //    stylize();
     socketInit();
-
+    scriptInit();
 
 }
 
@@ -190,6 +192,20 @@ void MainWindow::cmdRouterInit()
                           std::bind(&MainWindow::onResponseArchive,
                                     this,
                                     std::placeholders::_1));
+}
+
+void MainWindow::scriptInit()
+{
+    scriptEngine_ = new QScriptEngine;
+
+    QScriptValue scriptMainWindow = scriptEngine_->newQObject(this);
+    scriptEngine_->globalObject().setProperty("mainwindow", scriptMainWindow);
+
+    QScriptValue scriptCanvas = scriptEngine_->newQObject(this->ui->canvas);
+    scriptEngine_->globalObject().setProperty("canvas", scriptCanvas);
+
+    QScriptValue scriptClientSocket = scriptEngine_->newQObject(&Singleton<ClientSocket>::instance());
+    scriptEngine_->globalObject().setProperty("clientsocket", scriptClientSocket);
 }
 
 void MainWindow::layerWidgetInit()
@@ -863,6 +879,31 @@ void MainWindow::clearAllLayer()
         map.insert("key", getRoomKey());
         Singleton<ClientSocket>::instance().sendCmdPack(map);
     }
+}
+
+QString MainWindow::evaluateScript(const QString &script)
+{
+    if(!scriptEngine_){
+        qWarning()<<"Cannot evaluate script before script engine init!";
+        return QString();
+    }
+
+    // pause event process
+    if(scriptEngine_->processEventsInterval() > 0){
+        scriptEngine_->setProcessEventsInterval(-1);
+    }
+
+    return scriptEngine_->evaluate(script).toString();
+}
+
+void MainWindow::runScript(const QString &script)
+{
+    if(!scriptEngine_){
+        qWarning()<<"Cannot run script before script engine init!";
+        return;
+    }
+    scriptEngine_->setProcessEventsInterval(300);
+    scriptEngine_->evaluate(script);
 }
 
 void MainWindow::deleteLayer(const QString &name)
