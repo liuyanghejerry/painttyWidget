@@ -29,6 +29,7 @@
 #include "aboutdialog.h"
 #include "configuredialog.h"
 #include "brushsettingswidget.h"
+#include "gradualbox.h"
 #include "roomsharebar.h"
 #include "../../common/network/clientsocket.h"
 #include "../../common/network/localnetworkinterface.h"
@@ -498,7 +499,7 @@ void MainWindow::socketInit()
 
 void MainWindow::onServerDisconnected()
 {
-    ui->textEdit->insertPlainText(tr("Server Connection Failed.\n"));
+    GradualBox::showText(tr("Server Connection Failed."));
     ui->canvas->setEnabled(false);
 }
 
@@ -894,7 +895,12 @@ void MainWindow::closeEvent( QCloseEvent * event )
                       saveState());
     settings.sync();
 
-    Singleton<ClientSocket>::instance().close();
+    auto& client_socket = Singleton<ClientSocket>::instance();
+
+    disconnect(&client_socket, &ClientSocket::disconnected,
+            this, &MainWindow::onServerDisconnected);
+
+    client_socket.close();
     msgBox.close();
 
     event->accept();

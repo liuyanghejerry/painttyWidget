@@ -81,7 +81,8 @@ SOURCES += main.cpp\
     ../common/network/packparser.cpp \
     widgets/clearlineedit.cpp \
     widgets/roomsharebar.cpp \
-    widgets/easycopylineedit.cpp
+    widgets/easycopylineedit.cpp \
+    widgets/gradualbox.cpp
 
 
 HEADERS  += widgets/mainwindow.h \
@@ -133,7 +134,8 @@ HEADERS  += widgets/mainwindow.h \
     ../common/network/packparser.h \
     widgets/clearlineedit.h \
     widgets/roomsharebar.h \
-    widgets/easycopylineedit.h
+    widgets/easycopylineedit.h \
+    widgets/gradualbox.h
 
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
