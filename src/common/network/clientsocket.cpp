@@ -340,7 +340,7 @@ QString ClientSocket::genRoomUrl(const QString& addr,
     if(passwd.isEmpty()){
         raw_url = QString("%1@%2").arg(port).arg(addr);
     }else{
-        raw_url = QString("%1@%2:%3").arg(port).arg(addr).arg(passwd);
+        raw_url = QString("%1@%2|%3").arg(port).arg(addr).arg(passwd);
     }
     return QString("paintty://")+QString::fromUtf8(raw_url.toUtf8().toBase64());
 }
@@ -360,8 +360,8 @@ ClientSocket::RoomUrl ClientSocket::decodeRoomUrl(const QString& url)
 
     url_struct.port = decoded_url.section("@", 0, 0).toInt(0, 10);
     QString leftpart = decoded_url.section("@", 1, 1);
-    url_struct.addr = leftpart.section(":", 0, 0);
-    url_struct.passwd = leftpart.section(":", 1, 1);
+    url_struct.addr = leftpart.section("|", 0, 0);
+    url_struct.passwd = leftpart.section("|", 1, 1);
     url_struct.misc = match.captured(3);
 
     if( url_struct.scheme.isEmpty()
