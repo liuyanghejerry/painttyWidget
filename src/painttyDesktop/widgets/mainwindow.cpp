@@ -32,6 +32,7 @@
 #include "brushsettingswidget.h"
 #include "gradualbox.h"
 #include "roomsharebar.h"
+#include "developerconsole.h"
 #include "../../common/network/clientsocket.h"
 #include "../../common/network/localnetworkinterface.h"
 #include "../paintingTools/brush/brushmanager.h"
@@ -49,7 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
     toolbar_(nullptr),
     brushActionGroup_(nullptr),
     colorPickerButton_(nullptr),
-    scriptEngine_(nullptr)
+    scriptEngine_(nullptr),
+    console_(nullptr)
 {
     ui->setupUi(this);
     defaultView = saveState();
@@ -481,6 +483,10 @@ void MainWindow::shortcutInit()
         ConfigureDialog conf_dialog;
         conf_dialog.exec();
     });
+
+    QShortcut* console_shortcut = new QShortcut(QKeySequence("F12"), this);
+    connect(console_shortcut, &QShortcut::activated,
+            this, &MainWindow::openConsole);
 }
 
 void MainWindow::socketInit()
@@ -787,6 +793,18 @@ void MainWindow::onPickColorComplete()
     }
 }
 
+void MainWindow::openConsole()
+{
+    if(!console_){
+        console_ = new DeveloperConsole(this);
+        connect(this, &MainWindow::scriptResult,
+                console_, &DeveloperConsole::append);
+        connect(console_, &DeveloperConsole::evaluate,
+                this, &MainWindow::evaluateScript);
+    }
+    console_->show();
+}
+
 void MainWindow::remoteAddLayer(const QString &layerName)
 {
     if( layerName.isEmpty() ){
@@ -881,11 +899,11 @@ void MainWindow::clearAllLayer()
     }
 }
 
-QString MainWindow::evaluateScript(const QString &script)
+void MainWindow::evaluateScript(const QString &script)
 {
     if(!scriptEngine_){
         qWarning()<<"Cannot evaluate script before script engine init!";
-        return QString();
+        return;
     }
 
     // pause event process
@@ -893,7 +911,7 @@ QString MainWindow::evaluateScript(const QString &script)
         scriptEngine_->setProcessEventsInterval(-1);
     }
 
-    return scriptEngine_->evaluate(script).toString();
+    emit scriptResult(scriptEngine_->evaluate(script).toString());
 }
 
 void MainWindow::runScript(const QString &script)
@@ -903,7 +921,7 @@ void MainWindow::runScript(const QString &script)
         return;
     }
     scriptEngine_->setProcessEventsInterval(300);
-    scriptEngine_->evaluate(script);
+    emit scriptResult(scriptEngine_->evaluate(script).toString());
 }
 
 void MainWindow::deleteLayer(const QString &name)

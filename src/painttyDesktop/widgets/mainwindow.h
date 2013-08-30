@@ -9,6 +9,7 @@ class QToolButton;
 class BrushSettingsWidget;
 class QActionGroup;
 class QScriptEngine;
+class DeveloperConsole;
 
 typedef Router<> RegularRouter;
 
@@ -32,6 +33,7 @@ public slots:
     void resetView();
     void about();
     void onPickColorComplete();
+    void openConsole();
 
     /* layer operations */
     void remoteAddLayer(const QString &layerName);
@@ -42,11 +44,12 @@ public slots:
     void clearAllLayer();
 
     /* script */
-    QString evaluateScript(const QString& script);
+    void evaluateScript(const QString& script);
     void runScript(const QString& script);
 signals:
     void sendMessage(QString);
     void brushColorChange(const QColor &color);
+    void scriptResult(QString);
 protected:
     void closeEvent( QCloseEvent * event ) ;
 private:
@@ -80,6 +83,7 @@ private:
     QActionGroup *brushActionGroup_;
     QToolButton *colorPickerButton_;
     QScriptEngine* scriptEngine_;
+    DeveloperConsole* console_;
 private slots:
     void onServerDisconnected();
     void onNewMessage(const QString &content);

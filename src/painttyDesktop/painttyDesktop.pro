@@ -82,7 +82,8 @@ SOURCES += main.cpp\
     widgets/clearlineedit.cpp \
     widgets/roomsharebar.cpp \
     widgets/easycopylineedit.cpp \
-    widgets/gradualbox.cpp
+    widgets/gradualbox.cpp \
+    widgets/developerconsole.cpp
 
 
 HEADERS  += widgets/mainwindow.h \
@@ -135,7 +136,8 @@ HEADERS  += widgets/mainwindow.h \
     widgets/clearlineedit.h \
     widgets/roomsharebar.h \
     widgets/easycopylineedit.h \
-    widgets/gradualbox.h
+    widgets/gradualbox.h \
+    widgets/developerconsole.h
 
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
@@ -144,7 +146,8 @@ FORMS    += widgets/mainwindow.ui \
     widgets/newroomwindow.ui \
     widgets/aboutdialog.ui \
     widgets/helpdialog.ui \
-    widgets/configuredialog.ui
+    widgets/configuredialog.ui \
+    widgets/developerconsole.ui
 
 TRANSLATIONS += translation/paintty_zh_CN.ts \ #Simplified Chinese
     translation/paintty_zh_TW.ts \ #Traditional Chinese
