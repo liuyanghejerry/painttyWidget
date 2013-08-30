@@ -596,7 +596,6 @@ void MainWindow::onCommandActionClearAll(const QJsonObject &obj)
 void MainWindow::onCommandResponseOnlinelist(const QJsonObject &o)
 {
     QJsonArray list = o.value("onlinelist").toArray();
-//    qDebug()<<list;
     MemberList l;
     for(int i=0;i<list.count();++i){
         QJsonObject obj = list[i].toObject();
@@ -632,7 +631,6 @@ void MainWindow::onActionNotify(const QJsonObject &o)
 
 void MainWindow::onResponseArchiveSign(const QJsonObject &o)
 {
-    qDebug()<<"onResponseArchiveSign"<<o;
     if(!o.contains("result") || !o.contains("signature")){
         return;
     }
@@ -656,7 +654,6 @@ void MainWindow::onResponseArchiveSign(const QJsonObject &o)
 
 void MainWindow::onResponseArchive(const QJsonObject &o)
 {
-    qDebug()<<"onResponseArchive"<<o;
     if(!o.contains("result")|| !o.contains("datalength")){
         return;
     }

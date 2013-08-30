@@ -1,25 +1,27 @@
 #include "platformextend.h"
 
 #include <QWidget>
+#include <QApplication>
 #include <QDebug>
 #include "windows.h"
 #include "Imm.h"
 
 void PlatformExtend::notify(QWidget *widget, int times)
 {
-    HWND hwnd = (HWND)(widget->winId());
-    DWORD dwFlags = FLASHW_TRAY;
-    UINT  uCount = times;
-    DWORD dwTimeout = 0;
-    UINT  cbSize = sizeof(FLASHWINFO);
-    FLASHWINFO info;
-    info.cbSize = cbSize;
-    info.hwnd = hwnd;
-    info.dwFlags = dwFlags;
-    info.uCount = uCount;
-    info.dwTimeout = dwTimeout;
-    qDebug()<<"flash!";
-    FlashWindowEx(&info);
+//    HWND hwnd = (HWND)(widget->winId());
+//    DWORD dwFlags = FLASHW_TRAY;
+//    UINT  uCount = times;
+//    DWORD dwTimeout = 0;
+//    UINT  cbSize = sizeof(FLASHWINFO);
+//    FLASHWINFO info;
+//    info.cbSize = cbSize;
+//    info.hwnd = hwnd;
+//    info.dwFlags = dwFlags;
+//    info.uCount = uCount;
+//    info.dwTimeout = dwTimeout;
+//    qDebug()<<"flash!";
+//    FlashWindowEx(&info);
+    QApplication::alert(widget, times);
 }
 
 bool PlatformExtend::setIMEState(QWidget *widget, bool st)
