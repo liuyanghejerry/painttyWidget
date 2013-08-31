@@ -83,7 +83,8 @@ SOURCES += main.cpp\
     widgets/roomsharebar.cpp \
     widgets/easycopylineedit.cpp \
     widgets/gradualbox.cpp \
-    widgets/developerconsole.cpp
+    widgets/developerconsole.cpp \
+    widgets/irclineedit.cpp
 
 
 HEADERS  += widgets/mainwindow.h \
@@ -137,7 +138,8 @@ HEADERS  += widgets/mainwindow.h \
     widgets/roomsharebar.h \
     widgets/easycopylineedit.h \
     widgets/gradualbox.h \
-    widgets/developerconsole.h
+    widgets/developerconsole.h \
+    widgets/irclineedit.h
 
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \

@@ -55,7 +55,7 @@ public:
     void setArchiveSignature(const QString &as);
     quint64 archiveSize() const;
     void setRoomCloseFlag();
-    QString toAddress() const;
+    QString toUrl() const;
 
     static QString genRoomUrl(const QString& addr,
                               const quint16 port,

@@ -32,6 +32,16 @@ QHostAddress Socket::address() const
     return socket->peerAddress();
 }
 
+bool Socket::isIPv4Address() const
+{
+    return socket->peerAddress().protocol() == QAbstractSocket::IPv4Protocol;
+}
+
+bool Socket::isIPv6Address() const
+{
+    return socket->peerAddress().protocol() == QAbstractSocket::IPv6Protocol;
+}
+
 int Socket::port() const
 {
     return socket->peerPort();

@@ -368,12 +368,23 @@ void MainWindow::toolbarInit()
     brushSettingToolbar->addWidget(brushSettingWidget);
 
     // for room share
+    auto& client_socket = Singleton<ClientSocket>::instance();
     QToolBar* roomShareToolbar = new QToolBar(tr("Room Share"), this);
     brushSettingToolbar->setObjectName("RoomShareToolbar");
     this->addToolBar(Qt::TopToolBarArea, roomShareToolbar);
     RoomShareBar* rsb = new RoomShareBar(this);
-    rsb->setAddress(Singleton<ClientSocket>::instance().toAddress());
+    rsb->setAddress(client_socket.toUrl());
     roomShareToolbar->addWidget(rsb);
+
+    if(client_socket.isIPv6Address()){
+        auto f = [this](){
+            GradualBox::showText(tr("Notice, we detected you're using IPv6 protocol"\
+                                    " which may result in that your Room URL is not available"\
+                                    " for IPv4 users."));
+        };
+
+        GlobalDef::deferJob(f, 5000);
+    }
 }
 
 QString MainWindow::getRoomKey()

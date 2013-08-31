@@ -20,7 +20,7 @@ DeveloperConsole::~DeveloperConsole()
 void DeveloperConsole::commandProc()
 {
     QString commandLine = ui->lineEdit->text();
-    ui->lineEdit->clear();
+    ui->lineEdit->commit();
     if(commandLine.isEmpty()){
         return;
     }

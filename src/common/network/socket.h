@@ -16,6 +16,8 @@ public:
     void connectToHost(const QString & hostName, quint16 port);
     bool isConnected();
     QHostAddress address() const;
+    bool isIPv4Address() const;
+    bool isIPv6Address() const;
     int port() const;
     QString errorString() const;
     

@@ -89,7 +89,7 @@ void ClientSocket::setRoomCloseFlag()
     remove_after_close_ = true;
 }
 
-QString ClientSocket::toAddress() const
+QString ClientSocket::toUrl() const
 {
     return this->genRoomUrl(this->address().toString(),
                             this->port(),

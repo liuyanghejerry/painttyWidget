@@ -37,7 +37,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLineEdit" name="lineEdit">
+      <widget class="IRCLineEdit" name="lineEdit">
        <property name="placeholderText">
         <string>Type command and push...</string>
        </property>
@@ -54,6 +54,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>IRCLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>irclineedit.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>lineEdit</tabstop>
   <tabstop>pushButton</tabstop>
