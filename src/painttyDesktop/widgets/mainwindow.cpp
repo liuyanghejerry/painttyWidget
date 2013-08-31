@@ -85,10 +85,6 @@ void MainWindow::init()
 
     ui->centralWidget->setBackgroundRole(QPalette::Dark);
     ui->centralWidget->setCanvas(ui->canvas);
-//    ui->canvas->setDisabled(true);
-//    ui->layerWidget->setDisabled(true);
-//    ui->lineEdit->setDisabled(true);
-//    ui->pushButton->setDisabled(true);
 
     connect(ui->panorama, &PanoramaWidget::scaled,
             ui->centralWidget, &CanvasContainer::setScaleFactor);
@@ -523,6 +519,7 @@ void MainWindow::onServerDisconnected()
 {
     GradualBox::showText(tr("Server Connection Failed."));
     ui->canvas->setEnabled(false);
+    // TODO: reconnect to room and request login
 }
 
 void MainWindow::onCmdData(const QJsonObject &data)

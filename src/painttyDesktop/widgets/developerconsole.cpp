@@ -10,7 +10,6 @@ DeveloperConsole::DeveloperConsole(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->pushButton,&QPushButton::clicked,
             this, &DeveloperConsole::commandProc);
-    setWindowTitle(tr("Developer Console"));
 }
 
 DeveloperConsole::~DeveloperConsole()
