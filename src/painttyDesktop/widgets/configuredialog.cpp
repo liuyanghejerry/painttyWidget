@@ -116,10 +116,12 @@ void ConfigureDialog::initServerSettings()
             ui->ipv4_lineedit->setDisabled(true);
             ui->ipv6_lineedit->setDisabled(true);
             ui->port_lineedit->setDisabled(true);
+            ui->server_notice_label->setVisible(false);
         }else{
             ui->ipv4_lineedit->setDisabled(false);
             ui->ipv6_lineedit->setDisabled(false);
             ui->port_lineedit->setDisabled(false);
+            ui->server_notice_label->setVisible(true);
         }
     });
     ui->use_default_server_checkbox->setChecked(use_defalut_server);
