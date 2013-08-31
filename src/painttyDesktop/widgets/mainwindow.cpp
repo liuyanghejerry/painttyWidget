@@ -413,7 +413,7 @@ void MainWindow::requestOnlinelist()
     obj.insert("request", QString("onlinelist"));
     obj.insert("type", QString("command"));
     obj.insert("clientid", Singleton<ClientSocket>::instance().clientId());
-    qDebug()<<"clientid: "<<Singleton<ClientSocket>::instance().clientId();
+//    qDebug()<<"clientid: "<<Singleton<ClientSocket>::instance().clientId();
 
     Singleton<ClientSocket>::instance().sendCmdPack(obj);
 }

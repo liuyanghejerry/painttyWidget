@@ -401,8 +401,6 @@ void Canvas::drawLineTo(const QPoint &endPoint, qreal pressure)
     brush_->setSurface(l);
     brush_->lineTo(endPoint, pressure);
 
-    qDebug()<<"lineto"<<endPoint;
-
     update();
 
     QVariantMap start_j;
@@ -577,8 +575,6 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
     QColor color(colorMap["red"].toInt(),
             colorMap["green"].toInt(),
             colorMap["blue"].toInt());
-
-    qDebug()<<"remote lineto"<<end;
 
     if(remoteBrush.contains(clientid)){
         BrushPointer t = remoteBrush[clientid];
@@ -1001,7 +997,6 @@ void CanvasBackend::onDataBlock(const QVariantMap d)
     QString author = info["name"].toString();
     QString clientid = info["clientid"].toString();
     upsertMember(clientid, author);
-    qDebug()<<"backend lineto"<<info["end"];
 
     if(blocklevel_ == NONE){
         commit();
@@ -1109,7 +1104,7 @@ void CanvasBackend::onIncomingData(const QJsonObject& obj)
 void CanvasBackend::requestMembers(MemberSectionIndex index,
                                    bool mergeSameName)
 {
-    qDebug()<<"Members requested!";
+//    qDebug()<<"Members requested!";
     typedef MemberSection MS;
     typedef QList<MS> MSL;
 
