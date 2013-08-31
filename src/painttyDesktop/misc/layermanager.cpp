@@ -184,13 +184,13 @@ void LayerManager::resizeLayers(const QSize &newsize)
     qDebug()<<"LayerManager::resizeLayers:"<<layerSize_;
 }
 
-void LayerManager::combineLayers(QPixmap *p, const QRect &rect)
+void LayerManager::combineLayers(QImage *p, const QRect &rect)
 {
     *p = p->scaled(layerSize_);
     p->fill(Qt::white);
     QPainter painter(p);
     int lc = this->count();
-    QPixmap * im = 0;
+    QImage * im = 0;
     for(int i=0;i<lc;++i){
         LayerPointer l = layerFrom(i);
         if( l->isHided() || !l->isTouched() ){
@@ -198,9 +198,9 @@ void LayerManager::combineLayers(QPixmap *p, const QRect &rect)
         }
         im = l->imagePtr();
         if(rect.isNull()){
-            painter.drawPixmap(0, 0, *im);
+            painter.drawImage(0, 0, *im);
         }else{
-            painter.drawPixmap(QRectF(rect), *im, QRectF(rect));
+            painter.drawImage(QRectF(rect), *im, QRectF(rect));
         }
     }
 }

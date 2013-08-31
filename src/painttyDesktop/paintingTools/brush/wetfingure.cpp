@@ -48,7 +48,7 @@ void WetFingure::start(const QPointF &st, qreal pressure)
 {
     QRectF rect(0, 0, width_, width_);
     rect.moveCenter(st);
-    lastPointImage = surface_->imagePtr()->copy(rect.toRect()).toImage();
+    lastPointImage = surface_->imagePtr()->copy(rect.toRect());
     lastPoint_ = st;
 }
 
@@ -61,18 +61,18 @@ void WetFingure::lineTo(const QPointF &end, qreal pressure)
     lastPoint_ += moveBy;
     painter.drawImage(lastPoint_-QPointF(width_/2.0,width_/2.0), lastPointImage);
     rect.moveCenter(lastPoint_);
-    lastPointImage = surface_->imagePtr()->copy(rect.toRect()).toImage();
+    lastPointImage = surface_->imagePtr()->copy(rect.toRect());
     lastPoint_ += moveBy;
     painter.drawImage(lastPoint_-QPointF(width_/2.0,width_/2.0), lastPointImage);
     rect.moveCenter(lastPoint_);
-    lastPointImage = surface_->imagePtr()->copy(rect.toRect()).toImage();
+    lastPointImage = surface_->imagePtr()->copy(rect.toRect());
     lastPoint_ += moveBy;
     painter.drawImage(lastPoint_-QPointF(width_/2.0,width_/2.0), lastPointImage);
     rect.moveCenter(lastPoint_);
-    lastPointImage = surface_->imagePtr()->copy(rect.toRect()).toImage();
+    lastPointImage = surface_->imagePtr()->copy(rect.toRect());
     lastPoint_ += moveBy;
     painter.drawImage(lastPoint_-QPointF(width_/2.0,width_/2.0), lastPointImage);
     rect.moveCenter(lastPoint_);
-    lastPointImage = surface_->imagePtr()->copy(rect.toRect()).toImage();
+    lastPointImage = surface_->imagePtr()->copy(rect.toRect());
     lastPoint_ = end;
 }

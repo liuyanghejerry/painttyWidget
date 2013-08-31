@@ -4,20 +4,20 @@
 #include <QSharedPointer>
 #include <QSize>
 
-class QPixmap;
+class QImage;
 
 class Layer
 {
 public:
     Layer(const QString &name, const QSize &size);
     ~Layer();
-    QPixmap* imagePtr();
-    const QPixmap* imageConstPtr();
+    QImage* imagePtr();
+    const QImage* imageConstPtr();
     void resize(const QSize &size);
-    bool isLocked();
-    bool isHided();
-    bool isSelected();
-    bool isTouched();
+    bool isLocked() const;
+    bool isHided() const;
+    bool isSelected() const;
+    bool isTouched() const;
     void lock();
     void unlock();
     void hide();
@@ -25,7 +25,7 @@ public:
     void select();
     void deselect();
     void clear();
-    QString name();
+    QString name() const;
     void rename(const QString &new_name);
 private:
     Q_DISABLE_COPY(Layer)
@@ -34,7 +34,7 @@ private:
     bool select_;
     bool touched_;  // if pixmap is already created
     bool access_;   //reserved
-    QSharedPointer<QPixmap> img_;
+    QSharedPointer<QImage> img_;
     QString name_;
     QSize size_;
     void create();

@@ -984,7 +984,7 @@ void MainWindow::exportAllToFile()
     if(!fileName.endsWith(".png", Qt::CaseInsensitive)){
         fileName = fileName + ".png";
     }
-    QPixmap image = ui->canvas->allCanvas();
+    QImage image = ui->canvas->allCanvas();
     image.save(fileName, "PNG");
 }
 
@@ -1002,22 +1002,22 @@ void MainWindow::exportVisibleToFile()
     if(!fileName.endsWith(".png", Qt::CaseInsensitive)){
         fileName = fileName + ".png";
     }
-    QPixmap image = ui->canvas->currentCanvas();
+    QImage image = ui->canvas->currentCanvas();
     image.save(fileName, "PNG");
 }
 
 void MainWindow::exportAllToClipboard()
 {
     QClipboard *cb = qApp->clipboard();
-    QPixmap image = ui->canvas->allCanvas();
-    cb->setPixmap(image);
+    QImage image = ui->canvas->allCanvas();
+    cb->setImage(image);
 }
 
 void MainWindow::exportVisibleToClipboard()
 {
     QClipboard *cb = qApp->clipboard();
-    QPixmap image = ui->canvas->currentCanvas();
-    cb->setPixmap(image);
+    QImage image = ui->canvas->currentCanvas();
+    cb->setImage(image);
 }
 
 void MainWindow::resetView()

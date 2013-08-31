@@ -72,8 +72,8 @@ public:
     QString currentLayer();
     int count(){return layers.count();}
     int layerNum(){return layerNameCounter;}
-    QPixmap currentCanvas();
-    QPixmap allCanvas();
+    QImage currentCanvas();
+    QImage allCanvas();
     int jitterCorrectionLevel() const;
     bool isJitterCorrectionEnabled() const;
 
@@ -142,7 +142,7 @@ private:
     void pickColor(const QPoint &point);
     void updateCursor();
     void tryJitterCorrection();
-    QPixmap appendAuthorSignature(QPixmap target);
+    QImage appendAuthorSignature(QImage target);
 
     BrushPointer brushFactory(const QString &name);
 
@@ -150,8 +150,8 @@ private:
     bool drawing;
     QSize canvasSize;
     LayerManager layers;
-    QPixmap image;
-    QPixmap *currentImage;
+    QImage image;
+    QImage *currentImage;
     QPoint lastPoint;
     QList<QPoint> stackPoints;
     int layerNameCounter;

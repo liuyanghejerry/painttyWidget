@@ -56,7 +56,7 @@ Canvas::Canvas(QWidget *parent) :
     QWidget(parent),
     canvasSize(Singleton<ClientSocket>::instance().canvasSize()),
     layers(canvasSize),
-    image(canvasSize),
+    image(canvasSize, QImage::Format_ARGB32_Premultiplied),
     layerNameCounter(0),
     shareColor_(true),
     jitterCorrection_(false),
@@ -139,29 +139,29 @@ Canvas::~Canvas()
 {
 }
 
-QPixmap Canvas::currentCanvas()
+QImage Canvas::currentCanvas()
 {
-    QPixmap pmp = image;
+    QImage pmp = image;
     layers.combineLayers(&pmp);
     return appendAuthorSignature(pmp);
 }
 
-QPixmap Canvas::allCanvas()
+QImage Canvas::allCanvas()
 {
-    QPixmap exp(canvasSize);
-    exp.fill();
+    QImage exp(canvasSize, QImage::Format_ARGB32_Premultiplied);
+    exp.fill(Qt::white);
     QPainter painter(&exp);
     int count = layers.count();
-    QPixmap * im = 0;
+    QImage * im = 0;
     for(int i=0;i<count;++i){
         LayerPointer l = layers.layerFrom(i);
         im = l->imagePtr();
-        painter.drawPixmap(0, 0, *im);
+        painter.drawImage(0, 0, *im);
     }
     return appendAuthorSignature(exp);
 }
 
-QPixmap Canvas::appendAuthorSignature(QPixmap target)
+QImage Canvas::appendAuthorSignature(QImage target)
 {
     // TODO: make all numbers configurable
     typedef CanvasBackend::MemberSectionIndex CBMSI;
@@ -401,6 +401,8 @@ void Canvas::drawLineTo(const QPoint &endPoint, qreal pressure)
     brush_->setSurface(l);
     brush_->lineTo(endPoint, pressure);
 
+    qDebug()<<"lineto"<<endPoint;
+
     update();
 
     QVariantMap start_j;
@@ -478,7 +480,7 @@ void Canvas::drawPoint(const QPoint &point, qreal pressure)
 
 void Canvas::pickColor(const QPoint &point)
 {
-    brush_->setColor(image.toImage().pixel(point));
+    brush_->setColor(image.pixel(point));
     newBrushSettings(brush_->brushInfo());
 }
 
@@ -575,6 +577,8 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
     QColor color(colorMap["red"].toInt(),
             colorMap["green"].toInt(),
             colorMap["blue"].toInt());
+
+    qDebug()<<"remote lineto"<<end;
 
     if(remoteBrush.contains(clientid)){
         BrushPointer t = remoteBrush[clientid];
@@ -868,7 +872,7 @@ void Canvas::paintEvent(QPaintEvent *event)
     if(dirtyRect.isEmpty())return;
     layers.combineLayers(&image, dirtyRect);
 
-    painter.drawPixmap(dirtyRect, image, dirtyRect);
+    painter.drawImage(dirtyRect, image, dirtyRect);
 
     if(!isEnabled()){
         QBrush brush;
@@ -895,10 +899,10 @@ void Canvas::resizeEvent(QResizeEvent *event)
     QSize newSize = event->size();
     canvasSize = newSize;
     layers.resizeLayers(newSize);
-    QPixmap newImage(newSize);
+    QImage newImage(newSize, QImage::Format_ARGB32_Premultiplied);
     newImage.fill(Qt::transparent);
     QPainter painter(&newImage);
-    painter.drawPixmap(QPoint(0, 0), image);
+    painter.drawImage(QPoint(0, 0), image);
     image = newImage;
 
     update();
@@ -997,6 +1001,7 @@ void CanvasBackend::onDataBlock(const QVariantMap d)
     QString author = info["name"].toString();
     QString clientid = info["clientid"].toString();
     upsertMember(clientid, author);
+    qDebug()<<"backend lineto"<<info["end"];
 
     if(blocklevel_ == NONE){
         commit();

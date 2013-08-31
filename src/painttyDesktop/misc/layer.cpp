@@ -1,6 +1,6 @@
 #include "layer.h"
 
-#include <QPixmap>
+#include <QImage>
 
 Layer::Layer(const QString &name, const QSize &size)
     :lock_(false),
@@ -20,27 +20,27 @@ Layer::~Layer()
 
 void Layer::create()
 {
-    img_ = QSharedPointer<QPixmap>(new QPixmap(size_));
+    img_ = QSharedPointer<QImage>(new QImage(size_, QImage::Format_ARGB32_Premultiplied));
     img_->fill(Qt::transparent);
     touched_ = true;
 }
 
-bool Layer::isLocked()
+bool Layer::isLocked() const
 {
     return lock_;
 }
 
-bool Layer::isHided()
+bool Layer::isHided() const
 {
     return hide_;
 }
 
-bool Layer::isSelected()
+bool Layer::isSelected() const
 {
     return select_;
 }
 
-bool Layer::isTouched()
+bool Layer::isTouched() const
 {
     return touched_;
 }
@@ -81,7 +81,7 @@ void Layer::clear()
     touched_ = false;
 }
 
-QPixmap* Layer::imagePtr()
+QImage* Layer::imagePtr()
 {
     if(!touched_){
         create();
@@ -89,7 +89,7 @@ QPixmap* Layer::imagePtr()
     return img_.data();
 }
 
-const QPixmap* Layer::imageConstPtr()
+const QImage* Layer::imageConstPtr()
 {
     if(!touched_){
         create();
@@ -107,7 +107,7 @@ void Layer::resize(const QSize &size)
     }
 }
 
-QString Layer::name()
+QString Layer::name() const
 {
     return name_;
 }

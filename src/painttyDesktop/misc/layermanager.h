@@ -38,7 +38,7 @@ public:
     int count(){return layers.count();}
     void resizeLayers(const QSize &newsize);
     void updateSelected();
-    void combineLayers(QPixmap *p, const QRect &rect = QRect());
+    void combineLayers(QImage *p, const QRect &rect = QRect());
 
 private:
     Q_DISABLE_COPY(LayerManager)
