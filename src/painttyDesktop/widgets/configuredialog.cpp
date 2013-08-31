@@ -19,15 +19,19 @@ ConfigureDialog::ConfigureDialog(QWidget *parent) :
     ui(new Ui::ConfigureDialog),
     tryIpv6(false),
     msg_notify(false),
-    auto_disable_ime(false)
+    auto_disable_ime(false),
+    use_defalut_server(true),
+    server_port(0)
 {
     ui->setupUi(this);
     readSettings();
     initLanguageList();
     initShortcutList();
+    initServerSettings();
     initUi();
 
-    connect(this, &ConfigureDialog::accepted, this, &ConfigureDialog::acceptConfigure);
+    connect(this, &ConfigureDialog::accepted,
+            this, &ConfigureDialog::acceptConfigure);
 }
 
 ConfigureDialog::~ConfigureDialog()
@@ -45,6 +49,10 @@ void ConfigureDialog::readSettings()
     msg_notify = settings.value("chat/msg_notify", false).toBool();
     auto_disable_ime = settings.value("canvas/auto_disable_ime", false).toBool();
     enable_tablet = settings.value("canvas/enable_tablet", false).toBool();
+    use_defalut_server = settings.value("global/server/use_default", true).toBool();
+    IPv4_addr = settings.value("global/server/ipv4_addr", QString()).toString();
+    IPv6_addr = settings.value("global/server/ipv6_addr", QString()).toString();
+    server_port = settings.value("global/server/server_port", 0).toUInt();
 }
 
 void ConfigureDialog::initLanguageList()
@@ -98,6 +106,31 @@ void ConfigureDialog::initShortcutList()
     ui->shortcutList->expandAll();
     ui->shortcutList->resizeColumnToContents(2);
     ui->shortcutList->resizeColumnToContents(0);
+}
+
+void ConfigureDialog::initServerSettings()
+{
+    connect(ui->use_default_server_checkbox, &QCheckBox::stateChanged,
+            [this](int n_state){
+        if(n_state == Qt::Checked){
+            ui->ipv4_lineedit->setDisabled(true);
+            ui->ipv6_lineedit->setDisabled(true);
+            ui->port_lineedit->setDisabled(true);
+        }else{
+            ui->ipv4_lineedit->setDisabled(false);
+            ui->ipv6_lineedit->setDisabled(false);
+            ui->port_lineedit->setDisabled(false);
+        }
+    });
+    ui->use_default_server_checkbox->setChecked(use_defalut_server);
+
+    ui->ipv4_lineedit->setText(IPv4_addr);
+    ui->ipv6_lineedit->setText(IPv6_addr);
+    if(!server_port){
+        ui->port_lineedit->clear();
+    }else{
+        ui->port_lineedit->setText(QString::number(server_port, 10));
+    }
 }
 
 void ConfigureDialog::initUi()
@@ -191,6 +224,13 @@ void ConfigureDialog::acceptConfigure()
                           ui->enable_tablet->isChecked());
         needRestart = true;
     }
+
+    // save server settings
+    settings.setValue("global/server/use_default", use_defalut_server);
+    settings.setValue("global/server/ipv4_addr", IPv4_addr);
+    settings.setValue("global/server/ipv6_addr", IPv6_addr);
+    settings.setValue("global/server/server_port", server_port);
+    needRestart = true;
 
     settings.sync();
 

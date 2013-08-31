@@ -118,17 +118,39 @@ void RoomListDialog::connectToManager()
     connect(&client_socket, &ClientSocket::disconnected,
             this, &RoomListDialog::onManagerServerClosed);
     client_socket.setPoolEnabled(false);
-    QHostAddress addr;
+
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    bool use_defalut_server = settings.value("global/server/use_default", true).toBool();
+    QString IPv4_addr = settings.value("global/server/ipv4_addr", QString()).toString();
+    QString IPv6_addr = settings.value("global/server/ipv6_addr", QString()).toString();
+    quint16 server_port = settings.value("global/server/server_port", 0).toUInt();
+
+    QHostAddress addr[2];
+    quint16 port = 0;
+
+    if(!use_defalut_server){
+        qDebug()<<"using address in settings";
+        addr[0] = QHostAddress(IPv4_addr);
+        addr[1] = QHostAddress(IPv6_addr);
+        port = server_port;
+    }else{
+        qDebug()<<"using default address";
+        addr[0] = GlobalDef::HOST_ADDR[0];
+        addr[1] = GlobalDef::HOST_ADDR[1];
+        port = GlobalDef::HOST_MGR_PORT;
+    }
+
     if(LocalNetworkInterface::supportIpv6()){
-        addr = GlobalDef::HOST_ADDR[1];
+        client_socket.connectToHost(addr[1], port);
         qDebug()<<"using ipv6 address to connect server";
     }else{
-        addr = GlobalDef::HOST_ADDR[0];
+        client_socket.connectToHost(addr[0], port);
         qDebug()<<"using ipv4 address to connect server";
     }
 
-    client_socket.connectToHost(addr,
-                                GlobalDef::HOST_MGR_PORT);
+
 }
 
 void RoomListDialog::routerInit()

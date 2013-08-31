@@ -29,9 +29,15 @@ private:
     bool auto_disable_ime;
     bool enable_tablet;
 
+    bool use_defalut_server;
+    QString IPv4_addr;
+    QString IPv6_addr;
+    quint16 server_port;
+
     void readSettings();
     void initLanguageList();
     void initShortcutList();
+    void initServerSettings();
     void initUi();
 
 private slots:
