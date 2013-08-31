@@ -12,11 +12,13 @@ class CanvasBackend : public QObject
     Q_OBJECT
 public:
     // id, name and count, where count can be use to sort
-    typedef std::tuple<QString, QString, quint64> MemberSection;
+    typedef std::tuple<QString, QString, quint64, QPoint, qint64> MemberSection;
     enum MemberSectionIndex {
         Id = 0,
         Name,
-        Count
+        Count,
+        Footprint,
+        LastActiveStamp
     };
 
     enum BlockLevel {
@@ -33,8 +35,7 @@ public:
 public slots:
     void onDataBlock(const QVariantMap d);
     void onIncomingData(const QJsonObject &d);
-    void requestMembers(MemberSectionIndex index,
-                        bool mergeSameName = false);
+    void requestMembers(MemberSectionIndex index);
     void clearMembers();
     void setBlockLevel(const BlockLevel le);
 signals:
@@ -57,7 +58,8 @@ private:
     // Warning, access memberHistory_ across thread
     // via member functions is not thread-safe
     QHash<QString, MemberSection> memberHistory_;
-    void upsertMember(const QString& id, const QString& name);
+    void upsertFootprint(const QString& id, const QString& name, const QPoint &point);
+    void upsertFootprint(const QString& id, const QString& name);
     QByteArray toJson(const QVariant &m);
     QVariant fromJson(const QByteArray &d);
 };
@@ -108,8 +110,7 @@ signals:
     void newPaintAction(const QVariantMap m);
     void paintActionComplete();
     void requestSortedMembers(CanvasBackend::MemberSectionIndex index
-                               = CanvasBackend::MemberSectionIndex::Count,
-                              bool mergeSameName = true);
+                               = CanvasBackend::MemberSectionIndex::Count);
     void requestClearMembers();
     void canvasExported(const QPixmap& pic);
 protected:

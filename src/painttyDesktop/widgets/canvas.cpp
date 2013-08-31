@@ -9,6 +9,7 @@
 #include <QSettings>
 #include <QApplication>
 #include <QTimer>
+#include <QDateTime>
 #include <QStaticText>
 #include <QtCore/qmath.h>
 
@@ -24,6 +25,9 @@
 #include "../misc/singleton.h"
 
 #include "canvas.h"
+
+typedef CanvasBackend::MemberSection MS;
+typedef CanvasBackend::MemberSectionIndex MSI;
 
 
 /*!
@@ -104,10 +108,8 @@ Canvas::Canvas(QWidget *parent) :
     // instead of using QTimer
     QTimer *t = new QTimer(this);
 
-    typedef CanvasBackend::MemberSectionIndex CM;
-
-    qRegisterMetaType<CM>("CanvasBackend::MemberSectionIndex");
-    qRegisterMetaType< QList<CanvasBackend::MemberSection> >("QList<MemberSection>");
+    qRegisterMetaType<MSI>("CanvasBackend::MemberSectionIndex");
+    qRegisterMetaType< QList<MS> >("QList<MemberSection>");
 
     connect(backend_, &CanvasBackend::membersSorted,
             this, &Canvas::onMembersSorted);
@@ -117,9 +119,9 @@ Canvas::Canvas(QWidget *parent) :
             backend_, &CanvasBackend::clearMembers);
     connect(t, &QTimer::timeout,
             [this](){
-        emit requestSortedMembers(CM::Count, true);
+        emit requestSortedMembers(MSI::Count);
     });
-    t->start(5000);
+    t->start(500);
     auto& client_socket = Singleton<ClientSocket>::instance();
     if(client_socket.schedualDataLength()){
         this->setEnabled(false);
@@ -163,8 +165,18 @@ QImage Canvas::allCanvas()
 
 QImage Canvas::appendAuthorSignature(QImage target)
 {
+
+    QHash<QString, MS> list;
+    for(const MS &elem: author_list_){
+        QString author = std::get<MSI::Name>(elem);
+        if(list.contains(author)){
+            std::get<MSI::Count>(list[author]) += std::get<MSI::Count>(elem);
+        }else{
+            list.insert(author, elem);
+        }
+    }
+
     // TODO: make all numbers configurable
-    typedef CanvasBackend::MemberSectionIndex CBMSI;
     int textSize = qMin(target.size().height(), target.width());
     textSize = qBound(10, int(textSize * 0.02), 100);
 
@@ -182,8 +194,8 @@ QImage Canvas::appendAuthorSignature(QImage target)
     textOp.setAlignment(Qt::AlignRight);
     text.setTextOption(textOp);
 
-    for(auto& item: author_list_){
-        QString name = std::get<CBMSI::Name>(item);
+    for(auto& item: list.values()){
+        QString name = std::get<MSI::Name>(item);
         authors += QString("BY ") + name + "<br/>";
     }
 
@@ -270,7 +282,7 @@ void Canvas::tryJitterCorrection()
         }
     }
     // you can see the correction rate.
-//    qDebug()<<"correction rate: "<<qreal(amount-redudent)/amount *100<<"%";
+    //    qDebug()<<"correction rate: "<<qreal(amount-redudent)/amount *100<<"%";
 }
 
 /*!
@@ -604,11 +616,10 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
         newOne->lineTo(end, pressure);
         remoteBrush[clientid] = newOne;
     }
-
     update();
 }
 
-void Canvas::onMembersSorted(const QList<CanvasBackend::MemberSection>& list)
+void Canvas::onMembersSorted(const QList<MS>& list)
 {
     author_list_ = list;
 }
@@ -870,6 +881,47 @@ void Canvas::paintEvent(QPaintEvent *event)
 
     painter.drawImage(dirtyRect, image, dirtyRect);
 
+    // draw painter's name.
+    // Considering move out of paintEvent.
+    auto f_draw_name = [this](QPainter& painter,
+            const QPoint& pos,
+            const QString& name){
+        QFontMetrics fm(this->font());
+        int t_width = fm.width(name)+15;
+        int t_height = fm.height()+15;
+        QRect box_rect(pos.x(), pos.y(), t_width, t_height);
+
+        painter.save();
+        QPen pen(Qt::transparent);
+        QBrush brush(Qt::black);
+        painter.setOpacity(0.6);
+        painter.setPen(pen);
+        painter.setBrush(brush);
+        painter.drawRoundedRect(box_rect, 10, 10);
+
+        pen.setColor(Qt::white);
+        painter.setPen(pen);
+        painter.drawText(box_rect, Qt::AlignCenter, name);
+        painter.restore();
+    };
+
+    // filter outdated names.
+    // Considering using another QImage instead of direct draw
+    qint64 now = QDateTime::currentMSecsSinceEpoch();
+    for(auto& item: author_list_){
+        QPoint point = std::get<MSI::Footprint>(item);
+        QString name = std::get<MSI::Name>(item);
+        qint64 stamp = std::get<MSI::LastActiveStamp>(item);
+        if(name.isEmpty()){
+            name = std::get<MSI::Id>(item);
+        }
+        if(now - stamp > 1000*10){
+            break;
+        }
+
+        f_draw_name(painter, point, name);
+    }
+
     if(!isEnabled()){
         QBrush brush;
         brush.setStyle(Qt::BDiagPattern);
@@ -953,7 +1005,7 @@ CanvasBackend::~CanvasBackend()
     auto& client_socket = Singleton<ClientSocket>::instance();
 
     disconnect(&client_socket, &ClientSocket::dataPack,
-            this, &CanvasBackend::onIncomingData);
+               this, &CanvasBackend::onIncomingData);
     disconnect(this, &CanvasBackend::newDataGroup,
                &client_socket, static_cast<void (ClientSocket::*)(const QByteArray&)>
                (&ClientSocket::sendDataPack));
@@ -996,7 +1048,7 @@ void CanvasBackend::onDataBlock(const QVariantMap d)
     QVariantMap info = d["info"].toMap();
     QString author = info["name"].toString();
     QString clientid = info["clientid"].toString();
-    upsertMember(clientid, author);
+    upsertFootprint(clientid, author);
 
     if(blocklevel_ == NONE){
         commit();
@@ -1034,7 +1086,7 @@ void CanvasBackend::onIncomingData(const QJsonObject& obj)
 
         if(map.contains("name")){
             QString author = map["name"].toString();
-            upsertMember(clientid, author);
+            upsertFootprint(clientid, author, point);
         }
 
         emit remoteDrawPoint(point, brushInfo,
@@ -1070,7 +1122,7 @@ void CanvasBackend::onIncomingData(const QJsonObject& obj)
 
         if(map.contains("name")){
             QString author = map["name"].toString();
-            upsertMember(clientid, author);
+            upsertFootprint(clientid, author, end);
         }
 
         emit remoteDrawLine(start, end,
@@ -1101,14 +1153,12 @@ void CanvasBackend::onIncomingData(const QJsonObject& obj)
     }
 }
 
-void CanvasBackend::requestMembers(MemberSectionIndex index,
-                                   bool mergeSameName)
+void CanvasBackend::requestMembers(MSI index)
 {
-//    qDebug()<<"Members requested!";
-    typedef MemberSection MS;
+    //    qDebug()<<"Members requested!";
     typedef QList<MS> MSL;
 
-    MSL list = memberHistory_.values();
+    MSL&& list = memberHistory_.values();
     qSort(list.begin(), list.end(), [index](const MS &e1,
           const MS &e2) {
         // Note, std::get<> never receive dynamic index.
@@ -1124,18 +1174,6 @@ void CanvasBackend::requestMembers(MemberSectionIndex index,
         }
     });
 
-    if(mergeSameName){
-        QHash<QString, MS> list2;
-        for(const MS &elem: list){
-            QString author = std::get<Name>(elem);
-            if(list2.contains(author)){
-                std::get<Count>(list2[author]) += std::get<Count>(elem);
-            }else{
-                list2.insert(author, elem);
-            }
-        }
-        list = list2.values();
-    }
     emit membersSorted(list);
 }
 
@@ -1144,13 +1182,39 @@ void CanvasBackend::clearMembers()
     memberHistory_.clear();
 }
 
-void CanvasBackend::upsertMember(const QString& id, const QString& name)
+void CanvasBackend::upsertFootprint(const QString& id,
+                                    const QString& name,
+                                    const QPoint& point)
 {
-    typedef MemberSectionIndex MSI;
+    qint64 stamp = QDateTime::currentMSecsSinceEpoch();
     if( memberHistory_.contains(id) ) {
-        std::get<MSI::Count>( memberHistory_[id] )++;
+        auto& member = memberHistory_[id];
+        std::get<MSI::Count>( member )++;
+        std::get<MSI::Footprint>( member ) = point;
+        std::get<MSI::Name>( member ) = name;
+        std::get<MSI::LastActiveStamp>( member ) = stamp;
     }else{
-        memberHistory_[id] = MemberSection(id, name, 1);
+        memberHistory_.insert(id, MemberSection(id,
+                                                name,
+                                                1,
+                                                point,
+                                                stamp));
+    }
+}
+
+void CanvasBackend::upsertFootprint(const QString& id,
+                                    const QString& name)
+{
+    if( memberHistory_.contains(id) ) {
+        auto& member = memberHistory_[id];
+        std::get<MSI::Count>( member )++;
+        std::get<MSI::Name>( member ) = name;
+    }else{
+        memberHistory_.insert(id, MemberSection(id,
+                                                name,
+                                                1,
+                                                QPoint(),
+                                                QDateTime::currentMSecsSinceEpoch()));
     }
 }
 
