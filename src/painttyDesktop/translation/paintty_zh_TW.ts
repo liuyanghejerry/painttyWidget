@@ -468,15 +468,15 @@ Do you want to restart right now?</source>
         <translation type="obsolete">語言更改將在下次啟動程式時生效。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="466"/>
-        <location filename="../widgets/mainwindow.cpp" line="546"/>
-        <location filename="../widgets/mainwindow.cpp" line="572"/>
-        <location filename="../widgets/mainwindow.cpp" line="886"/>
+        <location filename="../widgets/mainwindow.cpp" line="477"/>
+        <location filename="../widgets/mainwindow.cpp" line="557"/>
+        <location filename="../widgets/mainwindow.cpp" line="583"/>
+        <location filename="../widgets/mainwindow.cpp" line="897"/>
         <source>Sorry</source>
         <translation>抱歉</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="467"/>
+        <location filename="../widgets/mainwindow.cpp" line="478"/>
         <source>Only room owner is authorized to close the room.
 It seems you&apos;re not room manager.</source>
         <translation>只有房主才有權限關閉房間。
@@ -500,7 +500,7 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="371"/>
+        <location filename="../widgets/mainwindow.cpp" line="372"/>
         <source>Room Share</source>
         <translation>分享房間</translation>
     </message>
@@ -511,109 +511,114 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="520"/>
+        <location filename="../widgets/mainwindow.cpp" line="381"/>
+        <source>Notice, we detected you&apos;re using IPv6 protocol which may result in that your Room URL is not available for IPv4 users.</source>
+        <translation>提示：檢測到您正在使用IPv6協定，這將導致您的房間URL無法與IPv4用戶共通。</translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwindow.cpp" line="531"/>
         <source>Server Connection Failed.</source>
         <translation>伺服器斷開了連接。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="533"/>
+        <location filename="../widgets/mainwindow.cpp" line="544"/>
         <source>Closing</source>
         <translation>房間關閉</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="534"/>
+        <location filename="../widgets/mainwindow.cpp" line="545"/>
         <source>Warning, the room owner has closed the room. This room will close when everyone leaves.
 Save your work if you like it!</source>
         <translation>警告，房主已經關閉了本房間。所有人離開後本房間將刪除。
 請保存好您的得意之作！</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="547"/>
-        <location filename="../widgets/mainwindow.cpp" line="573"/>
+        <location filename="../widgets/mainwindow.cpp" line="558"/>
+        <location filename="../widgets/mainwindow.cpp" line="584"/>
         <source>Sorry, it seems you&apos;re notroom owner.</source>
         <translation>抱歉，您似乎不是房主。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="562"/>
+        <location filename="../widgets/mainwindow.cpp" line="573"/>
         <source>Close Request Completed.</source>
         <translation>關閉命令已發送</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="576"/>
+        <location filename="../widgets/mainwindow.cpp" line="587"/>
         <source>Clear Request Completed.</source>
         <translation>清空命令已發送</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="600"/>
+        <location filename="../widgets/mainwindow.cpp" line="611"/>
         <source>Checkout Completed.</source>
         <translation>簽到完畢</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="628"/>
+        <location filename="../widgets/mainwindow.cpp" line="639"/>
         <source>Online List Refreshed.</source>
         <translation>在線列表刷新完畢</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="660"/>
-        <location filename="../widgets/mainwindow.cpp" line="683"/>
+        <location filename="../widgets/mainwindow.cpp" line="671"/>
+        <location filename="../widgets/mainwindow.cpp" line="694"/>
         <source>Error</source>
         <translation>出錯</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="661"/>
-        <location filename="../widgets/mainwindow.cpp" line="684"/>
+        <location filename="../widgets/mainwindow.cpp" line="672"/>
+        <location filename="../widgets/mainwindow.cpp" line="695"/>
         <source>Sorry, an error occurred.
 Error: %1, %2</source>
         <translation>抱歉，出錯了。
 錯誤：%1，%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="854"/>
-        <location filename="../widgets/mainwindow.cpp" line="875"/>
+        <location filename="../widgets/mainwindow.cpp" line="865"/>
+        <location filename="../widgets/mainwindow.cpp" line="886"/>
         <source>OMG</source>
         <translation>天吶</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="855"/>
+        <location filename="../widgets/mainwindow.cpp" line="866"/>
         <source>You&apos;re going to clear layer %1. All the work of that layerwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translation>您將清空圖層 %1。該圖層的所有內容將被清空，並且&lt;b&gt;無法&lt;/b&gt;恢復。
 您確定您要這麼做嗎？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="876"/>
+        <location filename="../widgets/mainwindow.cpp" line="887"/>
         <source>You&apos;re going to clear ALL LAYERS. All of work in this roomwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translation>您將清空所有圖層。本房間的所有內容將被清空，並且&lt;b&gt;無法&lt;/b&gt;恢復。
 您確定要這麼做嗎？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="887"/>
+        <location filename="../widgets/mainwindow.cpp" line="898"/>
         <source>Only room owner is authorized to clear the canvas.
 It seems you&apos;re not room manager.</source>
         <translation>只有房間所有者才可清理畫布。
 您似乎不是所有者。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="933"/>
+        <location filename="../widgets/mainwindow.cpp" line="944"/>
         <source>Waiting for sync, please do not close.
 This will cost you 1 minute at most.</source>
         <translation>正在等待同步，請不要關閉。
 整個過程至多需要1分鐘。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="966"/>
+        <location filename="../widgets/mainwindow.cpp" line="977"/>
         <source>Export all to file</source>
         <translation>全部導出至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="968"/>
-        <location filename="../widgets/mainwindow.cpp" line="986"/>
+        <location filename="../widgets/mainwindow.cpp" line="979"/>
+        <location filename="../widgets/mainwindow.cpp" line="997"/>
         <source>Images (*.png)</source>
         <translation>圖像 (*.png)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="984"/>
+        <location filename="../widgets/mainwindow.cpp" line="995"/>
         <source>Export visible part to file</source>
         <translation>導出可見圖層至文件</translation>
     </message>

@@ -102,7 +102,7 @@ void RoomListDialog::tableInit()
          << QString(tr("Current Member"))
          << QString(tr("Max Member"));
     ui->tableWidget->setHorizontalHeaderLabels(list);
-    ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 }
 
 void RoomListDialog::connectToManager()

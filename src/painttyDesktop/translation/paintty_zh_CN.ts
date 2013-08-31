@@ -525,16 +525,16 @@ Do you want to restart right now?</source>
         <translation type="obsolete">语言更改将在下次启动程序时生效。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="466"/>
-        <location filename="../widgets/mainwindow.cpp" line="546"/>
-        <location filename="../widgets/mainwindow.cpp" line="572"/>
-        <location filename="../widgets/mainwindow.cpp" line="886"/>
+        <location filename="../widgets/mainwindow.cpp" line="477"/>
+        <location filename="../widgets/mainwindow.cpp" line="557"/>
+        <location filename="../widgets/mainwindow.cpp" line="583"/>
+        <location filename="../widgets/mainwindow.cpp" line="897"/>
         <source>Sorry</source>
         <translatorcomment>すみません</translatorcomment>
         <translation>抱歉</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="467"/>
+        <location filename="../widgets/mainwindow.cpp" line="478"/>
         <source>Only room owner is authorized to close the room.
 It seems you&apos;re not room manager.</source>
         <translatorcomment>家主さんしかこのルームを閉じられませんから、
@@ -563,7 +563,7 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="371"/>
+        <location filename="../widgets/mainwindow.cpp" line="372"/>
         <source>Room Share</source>
         <translation>分享房间</translation>
     </message>
@@ -575,18 +575,23 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="520"/>
+        <location filename="../widgets/mainwindow.cpp" line="381"/>
+        <source>Notice, we detected you&apos;re using IPv6 protocol which may result in that your Room URL is not available for IPv4 users.</source>
+        <translation>提示：检测到您正在使用IPv6协议连接房间，您的房间URL将无法与IPv4用户通用。</translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwindow.cpp" line="531"/>
         <source>Server Connection Failed.</source>
         <translation>服务器断开了连接。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="533"/>
+        <location filename="../widgets/mainwindow.cpp" line="544"/>
         <source>Closing</source>
         <translatorcomment>ルームを閉じます</translatorcomment>
         <translation>房间关闭</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="534"/>
+        <location filename="../widgets/mainwindow.cpp" line="545"/>
         <source>Warning, the room owner has closed the room. This room will close when everyone leaves.
 Save your work if you like it!</source>
         <translatorcomment>警告、家主さんはこのルームを閉じました。誰もいなかったらこのルームを閉じますから、
@@ -595,55 +600,55 @@ Save your work if you like it!</source>
 请保存好您的得意之作！</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="547"/>
-        <location filename="../widgets/mainwindow.cpp" line="573"/>
+        <location filename="../widgets/mainwindow.cpp" line="558"/>
+        <location filename="../widgets/mainwindow.cpp" line="584"/>
         <source>Sorry, it seems you&apos;re notroom owner.</source>
         <translatorcomment>申し訳ないが、貴方樣は家主さんではありません。</translatorcomment>
         <translation>对不起，您似乎不是房主。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="562"/>
+        <location filename="../widgets/mainwindow.cpp" line="573"/>
         <source>Close Request Completed.</source>
         <translation>关闭请求成功</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="576"/>
+        <location filename="../widgets/mainwindow.cpp" line="587"/>
         <source>Clear Request Completed.</source>
         <translation>清空请求完成</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="600"/>
+        <location filename="../widgets/mainwindow.cpp" line="611"/>
         <source>Checkout Completed.</source>
         <translation>签到完成</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="628"/>
+        <location filename="../widgets/mainwindow.cpp" line="639"/>
         <source>Online List Refreshed.</source>
         <translation>在线列表刷新完成</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="660"/>
-        <location filename="../widgets/mainwindow.cpp" line="683"/>
+        <location filename="../widgets/mainwindow.cpp" line="671"/>
+        <location filename="../widgets/mainwindow.cpp" line="694"/>
         <source>Error</source>
         <translation>出错</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="661"/>
-        <location filename="../widgets/mainwindow.cpp" line="684"/>
+        <location filename="../widgets/mainwindow.cpp" line="672"/>
+        <location filename="../widgets/mainwindow.cpp" line="695"/>
         <source>Sorry, an error occurred.
 Error: %1, %2</source>
         <translation>对不起，发生了错误。
 错误：%1，%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="854"/>
-        <location filename="../widgets/mainwindow.cpp" line="875"/>
+        <location filename="../widgets/mainwindow.cpp" line="865"/>
+        <location filename="../widgets/mainwindow.cpp" line="886"/>
         <source>OMG</source>
         <translatorcomment>OMG</translatorcomment>
         <translation>额滴神呐</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="855"/>
+        <location filename="../widgets/mainwindow.cpp" line="866"/>
         <source>You&apos;re going to clear layer %1. All the work of that layerwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translatorcomment>全消しますか。 %1全てのレイヤーが全消されます、やり直しはできませんので、
@@ -652,7 +657,7 @@ Do you really want to do so?</source>
 您确定要这么做吗？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="876"/>
+        <location filename="../widgets/mainwindow.cpp" line="887"/>
         <source>You&apos;re going to clear ALL LAYERS. All of work in this roomwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translatorcomment>全消しますか。全てのレイヤーが全消されます、やり直しはできませんので、
@@ -661,33 +666,33 @@ Do you really want to do so?</source>
 您确定要这么做吗？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="887"/>
+        <location filename="../widgets/mainwindow.cpp" line="898"/>
         <source>Only room owner is authorized to clear the canvas.
 It seems you&apos;re not room manager.</source>
         <translation>只有房主才可以清除画布，你似乎不是房主。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="933"/>
+        <location filename="../widgets/mainwindow.cpp" line="944"/>
         <source>Waiting for sync, please do not close.
 This will cost you 1 minute at most.</source>
         <translation>正在同步，请勿关闭...
 整个过程至多需要1分钟。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="966"/>
+        <location filename="../widgets/mainwindow.cpp" line="977"/>
         <source>Export all to file</source>
         <translatorcomment>全てのレイヤー画像を書き出し</translatorcomment>
         <translation>全部导出至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="968"/>
-        <location filename="../widgets/mainwindow.cpp" line="986"/>
+        <location filename="../widgets/mainwindow.cpp" line="979"/>
+        <location filename="../widgets/mainwindow.cpp" line="997"/>
         <source>Images (*.png)</source>
         <translatorcomment>画像 (*.png)</translatorcomment>
         <translation>图片 (*.png)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="984"/>
+        <location filename="../widgets/mainwindow.cpp" line="995"/>
         <source>Export visible part to file</source>
         <translatorcomment>表示レイヤーを書き出し</translatorcomment>
         <translation>导出可见图层至文件</translation>
