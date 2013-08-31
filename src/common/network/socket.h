@@ -14,6 +14,7 @@ public:
     ~Socket();
     void connectToHost(const QHostAddress& address, quint16 port);
     void connectToHost(const QString & hostName, quint16 port);
+    bool waitForConnected(int msecs = 30000);
     bool isConnected();
     QHostAddress address() const;
     bool isIPv4Address() const;

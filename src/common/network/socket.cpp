@@ -62,6 +62,11 @@ void Socket::connectToHost(const QString & hostName, quint16 port)
     socket->connectToHost(hostName, port);
 }
 
+bool Socket::waitForConnected(int msecs)
+{
+    socket->waitForConnected(msecs);
+}
+
 bool Socket::isConnected()
 {
     return (socket->state() == QAbstractSocket::ConnectedState);

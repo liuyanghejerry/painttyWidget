@@ -23,6 +23,7 @@
 #include "../misc/singleton.h"
 #include "configuredialog.h"
 #include "../misc/errortable.h"
+#include "gradualbox.h"
 
 RoomListDialog::RoomListDialog(QWidget *parent) :
     QDialog(parent),
@@ -142,14 +143,22 @@ void RoomListDialog::connectToManager()
         port = GlobalDef::HOST_MGR_PORT;
     }
 
+//    auto f = [this](){
+//        if(!Singleton<ClientSocket>::instance().isConnected()){
+//            GradualBox::showText(tr("It seems we cannot connect to the server"), true);
+//        }
+//    };
+
     if(LocalNetworkInterface::supportIpv6()){
-        client_socket.connectToHost(addr[1], port);
         qDebug()<<"using ipv6 address to connect server";
+        client_socket.connectToHost(addr[1], port);
     }else{
-        client_socket.connectToHost(addr[0], port);
         qDebug()<<"using ipv4 address to connect server";
+        client_socket.connectToHost(addr[0], port);
     }
 
+    // wait 10 seconds to test if we're connected
+//    GlobalDef::deferJob(f, 10*1000);
 
 }
 
