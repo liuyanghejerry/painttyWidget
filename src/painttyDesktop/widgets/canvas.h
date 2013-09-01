@@ -119,7 +119,9 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *event);
+#ifndef PAINTTY_NO_TABLET
     void tabletEvent(QTabletEvent *ev);
+#endif
     void focusInEvent(QFocusEvent * event);
     void focusOutEvent(QFocusEvent * event);
 

@@ -9,6 +9,8 @@ QT       += core gui network widgets script
 
 DEFINES += PAINTTY_DESKTOP
 
+DEFINES += PAINTTY_NO_TABLET
+
 win32 {
     RC_FILE = app.rc
     LIBS += -limm32

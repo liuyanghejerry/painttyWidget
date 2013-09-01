@@ -759,6 +759,9 @@ void Canvas::layerSelected(const QString &name)
 }
 
 /* Event control */
+
+#ifndef PAINTTY_NO_TABLET
+
 void Canvas::tabletEvent(QTabletEvent *ev)
 {
     //TODO: fully support tablet
@@ -790,6 +793,8 @@ void Canvas::tabletEvent(QTabletEvent *ev)
     }
     ev->accept();
 }
+
+#endif
 
 void Canvas::focusInEvent(QFocusEvent *)
 {
