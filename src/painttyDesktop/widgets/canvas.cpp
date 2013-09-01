@@ -622,6 +622,7 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
 void Canvas::onMembersSorted(const QList<MS>& list)
 {
     author_list_ = list;
+    update();
 }
 
 /* Layer */

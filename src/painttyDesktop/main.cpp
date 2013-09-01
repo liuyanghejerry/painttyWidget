@@ -1,6 +1,5 @@
 #include <QApplication>
 #include <QProcess>
-#include <QMessageBox>
 #include <QTranslator>
 #include <QSettings>
 #include <QVariant>
@@ -8,6 +7,7 @@
 #include "../common/common.h"
 #include "widgets/mainwindow.h"
 #include "widgets/roomlistdialog.h"
+#include "widgets/gradualbox.h"
 #include "misc/singleton.h"
 
 namespace mainOnly
@@ -75,12 +75,9 @@ bool runUpdater()
     process->setWorkingDirectory(QDir::currentPath());
     QObject::connect(qApp, &QApplication::aboutToQuit, process, &QProcess::kill);
     process->start(QDir::current().filePath("updater"), args);
-    if (!process->waitForStarted())
-    {
-        QMessageBox::warning(0, QObject::tr("No Updater?"),
-                             QObject::tr("We cannot find updater.\n"
-                                         "You may need to check update yourself."),
-                             QMessageBox::Ok);
+    if (!process->waitForStarted()){
+        GradualBox::showText(QObject::tr("We cannot find updater.\n"
+                                         "You may need to check update yourself."));
         return false;
     }
     return true;
@@ -124,7 +121,7 @@ int main(int argc, char *argv[])
         w.showMaximized();
 #endif
         exitCode = a.exec();
-//        qDebug()<<"exit code: "<<exitCode;
+        //        qDebug()<<"exit code: "<<exitCode;
     }
 
     delete dialog;
