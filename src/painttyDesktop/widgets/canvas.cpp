@@ -921,6 +921,9 @@ void Canvas::paintEvent(QPaintEvent *event)
         if(now - stamp > 1000*10){
             break;
         }
+        if(point.isNull()){
+            break;
+        }
 
         f_draw_name(painter, point, name);
     }
