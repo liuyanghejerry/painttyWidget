@@ -64,7 +64,7 @@ void Socket::connectToHost(const QString & hostName, quint16 port)
 
 bool Socket::waitForConnected(int msecs)
 {
-    socket->waitForConnected(msecs);
+    return socket->waitForConnected(msecs);
 }
 
 bool Socket::isConnected()
