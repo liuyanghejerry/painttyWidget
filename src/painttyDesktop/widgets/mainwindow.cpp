@@ -820,8 +820,8 @@ void MainWindow::remoteAddLayer(const QString &layerName)
     }
 
     LayerItem *item = new LayerItem;
-    item->setVisibleIcon(QIcon(":/iconset/visibility-on.png"));
-    item->setLockIcon(QIcon(":/iconset/lock.png"));
+    item->setVisibleIcon(QIcon(":/iconset/ui/visibility-on.png"));
+    item->setLockIcon(QIcon(":/iconset/ui/lock.png"));
     item->setLabel(layerName);
     ui->layerWidget->addItem(item);
 }
@@ -833,8 +833,8 @@ void MainWindow::addLayer(const QString &layerName)
         name = QString::number(ui->canvas->layerNum());
 
     LayerItem *item = new LayerItem;
-    item->setVisibleIcon(QIcon(":/iconset/visibility-on.png"));
-    item->setLockIcon(QIcon(":/iconset/lock.png"));
+    item->setVisibleIcon(QIcon(":/iconset/ui/visibility-on.png"));
+    item->setLockIcon(QIcon(":/iconset/ui/lock.png"));
     item->setLabel(name);
     ui->layerWidget->addItem(item);
     ui->canvas->addLayer(name);

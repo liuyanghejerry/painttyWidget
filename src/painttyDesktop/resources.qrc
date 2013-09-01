@@ -7,7 +7,6 @@
         <file>translation/qt_zh_TW.qm</file>
         <file>translation/qt_ja.qm</file>
         <file>iconset/icon.png</file>
-        <file>iconset/lock.png</file>
         <file>iconset/ui/brush-1.png</file>
         <file>iconset/ui/brush-2.png</file>
         <file>iconset/ui/brush-3.png</file>
@@ -38,9 +37,11 @@
         <file>iconset/ui/sketch-3.png</file>
         <file>iconset/ui/sketch-4.png</file>
         <file>iconset/ui/picker-cursor-1.png</file>
-        <file>iconset/visibility-off.png</file>
-        <file>iconset/visibility-on.png</file>
         <file>iconset/ui/cross_16x16.png</file>
         <file>iconset/ui/cross_32x32.png</file>
+        <file>iconset/ui/picker-cursor-small.png</file>
+        <file>iconset/ui/lock.png</file>
+        <file>iconset/ui/visibility-off.png</file>
+        <file>iconset/ui/visibility-on.png</file>
     </qresource>
 </RCC>
