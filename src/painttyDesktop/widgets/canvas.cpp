@@ -759,41 +759,37 @@ void Canvas::layerSelected(const QString &name)
 }
 
 /* Event control */
-// FIXME: uncomment below when Qt support tablet
-//void Canvas::tabletEvent(QTabletEvent *ev)
-//{
-//    if(!enable_tablet) {
-//        return;
-//    }
-//    //TODO: fully support tablet
-//    qreal pressure = ev->pressure();
-//    QPoint pos = ev->pos();
+void Canvas::tabletEvent(QTabletEvent *ev)
+{
+    //TODO: fully support tablet
+    qreal pressure = ev->pressure();
+    QPoint pos = ev->pos();
 
-//    switch(ev->type()){
-//    case QEvent::TabletPress:
-//        if(!drawing){
-//            lastPoint = pos;
-//            drawPoint(pos, pressure);
-//            drawing = true;
-//        }
-//        break;
-//    case QEvent::TabletMove:
-//        if(drawing && lastPoint != pos){
-//            drawLineTo(pos, pressure);
-//            lastPoint = pos;
-//        }
-//        break;
-//    case QEvent::TabletRelease:
-//        if(drawing){
-//            drawing = false;
-//            updateCursor();
-//        }
-//        break;
-//    default:
-//        break;
-//    }
-//    ev->accept();
-//}
+    switch(ev->type()){
+    case QEvent::TabletPress:
+        if(!drawing){
+            lastPoint = pos;
+            drawPoint(pos, pressure);
+            drawing = true;
+        }
+        break;
+    case QEvent::TabletMove:
+        if(drawing && lastPoint != pos){
+            drawLineTo(pos, pressure);
+            lastPoint = pos;
+        }
+        break;
+    case QEvent::TabletRelease:
+        if(drawing){
+            drawing = false;
+            updateCursor();
+        }
+        break;
+    default:
+        break;
+    }
+    ev->accept();
+}
 
 void Canvas::focusInEvent(QFocusEvent *)
 {
@@ -820,6 +816,7 @@ void Canvas::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
         lastPoint = event->pos();
         if(inPicker){
+            pickColor(event->pos());
         }else{
             drawing = true;
             stackPoints.push_back(lastPoint);

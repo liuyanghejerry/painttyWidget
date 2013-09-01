@@ -119,7 +119,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *event);
-//    void tabletEvent(QTabletEvent *ev);
+    void tabletEvent(QTabletEvent *ev);
     void focusInEvent(QFocusEvent * event);
     void focusOutEvent(QFocusEvent * event);
 
