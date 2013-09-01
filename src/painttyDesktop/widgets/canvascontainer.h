@@ -5,7 +5,6 @@
 
 class QGraphicsScene;
 class QGraphicsProxyWidget;
-class TabletSupport;
 
 class CanvasContainer : public QGraphicsView
 {
@@ -23,8 +22,6 @@ public:
 signals:
     void scaled(qreal factor);
     void rectChanged(const QRect&);
-    // caveat, work around for wacom tablet
-    void tabletDetected();
 
 public slots:
     void setScaleFactor(qreal factor);
