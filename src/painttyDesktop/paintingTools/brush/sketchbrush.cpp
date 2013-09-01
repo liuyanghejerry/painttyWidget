@@ -30,6 +30,7 @@ SketchBrush::~SketchBrush()
 void SketchBrush::setColor(const QColor &color)
 {
     mainColor = color;
+    preparePen();
 }
 
 int SketchBrush::width()
