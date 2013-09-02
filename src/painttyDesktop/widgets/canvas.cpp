@@ -63,8 +63,8 @@ Canvas::Canvas(QWidget *parent) :
     image(canvasSize, QImage::Format_ARGB32_Premultiplied),
     layerNameCounter(0),
     shareColor_(true),
-    jitterCorrection_(false),
-    jitterCorrectionLevel_(3),
+    jitterCorrection_(true),
+    jitterCorrectionLevel_(10),
     backend_(new CanvasBackend(0)),
     worker_(new QThread(this))
 {
@@ -234,10 +234,7 @@ void Canvas::setJitterCorrectionEnabled(bool correct)
 void Canvas::setJitterCorrectionLevel(int value)
 {
     jitterCorrectionLevel_ = qBound(0, value, 10);
-    jitterCorrectionLevel_internal_ =
-            qBound(0.0,
-                   jitterCorrectionLevel_ / 10.0 * 0.99 + 0.85,
-                   0.99);
+    jitterCorrectionLevel_internal_ = jitterCorrectionLevel_ * 0.5;
 }
 
 void Canvas::tryJitterCorrection()
@@ -255,18 +252,24 @@ void Canvas::tryJitterCorrection()
         QLine l1(p1, p2);
         QLine l2(p2, p3);
         QLine l3(p3, p1);
-        // l3^2 = l1^2 + l2^2 + 2*l1*l2*cos(a), where cos(a) is our goal
-        qreal len3 = l3.dx()*l3.dx() + l3.dy()*l3.dy();
-        len3 = qSqrt(len3);
-        qreal len2 = l2.dx()*l2.dx() + l2.dy()*l2.dy();
-        len2 = qSqrt(len2);
-        qreal len1 = l1.dx()*l1.dx() + l1.dy()*l1.dy();
-        len1 = qSqrt(len1);
 
-        qreal cosa = (len3*len3 - len2*len2 - len1*len1) / (2*len1*len2);
+        qreal A = 1.0;
+        if(l3.dx() != l1.dx()){
+            A = (l1.dy() - l3.dy()) / (l3.dx() - l1.dx());
+        }
+        qreal B = 1.0;
+        qreal C = l1.dx() * (-A) - l1.dy();
 
-        if(cosa < jitterCorrectionLevel_internal_ ){
-            redudent--;
+        qreal distance_up = A*l2.dx() + B*l2.dy() + C;
+        qreal distance_down = qSqrt(A*A+B*B);
+        if(qFuzzyCompare(distance_down, 0.0)){
+            return false;
+        }
+
+        qreal distance = qAbs(distance_up / distance_down);
+//        qDebug()<<"distance"<<distance;
+
+        if(distance <= jitterCorrectionLevel_internal_ ){
             return true;
         }else{
             return false;
@@ -274,15 +277,19 @@ void Canvas::tryJitterCorrection()
 
     };
 
-    for(int i=0;i<stackPoints.length()-3;++i){
-        if(should_correct(stackPoints[i],
-                          stackPoints[i+1],
-                          stackPoints[i+2])){
-            stackPoints.removeAt(i+1);
+    int basePos = 0;
+    while((stackPoints.length() >= 3) && (basePos < stackPoints.length() - 3)){
+        if(should_correct(stackPoints[basePos],
+                          stackPoints[basePos+1],
+                          stackPoints[basePos+2])){
+            stackPoints.removeAt(basePos+1);
+            redudent--;
+        }else{
+            basePos++;
         }
     }
     // you can see the correction rate.
-    //    qDebug()<<"correction rate: "<<qreal(amount-redudent)/amount *100<<"%";
+//    qDebug()<<"correction rate: "<<qreal(amount-redudent)/amount *100<<"%";
 }
 
 /*!
@@ -767,7 +774,7 @@ void Canvas::tabletEvent(QTabletEvent *ev)
     //TODO: fully support tablet
     qreal pressure = ev->pressure();
     QPoint pos = ev->pos();
-
+    qDebug()<<"pressure:"<<pressure<<"at"<<pos;
     switch(ev->type()){
     case QEvent::TabletPress:
         if(!drawing){
@@ -836,22 +843,23 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
         if(inPicker){
             pickColor(event->pos());
         }else{
-            if(drawing){
-                if(jitterCorrection_){
-                    if(stackPoints.length() < qBound(3, jitterCorrectionLevel_, 10)){
-                        stackPoints.push_back(event->pos());
-                    }else{
-                        tryJitterCorrection();
-                        for(auto &p: stackPoints){
-                            drawLineTo(p);
-                            lastPoint = p;
-                        }
-                        stackPoints.clear();
-                    }
+            if(!drawing){
+                return;
+            }
+            if(jitterCorrection_){
+                if(stackPoints.length() < qBound(3, jitterCorrectionLevel_, 10)){
+                    stackPoints.push_back(event->pos());
                 }else{
-                    drawLineTo(event->pos());
-                    lastPoint = event->pos();
+                    tryJitterCorrection();
+                    for(auto &p: stackPoints){
+                        drawLineTo(p);
+                        lastPoint = p;
+                    }
+                    stackPoints.clear();
                 }
+            }else{
+                drawLineTo(event->pos());
+                lastPoint = event->pos();
             }
         }
     }
