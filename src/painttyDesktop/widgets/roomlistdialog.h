@@ -52,6 +52,7 @@ protected:
 private:
     enum State{
         Error = -999,
+        ConnectFailed,
         Init,
         Ready,
         ManagerConnecting = 0,

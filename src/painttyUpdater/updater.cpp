@@ -11,15 +11,39 @@
 #include "network/socket.h"
 #include "network/localnetworkinterface.h"
 
+static QByteArray pack(const QJsonObject& obj)
+{
+    QJsonDocument doc;
+    doc.setObject(obj);
+    auto data = doc.toJson(QJsonDocument::Compact);
+    data = qCompress(data);
+    data.prepend(1);
+    return data;
+}
+
+static QJsonObject unpack(const QByteArray& data)
+{
+    auto cp_data = data;
+    cp_data = cp_data.right(cp_data.length()-1);
+    cp_data = qUncompress(cp_data);
+    QJsonDocument doc = QJsonDocument::fromJson(cp_data);
+    return doc.object();
+}
+
 
 Updater::Updater() :
     socket(new Socket(this)),
     state_(State::READY),
-    timer_(new QTimer(this))
+    timer_(new QTimer(this)),
+    output(stdout)
 {
     timer_->setSingleShot(true);
     connect(timer_, &QTimer::timeout,
             this, &Updater::timeout);
+}
+
+void Updater::run()
+{
     timer_->start(20*1000);
     checkNewestVersion();
 }
@@ -34,7 +58,6 @@ void Updater::checkNewestVersion()
     connect(socket, &Socket::connected,
             [this](){
         state_ = State::CHK_VERSION;
-        QJsonDocument doc;
         QJsonObject obj;
         obj.insert("request", QString("check"));
         // NOTICE: to ensure no ambigous,
@@ -43,8 +66,7 @@ void Updater::checkNewestVersion()
                 .name().toLower();
         obj.insert("language", locale);
         obj.insert("platform", QString("windows x86"));
-        doc.setObject(obj);
-        socket->sendData(doc.toJson());
+        socket->sendData(pack(obj));
     });
     connect(socket, &Socket::error,
             [this](){
@@ -62,22 +84,21 @@ void Updater::checkNewestVersion()
             state_ = State::UNKNOWN_ERROR;
         }
 
-        qDebug()<<socket->errorString();
+        output<<socket->errorString();
         qApp->exit(1);
     });
     connect(socket, &Socket::newData,
             [this](const QByteArray& data){
-        QJsonDocument doc = QJsonDocument::fromJson(data);
-        QJsonObject obj = doc.object();
+        QJsonObject obj = unpack(data);
         if(obj.isEmpty()){
             state_ = State::CHK_ERROR;
-            qDebug()<<"Check version error!";
+            output<<"Check version error!";
             qApp->exit(1);
         }
         QJsonObject info = obj.value("info").toObject();
         if(info.isEmpty()){
             state_ = State::CHK_ERROR;
-            qDebug()<<"Check version error!";
+            output<<"Check version error!";
             qApp->exit(1);
         }
 
@@ -103,18 +124,19 @@ void Updater::checkNewestVersion()
         // then we check if there is -v
         index = index>0?index:commandList.lastIndexOf("-v");
         if(index < 0 || index >= commandList.count()){
-            qDebug()<<"parsing error!"<<"cannot find --version or -v";
+            output<<"parsing error!"<<"cannot find --version or -v";
             printUsage();
             qApp->exit(1);
         }
         QString old_version = commandList[index+1].trimmed();
         if(old_version.isEmpty()){
-            qDebug()<<"parsing error!"<<"version number is empty";
+            output<<"parsing error!"<<"version number is empty";
             printUsage();
             qApp->exit(1);
         }
         if(version != old_version){
             QMessageBox msgBox;
+            msgBox.setWindowModality(Qt::ApplicationModal);
             msgBox.setTextFormat(Qt::RichText);
             msgBox.setWindowTitle(tr("New version!"));
             if(level < 3) {
@@ -134,18 +156,16 @@ void Updater::checkNewestVersion()
             }
 
             msgBox.exec();
-            qApp->exit(0);
         }
+        qApp->exit(0);
 
     });
     //
     QHostAddress addr;
     if(LocalNetworkInterface::supportIpv6()){
         addr = GlobalDef::UPDATER_ADDR[1];
-        qDebug()<<"using ipv6 address to connect server";
     }else{
         addr = GlobalDef::UPDATER_ADDR[0];
-        qDebug()<<"using ipv4 address to connect server";
     }
     socket->connectToHost(addr, GlobalDef::UPDATER_PORT);
 
@@ -166,22 +186,13 @@ bool Updater::overlap()
 
 void Updater::timeout()
 {
-    if(state_ <= 0 ){
-        QMessageBox msgBox;
-        msgBox.setTextFormat(Qt::RichText);
-        msgBox.setWindowTitle(tr("Update Failed!"));
-        msgBox.setIcon(QMessageBox::Critical);
-        msgBox.setText(tr("Cannot connect to server!\n"
-                          "We suggest you check network again"
-                          ", or update manually."));
-        msgBox.exec();
+    if(state_ < State::CHK_VERSION)
         qApp->exit(1);
-    }
 }
 
 void Updater::printUsage()
 {
-    qDebug()<<"painttyUpdater "<<GlobalDef::UPDATER_VERSION<<endl
+    output<<"painttyUpdater "<<GlobalDef::UPDATER_VERSION<<endl
            <<"Usage: "<<"painttyUpdater OPTIONS"<<endl<<endl
           <<"-v, --version VERSION: tell updater the current "
             "version of main program.";

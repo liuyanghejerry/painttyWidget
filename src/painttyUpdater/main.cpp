@@ -42,5 +42,6 @@ int main(int argc, char *argv[])
     initSettings();
     initTranslation();
     Updater up;
+    up.run();
     return a.exec();
 }

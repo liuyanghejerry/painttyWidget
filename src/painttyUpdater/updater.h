@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QApplication>
+#include <QTextStream>
 class Socket;
 
 class Updater : public QObject
@@ -10,6 +11,7 @@ class Updater : public QObject
     
 public:
     Updater();
+    void run();
     void checkNewestVersion();
     bool download();
     bool overlap();
@@ -32,6 +34,7 @@ private:
     Socket *socket;
     State state_;
     QTimer *timer_;
+    QTextStream output;
 };
 
 #endif // MAINWINDOW_H

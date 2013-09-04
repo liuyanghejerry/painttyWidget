@@ -112,6 +112,13 @@ void RoomListDialog::connectToManager()
     ui->progressBar->setRange(0,0);
     auto& client_socket = Singleton<ClientSocket>::instance();
 
+    disconnect(&client_socket, &ClientSocket::managerPack,
+            0, 0);
+    disconnect(&client_socket, &ClientSocket::connected,
+            0, 0);
+    disconnect(&client_socket, &ClientSocket::disconnected,
+            0, 0);
+
     connect(&client_socket, &ClientSocket::managerPack,
             this, &RoomListDialog::onManagerData);
     connect(&client_socket, &ClientSocket::connected,
@@ -145,7 +152,7 @@ void RoomListDialog::connectToManager()
 
 //    auto f = [this](){
 //        if(!Singleton<ClientSocket>::instance().isConnected()){
-//            GradualBox::showText(tr("It seems we cannot connect to the server"), true);
+//            state_ = ConnectFailed;
 //        }
 //    };
 
@@ -242,6 +249,8 @@ void RoomListDialog::requestRoomList()
         ui->progressBar->setRange(0,0);
     }else{
         qDebug()<<"Unexpected State in requestRoomList"<<state_;
+//        state_ = ConnectFailed;
+//        GradualBox::showText(tr("Seems you have trouble on connecting to server."));
     }
 }
 
@@ -276,6 +285,7 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
 
 void RoomListDialog::connectRoomByPort(const int &p)
 {
+    state_ = RoomConnecting;
     auto& client_socket = Singleton<ClientSocket>::instance();
     QHostAddress address = client_socket.address();
 
@@ -298,6 +308,7 @@ void RoomListDialog::connectRoomByPort(const int &p)
 
 void RoomListDialog::tryJoinRoomManually()
 {
+    state_ = RoomConnecting;
     int current = roomsInfo[roomName_].value("currentload").toDouble();
     int max = roomsInfo[roomName_].value("maxload").toDouble();
 
@@ -319,6 +330,9 @@ void RoomListDialog::tryJoinRoomManually()
                                        QString(),
                                        &isOk);
         if(!isOk) {
+            Singleton<ClientSocket>::instance().close();
+            Singleton<ClientSocket>::instance().reset();
+            connectToManager();
             return;
         }
         passwd.truncate(16);
@@ -341,6 +355,7 @@ void RoomListDialog::tryJoinRoomAutomated()
     if(!collectUserInfo()){
         return;
     }
+    state_ = RoomConnecting;
     QJsonObject map;
     map.insert("request", QString("login"));
     map.insert("name", nickName_);
@@ -357,6 +372,7 @@ void RoomListDialog::tryJoinRoomByUrl(const ClientSocket::RoomUrl& url)
     if(!collectUserInfo()){
         return;
     }
+    state_ = RoomConnecting;
     QJsonObject map;
     map.insert("request", QString("login"));
     map.insert("name", nickName_);
@@ -370,6 +386,7 @@ void RoomListDialog::tryJoinRoomByUrl(const ClientSocket::RoomUrl& url)
 
 void RoomListDialog::connectRoomByUrl(const QString& url)
 {
+    state_ = RoomConnecting;
     auto& client_socket = Singleton<ClientSocket>::instance();
     auto decoded_addr = client_socket.decodeRoomUrl(url);
 
