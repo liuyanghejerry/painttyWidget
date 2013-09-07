@@ -43,5 +43,6 @@
         <file>iconset/ui/lock.png</file>
         <file>iconset/ui/visibility-off.png</file>
         <file>iconset/ui/visibility-on.png</file>
+        <file>iconset/ui/unlock.png</file>
     </qresource>
 </RCC>
