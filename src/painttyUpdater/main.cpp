@@ -4,6 +4,9 @@
 #include <QStringList>
 #include <QSettings>
 #include <QDebug>
+#ifdef Q_OS_MACX
+#include <QDir>
+#endif
 #include "../common/common.h"
 
 void initTranslation()
