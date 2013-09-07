@@ -467,6 +467,8 @@ void MainWindow::shortcutInit()
             this, &MainWindow::about);
     connect(ui->actionAbout_Qt, &QAction::triggered,
             &QApplication::aboutQt);
+    connect(ui->actionExport_to_PSD, &QAction::triggered,
+            this, &MainWindow::exportToPSD);
     connect(ui->actionClose_Room, &QAction::triggered,
             [&](){
         QJsonObject obj;
@@ -1024,6 +1026,24 @@ void MainWindow::exportVisibleToFile()
     }
     QImage image = ui->canvas->currentCanvas();
     image.save(fileName, "PNG");
+}
+
+void MainWindow::exportToPSD()
+{
+    QString fileName =
+            QFileDialog::getSaveFileName(this,
+                                         tr("Export contents to psd file"),
+                                         QDir::currentPath(),
+                                         tr("Photoshop Images (*.psd)"));
+    fileName = fileName.trimmed();
+    if(fileName.isEmpty()){
+        return;
+    }
+    if(!fileName.endsWith(".psd", Qt::CaseInsensitive)){
+        fileName = fileName + ".psd";
+    }
+    //QImage image = ui->canvas->currentCanvas();
+
 }
 
 void MainWindow::exportAllToClipboard()
