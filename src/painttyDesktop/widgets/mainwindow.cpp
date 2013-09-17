@@ -467,8 +467,8 @@ void MainWindow::shortcutInit()
             this, &MainWindow::about);
     connect(ui->actionAbout_Qt, &QAction::triggered,
             &QApplication::aboutQt);
-    connect(ui->actionExport_to_PSD, &QAction::triggered,
-            this, &MainWindow::exportToPSD);
+//    connect(ui->actionExport_to_PSD, &QAction::triggered,
+//            this, &MainWindow::exportToPSD);
     connect(ui->actionClose_Room, &QAction::triggered,
             [&](){
         QJsonObject obj;
@@ -1028,6 +1028,7 @@ void MainWindow::exportVisibleToFile()
     image.save(fileName, "PNG");
 }
 
+// TODO
 void MainWindow::exportToPSD()
 {
     QString fileName =

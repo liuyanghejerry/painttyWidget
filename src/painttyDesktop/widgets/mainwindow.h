@@ -30,6 +30,7 @@ public slots:
     void exportVisibleToFile();
     void exportAllToClipboard();
     void exportVisibleToClipboard();
+    void exportToPSD();
     void resetView();
     void about();
     void onPickColorComplete();
