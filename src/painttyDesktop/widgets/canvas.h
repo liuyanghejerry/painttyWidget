@@ -52,16 +52,22 @@ signals:
                         const QString clientid,
                         const qreal pressure=1.0);
     void membersSorted(QList<MemberSection> list);
+protected:
+    void timerEvent(QTimerEvent * event);
 private:
     BlockLevel blocklevel_;
     QVariantList tempStore;
+    QList<QJsonObject> incoming_store_;
     // Warning, access memberHistory_ across thread
     // via member functions is not thread-safe
     QHash<QString, MemberSection> memberHistory_;
+    int send_timer_id_;
+    int parse_timer_id_;
     void upsertFootprint(const QString& id, const QString& name, const QPoint &point);
     void upsertFootprint(const QString& id, const QString& name);
     QByteArray toJson(const QVariant &m);
     QVariant fromJson(const QByteArray &d);
+    void parseIncoming();
 };
 
 class Canvas : public QWidget
