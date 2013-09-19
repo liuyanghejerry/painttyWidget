@@ -212,6 +212,7 @@ void MainWindow::layerWidgetInit()
         addLayer();
     }
     ui->layerWidget->itemAt(0)->setSelect(true);
+    ui->canvas->loadLayers();
 }
 
 void MainWindow::colorGridInit()

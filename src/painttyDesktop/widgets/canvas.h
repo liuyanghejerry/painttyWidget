@@ -52,6 +52,7 @@ signals:
                         const QString clientid,
                         const qreal pressure=1.0);
     void membersSorted(QList<MemberSection> list);
+    void archiveParsed();
 protected:
     void timerEvent(QTimerEvent * event);
 private:
@@ -63,11 +64,14 @@ private:
     QHash<QString, MemberSection> memberHistory_;
     int send_timer_id_;
     int parse_timer_id_;
+    bool archive_loaded_;
+    bool is_parsed_signal_sent;
     void upsertFootprint(const QString& id, const QString& name, const QPoint &point);
     void upsertFootprint(const QString& id, const QString& name);
     QByteArray toJson(const QVariant &m);
     QVariant fromJson(const QByteArray &d);
     void parseIncoming();
+    void onArchiveLoaded();
 };
 
 class Canvas : public QWidget
@@ -108,6 +112,8 @@ public slots:
     void layerSelected(const QString &name);
     void changeBrush(const QString &name);
     void onColorPicker(bool in);
+    void loadLayers();
+    void saveLayers();
 
 signals:
     void pickColorComplete();
@@ -152,8 +158,8 @@ private:
     void updateCursor();
     void tryJitterCorrection();
     QImage appendAuthorSignature(QImage target);
-
     BrushPointer brushFactory(const QString &name);
+
 
     bool inPicker;
     bool drawing;

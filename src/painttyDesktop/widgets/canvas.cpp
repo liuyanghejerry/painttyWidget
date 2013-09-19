@@ -11,6 +11,7 @@
 #include <QTimer>
 #include <QTimerEvent>
 #include <QDateTime>
+#include <QDir>
 #include <QStaticText>
 #include <QtCore/qmath.h>
 
@@ -117,6 +118,10 @@ Canvas::Canvas(QWidget *parent) :
             backend_, &CanvasBackend::requestMembers);
     connect(this, &Canvas::requestClearMembers,
             backend_, &CanvasBackend::clearMembers);
+    connect(backend_, &CanvasBackend::archiveParsed,
+            [this](){
+        setEnabled(true);
+    });
     connect(t, &QTimer::timeout,
             [this](){
         emit requestSortedMembers(MSI::Count);
@@ -126,9 +131,7 @@ Canvas::Canvas(QWidget *parent) :
     if(client_socket.schedualDataLength()){
         this->setEnabled(false);
     }
-    connect(&client_socket,
-            &ClientSocket::archiveLoaded,
-            this, &Canvas::setEnabled);
+
 }
 
 /*!
@@ -139,6 +142,7 @@ Canvas::Canvas(QWidget *parent) :
 
 Canvas::~Canvas()
 {
+    saveLayers();
 }
 
 QImage Canvas::currentCanvas()
@@ -347,6 +351,37 @@ void Canvas::setBrushHardness(int h)
 BrushPointer Canvas::brushFactory(const QString &name)
 {
     return Singleton<BrushManager>::instance().makeBrush(name);
+}
+
+void Canvas::loadLayers()
+{
+    QString dir_name = QString("%1/%2").arg("cache").arg(Singleton<ClientSocket>::instance().archiveSignature());
+    for(int i=layers.count()-1;i>0;--i){
+        QString img_name = QString("%1/%2.png").arg(dir_name).arg(i);
+        QImage img(img_name);
+        if(img.isNull()){
+            break;
+        }
+        QPainter painter(layers.layerFrom(i)->imagePtr());
+        painter.drawImage(0, 0, img);
+    }
+}
+
+void Canvas::saveLayers()
+{
+    qDebug()<<"saveLayers() called";
+    QString dir_name = QString("%1/%2")
+            .arg("cache")
+            .arg(Singleton<ClientSocket>::instance().archiveSignature());
+    QDir::current().mkpath(dir_name);
+    for(int i=layers.count()-1;i>0;--i){
+        if(!layers.layerFrom(i)->isTouched()){
+            qDebug()<<"layer "<<i<<"is not touched, skip";
+            return;
+        }
+        QString img_name = QString("%1/%2.png").arg(dir_name).arg(i);
+        qDebug()<<"save layer to png:"<<layers.layerFrom(i)->imageConstPtr()->save(img_name);
+    }
 }
 
 /*!
@@ -1001,14 +1036,13 @@ CanvasBackend::CanvasBackend(QObject *parent)
     :QObject(parent),
       blocklevel_(MEDIUM),
       send_timer_id_(0),
-      parse_timer_id_(0)
+      parse_timer_id_(0),
+      archive_loaded_(false),
+      is_parsed_signal_sent(false)
 {
     send_timer_id_ = this->startTimer(1000*10);
     parse_timer_id_ = this->startTimer(30);
-//    QTimer *sendTimer = new QTimer(this);
-//    sendTimer->setInterval(1000*10);
-//    connect(sendTimer, &QTimer::timeout,
-//            this, &CanvasBackend::commit);
+
     auto& client_socket = Singleton<ClientSocket>::instance();
 
     connect(&client_socket, &ClientSocket::dataPack,
@@ -1016,10 +1050,9 @@ CanvasBackend::CanvasBackend(QObject *parent)
     connect(this, &CanvasBackend::newDataGroup,
             &client_socket, static_cast<void (ClientSocket::*)(const QByteArray&)>
             (&ClientSocket::sendDataPack));
-//    QTimer *parseTimer = new QTimer(this);
-//    connect(parseTimer, &QTimer::timeout,
-//            this, &CanvasBackend::parseIncoming);
-//    parseTimer->start(30);
+    connect(&client_socket,
+            &ClientSocket::archiveLoaded,
+            this, &CanvasBackend::onArchiveLoaded);
 }
 
 CanvasBackend::~CanvasBackend()
@@ -1185,6 +1218,11 @@ void CanvasBackend::parseIncoming()
         }else if(action == "block"){
             dataBlock(obj.toVariantMap());
         }
+    }else{
+        if(archive_loaded_ && !is_parsed_signal_sent){
+            emit archiveParsed();
+            is_parsed_signal_sent = true;
+        }
     }
 }
 
@@ -1274,4 +1312,9 @@ QByteArray CanvasBackend::toJson(const QVariant &m)
 QVariant CanvasBackend::fromJson(const QByteArray &d)
 {
     return QJsonDocument::fromJson(d).toVariant();
+}
+
+void CanvasBackend::onArchiveLoaded()
+{
+    archive_loaded_ = true;
 }
