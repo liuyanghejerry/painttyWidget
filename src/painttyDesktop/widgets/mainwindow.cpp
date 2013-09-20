@@ -972,6 +972,8 @@ void MainWindow::closeEvent( QCloseEvent * event )
     msgBox.setWindowFlags(Qt::WindowTitleHint
                           | Qt::CustomizeWindowHint);
     msgBox.show();
+    // This is a workaround to make msgBox text shown
+    QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
