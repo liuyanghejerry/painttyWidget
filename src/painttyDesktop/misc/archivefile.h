@@ -19,6 +19,7 @@ public:
     QString signature() const;
     QString dirName() const;
 signals:
+    void newSignature(const QString&);
     
 public slots:
     void setName(const QString &name);

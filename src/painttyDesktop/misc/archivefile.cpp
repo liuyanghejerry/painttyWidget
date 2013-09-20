@@ -53,8 +53,10 @@ void ArchiveFile::appendData(const QByteArray &data)
 void ArchiveFile::setSignature(const QString& sign)
 {
     qDebug()<<"old sign"<<signature_<<"new"<<sign;
-    if(!signature_.isEmpty() && sign != signature_)
+    if(!signature_.isEmpty() && sign != signature_){
         prune();
+        emit newSignature(sign);
+    }
     signature_ = sign;
 
     QCryptographicHash crypto(QCryptographicHash::Sha1);
@@ -125,7 +127,7 @@ QString ArchiveFile::dirName() const
 bool ArchiveFile::createFile()
 {
     QCryptographicHash crypto(QCryptographicHash::Sha1);
-    crypto.addData(name_.toUtf8());
+    crypto.addData((name_).toUtf8());
     auto hash = crypto.result().toHex();
     dir_name_ = QString("%1/%2")
             .arg("cache")

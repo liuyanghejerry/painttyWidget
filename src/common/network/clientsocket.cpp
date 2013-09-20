@@ -290,7 +290,6 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
             leftDataLength_ -= bytes.length()+4;
             if(!no_save_)
                 archive_.appendData(pack(bytes));
-            qDebug()<<"leftDataLength_"<<leftDataLength_;
             if(leftDataLength_ <= 0){
                 emit archiveLoaded(schedualDataLength_);
             }

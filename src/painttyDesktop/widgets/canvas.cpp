@@ -366,6 +366,10 @@ void Canvas::loadLayers()
         QPainter painter(layers.layerFrom(i)->imagePtr());
         painter.drawImage(0, 0, img);
     }
+    connect(&Singleton<ArchiveFile>::instance(), &ArchiveFile::newSignature,
+            [this](){
+        this->clearAllLayer();
+    });
 }
 
 void Canvas::saveLayers()
