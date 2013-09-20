@@ -980,6 +980,11 @@ void MainWindow::closeEvent( QCloseEvent * event )
                       ui->colorGrid->dataExport());
     settings.setValue("mainwindow/view",
                       saveState());
+    bool skip_replay = settings.value("canvas/skip_replay", false).toBool();
+    if(skip_replay){
+        qDebug()<<"skip replay detected, save layers";
+        ui->canvas->saveLayers();
+    }
     settings.sync();
 
     auto& client_socket = Singleton<ClientSocket>::instance();

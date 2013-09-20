@@ -1,9 +1,13 @@
 #include "clientsocket.h"
 #include "../../common/binary.h"
+#include "../../common/common.h"
 #include "../misc/archivefile.h"
+#include "../misc/singleton.h"
 #include <QJsonDocument>
+#include <QApplication>
 #include <QJsonObject>
 #include <QMetaMethod>
+#include <QSettings>
 #include <QTimer>
 #include <QRegularExpression>
 
@@ -29,7 +33,7 @@ ClientSocket::ClientSocket(QObject *parent) :
     leftDataLength_(0),
     poolEnabled_(false),
     timer_(new QTimer(this)),
-    archive_(new ArchiveFile(this)),
+    archive_(Singleton<ArchiveFile>::instance()),
     no_save_(false),
     remove_after_close_(false)
 {
@@ -59,6 +63,9 @@ bool ClientSocket::isPoolEnabled()
 void ClientSocket::setSchedualDataLength(quint64 length)
 {
     leftDataLength_ = schedualDataLength_ = length;
+    if(leftDataLength_ <= 0){
+        emit archiveLoaded(schedualDataLength_);
+    }
 }
 
 quint64 ClientSocket::schedualDataLength()
@@ -68,20 +75,28 @@ quint64 ClientSocket::schedualDataLength()
 
 QString ClientSocket::archiveSignature() const
 {
-    return archive_->signature();
+    return archive_.signature();
 }
 
 void ClientSocket::setArchiveSignature(const QString &as)
 {
-    archive_->setSignature(as);
-    no_save_ = true;
-    unpack(archive_->readAll());
-    no_save_ = false;
+    archive_.setSignature(as);
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    bool skip_replay = settings.value("canvas/skip_replay", false).toBool();
+    if(!skip_replay){
+        no_save_ = true;
+        unpack(archive_.readAll());
+        no_save_ = false;
+    }else{
+        leftDataLength_ -= archive_.size();
+    }
 }
 
 quint64 ClientSocket::archiveSize() const
 {
-    return archive_->size();
+    return archive_.size();
 }
 
 void ClientSocket::setRoomCloseFlag()
@@ -119,7 +134,7 @@ QString ClientSocket::userName() const
 void ClientSocket::setRoomName(const QString &name)
 {
     roomname_ = name;
-    archive_->setName(name);
+    archive_.setName(name);
 }
 
 QString ClientSocket::roomName() const
@@ -184,11 +199,9 @@ void ClientSocket::sendManagerPack(const QJsonObject &content)
 
 void ClientSocket::close()
 {
-    if(archive_){
-        archive_->flush();
-    }
+    archive_.flush();
     if(remove_after_close_){
-        archive_->remove();
+        archive_.remove();
     }
     Socket::close();
 }
@@ -276,7 +289,8 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
             emit dataPack(obj);
             leftDataLength_ -= bytes.length()+4;
             if(!no_save_)
-                archive_->appendData(pack(bytes));
+                archive_.appendData(pack(bytes));
+            qDebug()<<"leftDataLength_"<<leftDataLength_;
             if(leftDataLength_ <= 0){
                 emit archiveLoaded(schedualDataLength_);
             }

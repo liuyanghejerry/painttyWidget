@@ -104,7 +104,7 @@ private:
     QList<QByteArray> pool_;
     bool poolEnabled_;
     QTimer *timer_;
-    ArchiveFile* archive_;
+    ArchiveFile& archive_;
     bool no_save_;
     bool remove_after_close_;
     const static int WAIT_TIME = 1000;

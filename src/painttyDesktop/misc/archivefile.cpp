@@ -117,19 +117,27 @@ QString ArchiveFile::signature() const
     return signature_;
 }
 
+QString ArchiveFile::dirName() const
+{
+    return dir_name_;
+}
+
 bool ArchiveFile::createFile()
 {
-    auto isGood = QDir::current().mkpath("cache");
-    if(!isGood){
-        qWarning()<<"Cannot create path: cache";
-        return isGood;
-    }
     QCryptographicHash crypto(QCryptographicHash::Sha1);
     crypto.addData(name_.toUtf8());
     auto hash = crypto.result().toHex();
-    QString filename = QString("%1%2")
-            .arg("cache/")
+    dir_name_ = QString("%1/%2")
+            .arg("cache")
             .arg(QString::fromUtf8(hash));
+
+    auto isGood = QDir::current().mkpath(dir_name_);
+    if(!isGood){
+        qWarning()<<"Cannot create path: "<<dir_name_;
+        return isGood;
+    }
+    QString filename = QString("%1/data")
+            .arg(dir_name_);
 
     if(backend_){
         if(backend_->isOpen())

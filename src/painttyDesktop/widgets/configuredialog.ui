@@ -198,6 +198,13 @@ Use at your own risk.</string>
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="skip_replay">
+         <property name="text">
+          <string>Always skip replay if possible</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>

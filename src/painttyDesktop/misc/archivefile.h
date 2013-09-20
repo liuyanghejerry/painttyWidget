@@ -17,6 +17,7 @@ public:
     quint64 size() const;
     QString name() const;
     QString signature() const;
+    QString dirName() const;
 signals:
     
 public slots:
@@ -29,6 +30,7 @@ public slots:
 protected:
     QString signature_;
     QString name_;
+    QString dir_name_;
     QFile* backend_;
 private:
     Q_DISABLE_COPY(ArchiveFile)
