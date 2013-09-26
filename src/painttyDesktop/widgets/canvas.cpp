@@ -1127,7 +1127,7 @@ void CanvasBackend::onIncomingData(const QJsonObject& obj)
 
 void CanvasBackend::parseIncoming()
 {
-    for(int i=0;i<qBound(3, (incoming_store_.length() >>10), 10);++i){
+    for(int i=0;i<3;++i){
         if(incoming_store_.length()){
             auto obj = incoming_store_.takeFirst();
 
