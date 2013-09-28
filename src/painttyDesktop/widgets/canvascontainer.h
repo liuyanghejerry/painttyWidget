@@ -26,6 +26,7 @@ signals:
 public slots:
     void setScaleFactor(qreal factor);
     void setSmoothScale(bool smooth);
+    void setRotation(int degree);
 
 private:
     QGraphicsScene *scene;
