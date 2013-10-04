@@ -18,7 +18,16 @@
     <normaloff>:/iconset/icon.png</normaloff>:/iconset/icon.png</iconset>
   </property>
   <widget class="CanvasContainer" name="centralWidget">
-   <widget class="Canvas" name="canvas" native="true"/>
+   <widget class="Canvas" name="canvas" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>100</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="windowTitle">
@@ -93,7 +102,7 @@
      <item row="0" column="0">
       <widget class="QTextEdit" name="textEdit">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>3</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -109,7 +118,7 @@
      <item row="0" column="1">
       <widget class="MemberListWidget" name="memberList">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>1</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -124,7 +133,7 @@
        <item>
         <widget class="QLineEdit" name="lineEdit">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>1</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>

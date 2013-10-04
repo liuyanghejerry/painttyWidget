@@ -91,6 +91,8 @@ Canvas::Canvas(QWidget *parent) :
     brush_manager.addBrush(p4);
     setJitterCorrectionLevel(5);
 
+    auto& client_socket = Singleton<ClientSocket>::instance();
+
     worker_->start();
     backend_->moveToThread(worker_);
     connect(backend_, &CanvasBackend::remoteDrawLine,
@@ -105,6 +107,8 @@ Canvas::Canvas(QWidget *parent) :
             backend_, &CanvasBackend::onDataBlock);
     connect(this, &Canvas::paintActionComplete,
             backend_, &CanvasBackend::commit);
+    connect(this, &Canvas::parsePaused,
+            backend_, &CanvasBackend::pauseParse);
 
     // TODO: proper use of signal requestSortedMembers,
     // instead of using QTimer
@@ -128,7 +132,7 @@ Canvas::Canvas(QWidget *parent) :
         emit requestSortedMembers(MSI::Count);
     });
     t->start(500);
-    auto& client_socket = Singleton<ClientSocket>::instance();
+
     if(client_socket.schedualDataLength()){
         this->setEnabled(false);
     }
@@ -143,6 +147,7 @@ Canvas::Canvas(QWidget *parent) :
 
 Canvas::~Canvas()
 {
+    pause();
 }
 
 QImage Canvas::currentCanvas()
@@ -271,7 +276,7 @@ void Canvas::tryJitterCorrection()
         }
 
         qreal distance = qAbs(distance_up / distance_down);
-//        qDebug()<<"distance"<<distance;
+        //        qDebug()<<"distance"<<distance;
 
         if(distance <= jitterCorrectionLevel_internal_ ){
             return true;
@@ -293,7 +298,7 @@ void Canvas::tryJitterCorrection()
         }
     }
     // you can see the correction rate.
-//    qDebug()<<"correction rate: "<<qreal(amount-redudent)/amount *100<<"%";
+    //    qDebug()<<"correction rate: "<<qreal(amount-redudent)/amount *100<<"%";
 }
 
 /*!
@@ -384,6 +389,11 @@ void Canvas::saveLayers()
         QString img_name = QString("%1/%2.png").arg(dir_name).arg(i);
         layers.layerFrom(i)->imageConstPtr()->save(img_name);
     }
+}
+
+void Canvas::pause()
+{
+    emit parsePaused();
 }
 
 /*!
@@ -1040,10 +1050,11 @@ CanvasBackend::CanvasBackend(QObject *parent)
       send_timer_id_(0),
       parse_timer_id_(0),
       archive_loaded_(false),
-      is_parsed_signal_sent(false)
+      is_parsed_signal_sent(false),
+      pause_(false)
 {
     send_timer_id_ = this->startTimer(1000*10);
-    parse_timer_id_ = this->startTimer(30);
+    parse_timer_id_ = this->startTimer(50);
 
     auto& client_socket = Singleton<ClientSocket>::instance();
 
@@ -1095,6 +1106,16 @@ void CanvasBackend::commit()
 void CanvasBackend::setBlockLevel(const BlockLevel le)
 {
     blocklevel_ = le;
+}
+
+void CanvasBackend::pauseParse()
+{
+    pause_ = true;
+}
+
+void CanvasBackend::resumeParse()
+{
+    pause_ = false;
 }
 
 CanvasBackend::BlockLevel CanvasBackend::blockLevel() const
@@ -1301,7 +1322,9 @@ void CanvasBackend::timerEvent(QTimerEvent * event)
     if(event->timerId() == send_timer_id_){
         this->commit();
     }else if(event->timerId() == parse_timer_id_){
-        this->parseIncoming();
+        if(!pause_){
+            this->parseIncoming();
+        }
     }
 }
 

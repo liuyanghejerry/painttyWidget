@@ -37,7 +37,6 @@ const static QString HOST_ADDR[] = {HOST_ADDR_IPV4,
                                     HOST_ADDR_IPV6};
 
 
-#ifdef PAINTTY_UPDATER
 
 const static QString UPDATER_ADDR[] = {UPDATER_ADDR_IPV4,
                                     UPDATER_ADDR_IPV6};
@@ -50,14 +49,11 @@ static const char* DOWNLOAD_URL = "";
 static const char* DOWNLOAD_URL = "http://mrspaint.oss.aliyuncs.com/0.4/%E8%8C%B6%E7%BB%98%E5%90%9B.app.zip";
 #endif
 
-#endif
-
-#ifdef PAINTTY_DESKTOP
 const qreal MAX_SCALE_FACTOR = 5.0;
 const qreal MIN_SCALE_FACTOR = 0.125;
 
 template<typename Func>
-void deferJob(Func f, int ms=2000)
+void delayJob(Func f, int ms=2000)
 {
     if( std::is_function<decltype(f)>::value
             || std::is_object<decltype(f)>::value){
@@ -65,15 +61,13 @@ void deferJob(Func f, int ms=2000)
         t->setSingleShot(true);
         QObject::connect(t, &QTimer::timeout,
                 [&f, t](){
-            qDebug()<<"deferJob";
+            qDebug()<<"delayJob";
             f();
             t->deleteLater();
         });
         t->start(ms);
     }
 }
-
-#endif
 
 } // namespace GlobalDef
 

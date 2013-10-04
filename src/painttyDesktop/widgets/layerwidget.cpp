@@ -44,7 +44,7 @@ QSize LayerWidget::sizeHint () const
 
 QSize LayerWidget::minimumSizeHint () const
 {
-    return QSize(100, 20);
+    return QSize(100, 20*5);
 }
 
 int LayerWidget::itemCount()
