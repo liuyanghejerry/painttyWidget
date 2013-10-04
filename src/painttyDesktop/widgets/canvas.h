@@ -38,6 +38,8 @@ public slots:
     void requestMembers(MemberSectionIndex index);
     void clearMembers();
     void setBlockLevel(const BlockLevel le);
+    void pauseParse();
+    void resumeParse();
 signals:
     void newDataGroup(const QByteArray& d);
     void remoteDrawPoint(const QPoint &point,
@@ -66,6 +68,7 @@ private:
     int parse_timer_id_;
     bool archive_loaded_;
     bool is_parsed_signal_sent;
+    bool pause_;
     void upsertFootprint(const QString& id, const QString& name, const QPoint &point);
     void upsertFootprint(const QString& id, const QString& name);
     QByteArray toJson(const QVariant &m);
@@ -114,6 +117,7 @@ public slots:
     void onColorPicker(bool in);
     void loadLayers();
     void saveLayers();
+    void pause();
 
 signals:
     void pickColorComplete();
@@ -125,6 +129,7 @@ signals:
                                = CanvasBackend::MemberSectionIndex::Count);
     void requestClearMembers();
     void canvasExported(const QPixmap& pic);
+    void parsePaused();
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);

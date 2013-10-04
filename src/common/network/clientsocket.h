@@ -89,6 +89,7 @@ public slots:
     void sendDataPack(const QJsonObject &content);
     void sendCmdPack(const QJsonObject &content);
     void sendManagerPack(const QJsonObject &content);
+    void cancelPendings();
     void close() Q_DECL_OVERRIDE;
 private:
     Q_DISABLE_COPY(ClientSocket)
@@ -107,6 +108,7 @@ private:
     ArchiveFile& archive_;
     bool no_save_;
     bool remove_after_close_;
+    bool canceled_;
     const static int WAIT_TIME = 1000;
 private slots:
     ParserResult parserPack(const QByteArray& data);

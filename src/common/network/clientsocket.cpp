@@ -35,7 +35,8 @@ ClientSocket::ClientSocket(QObject *parent) :
     timer_(new QTimer(this)),
     archive_(Singleton<ArchiveFile>::instance()),
     no_save_(false),
-    remove_after_close_(false)
+    remove_after_close_(false),
+    canceled_(false)
 {
     connect(this, &ClientSocket::newData,
             this, &ClientSocket::onPending);
@@ -197,6 +198,12 @@ void ClientSocket::sendManagerPack(const QJsonObject &content)
     this->sendData(assamblePack(true, MANAGER, jsonToBuffer(content)));
 }
 
+void ClientSocket::cancelPendings()
+{
+    canceled_ = true;
+    pool_.clear();
+}
+
 void ClientSocket::close()
 {
     archive_.flush();
@@ -237,6 +244,10 @@ QByteArray ClientSocket::assamblePack(bool compress, PACK_TYPE pt, const QByteAr
 
 void ClientSocket::onPending(const QByteArray& bytes)
 {
+    if(canceled_){
+        return;
+    }
+
     if(poolEnabled_){
         pool_.append(bytes);
     }else{
@@ -252,7 +263,7 @@ void ClientSocket::onPending(const QByteArray& bytes)
 void ClientSocket::processPending()
 {
     //    qDebug()<<"process pending";
-    while(!pool_.isEmpty()){
+    while(!pool_.isEmpty() && !canceled_){
         if(dispatch(pool_.first())){
             pool_.pop_front();
         }else{
@@ -335,6 +346,7 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
 void ClientSocket::reset()
 {
     poolEnabled_ = false;
+    canceled_ = false;
     username_.clear();
     clientid_.clear();
     roomname_.clear();
