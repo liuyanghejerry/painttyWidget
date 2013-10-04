@@ -22,6 +22,7 @@
 #include <QProcess>
 #include <QTimer>
 #include <QScriptEngine>
+#include <future>
 
 #include "../misc/singleshortcut.h"
 #include "layerwidget.h"
@@ -212,6 +213,7 @@ void MainWindow::layerWidgetInit()
         addLayer();
     }
     ui->layerWidget->itemAt(0)->setSelect(true);
+    ui->canvas->loadLayers();
 }
 
 void MainWindow::colorGridInit()
@@ -383,7 +385,7 @@ void MainWindow::toolbarInit()
                                     " for IPv4 users."));
         };
 
-        GlobalDef::deferJob(f, 5000);
+        GlobalDef::delayJob(f, 5000);
     }
 }
 
@@ -521,7 +523,7 @@ void MainWindow::socketInit()
             requestCheckout();
         }
     };
-    GlobalDef::deferJob<decltype(fff)>(fff);
+    std::async(std::launch::async, fff);
     QTimer *t = new QTimer(this);
     connect(t, &QTimer::timeout,
             this, &MainWindow::requestOnlinelist);
@@ -962,6 +964,11 @@ void MainWindow::deleteLayer(const QString &name)
 
 void MainWindow::closeEvent( QCloseEvent * event )
 {
+    auto& client_socket = Singleton<ClientSocket>::instance();
+
+    client_socket.cancelPendings();
+    ui->canvas->pause();
+
     QMessageBox msgBox;
     msgBox.setText(tr("Waiting for sync, please do not close.\n"\
                    "This will cost you 1 minute at most."));
@@ -971,6 +978,8 @@ void MainWindow::closeEvent( QCloseEvent * event )
     msgBox.setWindowFlags(Qt::WindowTitleHint
                           | Qt::CustomizeWindowHint);
     msgBox.show();
+    // This is a workaround to make msgBox text shown
+    QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
@@ -979,14 +988,18 @@ void MainWindow::closeEvent( QCloseEvent * event )
                       ui->colorGrid->dataExport());
     settings.setValue("mainwindow/view",
                       saveState());
+    bool skip_replay = settings.value("canvas/skip_replay", false).toBool();
+    if(skip_replay){
+        qDebug()<<"skip replay detected, save layers";
+        ui->canvas->saveLayers();
+    }
     settings.sync();
-
-    auto& client_socket = Singleton<ClientSocket>::instance();
 
     disconnect(&client_socket, &ClientSocket::disconnected,
             this, &MainWindow::onServerDisconnected);
 
     client_socket.close();
+    client_socket.reset();
     msgBox.close();
 
     event->accept();

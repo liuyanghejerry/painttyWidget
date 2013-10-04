@@ -1,5 +1,5 @@
 #include "socket.h"
-
+#include <future>
 #include <QTcpSocket>
 #include <QBuffer>
 #include <QApplication>
@@ -155,8 +155,8 @@ void Socket::onReceipt()
             emit newData(info);
             QApplication::processEvents();
             commandStarted = false;
-            /* Recursive call to spare code =), there may be still data pending */
-            onReceipt();
+            // prevent stackoverflow
+            std::async(std::launch::async, [this]{ onReceipt(); });
         }
     }
 }

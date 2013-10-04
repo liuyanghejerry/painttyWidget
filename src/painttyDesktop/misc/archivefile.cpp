@@ -53,8 +53,10 @@ void ArchiveFile::appendData(const QByteArray &data)
 void ArchiveFile::setSignature(const QString& sign)
 {
     qDebug()<<"old sign"<<signature_<<"new"<<sign;
-    if(!signature_.isEmpty() && sign != signature_)
+    if(!signature_.isEmpty() && sign != signature_){
         prune();
+        emit newSignature(sign);
+    }
     signature_ = sign;
 
     QCryptographicHash crypto(QCryptographicHash::Sha1);
@@ -117,19 +119,27 @@ QString ArchiveFile::signature() const
     return signature_;
 }
 
+QString ArchiveFile::dirName() const
+{
+    return dir_name_;
+}
+
 bool ArchiveFile::createFile()
 {
-    auto isGood = QDir::current().mkpath("cache");
+    QCryptographicHash crypto(QCryptographicHash::Sha1);
+    crypto.addData((name_).toUtf8());
+    auto hash = crypto.result().toHex();
+    dir_name_ = QString("%1/%2")
+            .arg("cache")
+            .arg(QString::fromUtf8(hash));
+
+    auto isGood = QDir::current().mkpath(dir_name_);
     if(!isGood){
-        qWarning()<<"Cannot create path: cache";
+        qWarning()<<"Cannot create path: "<<dir_name_;
         return isGood;
     }
-    QCryptographicHash crypto(QCryptographicHash::Sha1);
-    crypto.addData(name_.toUtf8());
-    auto hash = crypto.result().toHex();
-    QString filename = QString("%1%2")
-            .arg("cache/")
-            .arg(QString::fromUtf8(hash));
+    QString filename = QString("%1/data")
+            .arg(dir_name_);
 
     if(backend_){
         if(backend_->isOpen())

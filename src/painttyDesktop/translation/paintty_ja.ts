@@ -219,39 +219,44 @@ Use at your own risk.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="63"/>
+        <location filename="../widgets/configuredialog.ui" line="203"/>
+        <source>Always skip replay if possible</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.cpp" line="65"/>
         <source>System Default</source>
         <translation type="unfinished">システムのデフォルト</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="82"/>
+        <location filename="../widgets/configuredialog.cpp" line="84"/>
         <source>Brushes</source>
         <translation type="unfinished">ブラシ</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="98"/>
+        <location filename="../widgets/configuredialog.cpp" line="100"/>
         <source>Immediately</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="100"/>
+        <location filename="../widgets/configuredialog.cpp" line="102"/>
         <source>When Release</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="242"/>
-        <location filename="../widgets/configuredialog.cpp" line="255"/>
+        <location filename="../widgets/configuredialog.cpp" line="253"/>
+        <location filename="../widgets/configuredialog.cpp" line="266"/>
         <source>Restart</source>
         <translation type="unfinished">再起動</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="243"/>
+        <location filename="../widgets/configuredialog.cpp" line="254"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="256"/>
+        <location filename="../widgets/configuredialog.cpp" line="267"/>
         <source>New settings will be applied on next start.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -453,25 +458,25 @@ Do you want to restart right now?</source>
         <translation>すべてのレイヤー</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="247"/>
+        <location filename="../widgets/mainwindow.cpp" line="248"/>
         <source>Brushes</source>
         <translation>ブラシ</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="283"/>
-        <location filename="../widgets/mainwindow.cpp" line="327"/>
+        <location filename="../widgets/mainwindow.cpp" line="284"/>
+        <location filename="../widgets/mainwindow.cpp" line="328"/>
         <source>%1
 Shortcut: %2</source>
         <translation>%1
 ショートカットキー：%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="307"/>
+        <location filename="../widgets/mainwindow.cpp" line="308"/>
         <source>Color Picker</source>
         <translation>スポイト</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="336"/>
+        <location filename="../widgets/mainwindow.cpp" line="337"/>
         <source>Brush Settings</source>
         <translation>ブラシ設定</translation>
     </message>
@@ -498,15 +503,15 @@ Do you want to restart right now?</source>
         <translation type="obsolete">言語変換は次の起動から有効になる。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="477"/>
-        <location filename="../widgets/mainwindow.cpp" line="557"/>
-        <location filename="../widgets/mainwindow.cpp" line="583"/>
-        <location filename="../widgets/mainwindow.cpp" line="897"/>
+        <location filename="../widgets/mainwindow.cpp" line="480"/>
+        <location filename="../widgets/mainwindow.cpp" line="560"/>
+        <location filename="../widgets/mainwindow.cpp" line="586"/>
+        <location filename="../widgets/mainwindow.cpp" line="920"/>
         <source>Sorry</source>
         <translation>すみません</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="478"/>
+        <location filename="../widgets/mainwindow.cpp" line="481"/>
         <source>Only room owner is authorized to close the room.
 It seems you&apos;re not room manager.</source>
         <translation>家主さんしかこのルームを閉じられませんから、
@@ -530,7 +535,7 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="372"/>
+        <location filename="../widgets/mainwindow.cpp" line="373"/>
         <source>Room Share</source>
         <translation type="unfinished"></translation>
     </message>
@@ -541,114 +546,124 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="381"/>
+        <location filename="../widgets/mainwindow.cpp" line="382"/>
         <source>Notice, we detected you&apos;re using IPv6 protocol which may result in that your Room URL is not available for IPv4 users.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="531"/>
+        <location filename="../widgets/mainwindow.cpp" line="534"/>
         <source>Server Connection Failed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="544"/>
+        <location filename="../widgets/mainwindow.cpp" line="547"/>
         <source>Closing</source>
         <translation>ルームを閉じます</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="545"/>
+        <location filename="../widgets/mainwindow.cpp" line="548"/>
         <source>Warning, the room owner has closed the room. This room will close when everyone leaves.
 Save your work if you like it!</source>
         <translation>警告、家主さんはこのルームを閉じました。誰もいなかったらこのルームを閉じますから、
 自慢な作品を保存するのをお忘れないください。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="558"/>
-        <location filename="../widgets/mainwindow.cpp" line="584"/>
+        <location filename="../widgets/mainwindow.cpp" line="561"/>
+        <location filename="../widgets/mainwindow.cpp" line="587"/>
         <source>Sorry, it seems you&apos;re notroom owner.</source>
         <translation>申し訳ないが、貴方樣は家主さんではありません。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="573"/>
+        <location filename="../widgets/mainwindow.cpp" line="576"/>
         <source>Close Request Completed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="587"/>
+        <location filename="../widgets/mainwindow.cpp" line="590"/>
         <source>Clear Request Completed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="611"/>
+        <location filename="../widgets/mainwindow.cpp" line="614"/>
         <source>Checkout Completed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="639"/>
+        <location filename="../widgets/mainwindow.cpp" line="642"/>
         <source>Online List Refreshed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="671"/>
-        <location filename="../widgets/mainwindow.cpp" line="694"/>
+        <location filename="../widgets/mainwindow.cpp" line="674"/>
+        <location filename="../widgets/mainwindow.cpp" line="697"/>
         <source>Error</source>
         <translation type="unfinished">エラー</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="672"/>
-        <location filename="../widgets/mainwindow.cpp" line="695"/>
+        <location filename="../widgets/mainwindow.cpp" line="675"/>
+        <location filename="../widgets/mainwindow.cpp" line="698"/>
         <source>Sorry, an error occurred.
 Error: %1, %2</source>
         <translation type="unfinished">エラーが発生しました、申し訳ありません。
 エラー: %1，%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="865"/>
-        <location filename="../widgets/mainwindow.cpp" line="886"/>
+        <location filename="../widgets/mainwindow.cpp" line="888"/>
+        <location filename="../widgets/mainwindow.cpp" line="909"/>
         <source>OMG</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="866"/>
+        <location filename="../widgets/mainwindow.cpp" line="889"/>
         <source>You&apos;re going to clear layer %1. All the work of that layerwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translation>全消しますか。 %1全てのレイヤーが全消されます、やり直しはできませんので、
 本当にいいですか。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="887"/>
+        <location filename="../widgets/mainwindow.cpp" line="910"/>
         <source>You&apos;re going to clear ALL LAYERS. All of work in this roomwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translation>全消しますか。全てのレイヤーが全消されます、やり直しはできませんので、
 本当にいいですか。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="898"/>
+        <location filename="../widgets/mainwindow.cpp" line="921"/>
         <source>Only room owner is authorized to clear the canvas.
 It seems you&apos;re not room manager.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="944"/>
+        <location filename="../widgets/mainwindow.cpp" line="967"/>
         <source>Waiting for sync, please do not close.
 This will cost you 1 minute at most.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="977"/>
+        <location filename="../widgets/mainwindow.cpp" line="1007"/>
         <source>Export all to file</source>
         <translation>全てのレイヤー画像を書き出し</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="979"/>
-        <location filename="../widgets/mainwindow.cpp" line="997"/>
+        <location filename="../widgets/mainwindow.cpp" line="1009"/>
+        <location filename="../widgets/mainwindow.cpp" line="1027"/>
         <source>Images (*.png)</source>
         <translation>画像 (*.png)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="995"/>
+        <location filename="../widgets/mainwindow.cpp" line="1025"/>
         <source>Export visible part to file</source>
         <translation>表示レイヤーを書き出し</translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwindow.cpp" line="1044"/>
+        <source>Export contents to psd file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwindow.cpp" line="1046"/>
+        <source>Photoshop Images (*.psd)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -880,12 +895,7 @@ Do you want to retry?</source>
         <translation>指先</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="80"/>
-        <source>No Updater?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../main.cpp" line="81"/>
+        <location filename="../main.cpp" line="79"/>
         <source>We cannot find updater.
 You may need to check update yourself.</source>
         <translation type="unfinished"></translation>
@@ -972,147 +982,147 @@ You may need to check update yourself.</source>
         <translation type="obsolete">通知：チャエ君はまだ試作の段階なんですから、チャットルームは50間しか新規できません。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="72"/>
-        <location filename="../widgets/roomlistdialog.cpp" line="616"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="73"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="642"/>
         <source>Rooms: %1, Members: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="100"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="101"/>
         <source>Room Name</source>
         <translation>ルーム名</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="101"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="102"/>
         <source>Privacy</source>
         <translation>公開制限</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="102"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="103"/>
         <source>Current Member</source>
         <translation>只今の入室者数</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="103"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="104"/>
         <source>Max Member</source>
         <translation>最大人数</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="176"/>
-        <location filename="../widgets/roomlistdialog.cpp" line="198"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="192"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="214"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="177"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="193"/>
         <source>You must have a valid nick name.</source>
         <translation>有効なニックネームを持たなければなりません。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="199"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="215"/>
         <source>You didn&apos;t choose any room.</source>
         <translation>ルームはご選択しておりません。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="220"/>
-        <location filename="../widgets/roomlistdialog.cpp" line="244"/>
-        <location filename="../widgets/roomlistdialog.cpp" line="552"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="236"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="262"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="578"/>
         <source>Error!</source>
         <translation type="unfinished">エラー！</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="221"/>
-        <location filename="../widgets/roomlistdialog.cpp" line="245"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="237"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="263"/>
         <source>Cannot connect to server.
 If this situation continues, you should consider &lt;a href=&apos;http://mrspaint.com&apos;&gt;update&lt;/a&gt; manually.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="513"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="539"/>
         <source>Succeed!</source>
         <translation type="unfinished">成功！</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="514"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="540"/>
         <source>Go get your room!</source>
         <translation type="unfinished">ルームに入室しましょう</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="548"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="574"/>
         <source>Error: %1, %2
 Do you want to retry?</source>
         <translation type="unfinished">エラー：%，%2
 もう一度しますか。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="598"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="624"/>
         <source>Private</source>
         <translation>非公開</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="598"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="624"/>
         <source>Public</source>
         <translation>公開</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="428"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="454"/>
         <source>Connection</source>
         <translation>接続</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="429"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="455"/>
         <source>Sorry, server has closed.</source>
         <translation>接続が切断されました、申し訳ありません。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="297"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="317"/>
         <source>Full loaded</source>
         <translation>満員</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="38"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="39"/>
         <source>Room Url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="39"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="40"/>
         <source>Input room url:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="298"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="318"/>
         <source>Cannot join a full loaded room.</source>
         <translation>ルームは満員のために、入室ができません。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="307"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="327"/>
         <source>Password</source>
         <translation>パスワード</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="308"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="328"/>
         <source>This is a private room, please input password:</source>
         <translation>これは非公開のルームなんで、入室用パスワードを入力してください：</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="463"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="489"/>
         <source>Error</source>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="464"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="490"/>
         <source>Sorry, an error occurred.
 Error: %1, %2</source>
         <translation>エラーが発生しました、申し訳ありません。
 エラー: %1，%2</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="650"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="676"/>
         <source>Notice</source>
         <translation>通知</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="651"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="677"/>
         <source>We&apos;re still in alpha test. This means the program may crash at any time in any condition.
 Use this software only when you accept it.</source>
         <translation>チャエ君はまだテストの段階なんで、プログラムは時々崩れかねないから、
@@ -1130,16 +1140,16 @@ Use this software only when you accept it.</source>
 <context>
     <name>ShortcutDelegate</name>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="275"/>
-        <location filename="../widgets/configuredialog.cpp" line="296"/>
-        <location filename="../widgets/configuredialog.cpp" line="315"/>
+        <location filename="../widgets/configuredialog.cpp" line="286"/>
+        <location filename="../widgets/configuredialog.cpp" line="307"/>
+        <location filename="../widgets/configuredialog.cpp" line="326"/>
         <source>Immediately</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="276"/>
-        <location filename="../widgets/configuredialog.cpp" line="298"/>
-        <location filename="../widgets/configuredialog.cpp" line="317"/>
+        <location filename="../widgets/configuredialog.cpp" line="287"/>
+        <location filename="../widgets/configuredialog.cpp" line="309"/>
+        <location filename="../widgets/configuredialog.cpp" line="328"/>
         <source>When Release</source>
         <translation type="unfinished"></translation>
     </message>

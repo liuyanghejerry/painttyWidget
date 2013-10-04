@@ -38,6 +38,8 @@ public slots:
     void requestMembers(MemberSectionIndex index);
     void clearMembers();
     void setBlockLevel(const BlockLevel le);
+    void pauseParse();
+    void resumeParse();
 signals:
     void newDataGroup(const QByteArray& d);
     void remoteDrawPoint(const QPoint &point,
@@ -52,6 +54,7 @@ signals:
                         const QString clientid,
                         const qreal pressure=1.0);
     void membersSorted(QList<MemberSection> list);
+    void archiveParsed();
 protected:
     void timerEvent(QTimerEvent * event);
 private:
@@ -63,11 +66,15 @@ private:
     QHash<QString, MemberSection> memberHistory_;
     int send_timer_id_;
     int parse_timer_id_;
+    bool archive_loaded_;
+    bool is_parsed_signal_sent;
+    bool pause_;
     void upsertFootprint(const QString& id, const QString& name, const QPoint &point);
     void upsertFootprint(const QString& id, const QString& name);
     QByteArray toJson(const QVariant &m);
     QVariant fromJson(const QByteArray &d);
     void parseIncoming();
+    void onArchiveLoaded();
 };
 
 class Canvas : public QWidget
@@ -108,6 +115,9 @@ public slots:
     void layerSelected(const QString &name);
     void changeBrush(const QString &name);
     void onColorPicker(bool in);
+    void loadLayers();
+    void saveLayers();
+    void pause();
 
 signals:
     void pickColorComplete();
@@ -119,6 +129,7 @@ signals:
                                = CanvasBackend::MemberSectionIndex::Count);
     void requestClearMembers();
     void canvasExported(const QPixmap& pic);
+    void parsePaused();
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
@@ -152,8 +163,8 @@ private:
     void updateCursor();
     void tryJitterCorrection();
     QImage appendAuthorSignature(QImage target);
-
     BrushPointer brushFactory(const QString &name);
+
 
     bool inPicker;
     bool drawing;

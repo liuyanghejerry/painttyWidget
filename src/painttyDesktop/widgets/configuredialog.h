@@ -28,6 +28,7 @@ private:
     bool msg_notify;
     bool auto_disable_ime;
     bool enable_tablet;
+    bool skip_replay;
 
     bool use_defalut_server;
     QString IPv4_addr;

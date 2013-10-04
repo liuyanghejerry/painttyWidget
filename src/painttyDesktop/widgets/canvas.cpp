@@ -11,6 +11,7 @@
 #include <QTimer>
 #include <QTimerEvent>
 #include <QDateTime>
+#include <QDir>
 #include <QStaticText>
 #include <QtCore/qmath.h>
 
@@ -23,6 +24,7 @@
 #include "../paintingTools/brush/pencil.h"
 #include "../misc/platformextend.h"
 #include "../misc/singleton.h"
+#include "../misc/archivefile.h"
 
 #include "canvas.h"
 
@@ -89,6 +91,8 @@ Canvas::Canvas(QWidget *parent) :
     brush_manager.addBrush(p4);
     setJitterCorrectionLevel(5);
 
+    auto& client_socket = Singleton<ClientSocket>::instance();
+
     worker_->start();
     backend_->moveToThread(worker_);
     connect(backend_, &CanvasBackend::remoteDrawLine,
@@ -103,6 +107,8 @@ Canvas::Canvas(QWidget *parent) :
             backend_, &CanvasBackend::onDataBlock);
     connect(this, &Canvas::paintActionComplete,
             backend_, &CanvasBackend::commit);
+    connect(this, &Canvas::parsePaused,
+            backend_, &CanvasBackend::pauseParse);
 
     // TODO: proper use of signal requestSortedMembers,
     // instead of using QTimer
@@ -117,18 +123,20 @@ Canvas::Canvas(QWidget *parent) :
             backend_, &CanvasBackend::requestMembers);
     connect(this, &Canvas::requestClearMembers,
             backend_, &CanvasBackend::clearMembers);
+    connect(backend_, &CanvasBackend::archiveParsed,
+            [this](){
+        setEnabled(true);
+    });
     connect(t, &QTimer::timeout,
             [this](){
         emit requestSortedMembers(MSI::Count);
     });
     t->start(500);
-    auto& client_socket = Singleton<ClientSocket>::instance();
+
     if(client_socket.schedualDataLength()){
         this->setEnabled(false);
     }
-    connect(&client_socket,
-            &ClientSocket::archiveLoaded,
-            this, &Canvas::setEnabled);
+
 }
 
 /*!
@@ -139,6 +147,7 @@ Canvas::Canvas(QWidget *parent) :
 
 Canvas::~Canvas()
 {
+    pause();
 }
 
 QImage Canvas::currentCanvas()
@@ -267,7 +276,7 @@ void Canvas::tryJitterCorrection()
         }
 
         qreal distance = qAbs(distance_up / distance_down);
-//        qDebug()<<"distance"<<distance;
+        //        qDebug()<<"distance"<<distance;
 
         if(distance <= jitterCorrectionLevel_internal_ ){
             return true;
@@ -289,7 +298,7 @@ void Canvas::tryJitterCorrection()
         }
     }
     // you can see the correction rate.
-//    qDebug()<<"correction rate: "<<qreal(amount-redudent)/amount *100<<"%";
+    //    qDebug()<<"correction rate: "<<qreal(amount-redudent)/amount *100<<"%";
 }
 
 /*!
@@ -347,6 +356,44 @@ void Canvas::setBrushHardness(int h)
 BrushPointer Canvas::brushFactory(const QString &name)
 {
     return Singleton<BrushManager>::instance().makeBrush(name);
+}
+
+void Canvas::loadLayers()
+{
+    // TODO: merge this feature into ArchiveFile, maybe?
+    QString dir_name = Singleton<ArchiveFile>::instance().dirName();
+    for(int i=layers.count()-1;i>=0;--i){
+        QString img_name = QString("%1/%2.png").arg(dir_name).arg(i);
+        QImage img(img_name);
+        if(img.isNull()){
+            continue;
+        }
+        QPainter painter(layers.layerFrom(i)->imagePtr());
+        painter.drawImage(0, 0, img);
+    }
+    connect(&Singleton<ArchiveFile>::instance(), &ArchiveFile::newSignature,
+            [this](){
+        this->clearAllLayer();
+    });
+}
+
+void Canvas::saveLayers()
+{
+    // TODO: merge this feature into ArchiveFile, maybe?
+    QString dir_name = Singleton<ArchiveFile>::instance().dirName();
+    QDir::current().mkpath(dir_name);
+    for(int i=layers.count()-1;i>=0;--i){
+        if(!layers.layerFrom(i)->isTouched()){
+            continue;
+        }
+        QString img_name = QString("%1/%2.png").arg(dir_name).arg(i);
+        layers.layerFrom(i)->imageConstPtr()->save(img_name);
+    }
+}
+
+void Canvas::pause()
+{
+    emit parsePaused();
 }
 
 /*!
@@ -1001,14 +1048,14 @@ CanvasBackend::CanvasBackend(QObject *parent)
     :QObject(parent),
       blocklevel_(MEDIUM),
       send_timer_id_(0),
-      parse_timer_id_(0)
+      parse_timer_id_(0),
+      archive_loaded_(false),
+      is_parsed_signal_sent(false),
+      pause_(false)
 {
     send_timer_id_ = this->startTimer(1000*10);
-    parse_timer_id_ = this->startTimer(30);
-//    QTimer *sendTimer = new QTimer(this);
-//    sendTimer->setInterval(1000*10);
-//    connect(sendTimer, &QTimer::timeout,
-//            this, &CanvasBackend::commit);
+    parse_timer_id_ = this->startTimer(50);
+
     auto& client_socket = Singleton<ClientSocket>::instance();
 
     connect(&client_socket, &ClientSocket::dataPack,
@@ -1016,10 +1063,9 @@ CanvasBackend::CanvasBackend(QObject *parent)
     connect(this, &CanvasBackend::newDataGroup,
             &client_socket, static_cast<void (ClientSocket::*)(const QByteArray&)>
             (&ClientSocket::sendDataPack));
-//    QTimer *parseTimer = new QTimer(this);
-//    connect(parseTimer, &QTimer::timeout,
-//            this, &CanvasBackend::parseIncoming);
-//    parseTimer->start(30);
+    connect(&client_socket,
+            &ClientSocket::archiveLoaded,
+            this, &CanvasBackend::onArchiveLoaded);
 }
 
 CanvasBackend::~CanvasBackend()
@@ -1062,6 +1108,16 @@ void CanvasBackend::setBlockLevel(const BlockLevel le)
     blocklevel_ = le;
 }
 
+void CanvasBackend::pauseParse()
+{
+    pause_ = true;
+}
+
+void CanvasBackend::resumeParse()
+{
+    pause_ = false;
+}
+
 CanvasBackend::BlockLevel CanvasBackend::blockLevel() const
 {
     return blocklevel_;
@@ -1092,98 +1148,106 @@ void CanvasBackend::onIncomingData(const QJsonObject& obj)
 
 void CanvasBackend::parseIncoming()
 {
-    if(incoming_store_.length()){
-        auto obj = incoming_store_.takeFirst();
+    for(int i=0;i<3;++i){
+        if(incoming_store_.length()){
+            auto obj = incoming_store_.takeFirst();
 
-        QString action = obj.value("action").toString().toLower();
+            QString action = obj.value("action").toString().toLower();
 
-        auto drawPoint = [this](const QVariantMap& m){
-            QPoint point;
-            QString layerName;
+            auto drawPoint = [this](const QVariantMap& m){
+                QPoint point;
+                QString layerName;
 
-            QVariantMap map = m["info"].toMap();
-            QString clientid = map["clientid"].toString();
-            // don't draw your own move from remote
-            if(clientid == Singleton<ClientSocket>::instance().clientId()){
-                return;
-            }
-
-            QVariantMap point_j = map["point"].toMap();
-            point.setX(point_j["x"].toInt());
-            point.setY(point_j["y"].toInt());
-            layerName = map["layer"].toString();
-            QVariantMap brushInfo = map["brush"].toMap();
-            qreal pressure = 1.0;
-            if(map.contains("pressure")){
-                pressure = map["pressure"].toDouble();
-            }
-
-            if(map.contains("name")){
-                QString author = map["name"].toString();
-                upsertFootprint(clientid, author, point);
-            }
-
-            emit remoteDrawPoint(point, brushInfo,
-                                 layerName, clientid,
-                                 pressure);
-        };
-
-        auto drawLine = [this](const QVariantMap& m){
-            QPoint start;
-            QPoint end;
-            QString layerName;
-
-            QVariantMap map = m["info"].toMap();
-
-            QString clientid = map["clientid"].toString();
-            // don't draw your own move from remote
-            if(clientid == Singleton<ClientSocket>::instance().clientId()){
-                return;
-            }
-
-            QVariantMap start_j = map["start"].toMap();
-            start.setX(start_j["x"].toInt());
-            start.setY(start_j["y"].toInt());
-            QVariantMap end_j = map["end"].toMap();
-            end.setX(end_j["x"].toInt());
-            end.setY(end_j["y"].toInt());
-            layerName = map["layer"].toString();
-            QVariantMap brushInfo = map["brush"].toMap();
-            qreal pressure = 1.0;
-            if(map.contains("pressure")){
-                pressure = map["pressure"].toDouble();
-            }
-
-            if(map.contains("name")){
-                QString author = map["name"].toString();
-                upsertFootprint(clientid, author, end);
-            }
-
-            emit remoteDrawLine(start, end,
-                                brushInfo, layerName,
-                                clientid, pressure);
-        };
-
-        auto dataBlock = [&drawPoint,
-                &drawLine](const QVariantMap& m){
-            QVariantList list = m["block"].toList();
-            for(auto &item: list){
-                QVariantMap singleData = item.toMap();
-                QString action = singleData["action"].toString().toLower();
-                if(action == "drawpoint"){
-                    drawPoint(singleData);
-                }else if(action == "drawline"){
-                    drawLine(singleData);
+                QVariantMap map = m["info"].toMap();
+                QString clientid = map["clientid"].toString();
+                // don't draw your own move from remote
+                if(clientid == Singleton<ClientSocket>::instance().clientId()){
+                    return;
                 }
-            }
-        };
 
-        if(action == "drawpoint"){
-            drawPoint(obj.toVariantMap());
-        }else if(action == "drawline"){
-            drawLine(obj.toVariantMap());
-        }else if(action == "block"){
-            dataBlock(obj.toVariantMap());
+                QVariantMap point_j = map["point"].toMap();
+                point.setX(point_j["x"].toInt());
+                point.setY(point_j["y"].toInt());
+                layerName = map["layer"].toString();
+                QVariantMap brushInfo = map["brush"].toMap();
+                qreal pressure = 1.0;
+                if(map.contains("pressure")){
+                    pressure = map["pressure"].toDouble();
+                }
+
+                if(map.contains("name")){
+                    QString author = map["name"].toString();
+                    upsertFootprint(clientid, author, point);
+                }
+
+                emit remoteDrawPoint(point, brushInfo,
+                                     layerName, clientid,
+                                     pressure);
+            };
+
+            auto drawLine = [this](const QVariantMap& m){
+                QPoint start;
+                QPoint end;
+                QString layerName;
+
+                QVariantMap map = m["info"].toMap();
+
+                QString clientid = map["clientid"].toString();
+                // don't draw your own move from remote
+                if(clientid == Singleton<ClientSocket>::instance().clientId()){
+                    return;
+                }
+
+                QVariantMap start_j = map["start"].toMap();
+                start.setX(start_j["x"].toInt());
+                start.setY(start_j["y"].toInt());
+                QVariantMap end_j = map["end"].toMap();
+                end.setX(end_j["x"].toInt());
+                end.setY(end_j["y"].toInt());
+                layerName = map["layer"].toString();
+                QVariantMap brushInfo = map["brush"].toMap();
+                qreal pressure = 1.0;
+                if(map.contains("pressure")){
+                    pressure = map["pressure"].toDouble();
+                }
+
+                if(map.contains("name")){
+                    QString author = map["name"].toString();
+                    upsertFootprint(clientid, author, end);
+                }
+
+                emit remoteDrawLine(start, end,
+                                    brushInfo, layerName,
+                                    clientid, pressure);
+            };
+
+            auto dataBlock = [&drawPoint,
+                    &drawLine](const QVariantMap& m){
+                QVariantList list = m["block"].toList();
+                for(auto &item: list){
+                    QVariantMap singleData = item.toMap();
+                    QString action = singleData["action"].toString().toLower();
+                    if(action == "drawpoint"){
+                        drawPoint(singleData);
+                    }else if(action == "drawline"){
+                        drawLine(singleData);
+                    }
+                }
+            };
+
+            if(action == "drawpoint"){
+                drawPoint(obj.toVariantMap());
+            }else if(action == "drawline"){
+                drawLine(obj.toVariantMap());
+            }else if(action == "block"){
+                dataBlock(obj.toVariantMap());
+            }
+        }else{
+            if(archive_loaded_ && !is_parsed_signal_sent){
+                emit archiveParsed();
+                is_parsed_signal_sent = true;
+            }
+            break;
         }
     }
 }
@@ -1258,7 +1322,9 @@ void CanvasBackend::timerEvent(QTimerEvent * event)
     if(event->timerId() == send_timer_id_){
         this->commit();
     }else if(event->timerId() == parse_timer_id_){
-        this->parseIncoming();
+        if(!pause_){
+            this->parseIncoming();
+        }
     }
 }
 
@@ -1274,4 +1340,9 @@ QByteArray CanvasBackend::toJson(const QVariant &m)
 QVariant CanvasBackend::fromJson(const QByteArray &d)
 {
     return QJsonDocument::fromJson(d).toVariant();
+}
+
+void CanvasBackend::onArchiveLoaded()
+{
+    archive_loaded_ = true;
 }

@@ -20,6 +20,7 @@ ConfigureDialog::ConfigureDialog(QWidget *parent) :
     tryIpv6(false),
     msg_notify(false),
     auto_disable_ime(false),
+    skip_replay(false),
     use_defalut_server(true),
     server_port(0)
 {
@@ -53,6 +54,7 @@ void ConfigureDialog::readSettings()
     IPv4_addr = settings.value("global/server/ipv4_addr", QString()).toString();
     IPv6_addr = settings.value("global/server/ipv6_addr", QString()).toString();
     server_port = settings.value("global/server/server_port", 0).toUInt();
+    skip_replay = settings.value("canvas/skip_replay", false).toBool();
 }
 
 void ConfigureDialog::initLanguageList()
@@ -141,6 +143,7 @@ void ConfigureDialog::initUi()
     ui->msg_notify_checkbox->setChecked(msg_notify);
     ui->auto_disable_ime_checkbox->setChecked(auto_disable_ime);
     ui->enable_tablet->setChecked(enable_tablet);
+    ui->skip_replay->setChecked(skip_replay);
     connect(ui->clearCache, &QPushButton::clicked,
             [](){
         QDir cacheDir("cache");
@@ -233,6 +236,14 @@ void ConfigureDialog::acceptConfigure()
     settings.setValue("global/server/ipv6_addr", IPv6_addr);
     settings.setValue("global/server/server_port", server_port);
     needRestart = true;
+
+    // save canvas replay-skip settings
+    if (ui->skip_replay->isChecked() != skip_replay)
+    {
+        settings.setValue("canvas/skip_replay",
+                          ui->skip_replay->isChecked());
+        needRestart = true;
+    }
 
     settings.sync();
 
