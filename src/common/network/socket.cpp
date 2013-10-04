@@ -1,5 +1,4 @@
 #include "socket.h"
-#include <future>
 #include <QTcpSocket>
 #include <QBuffer>
 #include <QApplication>
@@ -131,32 +130,23 @@ void Socket::sendData(const QByteArray &content)
 
 void Socket::onReceipt()
 {
-    //    qDebug() << "thread" << QThread::currentThreadId();
-    if (commandStarted == false) {
-        /* There it's a new message we are receiving.
-           To start receiving it we must know its length, i.e. the 2 first bytes */
-        if (socket->bytesAvailable() < 4) {
-            return;
+    while(socket->bytesAvailable() > 4){
+        if(!commandStarted){
+            commandStarted=true;
+            /* getting the length of the message */
+            char c1, c2, c3, c4;
+            socket->getChar(&c1), socket->getChar(&c2);
+            socket->getChar(&c3), socket->getChar(&c4);
+            dataSize= (uchar(c1) << 24) + (uchar(c2) << 16)
+                    + (uchar(c3) << 8) + uchar(c4);
         }
-        /* Ok now we can start */
-        commandStarted=true;
-        /* getting the length of the message */
-        char c1, c2, c3, c4;
-        socket->getChar(&c1), socket->getChar(&c2);
-        socket->getChar(&c3), socket->getChar(&c4);
-        dataSize= (uchar(c1) << 24) + (uchar(c2) << 16)
-                + (uchar(c3) << 8) + uchar(c4);
-        /* Recursive call to write less code =) */
-        onReceipt();
-    } else {
-        /* Checking if the command is complete! */
-        if (socket->bytesAvailable() >= dataSize) {
+        if(socket->bytesAvailable() >= dataSize){
             QByteArray info = socket->read(dataSize);
+            commandStarted = false;
             emit newData(info);
             QApplication::processEvents();
-            commandStarted = false;
-            // prevent stackoverflow
-            std::async(std::launch::async, [this]{ onReceipt(); });
+        }else{
+            break;
         }
     }
 }

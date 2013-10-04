@@ -22,7 +22,6 @@
 #include <QProcess>
 #include <QTimer>
 #include <QScriptEngine>
-#include <future>
 
 #include "../misc/singleshortcut.h"
 #include "layerwidget.h"
@@ -523,7 +522,7 @@ void MainWindow::socketInit()
             requestCheckout();
         }
     };
-    std::async(std::launch::async, fff);
+    GlobalDef::delayJob(fff);
     QTimer *t = new QTimer(this);
     connect(t, &QTimer::timeout,
             this, &MainWindow::requestOnlinelist);
