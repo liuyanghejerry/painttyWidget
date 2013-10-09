@@ -1061,22 +1061,19 @@ CanvasBackend::CanvasBackend(QObject *parent)
     connect(&client_socket, &ClientSocket::dataPack,
             this, &CanvasBackend::onIncomingData);
     connect(this, &CanvasBackend::newDataGroup,
-            &client_socket, static_cast<void (ClientSocket::*)(const QByteArray&)>
+            &client_socket,
+            static_cast<void (ClientSocket::*)(const QByteArray&)>
             (&ClientSocket::sendDataPack));
-    connect(&client_socket,
-            &ClientSocket::archiveLoaded,
+    connect(&client_socket, &ClientSocket::archiveLoaded,
             this, &CanvasBackend::onArchiveLoaded);
 }
 
 CanvasBackend::~CanvasBackend()
 {
     auto& client_socket = Singleton<ClientSocket>::instance();
-
     disconnect(&client_socket, &ClientSocket::dataPack,
                this, &CanvasBackend::onIncomingData);
-    disconnect(this, &CanvasBackend::newDataGroup,
-               &client_socket, static_cast<void (ClientSocket::*)(const QByteArray&)>
-               (&ClientSocket::sendDataPack));
+    this->disconnect();
     if(send_timer_id_)
         killTimer(send_timer_id_);
     if(parse_timer_id_)

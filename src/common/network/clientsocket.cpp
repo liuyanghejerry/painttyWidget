@@ -47,6 +47,7 @@ ClientSocket::ClientSocket(QObject *parent) :
 
 void ClientSocket::setPoolEnabled(bool on)
 {
+    mutex_.lock();
     poolEnabled_ = on;
     if(!poolEnabled_){
         timer_->start(WAIT_TIME);
@@ -54,6 +55,7 @@ void ClientSocket::setPoolEnabled(bool on)
     }else{
         timer_->stop();
     }
+    mutex_.unlock();
 }
 
 bool ClientSocket::isPoolEnabled()
@@ -63,7 +65,9 @@ bool ClientSocket::isPoolEnabled()
 
 void ClientSocket::setSchedualDataLength(quint64 length)
 {
+    mutex_.lock();
     leftDataLength_ = schedualDataLength_ = length;
+    mutex_.unlock();
     if(leftDataLength_ <= 0){
         emit archiveLoaded(schedualDataLength_);
     }
@@ -81,6 +85,7 @@ QString ClientSocket::archiveSignature() const
 
 void ClientSocket::setArchiveSignature(const QString &as)
 {
+    mutex_.lock();
     archive_.setSignature(as);
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
@@ -93,6 +98,7 @@ void ClientSocket::setArchiveSignature(const QString &as)
     }else{
         leftDataLength_ -= archive_.size();
     }
+    mutex_.unlock();
 }
 
 quint64 ClientSocket::archiveSize() const
@@ -102,7 +108,9 @@ quint64 ClientSocket::archiveSize() const
 
 void ClientSocket::setRoomCloseFlag()
 {
+    mutex_.lock();
     remove_after_close_ = true;
+    mutex_.unlock();
 }
 
 QString ClientSocket::toUrl() const
@@ -114,7 +122,9 @@ QString ClientSocket::toUrl() const
 
 void ClientSocket::setClientId(const QString &id)
 {
+    mutex_.lock();
     clientid_ = id;
+    mutex_.unlock();
 }
 
 QString ClientSocket::clientId() const
@@ -124,7 +134,9 @@ QString ClientSocket::clientId() const
 
 void ClientSocket::setUserName(const QString &name)
 {
+    mutex_.lock();
     username_ = name;
+    mutex_.unlock();
 }
 
 QString ClientSocket::userName() const
@@ -134,8 +146,10 @@ QString ClientSocket::userName() const
 
 void ClientSocket::setRoomName(const QString &name)
 {
+    mutex_.lock();
     roomname_ = name;
     archive_.setName(name);
+    mutex_.unlock();
 }
 
 QString ClientSocket::roomName() const
@@ -145,7 +159,9 @@ QString ClientSocket::roomName() const
 
 void ClientSocket::setCanvasSize(const QSize &size)
 {
+    mutex_.lock();
     canvassize_ = size;
+    mutex_.unlock();
 }
 
 QSize ClientSocket::canvasSize() const
@@ -160,14 +176,18 @@ QString ClientSocket::passwd() const
 
 void ClientSocket::setPasswd(const QString &passwd)
 {
+    mutex_.lock();
     passwd_ = passwd;
+    mutex_.unlock();
 }
 
 void ClientSocket::sendMessage(const QString &content)
 {
+    mutex_.lock();
     QJsonObject map;
     map.insert("content", content);
     this->sendData(assamblePack(true, MESSAGE, jsonToBuffer(map)));
+    mutex_.unlock();
 }
 
 void ClientSocket::onNewMessage(const QJsonObject &map)
@@ -180,37 +200,49 @@ void ClientSocket::onNewMessage(const QJsonObject &map)
 
 void ClientSocket::sendDataPack(const QByteArray &content)
 {
+    mutex_.lock();
     this->sendData(assamblePack(true, DATA, content));
+    mutex_.unlock();
 }
 
 void ClientSocket::sendDataPack(const QJsonObject &content)
 {
+    mutex_.lock();
     this->sendData(assamblePack(true, DATA, jsonToBuffer(content)));
+    mutex_.unlock();
 }
 
 void ClientSocket::sendCmdPack(const QJsonObject &content)
 {
+    mutex_.lock();
     this->sendData(assamblePack(true, COMMAND, jsonToBuffer(content)));
+    mutex_.unlock();
 }
 
 void ClientSocket::sendManagerPack(const QJsonObject &content)
 {
+    mutex_.lock();
     this->sendData(assamblePack(true, MANAGER, jsonToBuffer(content)));
+    mutex_.unlock();
 }
 
 void ClientSocket::cancelPendings()
 {
+    mutex_.lock();
     canceled_ = true;
     pool_.clear();
+    mutex_.unlock();
 }
 
 void ClientSocket::close()
 {
+    mutex_.lock();
     archive_.flush();
     if(remove_after_close_){
         archive_.remove();
     }
     Socket::close();
+    mutex_.unlock();
 }
 
 ClientSocket::ParserResult ClientSocket::parserPack(const QByteArray &data)
@@ -345,6 +377,7 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
 
 void ClientSocket::reset()
 {
+    mutex_.lock();
     poolEnabled_ = false;
     canceled_ = false;
     username_.clear();
@@ -354,6 +387,7 @@ void ClientSocket::reset()
     router_.clear();
     timer_->start(WAIT_TIME);
     pool_.clear();
+    mutex_.unlock();
 }
 
 

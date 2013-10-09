@@ -6,6 +6,7 @@
 //#include "../../common/network/packparser.h"
 #include "../misc/router.h"
 #include <QSize>
+#include <QMutex>
 class QTimer;
 class ArchiveFile;
 
@@ -93,6 +94,7 @@ public slots:
     void close() Q_DECL_OVERRIDE;
 private:
     Q_DISABLE_COPY(ClientSocket)
+    QMutex mutex_;
 //    PackParser parser_;
     QString clientid_;
     QString username_;
