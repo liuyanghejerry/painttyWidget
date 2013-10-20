@@ -106,7 +106,7 @@ void CanvasBackend::onDataBlock(const QVariantMap d)
 
 void CanvasBackend::onIncomingData(const QJsonObject& obj)
 {
-    incoming_store_.append(obj);
+    incoming_store_.enqueue(obj);
 }
 
 void CanvasBackend::parseIncoming()
@@ -193,7 +193,7 @@ void CanvasBackend::parseIncoming()
     };
     for(int i=0;i<3;++i){
         if(incoming_store_.length()){
-            auto obj = incoming_store_.takeFirst();
+            auto obj = incoming_store_.dequeue();
             QString action = obj.value("action").toString().toLower();
 
             if(action == "drawpoint"){

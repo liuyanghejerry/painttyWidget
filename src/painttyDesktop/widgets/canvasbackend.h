@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QHash>
-#include <QList>
+#include <QQueue>
 #include <QJsonObject>
 #include <QVariantList>
 #include <QByteArray>
@@ -62,7 +62,7 @@ protected:
 private:
     BlockLevel blocklevel_;
     QVariantList tempStore;
-    QList<QJsonObject> incoming_store_;
+    QQueue<QJsonObject> incoming_store_;
     // Warning, access memberHistory_ across thread
     // via member functions is not thread-safe
     QHash<QString, MemberSection> memberHistory_;
