@@ -29,6 +29,7 @@ static QByteArray jsonToBuffer(const QJsonObject& obj)
 
 ClientSocket::ClientSocket(QObject *parent) :
     Socket(parent),
+    mutex_(QMutex::Recursive),
     schedualDataLength_(0),
     leftDataLength_(0),
     poolEnabled_(false),

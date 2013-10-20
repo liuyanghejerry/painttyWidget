@@ -86,6 +86,7 @@ SOURCES += main.cpp\
     widgets/easycopylineedit.cpp \
     widgets/gradualbox.cpp \
     widgets/developerconsole.cpp \
+    widgets/canvasbackend.cpp \
     widgets/irclineedit.cpp
 
 
@@ -141,7 +142,8 @@ HEADERS  += widgets/mainwindow.h \
     widgets/easycopylineedit.h \
     widgets/gradualbox.h \
     widgets/developerconsole.h \
-    widgets/irclineedit.h
+    widgets/irclineedit.h \
+    widgets/canvasbackend.h
 
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
