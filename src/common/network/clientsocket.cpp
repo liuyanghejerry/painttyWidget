@@ -29,7 +29,7 @@ static QByteArray jsonToBuffer(const QJsonObject& obj)
 
 ClientSocket::ClientSocket(QObject *parent) :
     Socket(parent),
-    mutex_(QMutex::Recursive),
+    mutex_(),
     schedualDataLength_(0),
     leftDataLength_(0),
     poolEnabled_(false),
@@ -378,7 +378,7 @@ bool ClientSocket::dispatch(const QByteArray& bytes)
 
 void ClientSocket::reset()
 {
-    mutex_.lock();
+//    mutex_.lock();
     poolEnabled_ = false;
     canceled_ = false;
     username_.clear();
@@ -388,7 +388,7 @@ void ClientSocket::reset()
     router_.clear();
     timer_->start(WAIT_TIME);
     pool_.clear();
-    mutex_.unlock();
+//    mutex_.unlock();
 }
 
 

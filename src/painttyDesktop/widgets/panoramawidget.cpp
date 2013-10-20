@@ -31,16 +31,19 @@ PanoramaWidget::PanoramaWidget(QWidget *parent) :
 
 void PanoramaWidget::setScaled(qreal f)
 {
-    slider->setScale(f);
+    if(slider)
+        slider->setScale(f);
 }
 
 void PanoramaWidget::onImageChange(const QPixmap &p,
                                    const QRect &r)
 {
-    view->onImageChange(p,r);
+    if(view)
+        view->onImageChange(p,r);
 }
 
 void PanoramaWidget::onRectChange(const QRect &r)
 {
-    view->onRectChange(r);
+    if(view)
+        view->onRectChange(r);
 }

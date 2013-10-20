@@ -95,10 +95,12 @@ Canvas::Canvas(QWidget *parent) :
             this, &Canvas::remoteDrawLine);
     connect(backend_, &CanvasBackend::remoteDrawPoint,
             this, &Canvas::remoteDrawPoint);
-    connect(this, &Canvas::destroyed,
+//    connect(this, &Canvas::destroyed,
+//            backend_, &CanvasBackend::deleteLater);
+//    connect(this, &Canvas::destroyed,
+//            worker_, &QThread::terminate);
+    connect(worker_, &QThread::finished,
             backend_, &CanvasBackend::deleteLater);
-    connect(this, &Canvas::destroyed,
-            worker_, &QThread::terminate);
     connect(this, &Canvas::newPaintAction,
             backend_, &CanvasBackend::onDataBlock);
     connect(this, &Canvas::paintActionComplete,
@@ -144,6 +146,11 @@ Canvas::Canvas(QWidget *parent) :
 Canvas::~Canvas()
 {
     pause();
+    if(worker_){
+        worker_->quit();
+        worker_->wait();
+    }
+    this->disconnect();
 }
 
 QImage Canvas::currentCanvas()
@@ -367,10 +374,12 @@ void Canvas::loadLayers()
         QPainter painter(layers.layerFrom(i)->imagePtr());
         painter.drawImage(0, 0, img);
     }
+//    connect(&Singleton<ArchiveFile>::instance(), &ArchiveFile::newSignature,
+//            [this](){
+//        this->clearAllLayer();
+//    });
     connect(&Singleton<ArchiveFile>::instance(), &ArchiveFile::newSignature,
-            [this](){
-        this->clearAllLayer();
-    });
+           this, &Canvas::clearAllLayer);
 }
 
 void Canvas::saveLayers()
