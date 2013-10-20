@@ -371,7 +371,7 @@ void MainWindow::toolbarInit()
     // for room share
     auto& client_socket = Singleton<ClientSocket>::instance();
     QToolBar* roomShareToolbar = new QToolBar(tr("Room Share"), this);
-    brushSettingToolbar->setObjectName("RoomShareToolbar");
+    roomShareToolbar->setObjectName("RoomShareToolbar");
     this->addToolBar(Qt::TopToolBarArea, roomShareToolbar);
     RoomShareBar* rsb = new RoomShareBar(this);
     rsb->setAddress(client_socket.toUrl());
