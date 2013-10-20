@@ -20,6 +20,10 @@ CanvasBackend::CanvasBackend(QObject *parent)
 
     auto& client_socket = Singleton<ClientSocket>::instance();
 
+    // NOTICE: This is a direct call,
+    // hence CanvasBackend must be inited at main thread.
+    cached_clientid_ = client_socket.clientId();
+
     connect(&client_socket, &ClientSocket::dataPack,
             this, &CanvasBackend::onIncomingData);
     connect(this, &CanvasBackend::newDataGroup,
@@ -114,7 +118,7 @@ void CanvasBackend::parseIncoming()
         QVariantMap map = m["info"].toMap();
         QString clientid = map["clientid"].toString();
         // don't draw your own move from remote
-        if(clientid == Singleton<ClientSocket>::instance().clientId()){
+        if(clientid == cached_clientid_){
             return;
         }
 
@@ -147,7 +151,7 @@ void CanvasBackend::parseIncoming()
 
         QString clientid = map["clientid"].toString();
         // don't draw your own move from remote
-        if(clientid == Singleton<ClientSocket>::instance().clientId()){
+        if(clientid == cached_clientid_){
             return;
         }
 

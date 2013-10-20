@@ -66,6 +66,7 @@ private:
     // Warning, access memberHistory_ across thread
     // via member functions is not thread-safe
     QHash<QString, MemberSection> memberHistory_;
+    QString cached_clientid_;
     int send_timer_id_;
     int parse_timer_id_;
     bool archive_loaded_;
