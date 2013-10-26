@@ -11,7 +11,7 @@
 namespace GlobalDef
 {
 
-const static char CLIENT_VER[] = "0.40";
+const static char CLIENT_VER[] = "0.41";
 const static char CLIENT_TYPE[] = "alpha";
 static const char UPDATER_VERSION[] = "0.12";
 
@@ -42,11 +42,11 @@ const static QString UPDATER_ADDR[] = {UPDATER_ADDR_IPV4,
                                     UPDATER_ADDR_IPV6};
 
 #if defined(Q_OS_WIN32)
-static const char* DOWNLOAD_URL = "http://mrspaint.oss.aliyuncs.com/0.4/%E8%8C%B6%E7%BB%98%E5%90%9B_Alpha_x86.zip";
+static const char* DOWNLOAD_URL = "http://download.mrspaint.com/0.4/%E8%8C%B6%E7%BB%98%E5%90%9B_Alpha_x86.zip";
 #elif defined(Q_OS_UNIX) && !defined(Q_OS_MACX)
 static const char* DOWNLOAD_URL = "";
 #elif defined(Q_OS_MACX)
-static const char* DOWNLOAD_URL = "http://mrspaint.oss.aliyuncs.com/0.4/%E8%8C%B6%E7%BB%98%E5%90%9B.app.zip";
+static const char* DOWNLOAD_URL = "http://download.mrspaint.com/0.4/%E8%8C%B6%E7%BB%98%E5%90%9B_Alpha_Mac_0.4.zip";
 #endif
 
 const qreal MAX_SCALE_FACTOR = 5.0;
