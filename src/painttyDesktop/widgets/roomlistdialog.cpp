@@ -298,7 +298,8 @@ void RoomListDialog::connectRoomByPort(const int &p)
     client_socket.close();
 
     connect(&client_socket, &ClientSocket::connected,
-            this, &RoomListDialog::onCmdServerConnected);
+            this, &RoomListDialog::onCmdServerConnected,
+            Qt::ConnectionType(Qt::AutoConnection | Qt::UniqueConnection));
     connect(&client_socket, &ClientSocket::cmdPack,
             this, &RoomListDialog::onCmdData);
 
