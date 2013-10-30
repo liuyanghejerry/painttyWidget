@@ -29,6 +29,7 @@ private:
     bool auto_disable_ime;
     bool enable_tablet;
     bool skip_replay;
+    bool use_droid_font;
 
     bool use_defalut_server;
     QString IPv4_addr;
