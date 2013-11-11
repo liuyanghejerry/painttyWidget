@@ -115,11 +115,7 @@ int main(int argc, char *argv[])
     while( !exitCode && dialog->exec() ) {
         dialog->hide();
         MainWindow w;
-#ifdef Q_OS_MACX
-        w.showFullScreen();
-#else
         w.showMaximized();
-#endif
         exitCode = a.exec();
         //        qDebug()<<"exit code: "<<exitCode;
     }
