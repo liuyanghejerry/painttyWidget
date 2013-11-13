@@ -140,16 +140,11 @@ int main(int argc, char *argv[])
 
     RoomListDialog *dialog = new RoomListDialog;
     int exitCode = 0;
-    dialog->show();
     mainOnly::runUpdater();
     while( !exitCode && dialog->exec() ) {
         dialog->hide();
         MainWindow w;
-#ifdef Q_OS_MACX
-        w.showFullScreen();
-#else
         w.showMaximized();
-#endif
         exitCode = a.exec();
         //        qDebug()<<"exit code: "<<exitCode;
     }
