@@ -140,6 +140,9 @@ int main(int argc, char *argv[])
 
     RoomListDialog *dialog = new RoomListDialog;
     int exitCode = 0;
+#ifndef Q_OS_MACX
+    dialog->show();
+#endif
     mainOnly::runUpdater();
     while( !exitCode && dialog->exec() ) {
         dialog->hide();
