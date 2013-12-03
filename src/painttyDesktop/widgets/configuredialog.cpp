@@ -21,6 +21,7 @@ ConfigureDialog::ConfigureDialog(QWidget *parent) :
     msg_notify(false),
     auto_disable_ime(false),
     skip_replay(false),
+    use_droid_font(false),
     use_defalut_server(true),
     server_port(0)
 {
@@ -55,6 +56,7 @@ void ConfigureDialog::readSettings()
     IPv6_addr = settings.value("global/server/ipv6_addr", QString()).toString();
     server_port = settings.value("global/server/server_port", 0).toUInt();
     skip_replay = settings.value("canvas/skip_replay", false).toBool();
+    use_droid_font = settings.value("global/use_droid_font", false).toBool();
 }
 
 void ConfigureDialog::initLanguageList()
@@ -144,6 +146,7 @@ void ConfigureDialog::initUi()
     ui->auto_disable_ime_checkbox->setChecked(auto_disable_ime);
     ui->enable_tablet->setChecked(enable_tablet);
     ui->skip_replay->setChecked(skip_replay);
+    ui->droid_font_checkbox->setChecked(use_droid_font);
     connect(ui->clearCache, &QPushButton::clicked,
             [](){
         QDir cacheDir("cache");
@@ -171,6 +174,13 @@ void ConfigureDialog::acceptConfigure()
     if (ui->ipv6CheckBox->isChecked() != tryIpv6)
     {
         settings.setValue("global/ipv6", ui->ipv6CheckBox->isChecked());
+        needRestart = true;
+    }
+
+    // droid font
+    if(ui->droid_font_checkbox->isChecked() != use_droid_font)
+    {
+        settings.setValue("global/use_droid_font", ui->droid_font_checkbox->isChecked());
         needRestart = true;
     }
 

@@ -2,6 +2,7 @@
 #include <QProcess>
 #include <QTranslator>
 #include <QSettings>
+#include <QFontDatabase>
 #include <QVariant>
 #include <QDir>
 #include "../common/common.h"
@@ -66,6 +67,34 @@ void initTranslation()
     QCoreApplication::installTranslator(qtTranslator);
     QCoreApplication::installTranslator(myappTranslator);
 }
+void initFonts()
+{
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat(),
+                       qApp);
+    bool use_droid_font = settings.value("global/use_droid_font", false)
+                .toBool();
+    if(!use_droid_font){
+        return;
+    }
+
+    int  ret = QFontDatabase::addApplicationFont(":/fonts/DroidSansFallback.ttf");
+    if(ret < 0){
+        qDebug()<<"Cannot load fonts!";
+    }
+    QStringList strList(QFontDatabase::applicationFontFamilies(ret));
+    if (strList.count() > 0){
+        QFont fontThis(strList.at(0));
+//        fontThis.setPointSize(9);
+        if(qApp->font().pointSize() == -1){
+            fontThis.setPixelSize(qApp->font().pixelSize());
+        }else{
+            fontThis.setPointSize(qApp->font().pointSize());
+        }
+
+        qApp->setFont(fontThis);
+    }
+}
 
 bool runUpdater()
 {
@@ -107,6 +136,7 @@ int main(int argc, char *argv[])
     mainOnly::initStyle();
     mainOnly::initSettings();
     mainOnly::initTranslation();
+    mainOnly::initFonts();
 
     RoomListDialog *dialog = new RoomListDialog;
     int exitCode = 0;

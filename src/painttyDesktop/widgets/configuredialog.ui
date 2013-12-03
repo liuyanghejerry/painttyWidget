@@ -57,10 +57,24 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="3" column="0">
         <widget class="QPushButton" name="clearCache">
          <property name="text">
           <string>Clear Cache</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="droidFontLabel">
+         <property name="text">
+          <string>Custom Font:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QCheckBox" name="droid_font_checkbox">
+         <property name="text">
+          <string>Use Droid Sans Font</string>
          </property>
         </widget>
        </item>

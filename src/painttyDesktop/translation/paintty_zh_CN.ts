@@ -165,75 +165,85 @@
         <translation>清除缓存</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="71"/>
-        <location filename="../widgets/configuredialog.ui" line="92"/>
+        <location filename="../widgets/configuredialog.ui" line="70"/>
+        <source>Custom Font:</source>
+        <translation>自定义字体：</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.ui" line="77"/>
+        <source>Use Droid Sans Font</source>
+        <translation>使用Droid Sans字体</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.ui" line="85"/>
+        <location filename="../widgets/configuredialog.ui" line="106"/>
         <source>Shortcut</source>
         <translation>快捷键</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="87"/>
+        <location filename="../widgets/configuredialog.ui" line="101"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="97"/>
+        <location filename="../widgets/configuredialog.ui" line="111"/>
         <source>Type</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="105"/>
+        <location filename="../widgets/configuredialog.ui" line="119"/>
         <source>Double click the shortcut and press your shortcut keys.</source>
         <translation>双击要修改的快捷键，然后按下您要设置的按键。</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="116"/>
+        <location filename="../widgets/configuredialog.ui" line="130"/>
         <source>Server</source>
         <translation>服务器</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="122"/>
+        <location filename="../widgets/configuredialog.ui" line="136"/>
         <source>IPv4 address</source>
         <translation>IPv4地址</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="132"/>
+        <location filename="../widgets/configuredialog.ui" line="146"/>
         <source>IPv6 address</source>
         <translation>IPv6地址</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="142"/>
+        <location filename="../widgets/configuredialog.ui" line="156"/>
         <source>Server Port</source>
         <translation>服务器端口</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="152"/>
+        <location filename="../widgets/configuredialog.ui" line="166"/>
         <source>Use default server</source>
         <translation>使用默认配置</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="164"/>
+        <location filename="../widgets/configuredialog.ui" line="178"/>
         <source>Warning, non-default server may lead to software crush.
 Use at your own risk.</source>
         <translation>警告：使用非默认配置可能会导致软件崩溃。
 使用自担风险。</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="182"/>
+        <location filename="../widgets/configuredialog.ui" line="196"/>
         <source>Disable IME when painting (Windows exclusive)</source>
         <translation>绘画时禁用输入法（Windows）</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="189"/>
+        <location filename="../widgets/configuredialog.ui" line="203"/>
         <source>Message Notification (Windows exclusive)</source>
         <translation>消息提示（Windows）</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="196"/>
+        <location filename="../widgets/configuredialog.ui" line="210"/>
         <source>Enable Wacom Tablet (Windows exclusive)</source>
         <translation>支持绘图板（暂不可用）</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="203"/>
+        <location filename="../widgets/configuredialog.ui" line="217"/>
         <source>Always skip replay if possible</source>
         <translation>可能的话总是跳过回放</translation>
     </message>
@@ -242,7 +252,7 @@ Use at your own risk.</source>
         <translation type="obsolete">提示：我们目前还没有加入快捷键的编辑功能（赶进度神马的</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="176"/>
+        <location filename="../widgets/configuredialog.ui" line="190"/>
         <source>Experimental Fetures</source>
         <translation>试验特性</translation>
     </message>
@@ -259,40 +269,40 @@ Use at your own risk.</source>
         <translation type="obsolete">有新消息时提醒我</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="65"/>
+        <location filename="../widgets/configuredialog.cpp" line="67"/>
         <source>System Default</source>
         <translation>系统默认</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="84"/>
+        <location filename="../widgets/configuredialog.cpp" line="86"/>
         <source>Brushes</source>
         <translation>画笔相关</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="100"/>
+        <location filename="../widgets/configuredialog.cpp" line="102"/>
         <source>Immediately</source>
         <translation>立即触发</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="102"/>
+        <location filename="../widgets/configuredialog.cpp" line="104"/>
         <source>When Release</source>
         <translation>松开后触发</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="253"/>
-        <location filename="../widgets/configuredialog.cpp" line="266"/>
+        <location filename="../widgets/configuredialog.cpp" line="263"/>
+        <location filename="../widgets/configuredialog.cpp" line="276"/>
         <source>Restart</source>
         <translation>重新启动</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="254"/>
+        <location filename="../widgets/configuredialog.cpp" line="264"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation>程序必须重新启动才可以应用一些新的设置。
 是否立即重新启动？</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="267"/>
+        <location filename="../widgets/configuredialog.cpp" line="277"/>
         <source>New settings will be applied on next start.</source>
         <translation>新设置将在下次启动程序时生效。</translation>
     </message>
@@ -364,143 +374,143 @@ Do you want to restart right now?</source>
         <translation>茶绘君</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="25"/>
+        <location filename="../widgets/mainwindow.ui" line="34"/>
         <source>Color</source>
         <translatorcomment>カラー</translatorcomment>
         <translation>颜色</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="71"/>
+        <location filename="../widgets/mainwindow.ui" line="80"/>
         <source>Chat</source>
         <translatorcomment>チャット</translatorcomment>
         <translation>聊天</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="137"/>
+        <location filename="../widgets/mainwindow.ui" line="146"/>
         <source>Send</source>
         <translatorcomment>送信</translatorcomment>
         <translation>发送</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="148"/>
+        <location filename="../widgets/mainwindow.ui" line="157"/>
         <source>Layers</source>
         <translatorcomment>レイヤー</translatorcomment>
         <translation>图层</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="187"/>
+        <location filename="../widgets/mainwindow.ui" line="196"/>
         <source>&amp;File</source>
         <translatorcomment>ファイル(&amp;F)</translatorcomment>
         <translation>文件(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="191"/>
+        <location filename="../widgets/mainwindow.ui" line="200"/>
         <source>Export...</source>
         <translatorcomment>書き出し...</translatorcomment>
         <translation>导出...</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="203"/>
+        <location filename="../widgets/mainwindow.ui" line="212"/>
         <source>&amp;About</source>
         <translatorcomment>ヘルプ(&amp;A)</translatorcomment>
         <translation>关于(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="210"/>
+        <location filename="../widgets/mainwindow.ui" line="219"/>
         <source>&amp;View</source>
         <translatorcomment>ウィンドウ(&amp;V)</translatorcomment>
         <translation>窗口(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="216"/>
+        <location filename="../widgets/mainwindow.ui" line="225"/>
         <source>&amp;Room</source>
         <translatorcomment>ルーム(&amp;R)</translatorcomment>
         <translation>房间(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="220"/>
+        <location filename="../widgets/mainwindow.ui" line="229"/>
         <source>Clear Canvas</source>
         <translatorcomment>全消し</translatorcomment>
         <translation>清空画布</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="229"/>
+        <location filename="../widgets/mainwindow.ui" line="238"/>
         <source>&amp;Edit</source>
         <translation>编辑(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="241"/>
+        <location filename="../widgets/mainwindow.ui" line="250"/>
         <source>Panorama</source>
         <translatorcomment>ナビゲーター</translatorcomment>
         <translation>导航</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="279"/>
+        <location filename="../widgets/mainwindow.ui" line="288"/>
         <source>Export All to File</source>
         <translatorcomment>全てのレイヤー画像を書き出し</translatorcomment>
         <translation>导出全部至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="284"/>
+        <location filename="../widgets/mainwindow.ui" line="293"/>
         <source>Export Visible To File</source>
         <translatorcomment>表示レイヤーを書き出し</translatorcomment>
         <translation>导出可见图层至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="289"/>
+        <location filename="../widgets/mainwindow.ui" line="298"/>
         <source>&amp;Quit</source>
         <translatorcomment>退室(&amp;Q)</translatorcomment>
         <translation>退出(&amp;Q)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="294"/>
+        <location filename="../widgets/mainwindow.ui" line="303"/>
         <source>About Mr.Paint</source>
         <translatorcomment>チャエ君について</translatorcomment>
         <translation>关于茶绘君</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="299"/>
+        <location filename="../widgets/mainwindow.ui" line="308"/>
         <source>About Qt</source>
         <translatorcomment>Qtについて</translatorcomment>
         <translation>关于Qt</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="304"/>
+        <location filename="../widgets/mainwindow.ui" line="313"/>
         <source>Export Visible To ClipBorad</source>
         <translatorcomment>表示レイヤーをコピー</translatorcomment>
         <translation>导出可见图层至剪贴板</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="309"/>
+        <location filename="../widgets/mainwindow.ui" line="318"/>
         <source>Export All To Clipboard</source>
         <translatorcomment>全てのレイヤー画像をコピー</translatorcomment>
         <translation>导出全部至剪贴板</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="314"/>
+        <location filename="../widgets/mainwindow.ui" line="323"/>
         <source>Reset View</source>
         <translatorcomment>すべてのツール配置を初期化</translatorcomment>
         <translation>复位工作区</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="319"/>
+        <location filename="../widgets/mainwindow.ui" line="328"/>
         <source>Nothing Here</source>
         <translatorcomment>べつに</translatorcomment>
         <translation>啥都没</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="334"/>
+        <location filename="../widgets/mainwindow.ui" line="343"/>
         <source>Configuration</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="324"/>
+        <location filename="../widgets/mainwindow.ui" line="333"/>
         <source>Close Room</source>
         <translatorcomment>ルームを閉じる</translatorcomment>
         <translation>关闭房间</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.ui" line="329"/>
+        <location filename="../widgets/mainwindow.ui" line="338"/>
         <source>All Layers</source>
         <translatorcomment>すべてのレイヤー</translatorcomment>
         <translation>所有图层</translation>
@@ -709,38 +719,38 @@ It seems you&apos;re not room manager.</source>
         <translation>只有房主才可以清除画布，你似乎不是房主。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="967"/>
+        <location filename="../widgets/mainwindow.cpp" line="972"/>
         <source>Waiting for sync, please do not close.
 This will cost you 1 minute at most.</source>
         <translation>正在同步，请勿关闭...
 整个过程至多需要1分钟。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1007"/>
+        <location filename="../widgets/mainwindow.cpp" line="1011"/>
         <source>Export all to file</source>
         <translatorcomment>全てのレイヤー画像を書き出し</translatorcomment>
         <translation>全部导出至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1009"/>
-        <location filename="../widgets/mainwindow.cpp" line="1027"/>
+        <location filename="../widgets/mainwindow.cpp" line="1013"/>
+        <location filename="../widgets/mainwindow.cpp" line="1031"/>
         <source>Images (*.png)</source>
         <translatorcomment>画像 (*.png)</translatorcomment>
         <translation>图片 (*.png)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1025"/>
+        <location filename="../widgets/mainwindow.cpp" line="1029"/>
         <source>Export visible part to file</source>
         <translatorcomment>表示レイヤーを書き出し</translatorcomment>
         <translation>导出可见图层至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1044"/>
+        <location filename="../widgets/mainwindow.cpp" line="1048"/>
         <source>Export contents to psd file</source>
         <translation>导出为PSD文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1046"/>
+        <location filename="../widgets/mainwindow.cpp" line="1050"/>
         <source>Photoshop Images (*.psd)</source>
         <translation>Photoshop格式</translation>
     </message>
@@ -872,7 +882,10 @@ Do you want to retry?</source>
     <message>
         <location filename="../misc/errortable.cpp" line="43"/>
         <location filename="../misc/errortable.cpp" line="67"/>
-        <location filename="../misc/errortable.cpp" line="81"/>
+        <location filename="../misc/errortable.cpp" line="83"/>
+        <location filename="../misc/errortable.cpp" line="87"/>
+        <location filename="../misc/errortable.cpp" line="93"/>
+        <location filename="../misc/errortable.cpp" line="95"/>
         <source>unknown error.</source>
         <translatorcomment>未知のエラー。</translatorcomment>
         <translation>未知错误。</translation>
@@ -964,24 +977,44 @@ Do you want to retry?</source>
     </message>
     <message>
         <location filename="../misc/errortable.cpp" line="77"/>
+        <source>server is too busy.</source>
+        <translation>服务器繁忙</translation>
+    </message>
+    <message>
+        <location filename="../misc/errortable.cpp" line="79"/>
         <source>closed by room or room manager.</source>
         <translatorcomment>管理者に閉じられました。</translatorcomment>
         <translation>被房间或者房间管理员关闭。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="79"/>
+        <location filename="../misc/errortable.cpp" line="81"/>
         <source>closed by room owner.</source>
         <translatorcomment>家主さんに閉じられました。</translatorcomment>
         <translation>被房主关闭。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="83"/>
+        <location filename="../misc/errortable.cpp" line="85"/>
         <source>room is closed already.</source>
         <translatorcomment>ルームはもう閉じられました。</translatorcomment>
         <translation>房间已经关闭了。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="85"/>
+        <location filename="../misc/errortable.cpp" line="89"/>
+        <source>wrong key.</source>
+        <translation>密钥出错。</translation>
+    </message>
+    <message>
+        <location filename="../misc/errortable.cpp" line="91"/>
+        <source>timeout, which means too late.</source>
+        <translation>已超时。</translation>
+    </message>
+    <message>
+        <location filename="../misc/errortable.cpp" line="97"/>
+        <source>out of range.</source>
+        <translation>超出范围。</translation>
+    </message>
+    <message>
+        <location filename="../misc/errortable.cpp" line="99"/>
         <source>Unnamed error: %1.</source>
         <translatorcomment>未知なエラー: %1。</translatorcomment>
         <translation>未命名错误：%1。</translation>
@@ -1021,7 +1054,7 @@ Do you want to retry?</source>
         <translation type="obsolete">找不到更新器？</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="79"/>
+        <location filename="../main.cpp" line="108"/>
         <source>We cannot find updater.
 You may need to check update yourself.</source>
         <translation>未找到更新器。
@@ -1119,7 +1152,7 @@ You may need to check update yourself.</source>
     </message>
     <message>
         <location filename="../widgets/roomlistdialog.cpp" line="73"/>
-        <location filename="../widgets/roomlistdialog.cpp" line="642"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="643"/>
         <source>Rooms: %1, Members: %2</source>
         <translation>房间数：%1，在线人数：%2</translation>
     </message>
@@ -1169,7 +1202,7 @@ You may need to check update yourself.</source>
     <message>
         <location filename="../widgets/roomlistdialog.cpp" line="236"/>
         <location filename="../widgets/roomlistdialog.cpp" line="262"/>
-        <location filename="../widgets/roomlistdialog.cpp" line="578"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="579"/>
         <source>Error!</source>
         <translation>出错！</translation>
     </message>
@@ -1182,48 +1215,48 @@ If this situation continues, you should consider &lt;a href=&apos;http://mrspain
 如果一直这样，请尝试&lt;a href=&apos;http://mrspaint.com&apos;&gt;手动更新&lt;/a&gt;。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="539"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="540"/>
         <source>Succeed!</source>
         <translation>建立成功！</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="540"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="541"/>
         <source>Go get your room!</source>
         <translation>快去房间吧！</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="574"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="575"/>
         <source>Error: %1, %2
 Do you want to retry?</source>
         <translation>错误：%1，%2
 想要重试吗？</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="624"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="625"/>
         <source>Private</source>
         <translatorcomment>非公開</translatorcomment>
         <translation>私密</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="624"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="625"/>
         <source>Public</source>
         <translatorcomment>公開</translatorcomment>
         <translation>公开</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="454"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="455"/>
         <source>Connection</source>
         <translatorcomment>接続</translatorcomment>
         <translation>连接</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="455"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="456"/>
         <source>Sorry, server has closed.</source>
         <translatorcomment>接続が切断されました、申し訳ありません。</translatorcomment>
         <translation>对不起，服务器貌似断开了。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="317"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="318"/>
         <source>Full loaded</source>
         <translatorcomment>満員</translatorcomment>
         <translation>满载</translation>
@@ -1239,31 +1272,31 @@ Do you want to retry?</source>
         <translation>输入房间的URL：</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="318"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="319"/>
         <source>Cannot join a full loaded room.</source>
         <translatorcomment>ルームは満員のために、入室ができません。</translatorcomment>
         <translation>无法加入一个满房。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="327"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="328"/>
         <source>Password</source>
         <translatorcomment>パスワード：</translatorcomment>
         <translation>密码：</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="328"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="329"/>
         <source>This is a private room, please input password:</source>
         <translatorcomment>これは非公開のルームなんで、入室用パスワードを入力してください：</translatorcomment>
         <translation>这是一个私人房间，请你输入密码：</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="489"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="490"/>
         <source>Error</source>
         <translatorcomment>エラー</translatorcomment>
         <translation>出错</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="490"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="491"/>
         <source>Sorry, an error occurred.
 Error: %1, %2</source>
         <translatorcomment>エラーが発生しました、申し訳ありません。
@@ -1272,13 +1305,13 @@ Error: %1, %2</source>
 错误：%1，%2</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="676"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="677"/>
         <source>Notice</source>
         <translatorcomment>通知</translatorcomment>
         <translation>注意</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="677"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="678"/>
         <source>We&apos;re still in alpha test. This means the program may crash at any time in any condition.
 Use this software only when you accept it.</source>
         <translatorcomment>チャエ君はまだテストの段階なんで、プログラムは時々崩れかねないから、貴方樣が不快なバグをお避けになるために、これを意識した上でお使いください。</translatorcomment>
@@ -1297,16 +1330,16 @@ Use this software only when you accept it.</source>
 <context>
     <name>ShortcutDelegate</name>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="286"/>
-        <location filename="../widgets/configuredialog.cpp" line="307"/>
-        <location filename="../widgets/configuredialog.cpp" line="326"/>
+        <location filename="../widgets/configuredialog.cpp" line="296"/>
+        <location filename="../widgets/configuredialog.cpp" line="317"/>
+        <location filename="../widgets/configuredialog.cpp" line="336"/>
         <source>Immediately</source>
         <translation>立即触发</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="287"/>
-        <location filename="../widgets/configuredialog.cpp" line="309"/>
-        <location filename="../widgets/configuredialog.cpp" line="328"/>
+        <location filename="../widgets/configuredialog.cpp" line="297"/>
+        <location filename="../widgets/configuredialog.cpp" line="319"/>
+        <location filename="../widgets/configuredialog.cpp" line="338"/>
         <source>When Release</source>
         <translation>松开后触发</translation>
     </message>
