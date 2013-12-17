@@ -7,6 +7,8 @@
 #include <QJsonValue>
 #include <QMessageBox>
 #include <QTimer>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 #include "common.h"
 #include "network/socket.h"
 #include "network/localnetworkinterface.h"
@@ -55,111 +57,118 @@ Updater::~Updater()
 
 void Updater::checkNewestVersion()
 {
-    connect(socket, &Socket::connected,
-            [this](){
-        state_ = State::CHK_VERSION;
-        QJsonObject obj;
-        obj.insert("request", QString("check"));
-        // NOTICE: to ensure no ambigous,
-        // all JSON should be in lower case
-        QString locale = QLocale(QLocale::system().uiLanguages().at(0))
-                .name().toLower();
-        obj.insert("language", locale);
-        obj.insert("platform", QString("windows x86"));
-        socket->sendData(pack(obj));
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QNetworkReply *reply = manager->get(QNetworkRequest(QUrl("https://api.github.com/users/liuyanghejerry")));
+    connect(reply, &QNetworkReply::readyRead,
+            [reply]() {
+        qDebug()<<QString::fromUtf8(reply->readAll());
     });
-    connect(socket, &Socket::error,
-            [this](){
-        switch(state_){
-        case State::CHK_VERSION:
-            state_ = State::CHK_ERROR;
-            break;
-        case State::DOWNLOAD_NEW:
-            state_ = State::DOWNLOAD_ERROR;
-            break;
-        case State::OVERLAP:
-            state_ = State::OVERLAP_ERROR;
-            break;
-        default:
-            state_ = State::UNKNOWN_ERROR;
-        }
 
-        output<<socket->errorString();
-        qApp->exit(1);
-    });
-    connect(socket, &Socket::newData,
-            [this](const QByteArray& data){
-        QJsonObject obj = unpack(data);
-        if(obj.isEmpty()){
-            state_ = State::CHK_ERROR;
-            output<<"Check version error!";
-            qApp->exit(1);
-        }
-        QJsonObject info = obj.value("info").toObject();
-        if(info.isEmpty()){
-            state_ = State::CHK_ERROR;
-            output<<"Check version error!";
-            qApp->exit(1);
-        }
+//    connect(socket, &Socket::connected,
+//            [this](){
+//        state_ = State::CHK_VERSION;
+//        QJsonObject obj;
+//        obj.insert("request", QString("check"));
+//        // NOTICE: to ensure no ambigous,
+//        // all JSON should be in lower case
+//        QString locale = QLocale(QLocale::system().uiLanguages().at(0))
+//                .name().toLower();
+//        obj.insert("language", locale);
+//        obj.insert("platform", QString("windows x86"));
+//        socket->sendData(pack(obj));
+//    });
+//    connect(socket, &Socket::error,
+//            [this](){
+//        switch(state_){
+//        case State::CHK_VERSION:
+//            state_ = State::CHK_ERROR;
+//            break;
+//        case State::DOWNLOAD_NEW:
+//            state_ = State::DOWNLOAD_ERROR;
+//            break;
+//        case State::OVERLAP:
+//            state_ = State::OVERLAP_ERROR;
+//            break;
+//        default:
+//            state_ = State::UNKNOWN_ERROR;
+//        }
 
-        // close connection right after we have the result.
-        socket->close();
+//        output<<socket->errorString();
+//        qApp->exit(1);
+//    });
+//    connect(socket, &Socket::newData,
+//            [this](const QByteArray& data){
+//        QJsonObject obj = unpack(data);
+//        if(obj.isEmpty()){
+//            state_ = State::CHK_ERROR;
+//            output<<"Check version error!";
+//            qApp->exit(1);
+//        }
+//        QJsonObject info = obj.value("info").toObject();
+//        if(info.isEmpty()){
+//            state_ = State::CHK_ERROR;
+//            output<<"Check version error!";
+//            qApp->exit(1);
+//        }
 
-        QString version = info.value("version").toString().trimmed();
-        QString changelog = info.value("changelog").toString();
-        int level = info.value("level").toDouble();
+//        // close connection right after we have the result.
+//        socket->close();
 
-        // try to use url fetched from remote server
-        QUrl url = QUrl::fromUserInput(GlobalDef::DOWNLOAD_URL);
-        QString fetched_url = info.value("url").toString();
+//        QString version = info.value("version").toString().trimmed();
+//        QString changelog = info.value("changelog").toString();
+//        int level = info.value("level").toDouble();
 
-        // if we cannot get a valid url, use predefined url
-        if(!fetched_url.isEmpty()){
-            url = QUrl::fromUserInput(fetched_url);
-        }
+//        // try to use url fetched from remote server
+//        QUrl url = QUrl::fromUserInput(GlobalDef::DOWNLOAD_URL);
+//        QString fetched_url = info.value("url").toString();
 
-        QStringList commandList = qApp->arguments();
-        // --version should be considered first
-        int index = commandList.lastIndexOf("--version");
-        // then we check if there is -v
-        index = index>0?index:commandList.lastIndexOf("-v");
-        if(index < 0 || index >= commandList.count()){
-            output<<"parsing error!"<<"cannot find --version or -v";
-            printUsage();
-            qApp->exit(1);
-        }
-        QString old_version = commandList[index+1].trimmed();
-        if(old_version.isEmpty()){
-            output<<"parsing error!"<<"version number is empty";
-            printUsage();
-            qApp->exit(1);
-        }
-        if(version != old_version){
-            QMessageBox msgBox;
-            msgBox.setWindowModality(Qt::ApplicationModal);
-            msgBox.setTextFormat(Qt::RichText);
-            msgBox.setWindowTitle(tr("New version!"));
-            if(level < 3) {
-                msgBox.setIcon(QMessageBox::Information);
-                msgBox.setText(tr("There's a new version of Mr.Paint.\n"
-                                  "We suggest you download it <a href='%1'>here</a>.")
-                               .arg(url.toString()));
-            }else{
-                msgBox.setIcon(QMessageBox::Warning);
-                msgBox.setText(tr("There's a critical update of Mr.Paint.\n"
-                                  "You can connect to server "
-                                  "ONLY if you've <a href='%1'>updated</a>!")
-                               .arg(url.toString()));
-            }
-            if(!changelog.isEmpty()){
-                msgBox.setDetailedText(changelog);
-            }
+//        // if we cannot get a valid url, use predefined url
+//        if(!fetched_url.isEmpty()){
+//            url = QUrl::fromUserInput(fetched_url);
+//        }
 
-            msgBox.exec();
-        }
-        qApp->exit(0);
+//        QStringList commandList = qApp->arguments();
+//        // --version should be considered first
+//        int index = commandList.lastIndexOf("--version");
+//        // then we check if there is -v
+//        index = index>0?index:commandList.lastIndexOf("-v");
+//        if(index < 0 || index >= commandList.count()){
+//            output<<"parsing error!"<<"cannot find --version or -v";
+//            printUsage();
+//            qApp->exit(1);
+//        }
+//        QString old_version = commandList[index+1].trimmed();
+//        if(old_version.isEmpty()){
+//            output<<"parsing error!"<<"version number is empty";
+//            printUsage();
+//            qApp->exit(1);
+//        }
+//        if(version != old_version){
+//            QMessageBox msgBox;
+//            msgBox.setWindowModality(Qt::ApplicationModal);
+//            msgBox.setTextFormat(Qt::RichText);
+//            msgBox.setWindowTitle(tr("New version!"));
+//            if(level < 3) {
+//                msgBox.setIcon(QMessageBox::Information);
+//                msgBox.setText(tr("There's a new version of Mr.Paint.\n"
+//                                  "We suggest you download it <a href='%1'>here</a>.")
+//                               .arg(url.toString()));
+//            }else{
+//                msgBox.setIcon(QMessageBox::Warning);
+//                msgBox.setText(tr("There's a critical update of Mr.Paint.\n"
+//                                  "You can connect to server "
+//                                  "ONLY if you've <a href='%1'>updated</a>!")
+//                               .arg(url.toString()));
+//            }
+//            if(!changelog.isEmpty()){
+//                msgBox.setDetailedText(changelog);
+//            }
 
-    });
+//            msgBox.exec();
+//        }
+//        qApp->exit(0);
+
+//    });
     //
     QHostAddress addr;
     if(LocalNetworkInterface::supportIpv6()){
