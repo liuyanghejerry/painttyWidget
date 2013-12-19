@@ -9,6 +9,7 @@
 #include <QTimer>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include "../network/localnetworkinterface.h"
 #include "common.h"
 
 Updater::Updater() :
@@ -35,7 +36,7 @@ Updater::~Updater()
 
 void Updater::quit()
 {
-    qApp->exit(1);
+    qApp->exit();
 }
 
 void Updater::onCheck()
@@ -153,7 +154,13 @@ void Updater::checkNewestVersion()
     QJsonDocument doc;
     doc.setObject(obj);
 
-    QNetworkRequest request(QUrl("http://localhost:7979"));
+    QUrl update_addr;
+    if(LocalNetworkInterface::supportIpv6()) {
+        update_addr = QUrl(GlobalDef::UPDATER_ADDR_IPV6);
+    } else {
+        update_addr = QUrl(GlobalDef::UPDATER_ADDR_IPV4);
+    }
+    QNetworkRequest request(update_addr);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
 
     QNetworkReply *reply = manager_->post(request, doc.toJson());
