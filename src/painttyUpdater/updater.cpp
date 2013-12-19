@@ -33,6 +33,11 @@ Updater::~Updater()
     //
 }
 
+void Updater::quit()
+{
+    qApp->exit(1);
+}
+
 void Updater::onCheck()
 {
     QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
@@ -57,22 +62,72 @@ void Updater::onCheck()
         url = QUrl::fromUserInput(fetched_url);
     }
 
+    QString old_version = queryOldVersion();
+    if(old_version.isEmpty()){
+        output<<"parsing error!"<<"version number is empty";
+        printUsage();
+        quit();
+    }
+
+    if(version != old_version){
+        QMessageBox msgBox;
+        msgBox.setWindowModality(Qt::ApplicationModal);
+        msgBox.setTextFormat(Qt::RichText);
+        msgBox.setWindowTitle(tr("New version!"));
+        if(level < 3) {
+            msgBox.setIcon(QMessageBox::Information);
+            msgBox.setText(tr("There's a new version of Mr.Paint.\n"
+                              "We suggest you download it <a href='%1'>here</a>.")
+                           .arg(url.toString()));
+        }else{
+            msgBox.setIcon(QMessageBox::Warning);
+            msgBox.setText(tr("There's a critical update of Mr.Paint.\n"
+                              "You can connect to server "
+                              "ONLY if you've <a href='%1'>updated</a>!")
+                           .arg(url.toString()));
+        }
+        if(!changelog.isEmpty()){
+            msgBox.setDetailedText(changelog);
+        }
+
+        msgBox.exec();
+    }
+
+    quit();
+}
+
+QString Updater::queryOldVersion()
+{
     QStringList commandList = qApp->arguments();
     // --version should be considered first
     int index = commandList.lastIndexOf("--version");
     // then we check if there is -v
     index = index > 0 ? index : commandList.lastIndexOf("-v");
     if(index < 0 || index >= commandList.count()){
-        output<<"parsing error!"<<"cannot find --version or -v";
-        printUsage();
-        qApp->exit(1);
+        return QString();
     }
     QString old_version = commandList[index+1].trimmed();
-    if(old_version.isEmpty()){
-        output<<"parsing error!"<<"version number is empty";
-        printUsage();
-        qApp->exit(1);
-    }
+    return old_version;
+}
+
+QString Updater::querySystem()
+{
+#if defined(Q_OS_WIN32)
+    return QString("windows x86");
+#elif defined(Q_OS_OSX)
+    return QString("mac");
+#elif defined(Q_OS_LINUX) && defined(Q_PROCESSOR_X86_32)
+    return QString("linux x86");
+#elif defined(Q_OS_LINUX) && defined(Q_PROCESSOR_X86_64)
+    return QString("linux x64");
+#endif
+    return QString();
+}
+
+QString Updater::queryLanguage()
+{
+    return QLocale(QLocale::system().uiLanguages().at(0))
+            .name().toLower();
 }
 
 void Updater::checkNewestVersion()
@@ -83,10 +138,18 @@ void Updater::checkNewestVersion()
     obj.insert("request", QString("check"));
     // NOTICE: to ensure no ambigous,
     // all JSON should be in lower case
-    QString locale = QLocale(QLocale::system().uiLanguages().at(0))
-            .name().toLower();
+    QString locale = queryLanguage();
+    if(locale.isEmpty()) {
+        output << "error when query system locale.";
+        quit();
+    }
+    QString system = querySystem();
+    if(system.isEmpty()) {
+        output << "error when query os. Unsupported system?";
+        quit();
+    }
     obj.insert("language", locale);
-    obj.insert("platform", QString("windows x86"));
+    obj.insert("platform", system);
     QJsonDocument doc;
     doc.setObject(obj);
 
@@ -116,7 +179,7 @@ void Updater::timeout()
 {
     // TODO: should stop all network activities before quit
     if(state_ < State::CHK_VERSION)
-        qApp->exit(1);
+        quit();
 }
 
 void Updater::printUsage()

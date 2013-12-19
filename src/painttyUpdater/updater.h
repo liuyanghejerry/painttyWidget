@@ -19,9 +19,15 @@ public:
     void printUsage();
     void timeout();
     ~Updater();
+    void quit();
 
 public slots:
     void onCheck();
+
+protected:
+    QString queryOldVersion();
+    QString querySystem();
+    QString queryLanguage();
     
 private:
     enum State {
