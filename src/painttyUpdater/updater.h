@@ -3,7 +3,8 @@
 
 #include <QApplication>
 #include <QTextStream>
-class Socket;
+
+class QNetworkAccessManager;
 
 class Updater : public QObject
 {
@@ -18,6 +19,9 @@ public:
     void printUsage();
     void timeout();
     ~Updater();
+
+public slots:
+    void onCheck();
     
 private:
     enum State {
@@ -31,7 +35,7 @@ private:
         UNKNOWN_ERROR
     };
 
-    Socket *socket;
+    QNetworkAccessManager *manager_;
     State state_;
     QTimer *timer_;
     QTextStream output;
