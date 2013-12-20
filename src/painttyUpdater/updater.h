@@ -3,6 +3,7 @@
 
 #include <QApplication>
 #include <QTextStream>
+#include <QFile>
 #include "updatedialog.h"
 
 class QNetworkAccessManager;
@@ -16,6 +17,7 @@ public:
     void run();
     void checkNewestVersion();
     bool download(const QUrl &url);
+    bool uncompress(QFile file);
     bool overlap();
     void printUsage();
     void timeout();
@@ -28,7 +30,7 @@ protected slots:
     void onDownloadFinished();
 
 protected:
-    QString queryOldVersion();
+    int queryOldVersion();
     QString querySystem();
     QString queryLanguage();
     

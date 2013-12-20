@@ -70,7 +70,7 @@ void initTranslation()
 bool runUpdater()
 {
     QStringList args;
-    args<<"-v"<<GlobalDef::CLIENT_VER;
+    args<<"-v"<<QString::number(GlobalDef::CLIENT_VER, 10);
     QProcess *process = new QProcess(qApp);
     process->setWorkingDirectory(QDir::currentPath());
     QObject::connect(qApp, &QApplication::aboutToQuit, process, &QProcess::kill);

@@ -28,14 +28,12 @@ mac {
 }
 
 SOURCES += main.cpp\
-    ../common/network/socket.cpp \
     updater.cpp \
     ../common/network/localnetworkinterface.cpp \
     updatedialog.cpp
 
 HEADERS  += \
     ../common/common.h \
-    ../common/network/socket.h \
     updater.h \
     ../common/network/localnetworkinterface.h \
     updatedialog.h

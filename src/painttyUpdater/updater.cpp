@@ -65,7 +65,7 @@ void Updater::onCheck()
     info = info.value("info").toObject();
     qDebug()<<info;
 
-    QString version = info.value("version").toString().trimmed();
+    int version = info.value("version").toDouble();
     QString changelog = info.value("changelog").toString();
     int level = info.value("level").toDouble();
 
@@ -78,8 +78,8 @@ void Updater::onCheck()
         url = QUrl::fromUserInput(fetched_url);
     }
 
-    QString old_version = queryOldVersion();
-    if(old_version.isEmpty()){
+    int old_version = queryOldVersion();
+    if(!old_version){
         output<<"parsing error!"<<"version number is empty";
         printUsage();
         quit();
@@ -87,7 +87,7 @@ void Updater::onCheck()
 
     if(version != old_version){
         QString find_new_version = QString(tr("Found new version, %1\nLevel: %2\nChangelog:\n%3\n"))
-                .arg(version)
+                .arg(version/100.0) // shows as float number
                 .arg(level)
                 .arg(changelog);
         dialog.print(find_new_version);
@@ -118,10 +118,11 @@ void Updater::onDownloadFinished()
         return;
     }
     tmp_file.write(reply->readAll());
-//    reply->readAll();
+    tmp_file.close();
+    uncompress(tmp_file);
 }
 
-QString Updater::queryOldVersion()
+int Updater::queryOldVersion()
 {
     QStringList commandList = qApp->arguments();
     // --version should be considered first
@@ -129,10 +130,9 @@ QString Updater::queryOldVersion()
     // then we check if there is -v
     index = index > 0 ? index : commandList.lastIndexOf("-v");
     if(index < 0 || index >= commandList.count()){
-        return QString();
+        return 0;
     }
-    QString old_version = commandList[index+1].trimmed();
-    return old_version;
+    return commandList[index+1].trimmed().toInt();
 }
 
 QString Updater::querySystem()
@@ -215,6 +215,11 @@ bool Updater::download(const QUrl& url)
     connect(reply, &QNetworkReply::finished,
             this, &Updater::onDownloadFinished);
     dialog.print(tr("downloading..."));
+    return true;
+}
+
+bool Updater::uncompress(QFile file)
+{
     return true;
 }
 
