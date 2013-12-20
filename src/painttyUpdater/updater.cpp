@@ -9,6 +9,7 @@
 #include <QTimer>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QDesktopServices>
 #include "../network/localnetworkinterface.h"
 #include "common.h"
 
@@ -42,10 +43,16 @@ void Updater::quit()
 void Updater::onCheck()
 {
     QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
-    reply->deleteLater();
-
+    if(!reply) {
+        qDebug()<<"cannot find reply object";
+        quit();
+        return;
+    }
     QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
-    if(doc.isNull() || doc.isEmpty()) {
+
+    if(doc.isEmpty()) {
+        qDebug()<<"return value is empty";
+        quit();
         return;
     }
     QJsonObject info = doc.object();
@@ -92,8 +99,10 @@ void Updater::onCheck()
         }
 
         msgBox.exec();
+        download(url);
     }
 
+    reply->deleteLater();
     quit();
 }
 
@@ -160,20 +169,24 @@ void Updater::checkNewestVersion()
     } else {
         update_addr = QUrl(GlobalDef::UPDATER_ADDR_IPV4);
     }
+//    qDebug()<<update_addr;
     QNetworkRequest request(update_addr);
     request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
 
     QNetworkReply *reply = manager_->post(request, doc.toJson());
     connect(reply, &QNetworkReply::finished,
             this, &Updater::onCheck);
-
     return;
 }
 
-bool Updater::download()
+bool Updater::download(const QUrl& url)
 {
+    if(url.isEmpty()) {
+        return false;
+    }
+    QDesktopServices::openUrl(url);
     // TODO: auto download the new version
-    return false;
+    return true;
 }
 
 bool Updater::overlap()
@@ -185,7 +198,7 @@ bool Updater::overlap()
 void Updater::timeout()
 {
     // TODO: should stop all network activities before quit
-    if(state_ < State::CHK_VERSION)
+    if(state_ <= State::CHK_VERSION)
         quit();
 }
 

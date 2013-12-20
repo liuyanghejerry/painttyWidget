@@ -14,7 +14,7 @@ public:
     Updater();
     void run();
     void checkNewestVersion();
-    bool download();
+    bool download(const QUrl &url);
     bool overlap();
     void printUsage();
     void timeout();

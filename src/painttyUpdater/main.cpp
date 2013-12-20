@@ -4,7 +4,7 @@
 #include <QStringList>
 #include <QSettings>
 #include <QDebug>
-#ifdef Q_OS_MACX
+#if defined(Q_OS_OSX) || defined(Q_OS_MACX)
 #include <QDir>
 #endif
 #include "../common/common.h"
@@ -39,7 +39,7 @@ void initSettings()
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-#ifdef Q_OS_MACX
+#if defined(Q_OS_OSX) || defined(Q_OS_MACX)
     QDir::setCurrent(a.applicationDirPath());
 #endif
     initSettings();

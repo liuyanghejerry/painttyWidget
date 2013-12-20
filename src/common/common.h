@@ -20,14 +20,14 @@ const static char SETTINGS_NAME[] = "mrpaint.ini";
 #ifdef PAINTTY_DEV
 const static QString HOST_ADDR_IPV4("192.81.128.68");
 const static QString HOST_ADDR_IPV6("2600:3c01::f03c:91ff:fe70:bc64");
-const static QString UPDATER_ADDR_IPV4("http://update.mrspaint.com");
-const static QString UPDATER_ADDR_IPV6("http://update6.mrspaint.com:7979");
+const static QString UPDATER_ADDR_IPV4("http://localhost:17979");
+const static QString UPDATER_ADDR_IPV6("http://localhost:17979");
 const static int HOST_MGR_PORT = 7575;
 #else
 const static QString HOST_ADDR_IPV4("192.81.128.68");
 const static QString HOST_ADDR_IPV6("2600:3c01::f03c:91ff:fe70:bc64");
-const static QString UPDATER_ADDR_IPV4("http://update.mrspaint.com");
-const static QString UPDATER_ADDR_IPV6("http://update6.mrspaint.com:7979");
+const static QString UPDATER_ADDR_IPV4("http://update.mrspaint.com:17979");
+const static QString UPDATER_ADDR_IPV6("http://update6.mrspaint.com:17979");
 const static int HOST_MGR_PORT = 7070;
 #endif
 
