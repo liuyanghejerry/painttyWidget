@@ -122,8 +122,10 @@ QString Updater::queryOldVersion()
 
 QString Updater::querySystem()
 {
-#if defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN32) && !defined(Q_OS_WIN64)
     return QString("windows x86");
+#elif defined(Q_OS_WIN64)
+    return QString("windows x64");
 #elif defined(Q_OS_OSX)
     return QString("mac");
 #elif defined(Q_OS_LINUX) && defined(Q_PROCESSOR_X86_32)
