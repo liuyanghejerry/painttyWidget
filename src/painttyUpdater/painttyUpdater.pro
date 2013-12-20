@@ -30,13 +30,15 @@ mac {
 SOURCES += main.cpp\
     ../common/network/socket.cpp \
     updater.cpp \
-    ../common/network/localnetworkinterface.cpp
+    ../common/network/localnetworkinterface.cpp \
+    updatedialog.cpp
 
 HEADERS  += \
     ../common/common.h \
     ../common/network/socket.h \
     updater.h \
-    ../common/network/localnetworkinterface.h
+    ../common/network/localnetworkinterface.h \
+    updatedialog.h
 
 TRANSLATIONS += translation/updater_zh_CN.ts \ #Simplified Chinese
     translation/updater_zh_TW.ts \ #Traditional Chinese
@@ -49,4 +51,7 @@ RESOURCES += \
 
 OTHER_FILES += \
     Info.plist
+
+FORMS += \
+    updatedialog.ui
 

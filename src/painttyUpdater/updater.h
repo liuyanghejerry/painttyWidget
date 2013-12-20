@@ -3,6 +3,7 @@
 
 #include <QApplication>
 #include <QTextStream>
+#include "updatedialog.h"
 
 class QNetworkAccessManager;
 
@@ -21,8 +22,10 @@ public:
     ~Updater();
     void quit();
 
-public slots:
+protected slots:
     void onCheck();
+    void onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+    void onDownloadFinished();
 
 protected:
     QString queryOldVersion();
@@ -45,6 +48,7 @@ private:
     State state_;
     QTimer *timer_;
     QTextStream output;
+    UpdateDialog dialog;
 };
 
 #endif // MAINWINDOW_H

@@ -9,9 +9,10 @@
 #include <QTimer>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QDesktopServices>
+#include <QTemporaryFile>
 #include "../network/localnetworkinterface.h"
 #include "common.h"
+#include "updatedialog.h"
 
 Updater::Updater() :
     manager_(new QNetworkAccessManager(this)),
@@ -56,6 +57,13 @@ void Updater::onCheck()
         return;
     }
     QJsonObject info = doc.object();
+    if( (!info.value("result").toBool()) || (info.value("response").toString() != "version") ) {
+        qDebug()<<"server error.";
+        quit();
+        return;
+    }
+    info = info.value("info").toObject();
+    qDebug()<<info;
 
     QString version = info.value("version").toString().trimmed();
     QString changelog = info.value("changelog").toString();
@@ -78,32 +86,39 @@ void Updater::onCheck()
     }
 
     if(version != old_version){
-        QMessageBox msgBox;
-        msgBox.setWindowModality(Qt::ApplicationModal);
-        msgBox.setTextFormat(Qt::RichText);
-        msgBox.setWindowTitle(tr("New version!"));
-        if(level < 3) {
-            msgBox.setIcon(QMessageBox::Information);
-            msgBox.setText(tr("There's a new version of Mr.Paint.\n"
-                              "We suggest you download it <a href='%1'>here</a>.")
-                           .arg(url.toString()));
-        }else{
-            msgBox.setIcon(QMessageBox::Warning);
-            msgBox.setText(tr("There's a critical update of Mr.Paint.\n"
-                              "You can connect to server "
-                              "ONLY if you've <a href='%1'>updated</a>!")
-                           .arg(url.toString()));
-        }
-        if(!changelog.isEmpty()){
-            msgBox.setDetailedText(changelog);
-        }
-
-        msgBox.exec();
+        QString find_new_version = QString(tr("Found new version, %1\nLevel: %2\nChangelog:\n%3\n"))
+                .arg(version)
+                .arg(level)
+                .arg(changelog);
+        dialog.print(find_new_version);
         download(url);
     }
-
     reply->deleteLater();
-    quit();
+}
+
+void Updater::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+{
+    dialog.updateProgress(bytesReceived/bytesTotal * 80);
+}
+
+void Updater::onDownloadFinished()
+{
+    QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
+    if(!reply) {
+        qDebug()<<"cannot find reply object";
+        quit();
+        return;
+    }
+    QTemporaryFile tmp_file("mrspaint.tmp");
+    tmp_file.setAutoRemove(true);
+    if(!tmp_file.open()) {
+        dialog.print(tr("Error encounter!\nAbort."));
+        qDebug()<<"cannot create a temp file.";
+        quit();
+        return;
+    }
+    tmp_file.write(reply->readAll());
+//    reply->readAll();
 }
 
 QString Updater::queryOldVersion()
@@ -144,6 +159,8 @@ QString Updater::queryLanguage()
 
 void Updater::checkNewestVersion()
 {
+    dialog.setWindowTitle(tr("Checking new version"));
+    dialog.show();
     state_ = State::CHK_VERSION;
 
     QJsonObject obj;
@@ -186,8 +203,18 @@ bool Updater::download(const QUrl& url)
     if(url.isEmpty()) {
         return false;
     }
-    QDesktopServices::openUrl(url);
+//    QDesktopServices::openUrl(url);
     // TODO: auto download the new version
+
+    dialog.setWindowTitle(tr("Downloading"));
+    QNetworkRequest request(url);
+//    request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/json"));
+    QNetworkReply *reply = manager_->get(request);
+    connect(reply, &QNetworkReply::downloadProgress,
+            this, &Updater::onDownloadProgress);
+    connect(reply, &QNetworkReply::finished,
+            this, &Updater::onDownloadFinished);
+    dialog.print(tr("downloading..."));
     return true;
 }
 
