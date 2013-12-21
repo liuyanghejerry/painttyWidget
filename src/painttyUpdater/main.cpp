@@ -30,7 +30,7 @@ void initSettings()
                        QSettings::defaultFormat(),
                        qApp);
     QString updaterVersion = settings.value("global/version/updater",
-                                           GlobalDef::UPDATER_VERSION)
+                                           GlobalDef::UPDATER_VER)
             .toString();
     settings.setValue("global/version/updater", updaterVersion);
     settings.sync();

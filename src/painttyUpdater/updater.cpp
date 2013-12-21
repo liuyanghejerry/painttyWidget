@@ -9,7 +9,6 @@
 #include <QTimer>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QTemporaryFile>
 #include "../network/localnetworkinterface.h"
 #include "common.h"
 #include "updatedialog.h"
@@ -218,7 +217,7 @@ bool Updater::download(const QUrl& url)
     return true;
 }
 
-bool Updater::uncompress(QFile file)
+bool Updater::uncompress(QTemporaryFile& file)
 {
     return true;
 }
@@ -238,7 +237,7 @@ void Updater::timeout()
 
 void Updater::printUsage()
 {
-    output<<"painttyUpdater "<<GlobalDef::UPDATER_VERSION<<endl
+    output<<"painttyUpdater "<<GlobalDef::UPDATER_VER<<endl
            <<"Usage: "<<"painttyUpdater OPTIONS"<<endl<<endl
           <<"-v, --version VERSION: tell updater the current "
             "version of main program.";

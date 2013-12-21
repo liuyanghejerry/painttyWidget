@@ -3,7 +3,7 @@
 
 #include <QApplication>
 #include <QTextStream>
-#include <QFile>
+#include <QTemporaryFile>
 #include "updatedialog.h"
 
 class QNetworkAccessManager;
@@ -17,7 +17,7 @@ public:
     void run();
     void checkNewestVersion();
     bool download(const QUrl &url);
-    bool uncompress(QFile file);
+    bool uncompress(QTemporaryFile &file);
     bool overlap();
     void printUsage();
     void timeout();
