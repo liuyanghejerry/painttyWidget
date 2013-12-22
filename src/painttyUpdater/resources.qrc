@@ -1,9 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>translation/qt_ja.qm</file>
-        <file>translation/qt_zh_CN.qm</file>
-        <file>translation/qt_zh_TW.qm</file>
-        <file>translation/updater_zh_CN.qm</file>
-        <file>translation/updater_zh_TW.qm</file>
-    </qresource>
-</RCC>
