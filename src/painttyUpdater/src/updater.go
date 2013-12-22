@@ -5,6 +5,7 @@ import (
     "archive/zip"
     "bytes"
     "strings"
+    "strconv"
     "encoding/json"
     "io"
     "io/ioutil"
@@ -14,6 +15,8 @@ import (
     "path/filepath"
     "osext"
     "easycp"
+    "platform"
+    "language"
 )
 
 const SERVER_ADDR_IPV4 = "http://localhost:17979"
@@ -98,16 +101,21 @@ func oldVersion() uint64 {
     return *v
 }
 
-func platform() string {
-    return "windows x86"
+func queryPlatform() string {
+    p := platform.GetPlatformName()
+    a := platform.GetPlatformArch()
+    if p == "mac" {
+        return p
+    }
+    return p + " " + a
 }
 
-func language() string {
-    return "zh_cn"
+func queryLanguage() string {
+    return language.GetSystemLanguage()
 }
 
 func complete() error {
-    r := flag.String("r", "", "path to original updater")
+    r := flag.String("i", "", "path to original updater")
     p := flag.Uint64("p", 0, "pid to original updater")
     flag.Parse()
 
@@ -159,7 +167,7 @@ func complete() error {
 }
 
 func check() (bool, string, error) {
-    m := VersionCheckReq{"version", platform(), language()}
+    m := VersionCheckReq{"version", queryPlatform(), queryLanguage()}
     jsonRequest, err := json.Marshal(m)
     if err != nil {
         return false, "", err
@@ -245,7 +253,8 @@ func install(dest string) error {
     }
     s := string(os.PathSeparator)
     new_updater := filepath.FromSlash(current_path + s +"updater")
-    args := []string {"-r \" + current_path + \" "}
+    pid := os.Getpid()
+    args := []string {"-i " + current_path + " ", "-p " + strconv.Itoa(pid) + " "}
     prcs, err := os.StartProcess(new_updater, args, nil)
     if err != nil {
         return err
