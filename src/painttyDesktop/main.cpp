@@ -99,7 +99,15 @@ void initFonts()
 bool runUpdater()
 {
     QStringList args;
-    args<<"-v"<<QString::number(GlobalDef::CLIENT_VER, 10);
+    args<<"-v"<< QString::number(GlobalDef::CLIENT_VER, 10)
+          <<"-p"<< QString::number(qApp->applicationPid(), 10);
+
+    qDebug()<<"try to start updater: "<<args;
+
+    // TODO: considering using detached way,
+    // which won't kill updater when Mr.Paint is get killed or be closed
+//    QProcess::startDetached(QDir::current().filePath("updater"), args, QDir::currentPath());
+
     QProcess *process = new QProcess(qApp);
     process->setWorkingDirectory(QDir::currentPath());
     process->start(QDir::current().filePath("updater"), args);
