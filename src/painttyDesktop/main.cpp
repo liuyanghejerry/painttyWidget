@@ -102,7 +102,6 @@ bool runUpdater()
     args<<"-v"<<QString::number(GlobalDef::CLIENT_VER, 10);
     QProcess *process = new QProcess(qApp);
     process->setWorkingDirectory(QDir::currentPath());
-    QObject::connect(qApp, &QApplication::aboutToQuit, process, &QProcess::kill);
     process->start(QDir::current().filePath("updater"), args);
     if (!process->waitForStarted()){
         GradualBox::showText(QObject::tr("We cannot find updater.\n"
