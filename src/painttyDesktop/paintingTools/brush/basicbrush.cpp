@@ -8,6 +8,9 @@
 #include <QtGlobal>
 #include <QDebug>
 
+#include "../../misc/shortcutmanager.h"
+#include "../../misc/singleton.h"
+
 //qreal myEasingFunction(qreal progress);
 
 BasicBrush::BasicBrush() :
@@ -24,7 +27,8 @@ BasicBrush::BasicBrush() :
 
     name_ = QObject::tr("BasicBrush");
     displayName_ = name_;
-    shortcut_ = Qt::Key_1;
+    shortcut_ = Singleton<ShortcutManager>::instance()
+            .shortcut("basicbrush")["key"].toString();
 }
 
 void BasicBrush::setWidth(int width)

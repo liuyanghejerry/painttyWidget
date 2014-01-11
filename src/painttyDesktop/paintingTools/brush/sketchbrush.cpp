@@ -2,6 +2,9 @@
 #include <QPainterPath>
 #include <QPainter>
 
+#include "../../misc/shortcutmanager.h"
+#include "../../misc/singleton.h"
+
 SketchBrush::SketchBrush()
 {
     typedef BrushFeature BF;
@@ -13,7 +16,8 @@ SketchBrush::SketchBrush()
 
     name_ = QObject::tr("SketchBrush");
     displayName_ = name_;
-    shortcut_ = Qt::Key_4;
+    shortcut_ = Singleton<ShortcutManager>::instance()
+            .shortcut("sketchbrush")["key"].toString();
 }
 
 void SketchBrush::setColor(const QColor &c)

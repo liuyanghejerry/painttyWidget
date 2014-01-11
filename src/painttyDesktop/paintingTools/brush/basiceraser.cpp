@@ -1,5 +1,8 @@
 #include "basiceraser.h"
 
+#include "../../misc/shortcutmanager.h"
+#include "../../misc/singleton.h"
+
 BasicEraser::BasicEraser()
     :brush_(Qt::transparent),
       pen_(Qt::transparent)
@@ -14,7 +17,8 @@ BasicEraser::BasicEraser()
 
     name_ = QObject::tr("BasicEraser");
     displayName_ = name_;
-    shortcut_ = Qt::Key_6;
+    shortcut_ = Singleton<ShortcutManager>::instance()
+            .shortcut("basiceraser")["key"].toString();
 }
 
 void BasicEraser::drawPoint(const QPoint &p, qreal )

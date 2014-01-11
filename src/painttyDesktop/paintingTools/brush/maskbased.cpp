@@ -2,6 +2,9 @@
 #include <QPainter>
 #include <QDebug>
 
+#include "../../misc/shortcutmanager.h"
+#include "../../misc/singleton.h"
+
 MaskBased::MaskBased() :
     BasicBrush()
 {
@@ -14,7 +17,8 @@ MaskBased::MaskBased() :
 
     name_ = QObject::tr("Crayon");
     displayName_ = name_;
-    shortcut_ = Qt::Key_5;
+    shortcut_ = Singleton<ShortcutManager>::instance()
+            .shortcut("crayon")["key"].toString();
 }
 
 void MaskBased::makeStencil(QColor color)

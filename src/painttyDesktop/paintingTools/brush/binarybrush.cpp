@@ -4,6 +4,9 @@
 #include <QBrush>
 #include <QPainter>
 
+#include "../../misc/shortcutmanager.h"
+#include "../../misc/singleton.h"
+
 BinaryBrush::BinaryBrush() :
     BasicBrush()
 {
@@ -15,7 +18,8 @@ BinaryBrush::BinaryBrush() :
 
     name_ = QObject::tr("BinaryBrush");
     displayName_ = name_;
-    shortcut_ = Qt::Key_2;
+    shortcut_ = Singleton<ShortcutManager>::instance()
+            .shortcut("binarybrush")["key"].toString();
 }
 
 AbstractBrush *BinaryBrush::createBrush()

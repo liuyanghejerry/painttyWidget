@@ -8,6 +8,9 @@
 #include <QObject>
 #include <QDebug>
 
+#include "../../misc/shortcutmanager.h"
+#include "../../misc/singleton.h"
+
 WaterBased::WaterBased():
     BasicBrush(),
     water_(50),
@@ -27,7 +30,8 @@ WaterBased::WaterBased():
 
     name_ = QObject::tr("WaterBrush");
     displayName_ = name_;
-    shortcut_ = Qt::Key_3;
+    shortcut_ = Singleton<ShortcutManager>::instance()
+            .shortcut("waterbrush")["key"].toString();
 }
 int WaterBased::water() const
 {
