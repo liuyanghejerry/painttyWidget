@@ -9,6 +9,7 @@
 #include "widgets/mainwindow.h"
 #include "widgets/roomlistdialog.h"
 #include "widgets/gradualbox.h"
+#include "widgets/waitupdaterdialog.h"
 #include "misc/singleton.h"
 
 namespace mainOnly
@@ -73,7 +74,7 @@ void initFonts()
                        QSettings::defaultFormat(),
                        qApp);
     bool use_droid_font = settings.value("global/use_droid_font", false)
-                .toBool();
+            .toBool();
     if(!use_droid_font){
         return;
     }
@@ -85,7 +86,7 @@ void initFonts()
     QStringList strList(QFontDatabase::applicationFontFamilies(ret));
     if (strList.count() > 0){
         QFont fontThis(strList.at(0));
-//        fontThis.setPointSize(9);
+        //        fontThis.setPointSize(9);
         if(qApp->font().pointSize() == -1){
             fontThis.setPixelSize(qApp->font().pixelSize());
         }else{
@@ -100,13 +101,13 @@ bool runUpdater()
 {
     QStringList args;
     args<<"-v"<< QString::number(GlobalDef::CLIENT_VER, 10)
-          <<"-p"<< QString::number(qApp->applicationPid(), 10);
+       <<"-p"<< QString::number(qApp->applicationPid(), 10);
 
     qDebug()<<"try to start updater: "<<args;
 
     // TODO: considering using detached way,
     // which won't kill updater when Mr.Paint is get killed or be closed
-//    QProcess::startDetached(QDir::current().filePath("updater"), args, QDir::currentPath());
+    //    QProcess::startDetached(QDir::current().filePath("updater"), args, QDir::currentPath());
 
     QProcess *process = new QProcess(qApp);
     process->setWorkingDirectory(QDir::currentPath());
@@ -116,6 +117,14 @@ bool runUpdater()
                                          "You may need to check update yourself."));
         return false;
     }
+    WaitUpdaterDialog *dialog = new WaitUpdaterDialog;
+    WaitUpdaterDialog::connect(dialog, &WaitUpdaterDialog::rejected,
+                               process, &QProcess::terminate);
+    WaitUpdaterDialog::connect(process,
+                               static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+                               dialog, &WaitUpdaterDialog::close);
+    dialog->exec();
+    dialog->deleteLater();
     return true;
 }
 

@@ -87,7 +87,8 @@ SOURCES += main.cpp\
     widgets/gradualbox.cpp \
     widgets/developerconsole.cpp \
     widgets/canvasbackend.cpp \
-    widgets/irclineedit.cpp
+    widgets/irclineedit.cpp \
+    widgets/waitupdaterdialog.cpp
 
 
 HEADERS  += widgets/mainwindow.h \
@@ -143,7 +144,8 @@ HEADERS  += widgets/mainwindow.h \
     widgets/gradualbox.h \
     widgets/developerconsole.h \
     widgets/irclineedit.h \
-    widgets/canvasbackend.h
+    widgets/canvasbackend.h \
+    widgets/waitupdaterdialog.h
 
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \
@@ -153,7 +155,8 @@ FORMS    += widgets/mainwindow.ui \
     widgets/aboutdialog.ui \
     widgets/helpdialog.ui \
     widgets/configuredialog.ui \
-    widgets/developerconsole.ui
+    widgets/developerconsole.ui \
+    widgets/waitupdaterdialog.ui
 
 TRANSLATIONS += translation/paintty_zh_CN.ts \ #Simplified Chinese
     translation/paintty_zh_TW.ts \ #Traditional Chinese
