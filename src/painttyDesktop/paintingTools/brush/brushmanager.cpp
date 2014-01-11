@@ -1,6 +1,6 @@
 #include "brushmanager.h"
 #include "abstractbrush.h"
-#include "brush.h"
+#include "basicbrush.h"
 #include <QDebug>
 
 bool BrushManager::addBrush(BrushPointer brush)
@@ -34,7 +34,7 @@ BrushPointer BrushManager::makeBrush(const QString &name)
         qWarning()<<"Brush"<<name<<" cannot identify";
 
         // use Brush to fall back
-        BrushPointer nptr = BrushPointer(new Brush);
+        BrushPointer nptr = BrushPointer(new BasicBrush);
         return nptr;
     }
     BrushPointer nptr = BrushPointer(ptr->createBrush());

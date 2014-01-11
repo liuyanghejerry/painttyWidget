@@ -1,10 +1,18 @@
 #include "abstractbrush.h"
+#include <QDebug>
 
-AbstractBrush::AbstractBrush()
-    :leftOverDistance(0),
-      hardness_(100)
+AbstractBrush::AbstractBrush():
+    width_(10),
+    thickness_(THICKNESS_MAX),
+    color_(Qt::black),
+    surface_(nullptr)
 {
-    //
+    typedef BrushFeature BF;
+    BF::FeatureBits bits;
+    bits.set(BF::WIDTH);
+    bits.set(BF::COLOR);
+    bits.set(BF::THICKNESS);
+    features_ = bits;
 }
 
 AbstractBrush::~AbstractBrush()
@@ -42,88 +50,58 @@ void AbstractBrush::setShortcut(QKeySequence key)
     shortcut_ = key;
 }
 
-void AbstractBrush::start(const QPointF &st, qreal pressure)
+int AbstractBrush::width() const
 {
-    leftOverDistance = 0;
-    drawPoint(st, pressure);
-    lastPoint_ = st;
+    return width_;
 }
 
-void AbstractBrush::lineTo(const QPointF &st, qreal pressure)
+void AbstractBrush::setWidth(int width)
 {
-    if(lastPoint_.isNull()){
-        start(st, pressure);
-        return;
-    }
-    this->drawLine(lastPoint_, st, leftOverDistance, pressure);
-    lastPoint_ = st;
+    width_ = qBound((int)WIDTH_MIN, width, (int)WIDTH_MAX);
+    settings_.insert("width", width_);
+}
+int AbstractBrush::thickness() const
+{
+    return thickness_;
 }
 
-QColor AbstractBrush::color()
+void AbstractBrush::setThickness(int thickness)
 {
-    return mainColor;
+    thickness_ = qBound((int)THICKNESS_MIN, thickness, (int)THICKNESS_MAX);
+    settings_.insert("thickness", thickness_);
 }
 
-void AbstractBrush::setColor(const QColor &c)
-{
-    mainColor = c;
-}
-
-int AbstractBrush::hardness()
-{
-    return hardness_;
-}
-
-void AbstractBrush::setHardness(int h)
-{
-    hardness_ = h;
-}
-
-LayerPointer AbstractBrush::surface()
+Surface AbstractBrush::surface() const
 {
     return surface_;
 }
 
-void AbstractBrush::setSurface(LayerPointer p)
+void AbstractBrush::setSurface(Surface surface)
 {
-    surface_ = p;
+    surface_ = surface;
 }
 
-void AbstractBrush::end()
+BrushSettings AbstractBrush::settings() const
 {
+    return settings_;
 }
 
-void AbstractBrush::drawPoint(const QPointF &, qreal pressure)
+void AbstractBrush::setSettings(const BrushSettings &settings)
 {
-    //
+    const BrushSettings& s = settings;
+    setColor(s.value("color", color_).value<QColor>());
+    setWidth(s.value("width", width_).toInt());
+    setThickness(s.value("thickness", thickness_).toInt());
+    settings_ = s;
 }
 
-void AbstractBrush::drawLine(const QPointF &,
-                      const QPointF &,
-                      qreal &, qreal pressure)
+QColor AbstractBrush::color() const
 {
-    //
+    return color_;
 }
 
-void AbstractBrush::updateCursor(int w)
+void AbstractBrush::setColor(const QColor &color)
 {
-    int frame = w+2+w%2; // +2 for a border padding
-    QPixmap img(frame, frame);
-    img.fill(Qt::transparent);
-    QPainter painter(&img);
-    painter.drawEllipse(0, 0, w, w);
-    if (w > 10)
-        painter.drawPoint(frame/2, frame/2);
-    cursor_ = QCursor(img, frame/2, frame/2);
-}
-
-QPointF AbstractBrush::lastPoint()
-{
-    return lastPoint_;
-}
-
-
-void AbstractBrush::setLastPoint(const QPointF &p)
-{
-    lastPoint_ = p;
+    color_ = color;
+    settings_.insert("color", color_);
 }

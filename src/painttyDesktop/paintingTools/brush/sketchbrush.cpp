@@ -1,82 +1,59 @@
 #include "sketchbrush.h"
-
-#include "../misc/singleton.h"
-#include "../misc/shortcutmanager.h"
+#include <QPainterPath>
+#include <QPainter>
 
 SketchBrush::SketchBrush()
 {
-    name_ = "Sketch";
-    displayName_ = QObject::tr("Sketch");
-    shortcut_ = Singleton<ShortcutManager>::instance()
-            .shortcut("sketch")["key"].toString();
-    icon_.addFile(":/iconset/ui/sketch-1.png",
-                  QSize(), QIcon::Disabled);
-    icon_.addFile(":/iconset/ui/sketch-2.png",
-                  QSize(), QIcon::Active);
-    icon_.addFile(":/iconset/ui/sketch-3.png",
-                  QSize(), QIcon::Selected);
-    icon_.addFile(":/iconset/ui/sketch-3.png",
-                  QSize(), QIcon::Normal, QIcon::On);
-    icon_.addFile(":/iconset/ui/sketch-4.png",
-                  QSize(), QIcon::Normal);
-    updateCursor(this->width());
+    typedef BrushFeature BF;
+    BF::FeatureBits bits;
+    bits.set(BF::WIDTH);
+    bits.set(BF::THICKNESS);
+    bits.set(BF::COLOR);
+    features_ = bits;
+
+    name_ = QObject::tr("SketchBrush");
+    displayName_ = name_;
+    shortcut_ = Qt::Key_4;
 }
 
-SketchBrush::~SketchBrush()
+void SketchBrush::setColor(const QColor &c)
 {
-
-}
-
-void SketchBrush::setColor(const QColor &color)
-{
-    mainColor = color;
+    AbstractBrush::setColor(c);
     preparePen();
 }
 
-int SketchBrush::width()
+void SketchBrush::drawPoint(const QPoint &p, qreal pressure)
 {
-    return sketchPen.width();
-}
-
-void SketchBrush::setWidth(int w)
-{
-    sketchPen.setWidth(w);
-    updateCursor(w);
-}
-
-void SketchBrush::start(const QPointF &st, qreal pressure)
-{
-    preparePen();
-    leftOverDistance = 0;
+//    preparePen();
     points.clear();
-    points.push_back(st);
-    lastPoint_ = st;
+    points.push_back(p);
+    last_point_ = p;
+}
+
+void SketchBrush::drawLineTo(const QPoint &end, qreal pressure)
+{
+    if(last_point_.isNull()){
+        drawPoint(end, pressure);
+        return;
+    }
+    points.push_back(end);
+    sketch();
+    last_point_ = end;
+}
+
+AbstractBrush *SketchBrush::createBrush()
+{
+    return new SketchBrush;
 }
 
 void SketchBrush::preparePen()
 {
-    QColor subColor = mainColor;
-    subColor.setAlphaF(this->hardness()/100.0);
+    QColor subColor = color_;
+    subColor.setAlphaF(this->thickness()/100.0);
     sketchPen.setColor(subColor);
+    sketchPen.setWidth(width_);
     sketchPen.setCapStyle(Qt::RoundCap);
     sketchPen.setJoinStyle(Qt::RoundJoin);
-}
-
-void SketchBrush::lineTo(const QPointF &st, qreal pressure)
-{
-    if(lastPoint_.isNull()){
-        start(st);
-        return;
-    }
-    points.push_back(st);
-    sketch();
-    lastPoint_ = st;
-}
-
-void SketchBrush::setLastPoint(const QPointF &p)
-{
-    lastPoint_ = p;
-    points.clear();
 }
 
 void SketchBrush::sketch()
@@ -97,36 +74,4 @@ void SketchBrush::sketch()
         painter.strokePath(path, sketchPen);
         painter.end();
     }
-}
-
-QVariantMap SketchBrush::brushInfo()
-{
-    QVariantMap map;
-    QVariantMap colorMap;
-    colorMap.insert("red", sketchPen.color().red());
-    colorMap.insert("green", sketchPen.color().green());
-    colorMap.insert("blue", sketchPen.color().blue());
-    map.insert("width", sketchPen.width());
-    map.insert("hardness", this->hardness());
-    map.insert("color", colorMap);
-    map.insert("name", this->name());
-    return map;
-}
-
-QVariantMap SketchBrush::defaultInfo()
-{
-    QVariantMap map;
-    QVariantMap colorMap;
-    colorMap.insert("red", 160);
-    colorMap.insert("green", 160);
-    colorMap.insert("blue", 164);
-    map.insert("width", 1);
-    map.insert("hardness", 7);
-    map.insert("color", colorMap);
-    return map;
-}
-
-AbstractBrush* SketchBrush::createBrush()
-{
-    return new SketchBrush;
 }
