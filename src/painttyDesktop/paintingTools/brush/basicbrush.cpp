@@ -25,8 +25,8 @@ BasicBrush::BasicBrush() :
     bits.set(BF::THICKNESS);
     features_ = bits;
 
-    name_ = QObject::tr("BasicBrush");
-    displayName_ = name_;
+    name_ = "BasicBrush";
+    displayName_ = QObject::tr("BasicBrush");
     shortcut_ = Singleton<ShortcutManager>::instance()
             .shortcut("basicbrush")["key"].toString();
 }

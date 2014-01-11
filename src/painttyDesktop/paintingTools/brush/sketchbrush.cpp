@@ -14,8 +14,8 @@ SketchBrush::SketchBrush()
     bits.set(BF::COLOR);
     features_ = bits;
 
-    name_ = QObject::tr("SketchBrush");
-    displayName_ = name_;
+    name_ = "SketchBrush";
+    displayName_ = QObject::tr("SketchBrush");
     shortcut_ = Singleton<ShortcutManager>::instance()
             .shortcut("sketchbrush")["key"].toString();
 }

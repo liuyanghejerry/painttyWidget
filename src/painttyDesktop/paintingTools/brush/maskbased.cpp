@@ -15,8 +15,8 @@ MaskBased::MaskBased() :
     bits.set(BF::THICKNESS);
     features_ = bits;
 
-    name_ = QObject::tr("Crayon");
-    displayName_ = name_;
+    name_ = "Crayon";
+    displayName_ = QObject::tr("Crayon");
     shortcut_ = Singleton<ShortcutManager>::instance()
             .shortcut("crayon")["key"].toString();
 }

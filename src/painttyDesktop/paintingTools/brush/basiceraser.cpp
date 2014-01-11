@@ -15,8 +15,8 @@ BasicEraser::BasicEraser()
     bits.set(BF::WIDTH);
     features_ = bits;
 
-    name_ = QObject::tr("BasicEraser");
-    displayName_ = name_;
+    name_ = "BasicEraser";
+    displayName_ = QObject::tr("BasicEraser");
     shortcut_ = Singleton<ShortcutManager>::instance()
             .shortcut("basiceraser")["key"].toString();
 }

@@ -16,8 +16,8 @@ BinaryBrush::BinaryBrush() :
     bits.set(BF::COLOR);
     features_ = bits;
 
-    name_ = QObject::tr("BinaryBrush");
-    displayName_ = name_;
+    name_ = "BinaryBrush";
+    displayName_ = QObject::tr("BinaryBrush");
     shortcut_ = Singleton<ShortcutManager>::instance()
             .shortcut("binarybrush")["key"].toString();
 }

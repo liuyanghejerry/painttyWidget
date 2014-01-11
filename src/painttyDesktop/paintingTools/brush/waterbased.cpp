@@ -28,8 +28,8 @@ WaterBased::WaterBased():
     bits.set(BF::MIXIN);
     features_ = bits;
 
-    name_ = QObject::tr("WaterBrush");
-    displayName_ = name_;
+    name_ = "WaterBrush";
+    displayName_ = QObject::tr("WaterBrush");
     shortcut_ = Singleton<ShortcutManager>::instance()
             .shortcut("waterbrush")["key"].toString();
 }
