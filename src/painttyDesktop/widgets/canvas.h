@@ -55,7 +55,6 @@ signals:
     void newBrushSettings(const QVariantMap &map);
     void historyComplete();
     void newPaintAction(const QVariantMap m);
-    void paintActionComplete();
     void requestSortedMembers(CanvasBackend::MemberSectionIndex index
                                = CanvasBackend::MemberSectionIndex::Count);
     void requestClearMembers();
@@ -90,6 +89,8 @@ private slots:
 private:
     void drawLineTo(const QPoint &endPoint, qreal pressure=1.0);
     void drawPoint(const QPoint &point, qreal pressure=1.0);
+    void storeAction(const QVariantMap& map);
+    void sendAction();
     void pickColor(const QPoint &point);
     void updateCursor();
     void tryJitterCorrection();
@@ -116,6 +117,7 @@ private:
     CanvasBackend* backend_;
     QThread *worker_;
     QList<CanvasBackend::MemberSection> author_list_;
+    QVariantList action_buffer_;
 };
 
 #endif // CANVAS_H

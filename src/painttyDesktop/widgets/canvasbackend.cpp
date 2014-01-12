@@ -8,14 +8,11 @@
 
 CanvasBackend::CanvasBackend(QObject *parent)
     :QObject(parent),
-      blocklevel_(MEDIUM),
-      send_timer_id_(0),
       parse_timer_id_(0),
       archive_loaded_(false),
       is_parsed_signal_sent(false),
       pause_(false)
 {
-    send_timer_id_ = this->startTimer(1000*10);
     parse_timer_id_ = this->startTimer(50);
 
     auto& client_socket = Singleton<ClientSocket>::instance();
@@ -40,35 +37,8 @@ CanvasBackend::~CanvasBackend()
     disconnect(&client_socket, &ClientSocket::dataPack,
                this, &CanvasBackend::onIncomingData);
     this->disconnect();
-    if(send_timer_id_)
-        killTimer(send_timer_id_);
     if(parse_timer_id_)
         killTimer(parse_timer_id_);
-}
-
-void CanvasBackend::commit()
-{
-    if(blocklevel_ == NONE){
-        while(!tempStore.isEmpty()){
-            QVariant element = tempStore.takeFirst();
-            auto data = toJson(element);
-            emit newDataGroup(data);
-        }
-    }else{
-        if(!tempStore.isEmpty()){
-            QVariantMap doc;
-            doc.insert("action", "block");
-            doc.insert("block", tempStore);
-            auto data = toJson(QVariant(doc));
-            emit newDataGroup(data);
-            tempStore.clear();
-        }
-    }
-}
-
-void CanvasBackend::setBlockLevel(const BlockLevel le)
-{
-    blocklevel_ = le;
 }
 
 void CanvasBackend::pauseParse()
@@ -81,27 +51,14 @@ void CanvasBackend::resumeParse()
     pause_ = false;
 }
 
-CanvasBackend::BlockLevel CanvasBackend::blockLevel() const
+void CanvasBackend::onDataBlock(const QVariantMap info)
 {
-    return blocklevel_;
-}
-
-void CanvasBackend::onDataBlock(const QVariantMap d)
-{
-    tempStore.append(d);
-
-    QVariantMap info = d["info"].toMap();
     QString author = info["name"].toString();
     QString clientid = info["clientid"].toString();
     upsertFootprint(clientid, author);
 
-    if(blocklevel_ == NONE){
-        commit();
-    }else{
-        if(tempStore.length() >= blocklevel_ ){
-            commit();
-        }
-    }
+    auto data = toJson(QVariant(info));
+    emit newDataGroup(data);
 }
 
 void CanvasBackend::onIncomingData(const QJsonObject& obj)
@@ -111,11 +68,10 @@ void CanvasBackend::onIncomingData(const QJsonObject& obj)
 
 void CanvasBackend::parseIncoming()
 {
-    auto drawPoint = [this](const QVariantMap& m){
+    auto drawPoint = [this](const QVariantMap& map){
         QPoint point;
         QString layerName;
 
-        QVariantMap map = m["info"].toMap();
         QString clientid = map["clientid"].toString();
         // don't draw your own move from remote
         if(clientid == cached_clientid_){
@@ -142,12 +98,10 @@ void CanvasBackend::parseIncoming()
                              pressure);
     };
 
-    auto drawLine = [this](const QVariantMap& m){
+    auto drawLine = [this](const QVariantMap& map){
         QPoint start;
         QPoint end;
         QString layerName;
-
-        QVariantMap map = m["info"].toMap();
 
         QString clientid = map["clientid"].toString();
         // don't draw your own move from remote
@@ -179,16 +133,57 @@ void CanvasBackend::parseIncoming()
     };
 
     auto dataBlock = [&drawPoint,
-            &drawLine](const QVariantMap& m){
-        QVariantList list = m["block"].toList();
-        for(auto &item: list){
-            QVariantMap singleData = item.toMap();
-            QString action = singleData["action"].toString().toLower();
-            if(action == "drawpoint"){
-                drawPoint(singleData);
-            }else if(action == "drawline"){
-                drawLine(singleData);
+            &drawLine, this](const QVariantMap& m){
+        QString clientid(m["clientid"].toString());
+        // don't draw your own move from remote
+        if(clientid == cached_clientid_){
+            return;
+        }
+        QVariantList list(m["block"].toList());
+        if(list.length() < 1) {
+            return;
+        }
+
+        QString layerName(m["layer"].toString());
+        QVariantMap brushInfo(m["brush"].toMap());
+
+        // parse first point as drawpoint
+        QVariantMap first_set(list.takeFirst().toMap());
+        QPoint point(first_set.value("x", 0).toInt(), first_set.value("y", 0).toInt());
+        qreal pressure = 1.0;
+        if(first_set.contains("pressure")) {
+            pressure = first_set.value("pressure").toDouble();
+        }
+        QString author;
+        bool has_author = m.contains("name");
+        if(has_author){
+            author = m["name"].toString();
+            upsertFootprint(clientid, author, point);
+        }
+
+        emit remoteDrawPoint(point, brushInfo,
+                             layerName, clientid,
+                             pressure);
+
+        // parse points as drawlines, with first point as start
+        QPoint start_point(point);
+        QPoint end_point;
+        QVariantMap end;
+        while(list.length()){
+            end = list.takeFirst().toMap();
+            end_point.setX(end.value("x").toInt());
+            end_point.setY(end.value("y").toInt());
+            qreal pressure = 1.0;
+            if(end.contains("pressure")) {
+                pressure = end.value("pressure").toDouble();
             }
+            if(has_author){
+                upsertFootprint(clientid, author, end_point);
+            }
+            emit remoteDrawLine(start_point, end_point,
+                                brushInfo, layerName,
+                                clientid, pressure);
+            start_point = end_point;
         }
     };
     for(int i=0;i<3;++i){
@@ -280,9 +275,7 @@ void CanvasBackend::upsertFootprint(const QString& id,
 
 void CanvasBackend::timerEvent(QTimerEvent * event)
 {
-    if(event->timerId() == send_timer_id_){
-        this->commit();
-    }else if(event->timerId() == parse_timer_id_){
+    if(event->timerId() == parse_timer_id_){
         if(!pause_){
             this->parseIncoming();
         }

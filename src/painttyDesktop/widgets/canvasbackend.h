@@ -23,23 +23,13 @@ public:
         LastActiveStamp
     };
 
-    enum BlockLevel {
-        NONE = 0,
-        LOW = 5,
-        MEDIUM = 10,
-        HIGH = 20
-    };
-
     CanvasBackend(QObject *parent = nullptr);
     ~CanvasBackend();
-    void commit();
-    BlockLevel blockLevel() const;
 public slots:
     void onDataBlock(const QVariantMap d);
     void onIncomingData(const QJsonObject &d);
     void requestMembers(MemberSectionIndex index);
     void clearMembers();
-    void setBlockLevel(const BlockLevel le);
     void pauseParse();
     void resumeParse();
 signals:
@@ -60,14 +50,11 @@ signals:
 protected:
     void timerEvent(QTimerEvent * event);
 private:
-    BlockLevel blocklevel_;
-    QVariantList tempStore;
     QQueue<QJsonObject> incoming_store_;
     // Warning, access memberHistory_ across thread
     // via member functions is not thread-safe
     QHash<QString, MemberSection> memberHistory_;
     QString cached_clientid_;
-    int send_timer_id_;
     int parse_timer_id_;
     bool archive_loaded_;
     bool is_parsed_signal_sent;

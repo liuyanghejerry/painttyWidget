@@ -8,25 +8,25 @@ ShortcutManager::ShortcutManager(QObject *parent) :
     QObject(parent)
 {
     QVariantMap map;
-    map.insert("name", "pencil");
+    map.insert("name", "binarybrush");
     map.insert("key", QKeySequence("Z"));
     map.insert("type", ShortcutType::Single);
     map.insert("description", tr("Pencil"));
     default_conf.insert("pencil", map);
 
-    map.insert("name", "brush");
+    map.insert("name", "basicbrush");
     map.insert("key", QKeySequence("P"));
     map.insert("type", ShortcutType::Single);
     map.insert("description", tr("Brush"));
     default_conf.insert("brush", map);
 
-    map.insert("name", "sketch");
+    map.insert("name", "sketchbrush");
     map.insert("key", QKeySequence("S"));
     map.insert("type", ShortcutType::Single);
     map.insert("description", tr("Sketch"));
     default_conf.insert("sketch", map);
 
-    map.insert("name", "eraser");
+    map.insert("name", "basiceraser");
     map.insert("key", QKeySequence("E"));
     map.insert("type", ShortcutType::Single);
     map.insert("description", tr("Eraser"));
