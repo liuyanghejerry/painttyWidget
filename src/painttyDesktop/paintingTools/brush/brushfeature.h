@@ -9,6 +9,7 @@ public:
     enum FEATURE {
         WIDTH = 0,
         COLOR,
+        HARDNESS,
         THICKNESS,
         WATER,
         EXTEND,
