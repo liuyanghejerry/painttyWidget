@@ -451,7 +451,6 @@ void Canvas::changeBrush(const QString &name)
 {
     QVariantMap currentSettings;
     LayerPointer sur = brush_->surface();
-//    QPointF lp = brush_->lastPoint();
     QVariantMap colorMap = brush_->settings()
             .value("color").toMap();
 

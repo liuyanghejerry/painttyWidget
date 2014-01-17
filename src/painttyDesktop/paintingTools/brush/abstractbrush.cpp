@@ -119,5 +119,9 @@ QColor AbstractBrush::color() const
 void AbstractBrush::setColor(const QColor &color)
 {
     color_ = color;
-    settings_.insert("color", color_);
+    QVariantMap colorMap;
+    colorMap.insert("red", color_.red());
+    colorMap.insert("green", color_.green());
+    colorMap.insert("blue", color_.blue());
+    settings_.insert("color", colorMap);
 }
