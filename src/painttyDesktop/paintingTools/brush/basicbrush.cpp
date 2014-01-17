@@ -109,7 +109,6 @@ void BasicBrush::drawPointInternal(const QPoint &p,
 
 void BasicBrush::drawPoint(const QPoint &p, qreal pr)
 {
-    qDebug()<<pr;
     QPainter painter(surface_->imagePtr());
     painter.setRenderHint(QPainter::Antialiasing);
     QImage pressure_stencil = stencil_.scaledToWidth(stencil_.width()*pr);
@@ -122,7 +121,6 @@ void BasicBrush::drawPoint(const QPoint &p, qreal pr)
 
 void BasicBrush::drawLineTo(const QPoint &end, qreal pressure)
 {
-    qDebug()<<pressure;
     if(end.x() > surface_->imageConstPtr()->width() || end.x() < 0
             || end.y() > surface_->imageConstPtr()->height() || end.y() < 0) {
         return;

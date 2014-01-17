@@ -317,7 +317,9 @@ void Canvas::tryJitterCorrection()
 
 QVariantMap Canvas::brushSettings() const
 {
-    return brush_->settings();
+    auto m = brush_->settings();
+    m.insert("name", brush_->name());
+    return m;
 }
 
 BrushFeature Canvas::brushFeatures() const
@@ -571,6 +573,7 @@ void Canvas::sendAction()
     store.insert("block", action_buffer_);
 
     emit newPaintAction(store);
+    action_buffer_.clear();
 }
 
 void Canvas::pickColor(const QPoint &point)
@@ -616,7 +619,7 @@ void Canvas::remoteDrawPoint(const QPoint &point,
             newOne->setSettings(cpd_brushInfo);
             newOne->drawPoint(point, pressure);
             remoteBrush[clientid] = newOne;
-            t.clear();
+//            t.clear();
         }else{
             BrushPointer original = remoteBrush[clientid];
             original->setSurface(l);
@@ -667,7 +670,7 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
             newOne->setSettings(cpd_brushInfo);
             newOne->drawLineTo(end, pressure);
             remoteBrush[clientid] = newOne;
-            t.clear();
+//            t.clear();
         }else{
             BrushPointer original = remoteBrush[clientid];
             original->setSurface(l);

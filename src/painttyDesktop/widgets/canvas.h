@@ -124,6 +124,7 @@ private:
     QThread *worker_;
     QList<CanvasBackend::MemberSection> author_list_;
     QVariantList action_buffer_;
+
 };
 
 #endif // CANVAS_H
