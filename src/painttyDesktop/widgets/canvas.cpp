@@ -604,39 +604,30 @@ void Canvas::remoteDrawPoint(const QPoint &point,
     if(!layers.exists(layer)) return;
     LayerPointer l = layers.layerFrom(layer);
 
-    QString brushName = brushInfo["name"].toString();
-    int width = brushInfo["width"].toInt();
-    int hardness = brushInfo["hardness"].toInt();
-    QVariantMap colorMap = brushInfo["color"].toMap();
-    QColor color(colorMap["red"].toInt(),
-            colorMap["green"].toInt(),
-            colorMap["blue"].toInt());
+    QVariantMap cpd_brushInfo = brushInfo;
+    QString brushName = cpd_brushInfo["name"].toString();
+
+    cpd_brushInfo.remove("name"); // remove useless info
 
     if(remoteBrush.contains(clientid)){
         BrushPointer t = remoteBrush[clientid];
-        if(brushInfo != t->settings()){
+        if(cpd_brushInfo != t->settings()){
             BrushPointer newOne = brushFactory(brushName);
             newOne->setSurface(l);
-            newOne->setWidth(width);
-            newOne->setThickness(hardness);
-            newOne->setColor(color);
+            newOne->setSettings(cpd_brushInfo);
             newOne->drawPoint(point, pressure);
             remoteBrush[clientid] = newOne;
             t.clear();
         }else{
             BrushPointer original = remoteBrush[clientid];
             original->setSurface(l);
-            original->setWidth(width);
-            original->setThickness(hardness);
-            original->setColor(color);
+            original->setSettings(cpd_brushInfo);
             original->drawPoint(point, pressure);
         }
     }else{
         BrushPointer newOne = brushFactory(brushName);
         newOne->setSurface(l);
-        newOne->setWidth(width);
-        newOne->setThickness(hardness);
-        newOne->setColor(color);
+        newOne->setSettings(cpd_brushInfo);
         newOne->drawPoint(point, pressure);
         remoteBrush[clientid] = newOne;
     }
@@ -666,39 +657,28 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
     }
     LayerPointer l = layers.layerFrom(layer);
 
-    QString brushName = brushInfo["name"].toString();
-    int width = brushInfo["width"].toInt();
-    int hardness = brushInfo["hardness"].toInt();
-    QVariantMap colorMap = brushInfo["color"].toMap();
-    QColor color(colorMap["red"].toInt(),
-            colorMap["green"].toInt(),
-            colorMap["blue"].toInt());
+    QVariantMap cpd_brushInfo = brushInfo;
+    QString brushName = cpd_brushInfo["name"].toString();
 
     if(remoteBrush.contains(clientid)){
         BrushPointer t = remoteBrush[clientid];
         if(brushName != t->settings()["name"].toString()){
             BrushPointer newOne = brushFactory(brushName);
             newOne->setSurface(l);
-            newOne->setWidth(width);
-            newOne->setThickness(hardness);
-            newOne->setColor(color);
+            newOne->setSettings(cpd_brushInfo);
             newOne->drawLineTo(end, pressure);
             remoteBrush[clientid] = newOne;
             t.clear();
         }else{
             BrushPointer original = remoteBrush[clientid];
             original->setSurface(l);
-            original->setWidth(width);
-            original->setThickness(hardness);
-            original->setColor(color);
+            original->setSettings(cpd_brushInfo);
             original->drawLineTo(end, pressure);
         }
     }else{
         BrushPointer newOne = brushFactory(brushName);
         newOne->setSurface(l);
-        newOne->setWidth(width);
-        newOne->setThickness(hardness);
-        newOne->setColor(color);
+        newOne->setSettings(cpd_brushInfo);
         newOne->drawLineTo(end, pressure);
         remoteBrush[clientid] = newOne;
     }

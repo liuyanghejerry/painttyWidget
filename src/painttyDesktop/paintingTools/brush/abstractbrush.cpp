@@ -101,7 +101,11 @@ BrushSettings AbstractBrush::settings() const
 void AbstractBrush::setSettings(const BrushSettings &settings)
 {
     const BrushSettings& s = settings;
-    setColor(s.value("color", color_).value<QColor>());
+    QVariantMap colorMap = settings["color"].toMap();
+    QColor color(colorMap["red"].toInt(),
+            colorMap["green"].toInt(),
+            colorMap["blue"].toInt());
+    setColor(color);
     setWidth(s.value("width", width_).toInt());
     setThickness(s.value("thickness", thickness_).toInt());
     settings_ = s;
