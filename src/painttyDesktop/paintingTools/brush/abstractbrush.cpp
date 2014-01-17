@@ -1,9 +1,11 @@
 #include "abstractbrush.h"
 #include <QDebug>
 
+typedef BrushFeature::LIMIT BFL;
+
 AbstractBrush::AbstractBrush():
     width_(10),
-    thickness_(THICKNESS_MAX),
+    thickness_(BFL::THICKNESS_MAX),
     color_(Qt::black),
     surface_(nullptr)
 {
@@ -57,7 +59,7 @@ int AbstractBrush::width() const
 
 void AbstractBrush::setWidth(int width)
 {
-    width_ = qBound((int)WIDTH_MIN, width, (int)WIDTH_MAX);
+    width_ = boundValueSet<int>(BFL::WIDTH_MIN, width, BFL::WIDTH_MAX);
     settings_.insert("width", width_);
 }
 int AbstractBrush::thickness() const
@@ -67,7 +69,7 @@ int AbstractBrush::thickness() const
 
 void AbstractBrush::setThickness(int thickness)
 {
-    thickness_ = qBound((int)THICKNESS_MIN, thickness, (int)THICKNESS_MAX);
+    thickness_ = boundValueSet<int>(BFL::THICKNESS_MIN, thickness, BFL::THICKNESS_MAX);
     settings_.insert("thickness", thickness_);
 }
 

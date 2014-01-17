@@ -8,6 +8,7 @@ class BinaryBrush : public BasicBrush
 public:
     explicit BinaryBrush();
     AbstractBrush* createBrush() Q_DECL_OVERRIDE;
+    void setSettings(const BrushSettings &settings) Q_DECL_OVERRIDE;
 
 signals:
 

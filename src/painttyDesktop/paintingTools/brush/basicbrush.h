@@ -7,10 +7,6 @@
 class BasicBrush : public AbstractBrush
 {
 public:
-    enum: int {
-        HARDNESS_MAX = 100,
-        HARDNESS_MIN = 0
-    };
     explicit BasicBrush();
     void setWidth(int width) Q_DECL_OVERRIDE;
     void setColor(const QColor &color) Q_DECL_OVERRIDE;
@@ -23,6 +19,8 @@ public:
 
     int hardness() const;
     void setHardness(int hardness);
+
+    void setSettings(const BrushSettings &settings) Q_DECL_OVERRIDE;
 
 signals:
 

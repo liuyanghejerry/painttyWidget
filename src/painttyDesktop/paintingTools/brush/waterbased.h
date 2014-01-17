@@ -7,20 +7,6 @@
 class WaterBased: public BasicBrush
 {
 public:
-//    const static int WATER_MAX = 100;
-//    const static int WATER_MIN = 0;
-//    const static int EXTEND_MAX = 100;
-//    const static int EXTEND_MIN = 0;
-//    const static int MIXIN_MAX = 100;
-//    const static int MIXIN_MIN = 0;
-    enum: int {
-        WATER_MAX = 100,
-        WATER_MIN = 0,
-        EXTEND_MAX = 100,
-        EXTEND_MIN = 0,
-        MIXIN_MAX = 100,
-        MIXIN_MIN = 0
-    };
     explicit WaterBased();
     int water() const;
     void setWater(int water);

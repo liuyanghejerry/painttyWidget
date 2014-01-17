@@ -16,14 +16,6 @@ typedef LayerPointer Surface;
 class AbstractBrush
 {
 public:
-    enum: int {
-        WIDTH_MAX = 100,
-        WIDTH_MIN = 0,
-        THICKNESS_MAX = 100,
-        THICKNESS_MIN = 0
-    };
-
-
     explicit AbstractBrush();
     // we need a virtual destructor, since it is deleted via base class
     // or we'll have risk of memory leak when sub-class has its own heap data.
@@ -57,6 +49,11 @@ public:
     virtual void setSettings(const BrushSettings &settings);
     virtual AbstractBrush* createBrush()=0;
 
+    template<typename A>
+    static A boundValueSet(A min, A value, A max)
+    {
+        return qBound(min, value, max);
+    }
 
 protected:
     int width_;

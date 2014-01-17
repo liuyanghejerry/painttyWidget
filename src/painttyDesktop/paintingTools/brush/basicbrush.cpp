@@ -13,10 +13,12 @@
 
 //qreal myEasingFunction(qreal progress);
 
+typedef BrushFeature::LIMIT BFL;
+
 BasicBrush::BasicBrush() :
     AbstractBrush(),
     left_(0),
-    hardness_(HARDNESS_MAX)
+    hardness_(BFL::HARDNESS_MAX)
 {
     typedef BrushFeature BF;
     BF::FeatureBits bits;
@@ -184,7 +186,14 @@ int BasicBrush::hardness() const
 
 void BasicBrush::setHardness(int hardness)
 {
-    hardness_ = qBound((int)HARDNESS_MIN, hardness, (int)HARDNESS_MAX);
+    hardness_ = boundValueSet<int>(BFL::HARDNESS_MIN, hardness, BFL::HARDNESS_MAX);
     settings_.insert("hardness", hardness_);
+    makeStencil(color_);
+}
+
+void BasicBrush::setSettings(const BrushSettings &settings)
+{
+    AbstractBrush::setSettings(settings);
+    setHardness(settings.value("hardness").toInt());
 }
 

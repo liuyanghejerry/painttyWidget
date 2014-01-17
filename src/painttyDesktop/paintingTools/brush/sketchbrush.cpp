@@ -50,6 +50,12 @@ AbstractBrush *SketchBrush::createBrush()
     return new SketchBrush;
 }
 
+void SketchBrush::setSettings(const BrushSettings &settings)
+{
+    AbstractBrush::setSettings(settings);
+    preparePen();
+}
+
 void SketchBrush::preparePen()
 {
     QColor subColor = color_;

@@ -27,6 +27,12 @@ AbstractBrush *BinaryBrush::createBrush()
     return new BinaryBrush;
 }
 
+void BinaryBrush::setSettings(const BrushSettings &settings)
+{
+    BasicBrush::setSettings(settings);
+//    makeStencil(color_);
+}
+
 void BinaryBrush::makeStencil(QColor color)
 {
     if(stencil_.isNull() || stencil_.width() != width_){

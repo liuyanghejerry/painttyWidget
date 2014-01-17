@@ -11,6 +11,8 @@
 #include "../../misc/shortcutmanager.h"
 #include "../../misc/singleton.h"
 
+typedef BrushFeature::LIMIT BFL;
+
 WaterBased::WaterBased():
     BasicBrush(),
     water_(50),
@@ -40,7 +42,7 @@ int WaterBased::water() const
 
 void WaterBased::setWater(int water)
 {
-    water_ = qBound((int)WATER_MIN, water, (int)WATER_MAX);
+    water_ = boundValueSet<int>(BFL::WATER_MIN, water, BFL::WATER_MAX);
 }
 int WaterBased::extend() const
 {
@@ -49,7 +51,7 @@ int WaterBased::extend() const
 
 void WaterBased::setExtend(int extend)
 {
-    extend_ = qBound((int)EXTEND_MIN, extend, (int)EXTEND_MAX);
+    extend_ = boundValueSet<int>(BFL::EXTEND_MIN, extend, BFL::EXTEND_MAX);
 }
 int WaterBased::mixin() const
 {
@@ -58,7 +60,7 @@ int WaterBased::mixin() const
 
 void WaterBased::setMixin(int mixin)
 {
-    mixin_ = qBound((int)MIXIN_MIN, mixin, (int)MIXIN_MAX);
+    mixin_ = boundValueSet<int>(BFL::MIXIN_MIN, mixin, BFL::MIXIN_MAX);
 }
 
 // non-reentrant.
@@ -188,10 +190,10 @@ void WaterBased::drawLineTo(const QPoint &end, qreal presure)
 void WaterBased::setSettings(const BrushSettings &settings)
 {
     const auto& s = settings;
-    BasicBrush::setSettings(s);
     setWater(s.value("water", water_).toInt());
     setExtend(s.value("extend", extend_).toInt());
     setMixin(s.value("mixin", mixin_).toInt());
+    BasicBrush::setSettings(s);
 }
 
 AbstractBrush *WaterBased::createBrush()
