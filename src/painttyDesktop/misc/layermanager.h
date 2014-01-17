@@ -15,12 +15,12 @@ class LayerManager
 public:
 
     LayerManager(const QSize &initSize);
-    LayerPointer layerFrom(int pos);
-    LayerPointer layerFrom(const QString &name);
-    LayerPointer topLayer();
-    LayerPointer bottomLayer();
-    LayerPointer selectedLayer();
-    LayerPointer topShownLayer();
+    LayerPointer layerFrom(int pos) const;
+    LayerPointer layerFrom(const QString &name) const;
+    LayerPointer topLayer() const;
+    LayerPointer bottomLayer() const;
+    LayerPointer selectedLayer() const;
+    LayerPointer topShownLayer() const;
     void select(const QString &name);
     void insertLayer(LayerPointer image,
                      const QString &name, int pos);
@@ -32,10 +32,10 @@ public:
     void moveUp(const QString &name);
     void moveDown(const QString &name);
     void moveTo(const QString &, int);
-    bool exists(const QString &name);
-    bool exists(int pos);
+    bool exists(const QString &name) const;
+    bool exists(int pos) const;
     void rename(const QString &oname, const QString &nname);
-    int count(){return layers.count();}
+    int count() const{return layers.count();}
     void resizeLayers(const QSize &newsize);
     void updateSelected();
     void combineLayers(QImage *p, const QRect &rect = QRect());

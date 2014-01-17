@@ -47,6 +47,9 @@ public:
     // Brush does NOT take ownership of surface
     virtual void setSurface(Surface surface);
 
+    virtual bool support(const BrushFeature::FEATURE &f);
+    virtual BrushFeature features();
+
     virtual void drawPoint(const QPoint& p, qreal pressure=1)=0;
     virtual void drawLineTo(const QPoint& end, qreal pressure=1)=0;
 

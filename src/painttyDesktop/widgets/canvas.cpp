@@ -315,9 +315,14 @@ void Canvas::tryJitterCorrection()
     \sa Brush::brushInfo()
 */
 
-QVariantMap Canvas::brushInfo()
+QVariantMap Canvas::brushSettings() const
 {
     return brush_->settings();
+}
+
+BrushFeature Canvas::brushFeatures() const
+{
+    return brush_->features();
 }
 
 void Canvas::setShareColor(bool b)
@@ -347,23 +352,51 @@ void Canvas::setBrushColor(const QColor &newColor)
 
 void Canvas::setBrushWidth(int newWidth)
 {
-    if(brush_->width() != newWidth){
-        brush_->setWidth(newWidth);
-        updateCursor();
-    }
+    setBrushFeature("width", newWidth);
+    updateCursor();
 }
 
 // TODO: correct name
 void Canvas::setBrushHardness(int h)
 {
-    if(brush_->thickness() != h){
-        brush_->setThickness(h);
-    }
+    setBrushFeature("hardness", h);
+}
+
+void Canvas::setBrushThickness(int t)
+{
+    setBrushFeature("thickness", t);
+}
+
+void Canvas::setBrushWater(int w)
+{
+    setBrushFeature("water", w);
+}
+
+void Canvas::setBrushExtend(int e)
+{
+    setBrushFeature("extend", e);
+}
+
+void Canvas::setBrushMixin(int e)
+{
+    setBrushFeature("mixin", e);
+}
+
+void Canvas::setBrushSettings(const QVariantMap &settings)
+{
+    brush_->setSettings(settings);
 }
 
 BrushPointer Canvas::brushFactory(const QString &name)
 {
     return Singleton<BrushManager>::instance().makeBrush(name);
+}
+
+void Canvas::setBrushFeature(const QString &key, const QVariant &value)
+{
+    auto&& settings = brushSettings();
+    settings.insert(key, value);
+    setBrushSettings(settings);
 }
 
 void Canvas::loadLayers()
@@ -534,7 +567,7 @@ void Canvas::sendAction()
     store.insert("name",
                Singleton<ClientSocket>::instance().userName());
     store.insert("type", "data");
-    store.insert("brush", brushInfo());
+    store.insert("brush", brushSettings());
     store.insert("action", "block");
     store.insert("block", action_buffer_);
 

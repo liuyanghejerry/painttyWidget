@@ -342,6 +342,14 @@ void MainWindow::toolbarInit()
             ui->canvas, &Canvas::setBrushWidth);
     connect(brushSettingWidget, &BrushSettingsWidget::hardnessChanged,
             ui->canvas, &Canvas::setBrushHardness);
+    connect(brushSettingWidget, &BrushSettingsWidget::thicknessChanged,
+            ui->canvas, &Canvas::setBrushThickness);
+    connect(brushSettingWidget, &BrushSettingsWidget::waterChanged,
+            ui->canvas, &Canvas::setBrushWater);
+    connect(brushSettingWidget, &BrushSettingsWidget::extendChanged,
+            ui->canvas, &Canvas::setBrushExtend);
+    connect(brushSettingWidget, &BrushSettingsWidget::mixinChanged,
+            ui->canvas, &Canvas::setBrushMixin);
     connect(brushSettingToolbar, &QToolBar::orientationChanged,
             brushSettingWidget, &BrushSettingsWidget::setOrientation);
 
@@ -364,6 +372,42 @@ void MainWindow::toolbarInit()
     hardnessActionAdd->setKey(stctmgr.shortcut("addhardness")["key"].toString());
     connect(hardnessActionAdd, &QShortcut::activated,
             brushSettingWidget, &BrushSettingsWidget::hardnessUp);
+    // shortcuts for thickness control
+    QShortcut* thicknessActionSub = new QShortcut(this);
+    thicknessActionSub->setKey(stctmgr.shortcut("subthickness")["key"].toString());
+    connect(thicknessActionSub, &QShortcut::activated,
+            brushSettingWidget, &BrushSettingsWidget::thicknessDown);
+    QShortcut* thicknessActionAdd = new QShortcut(this);
+    thicknessActionAdd->setKey(stctmgr.shortcut("addthickness")["key"].toString());
+    connect(thicknessActionAdd, &QShortcut::activated,
+            brushSettingWidget, &BrushSettingsWidget::thicknessUp);
+    // shortcuts for water control
+    QShortcut* waterActionSub = new QShortcut(this);
+    waterActionSub->setKey(stctmgr.shortcut("subwater")["key"].toString());
+    connect(waterActionSub, &QShortcut::activated,
+            brushSettingWidget, &BrushSettingsWidget::waterDown);
+    QShortcut* waterActionAdd = new QShortcut(this);
+    waterActionAdd->setKey(stctmgr.shortcut("addwater")["key"].toString());
+    connect(waterActionAdd, &QShortcut::activated,
+            brushSettingWidget, &BrushSettingsWidget::waterUp);
+    // shortcuts for extend control
+    QShortcut* extendActionSub = new QShortcut(this);
+    extendActionSub->setKey(stctmgr.shortcut("subextend")["key"].toString());
+    connect(extendActionSub, &QShortcut::activated,
+            brushSettingWidget, &BrushSettingsWidget::extendDown);
+    QShortcut* extendActionAdd = new QShortcut(this);
+    extendActionAdd->setKey(stctmgr.shortcut("addextend")["key"].toString());
+    connect(extendActionAdd, &QShortcut::activated,
+            brushSettingWidget, &BrushSettingsWidget::extendUp);
+    // shortcuts for mixin control
+    QShortcut* mixinActionSub = new QShortcut(this);
+    mixinActionSub->setKey(stctmgr.shortcut("submixin")["key"].toString());
+    connect(mixinActionSub, &QShortcut::activated,
+            brushSettingWidget, &BrushSettingsWidget::mixinDown);
+    QShortcut* mixinActionAdd = new QShortcut(this);
+    mixinActionAdd->setKey(stctmgr.shortcut("addmixin")["key"].toString());
+    connect(mixinActionAdd, &QShortcut::activated,
+            brushSettingWidget, &BrushSettingsWidget::mixinUp);
 
     brushSettingControl_ = brushSettingWidget;
     brushSettingToolbar->addWidget(brushSettingWidget);
@@ -754,12 +798,25 @@ void MainWindow::onColorGridPicked(int, const QColor &c)
 void MainWindow::onBrushTypeChange()
 {
     ui->canvas->changeBrush(sender()->objectName());
+    auto f = ui->canvas->brushFeatures();
+    if(!this->brushSettingControl_){
+        return;
+    }
+    this->brushSettingControl_->setHardnessEnabled(f.support(BrushFeature::HARDNESS));
+    this->brushSettingControl_->setThicknessEnabled(f.support(BrushFeature::THICKNESS));
+    this->brushSettingControl_->setWaterEnabled(f.support(BrushFeature::WATER));
+    this->brushSettingControl_->setExtendEnabled(f.support(BrushFeature::EXTEND));
+    this->brushSettingControl_->setMixinEnabled(f.support(BrushFeature::MIXIN));
 }
 
 void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
 {
-    int w = m["width"].toInt();
-    int h = m["hardness"].toInt();
+    int width = m["width"].toInt();
+    int hardness = m["hardness"].toInt();
+    int thickness = m["thickness"].toInt();
+    int water = m["water"].toInt();
+    int extend = m["extend"].toInt();
+    int mixin = m["mixin"].toInt();
     QVariantMap colorMap = m["color"].toMap();
     QColor c(colorMap["red"].toInt(),
             colorMap["green"].toInt(),
@@ -768,12 +825,18 @@ void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
     // INFO: to prevent scaled to 1px, should always
     // change width first
     if(brushSettingControl_){
-        if(brushSettingControl_->width() != w)
-            brushSettingControl_->setWidth(w);
-    }
-    if(brushSettingControl_){
-        if(brushSettingControl_->hardness() != h)
-            brushSettingControl_->setHardness(h);
+        if(brushSettingControl_->width() != width)
+            brushSettingControl_->setWidth(width);
+        if(brushSettingControl_->hardness() != hardness)
+            brushSettingControl_->setHardness(hardness);
+        if(brushSettingControl_->thickness() != thickness)
+            brushSettingControl_->setThickness(thickness);
+        if(brushSettingControl_->water() != water)
+            brushSettingControl_->setWater(water);
+        if(brushSettingControl_->extend() != extend)
+            brushSettingControl_->setExtend(extend);
+        if(brushSettingControl_->mixin() != mixin)
+            brushSettingControl_->setMixin(mixin);
     }
     if(ui->colorBox->color() != c)
         ui->colorBox->setColor(c);

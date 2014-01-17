@@ -81,6 +81,16 @@ void AbstractBrush::setSurface(Surface surface)
     surface_ = surface;
 }
 
+bool AbstractBrush::support(const BrushFeature::FEATURE &f)
+{
+    return features_.support(f);
+}
+
+BrushFeature AbstractBrush::features()
+{
+    return features_;
+}
+
 BrushSettings AbstractBrush::settings() const
 {
     return settings_;
