@@ -19,7 +19,7 @@ public:
 
     enum LIMIT: int {
         WIDTH_MAX = 100,
-        WIDTH_MIN = 0,
+        WIDTH_MIN = 1,
         THICKNESS_MAX = 100,
         THICKNESS_MIN = 0,
         HARDNESS_MAX = 100,
