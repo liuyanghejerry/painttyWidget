@@ -190,7 +190,6 @@ void CanvasBackend::parseIncoming()
         if(incoming_store_.length()){
             auto obj = incoming_store_.dequeue();
             QString action = obj.value("action").toString().toLower();
-            qDebug()<<"incoming: "<<obj;
             if(action == "drawpoint"){
                 drawPoint(obj.toVariantMap());
             }else if(action == "drawline"){

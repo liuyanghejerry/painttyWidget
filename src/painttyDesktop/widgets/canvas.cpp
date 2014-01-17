@@ -318,7 +318,7 @@ void Canvas::tryJitterCorrection()
 QVariantMap Canvas::brushSettings() const
 {
     auto m = brush_->settings();
-    m.insert("name", brush_->name());
+    m.insert("name", brush_->name().toLower());
     return m;
 }
 
@@ -607,13 +607,13 @@ void Canvas::remoteDrawPoint(const QPoint &point,
     LayerPointer l = layers.layerFrom(layer);
 
     QVariantMap cpd_brushInfo = brushInfo;
-    QString brushName = cpd_brushInfo["name"].toString();
+    QString brushName = cpd_brushInfo["name"].toString().toLower();
 
     cpd_brushInfo.remove("name"); // remove useless info
 
     if(remoteBrush.contains(clientid)){
         BrushPointer t = remoteBrush[clientid];
-        if(cpd_brushInfo != t->settings()){
+        if(brushName != t->name().toLower()){
             BrushPointer newOne = brushFactory(brushName);
             newOne->setSurface(l);
             newOne->setSettings(cpd_brushInfo);
@@ -660,14 +660,16 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
     LayerPointer l = layers.layerFrom(layer);
 
     QVariantMap cpd_brushInfo = brushInfo;
-    QString brushName = cpd_brushInfo["name"].toString();
+    QString brushName = cpd_brushInfo["name"].toString().toLower();
 
     if(remoteBrush.contains(clientid)){
         BrushPointer t = remoteBrush[clientid];
-        if(brushName != t->settings()["name"].toString()){
+        if(brushName != t->name().toLower()){
             BrushPointer newOne = brushFactory(brushName);
             newOne->setSurface(l);
             newOne->setSettings(cpd_brushInfo);
+            qDebug()<<"warning, remote drawing starts with line drawing";
+            qDebug()<<brushName<<"VS."<<t->name().toLower();
             newOne->drawLineTo(end, pressure);
             remoteBrush[clientid] = newOne;
 //            t.clear();
@@ -681,6 +683,7 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
         BrushPointer newOne = brushFactory(brushName);
         newOne->setSurface(l);
         newOne->setSettings(cpd_brushInfo);
+        qDebug()<<"warning, remote drawing starts with line drawing";
         newOne->drawLineTo(end, pressure);
         remoteBrush[clientid] = newOne;
     }

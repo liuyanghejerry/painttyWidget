@@ -126,7 +126,8 @@ void BasicBrush::drawLineTo(const QPoint &end, qreal pressure)
         return;
     }
     const QPoint& start = last_point_;
-    const qreal spacing = width_*pressure*0.1;
+    // TODO: spacing needs to be calc with thickness and hardness, too
+    const qreal spacing = width_*pressure*0.07;
 
     const qreal deltaX = end.x() - start.x();
     const qreal deltaY = end.y() - start.y();
