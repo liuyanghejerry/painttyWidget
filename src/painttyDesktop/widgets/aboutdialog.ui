@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>407</width>
+    <width>492</width>
     <height>377</height>
    </rect>
   </property>
@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="info_label">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
        <horstretch>0</horstretch>
@@ -23,7 +23,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>&lt;p&gt;Mr.Paint is a free software for paint-chat. However, it's in alpha state.&lt;/p&gt;&lt;p&gt;If you have any questions about Mr.Paint, please visit &lt;a href=&quot;http://mrspaint.com&quot;&gt;our site&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Copyright Information:&lt;/p&gt;&lt;p&gt;painttyWidget : The client of Mr.Paint built with Qt&lt;/p&gt;&lt;p&gt;Copyright (C) 2013 Project Paintty&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.&lt;/p&gt;&lt;p&gt;This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.&lt;/p&gt;&lt;p&gt;You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA&lt;/p&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mr.Paint is a free software for paint-chat. However, it's in alpha state.&lt;/p&gt;&lt;p&gt;If you have any questions about Mr.Paint, please visit &lt;a href=&quot;http://mrspaint.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;our site&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Mr.Paint version: %1&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Copyright Information:&lt;/p&gt;&lt;p&gt;painttyWidget : The client of Mr.Paint built with Qt&lt;/p&gt;&lt;p&gt;Copyright (C) 2013 Project Paintty&lt;/p&gt;&lt;p&gt;This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.&lt;/p&gt;&lt;p&gt;This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.&lt;/p&gt;&lt;p&gt;You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="textFormat">
       <enum>Qt::AutoText</enum>
