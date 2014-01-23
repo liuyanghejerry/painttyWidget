@@ -21,6 +21,7 @@ public:
     void setHardness(int hardness);
 
     void setSettings(const BrushSettings &settings) Q_DECL_OVERRIDE;
+    BrushSettings defaultSettings() const Q_DECL_OVERRIDE;
 
 signals:
 

@@ -35,8 +35,10 @@ BrushPointer BrushManager::makeBrush(const QString &name)
 
         // use Brush to fall back
         BrushPointer nptr = BrushPointer(new BasicBrush);
+        nptr->setSettings(nptr->defaultSettings());
         return nptr;
     }
     BrushPointer nptr = BrushPointer(ptr->createBrush());
+    nptr->setSettings(nptr->defaultSettings());
     return nptr;
 }

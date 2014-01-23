@@ -47,6 +47,7 @@ public:
 
     virtual BrushSettings settings() const;
     virtual void setSettings(const BrushSettings &settings);
+    virtual BrushSettings defaultSettings() const;
     virtual AbstractBrush* createBrush()=0;
 
     template<typename A>

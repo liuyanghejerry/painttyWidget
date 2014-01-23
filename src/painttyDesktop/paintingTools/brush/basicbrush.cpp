@@ -57,6 +57,8 @@ void BasicBrush::makeStencil(QColor color)
     if(stencil_.isNull() || stencil_.width() != width_){
         stencil_ = QImage(width_, width_, QImage::Format_ARGB32_Premultiplied);
     }
+    auto oc = color;
+    qDebug()<<"make stencil with color"<<color.red()<<color.green()<<color.blue()<<color.alpha();
     stencil_.fill(Qt::transparent);
     const QEasingCurve easing(QEasingCurve::OutQuart);
 
@@ -83,7 +85,7 @@ void BasicBrush::makeStencil(QColor color)
     const QBrush brush(gradient);
     const QPen pen(brush, width_);
     painter.setPen(pen);
-    painter.setOpacity(thickness_/100.0);
+    painter.setOpacity(thickness_/100.0*oc.alphaF());
     painter.drawPoint(half_width, half_width);
     painter.end();
 }
@@ -193,5 +195,12 @@ void BasicBrush::setSettings(const BrushSettings &settings)
 {
     AbstractBrush::setSettings(settings);
     setHardness(settings.value("hardness").toInt());
+}
+
+BrushSettings BasicBrush::defaultSettings() const
+{
+    auto s = AbstractBrush::defaultSettings();
+    s.insert("hardness", BFL::HARDNESS_MAX);
+    return s;
 }
 

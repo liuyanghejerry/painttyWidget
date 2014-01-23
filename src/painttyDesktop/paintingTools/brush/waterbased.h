@@ -19,6 +19,7 @@ public:
     virtual void drawLineTo(const QPoint& end, qreal pressure=1) Q_DECL_OVERRIDE;
 
     void setSettings(const BrushSettings &settings) Q_DECL_OVERRIDE;
+    BrushSettings defaultSettings() const Q_DECL_OVERRIDE;
     AbstractBrush* createBrush() Q_DECL_OVERRIDE;
 
 protected:

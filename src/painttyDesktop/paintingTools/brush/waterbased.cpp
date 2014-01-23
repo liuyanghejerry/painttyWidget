@@ -13,6 +13,8 @@
 
 typedef BrushFeature::LIMIT BFL;
 
+static QColor w_transparent = QColor(255, 255, 255 ,0);
+
 WaterBased::WaterBased():
     BasicBrush(),
     water_(50),
@@ -64,16 +66,16 @@ void WaterBased::setMixin(int mixin)
 }
 
 // non-reentrant.
-inline QImage circle_mask(const int width)
+static inline QImage circle_mask(const int width)
 {
     static QImage mask;
     if(mask.width() != width || mask.isNull()){
         mask = QImage(width, width, QImage::Format_ARGB32_Premultiplied);
-        mask.fill(Qt::transparent);
+        mask.fill(w_transparent);
         QPainter painter;
         // draw mask
         painter.begin(&mask);
-        QPen pen(Qt::transparent);
+        QPen pen(w_transparent);
         painter.setPen(pen);
         QBrush brush(Qt::black);
         painter.setBrush(brush);
@@ -84,33 +86,62 @@ inline QImage circle_mask(const int width)
 }
 
 // non-reentrant.
-inline QRgb avg_rgb(const QImage& square)
+static inline QRgb avg_rgb(const QImage& square)
 {
-    const QRgb tran_rgb = QColor(Qt::transparent).rgba();
-    QRgb target = tran_rgb;
+    QRegion region(0, 0, square.width(), square.height(), QRegion::Ellipse);
+    bool isPremultiplied = square.format() == QImage::Format_ARGB32_Premultiplied;
+    QRgb target = qRgba(255, 255, 255, 0);
     const QRgb* img_data = (const QRgb*) square.constBits();
     const size_t img_data_len = square.byteCount() >> (sizeof(QRgb)>>1);
 
     unsigned int r_sum = 0;
     unsigned int g_sum = 0;
     unsigned int b_sum = 0;
+    unsigned int a_sum = 0;
+    unsigned int a_calc_sum = 0;
+
+    unsigned int r = 255;
+    unsigned int g = 255;
+    unsigned int b = 255;
+    unsigned int a = 0;
+    unsigned int a_calc = 0;
 
     size_t colored = 0;
     for(size_t i = 0;i<img_data_len;++i){
-        QRgb next = *(img_data+i);
-        if(tran_rgb == next){
+        if(!region.contains(QPoint(i/square.width(), i%square.width()))){
             continue;
         }
+        QRgb next = *(img_data+i);
+        a_calc = a = qAlpha(next);
+        if(!a){
+            r = 255;
+            g = 255;
+            b = 255;
+            a_calc = 255;
+        }else{
+            if(isPremultiplied){
+                r = qRed(next);
+                g = qGreen(next);
+                b = qBlue(next);
+            }else{
+                r = qRed(next)*a/255;
+                g = qGreen(next)*a/255;
+                b = qBlue(next)*a/255;
+            }
+        }
+
         ++colored;
-        // NOTE: *_sum won't overflow, unless we have a really giant square
-        // we can also calculate avg one by one, but that's really lossy
-        r_sum += qRed(next);
-        g_sum += qGreen(next);
-        b_sum += qBlue(next);
+
+        r_sum += r;
+        g_sum += g;
+        b_sum += b;
+        a_sum += a;
+        a_calc_sum += a_calc;
     }
-    target = qRgb(r_sum / colored,
-                  g_sum / colored,
-                  b_sum / colored);
+    target = qRgba(r_sum *255/a_calc_sum ,
+                   g_sum *255/a_calc_sum,
+                   b_sum *255/a_calc_sum,
+                   a_sum / colored);
     return target;
 }
 
@@ -130,6 +161,7 @@ QColor WaterBased::fetchColor(const QPoint& center) const
     painter.end();
 
     const QRgb c = avg_rgb(square);
+    qDebug()<<"fetched color"<<qAlpha(c);
     return QColor::fromRgb(c);
 }
 
@@ -137,10 +169,9 @@ int WaterBased::mingleValue(int a, int b) const
 {
     const qreal new_part = mixin_ / 100.0;
     const qreal old_part = 1 - new_part;
-
-    return qBound(0.0,
-                  (a*old_part) + (b*new_part),
-                  255.0);
+    return qBound(0,
+                  int((a*old_part) + (b*new_part)),
+                  255);
 }
 
 template<typename COLOR_FUNC>
@@ -168,9 +199,11 @@ QColor WaterBased::mingleColor(const QColor &new_c)
 
     color_remain_ -= (100 - water_)/1000.0;
     color_remain_ = qBound(0, color_remain_, 255);
-    const int& a = color_remain_;
+    const int& a = color_remain_ / 255.0 * mingled_color_.alphaF();
 
-    return mingled_color_ = QColor::fromRgba(qRgba(r, g, b, a));
+    mingled_color_ = QColor(r, g, b, a);
+    qDebug()<<"mingled color"<<r<<g<<b<<a;
+    return mingled_color_;
 }
 
 void WaterBased::drawPoint(const QPoint &p, qreal )
@@ -183,7 +216,8 @@ void WaterBased::drawPoint(const QPoint &p, qreal )
 void WaterBased::drawLineTo(const QPoint &end, qreal presure)
 {
     last_color_ = fetchColor(last_point_);
-    makeStencil(mingleColor(last_color_));
+    auto m = mingleColor(last_color_);
+    makeStencil(m);
     BasicBrush::drawLineTo(end, presure);
 }
 
@@ -194,6 +228,15 @@ void WaterBased::setSettings(const BrushSettings &settings)
     setExtend(s.value("extend", extend_).toInt());
     setMixin(s.value("mixin", mixin_).toInt());
     BasicBrush::setSettings(s);
+}
+
+BrushSettings WaterBased::defaultSettings() const
+{
+    auto s = BasicBrush::defaultSettings();
+    s.insert("water", 50);
+    s.insert("extend", 50);
+    s.insert("mixin", 20);
+    return s;
 }
 
 AbstractBrush *WaterBased::createBrush()

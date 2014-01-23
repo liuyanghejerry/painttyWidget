@@ -412,6 +412,8 @@ void MainWindow::toolbarInit()
     brushSettingControl_ = brushSettingWidget;
     brushSettingToolbar->addWidget(brushSettingWidget);
 
+    changeToBrush("BasicBrush");
+
     // for room share
     auto& client_socket = Singleton<ClientSocket>::instance();
     QToolBar* roomShareToolbar = new QToolBar(tr("Room Share"), this);
@@ -797,16 +799,7 @@ void MainWindow::onColorGridPicked(int, const QColor &c)
 
 void MainWindow::onBrushTypeChange()
 {
-    ui->canvas->changeBrush(sender()->objectName());
-    auto f = ui->canvas->brushFeatures();
-    if(!this->brushSettingControl_){
-        return;
-    }
-    this->brushSettingControl_->setHardnessEnabled(f.support(BrushFeature::HARDNESS));
-    this->brushSettingControl_->setThicknessEnabled(f.support(BrushFeature::THICKNESS));
-    this->brushSettingControl_->setWaterEnabled(f.support(BrushFeature::WATER));
-    this->brushSettingControl_->setExtendEnabled(f.support(BrushFeature::EXTEND));
-    this->brushSettingControl_->setMixinEnabled(f.support(BrushFeature::MIXIN));
+    changeToBrush(sender()->objectName());
 }
 
 void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
@@ -877,6 +870,21 @@ void MainWindow::openConsole()
                 this, &MainWindow::evaluateScript);
     }
     console_->show();
+}
+
+void MainWindow::changeToBrush(const QString &brushName)
+{
+    ui->canvas->changeBrush(brushName);
+    auto f = ui->canvas->brushFeatures();
+    if(!this->brushSettingControl_){
+        return;
+    }
+    this->brushSettingControl_->setHardnessEnabled(f.support(BrushFeature::HARDNESS));
+    this->brushSettingControl_->setThicknessEnabled(f.support(BrushFeature::THICKNESS));
+    this->brushSettingControl_->setWaterEnabled(f.support(BrushFeature::WATER));
+    this->brushSettingControl_->setExtendEnabled(f.support(BrushFeature::EXTEND));
+    this->brushSettingControl_->setMixinEnabled(f.support(BrushFeature::MIXIN));
+    onBrushSettingsChanged(ui->canvas->brushSettings());
 }
 
 void MainWindow::remoteAddLayer(const QString &layerName)

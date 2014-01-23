@@ -111,6 +111,19 @@ void AbstractBrush::setSettings(const BrushSettings &settings)
     settings_ = s;
 }
 
+BrushSettings AbstractBrush::defaultSettings() const
+{
+    BrushSettings s;
+    s.insert("width", 10);
+    s.insert("thickness", BFL::THICKNESS_MAX);
+    QVariantMap color;
+    color.insert("red", 0);
+    color.insert("green", 0);
+    color.insert("blue", 0);
+    s.insert("color", color);
+    return s;
+}
+
 QColor AbstractBrush::color() const
 {
     return color_;

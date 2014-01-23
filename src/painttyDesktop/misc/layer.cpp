@@ -1,6 +1,7 @@
 #include "layer.h"
 
 #include <QImage>
+#include <QColor>
 
 Layer::Layer(const QString &name, const QSize &size)
     :lock_(false),
@@ -77,7 +78,7 @@ void Layer::deselect()
 
 void Layer::clear()
 {
-    img_.clear();
+    img_->fill(Qt::transparent);
     touched_ = false;
 }
 

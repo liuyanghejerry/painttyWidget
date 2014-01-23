@@ -80,11 +80,17 @@ Canvas::Canvas(QWidget *parent) :
 
     auto& brush_manager = Singleton<BrushManager>::instance();
     BrushPointer p1(new BasicBrush);
+    p1->setSettings(p1->defaultSettings());
     BrushPointer p2(new BinaryBrush);
+    p2->setSettings(p1->defaultSettings());
     BrushPointer p3(new SketchBrush);
+    p3->setSettings(p1->defaultSettings());
     BrushPointer p4(new BasicEraser);
+    p4->setSettings(p1->defaultSettings());
     BrushPointer p5(new WaterBased);
+    p5->setSettings(p1->defaultSettings());
     BrushPointer p6(new MaskBased);
+    p6->setSettings(p1->defaultSettings());
     brush_manager.addBrush(p1);
     brush_manager.addBrush(p2);
     brush_manager.addBrush(p3);
