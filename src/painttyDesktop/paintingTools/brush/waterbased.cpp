@@ -161,8 +161,7 @@ QColor WaterBased::fetchColor(const QPoint& center) const
     painter.end();
 
     const QRgb c = avg_rgb(square);
-    qDebug()<<"fetched color"<<qAlpha(c);
-    return QColor::fromRgb(c);
+    return QColor::fromRgba(c);
 }
 
 int WaterBased::mingleValue(int a, int b) const
@@ -199,11 +198,7 @@ QColor WaterBased::mingleColor(const QColor &new_c)
 
     color_remain_ -= (100 - water_)/1000.0;
     color_remain_ = qBound(0, color_remain_, 255);
-    const int& a = color_remain_ / 255.0 * mingled_color_.alphaF();
-
-    mingled_color_ = QColor(r, g, b, a);
-    qDebug()<<"mingled color"<<r<<g<<b<<a;
-    return mingled_color_;
+    return mingled_color_ = QColor(r, g, b, new_c.alpha());
 }
 
 void WaterBased::drawPoint(const QPoint &p, qreal )
@@ -216,8 +211,7 @@ void WaterBased::drawPoint(const QPoint &p, qreal )
 void WaterBased::drawLineTo(const QPoint &end, qreal presure)
 {
     last_color_ = fetchColor(last_point_);
-    auto m = mingleColor(last_color_);
-    makeStencil(m);
+    makeStencil(mingleColor(last_color_));
     BasicBrush::drawLineTo(end, presure);
 }
 
