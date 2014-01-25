@@ -45,6 +45,7 @@ signals:
                         const QString &layer,
                         const QString clientid,
                         const qreal pressure=1.0);
+    void repaintHint();
     void membersSorted(QList<MemberSection> list);
     void archiveParsed();
 protected:
@@ -59,6 +60,7 @@ private:
     bool archive_loaded_;
     bool is_parsed_signal_sent;
     bool pause_;
+    bool fullspeed_replay;
     void upsertFootprint(const QString& id, const QString& name, const QPoint &point);
     void upsertFootprint(const QString& id, const QString& name);
     QByteArray toJson(const QVariant &m);

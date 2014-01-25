@@ -1,17 +1,20 @@
 #include "canvasbackend.h"
 #include "../../common/network/clientsocket.h"
 #include "../misc/singleton.h"
+#include "../../common/common.h"
 
 #include <QTimerEvent>
 #include <QDateTime>
 #include <QJsonDocument>
+#include <QSettings>
 
 CanvasBackend::CanvasBackend(QObject *parent)
     :QObject(parent),
       parse_timer_id_(0),
       archive_loaded_(false),
       is_parsed_signal_sent(false),
-      pause_(false)
+      pause_(false),
+      fullspeed_replay(false)
 {
     parse_timer_id_ = this->startTimer(50);
 
@@ -20,6 +23,12 @@ CanvasBackend::CanvasBackend(QObject *parent)
     // NOTICE: This is a direct call,
     // hence CanvasBackend must be inited at main thread.
     cached_clientid_ = client_socket.clientId();
+
+    QSettings settings(GlobalDef::SETTINGS_NAME,
+                       QSettings::defaultFormat());
+
+    fullspeed_replay = settings.value("canvas/fullspeed_replay",
+                                       false).toBool();
 
     connect(&client_socket, &ClientSocket::dataPack,
             this, &CanvasBackend::onIncomingData);
@@ -64,10 +73,14 @@ void CanvasBackend::onDataBlock(const QVariantMap info)
 void CanvasBackend::onIncomingData(const QJsonObject& obj)
 {
     incoming_store_.enqueue(obj);
+    if(fullspeed_replay && !pause_){
+        parseIncoming();
+    }
 }
 
 void CanvasBackend::parseIncoming()
 {
+    // TODO: remove drawPoint and drawLine maybe.
     auto drawPoint = [this](const QVariantMap& map){
         QPoint point;
         QString layerName;
@@ -186,23 +199,33 @@ void CanvasBackend::parseIncoming()
             start_point = end_point;
         }
     };
-    for(int i=0;i<3;++i){
-        if(incoming_store_.length()){
-            auto obj = incoming_store_.dequeue();
-            QString action = obj.value("action").toString().toLower();
-            if(action == "drawpoint"){
-                drawPoint(obj.toVariantMap());
-            }else if(action == "drawline"){
-                drawLine(obj.toVariantMap());
-            }else if(action == "block"){
-                dataBlock(obj.toVariantMap());
+
+    static bool need_repaint = false;
+
+    if(incoming_store_.length()){
+        auto obj = incoming_store_.dequeue();
+        QString action = obj.value("action").toString().toLower();
+        if(action == "block"){
+            dataBlock(obj.toVariantMap());
+            if(fullspeed_replay){
+                need_repaint = true;
+            }else{
+                emit repaintHint();
             }
-        }else{
-            if(archive_loaded_ && !is_parsed_signal_sent){
-                emit archiveParsed();
-                is_parsed_signal_sent = true;
-            }
-            break;
+        }else if(action == "drawline"){
+            drawLine(obj.toVariantMap());
+            emit repaintHint();
+        }else if(action == "drawpoint"){
+            drawPoint(obj.toVariantMap());
+            emit repaintHint();
+        }
+    }else{
+        if(need_repaint){
+            emit repaintHint();
+        }
+        if(archive_loaded_ && !is_parsed_signal_sent){
+            emit archiveParsed();
+            is_parsed_signal_sent = true;
         }
     }
 }

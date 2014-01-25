@@ -44,8 +44,7 @@ ConfigureDialog::~ConfigureDialog()
 void ConfigureDialog::readSettings()
 {
     QSettings settings(GlobalDef::SETTINGS_NAME,
-                       QSettings::defaultFormat(),
-                       qApp);
+                       QSettings::defaultFormat());
     selectedLanguage = settings.value("global/language").toString();
     tryIpv6 = settings.value("global/ipv6", false).toBool();
     msg_notify = settings.value("chat/msg_notify", false).toBool();
@@ -57,6 +56,7 @@ void ConfigureDialog::readSettings()
     server_port = settings.value("global/server/server_port", 0).toUInt();
     skip_replay = settings.value("canvas/skip_replay", false).toBool();
     use_droid_font = settings.value("global/use_droid_font", false).toBool();
+    fullspeed_replay = settings.value("canvas/fullspeed_replay", false).toBool();
 }
 
 void ConfigureDialog::initLanguageList()
@@ -147,6 +147,7 @@ void ConfigureDialog::initUi()
     ui->enable_tablet->setChecked(enable_tablet);
     ui->skip_replay->setChecked(skip_replay);
     ui->droid_font_checkbox->setChecked(use_droid_font);
+    ui->fullspeed_replay->setChecked(fullspeed_replay);
     connect(ui->clearCache, &QPushButton::clicked,
             [](){
         QDir cacheDir("cache");
@@ -252,6 +253,13 @@ void ConfigureDialog::acceptConfigure()
     {
         settings.setValue("canvas/skip_replay",
                           ui->skip_replay->isChecked());
+        needRestart = true;
+    }
+
+    // save canvas full-speed replay settings
+    if(ui->fullspeed_replay->isChecked() != fullspeed_replay){
+        settings.setValue("canvas/fullspeed_replay",
+                          ui->fullspeed_replay->isChecked());
         needRestart = true;
     }
 

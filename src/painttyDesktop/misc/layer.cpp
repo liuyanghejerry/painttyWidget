@@ -78,7 +78,7 @@ void Layer::deselect()
 
 void Layer::clear()
 {
-    img_->fill(Qt::transparent);
+    img_.clear();
     touched_ = false;
 }
 

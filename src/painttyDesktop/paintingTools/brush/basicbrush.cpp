@@ -58,7 +58,6 @@ void BasicBrush::makeStencil(QColor color)
         stencil_ = QImage(width_, width_, QImage::Format_ARGB32_Premultiplied);
     }
     auto oc = color;
-    qDebug()<<"make stencil with color"<<color.red()<<color.green()<<color.blue()<<color.alpha();
     stencil_.fill(Qt::transparent);
     const QEasingCurve easing(QEasingCurve::OutQuart);
 

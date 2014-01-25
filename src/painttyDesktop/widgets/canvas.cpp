@@ -107,6 +107,8 @@ Canvas::Canvas(QWidget *parent) :
             this, &Canvas::remoteDrawLine);
     connect(backend_, &CanvasBackend::remoteDrawPoint,
             this, &Canvas::remoteDrawPoint);
+    connect(backend_, &CanvasBackend::repaintHint,
+            this, static_cast<void (Canvas::*)()>(&Canvas::update));
 //    connect(this, &Canvas::destroyed,
 //            backend_, &CanvasBackend::deleteLater);
 //    connect(this, &Canvas::destroyed,
@@ -640,7 +642,7 @@ void Canvas::remoteDrawPoint(const QPoint &point,
         remoteBrush[clientid] = newOne;
     }
 
-    update();
+//    update();
 }
 
 /*!
@@ -674,8 +676,6 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
             BrushPointer newOne = brushFactory(brushName);
             newOne->setSurface(l);
             newOne->setSettings(cpd_brushInfo);
-            qDebug()<<"warning, remote drawing starts with line drawing";
-            qDebug()<<brushName<<"VS."<<t->name().toLower();
             newOne->drawLineTo(end, pressure);
             remoteBrush[clientid] = newOne;
 //            t.clear();
@@ -693,7 +693,7 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
         newOne->drawLineTo(end, pressure);
         remoteBrush[clientid] = newOne;
     }
-    update();
+//    update();
 }
 
 void Canvas::onMembersSorted(const QList<MS>& list)
