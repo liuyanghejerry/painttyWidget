@@ -1,6 +1,7 @@
 #include "layer.h"
 
 #include <QImage>
+#include <QColor>
 
 Layer::Layer(const QString &name, const QSize &size)
     :lock_(false),

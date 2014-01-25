@@ -10,7 +10,7 @@ LayerManager::LayerManager(const QSize &initSize)
 {
 }
 
-LayerPointer LayerManager::layerFrom(int pos)
+LayerPointer LayerManager::layerFrom(int pos) const
 {
     if( pos >= layers.count() ){
         return LayerPointer();
@@ -18,7 +18,7 @@ LayerPointer LayerManager::layerFrom(int pos)
     return layers[layerLinks[pos]];
 }
 
-LayerPointer LayerManager::layerFrom(const QString &name)
+LayerPointer LayerManager::layerFrom(const QString &name) const
 {
     if(!exists(name)){
         qDebug()<<"Warnning: try to access a non-existent layer";
@@ -27,12 +27,12 @@ LayerPointer LayerManager::layerFrom(const QString &name)
     return layers[name];
 }
 
-LayerPointer LayerManager::topLayer()
+LayerPointer LayerManager::topLayer() const
 {
     return layers[layerLinks.last()];
 }
 
-LayerPointer LayerManager::bottomLayer()
+LayerPointer LayerManager::bottomLayer() const
 {
     return layers[layerLinks.first()];
 }
@@ -48,12 +48,12 @@ void LayerManager::updateSelected()
     }
 }
 
-LayerPointer LayerManager::selectedLayer()
+LayerPointer LayerManager::selectedLayer() const
 {
     return lastSelected;
 }
 
-LayerPointer LayerManager::topShownLayer()
+LayerPointer LayerManager::topShownLayer() const
 {
     for(int i=layerLinks.count()-1;i>0;--i){
         if(layers[layerLinks[i]]->isHided()){
@@ -155,12 +155,12 @@ void LayerManager::moveTo(const QString &, int )
     //TODO
 }
 
-bool LayerManager::exists(const QString &name)
+bool LayerManager::exists(const QString &name) const
 {
     return layers.contains(name);
 }
 
-bool LayerManager::exists(int pos)
+bool LayerManager::exists(int pos) const
 {
     return layerLinks.count()-1 >pos;
 }

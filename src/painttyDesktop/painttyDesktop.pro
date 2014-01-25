@@ -51,10 +51,6 @@ SOURCES += main.cpp\
     widgets/layeritem.cpp \
     widgets/iconcheckbox.cpp \
     misc/layer.cpp \
-    paintingTools/brush/sketchbrush.cpp \
-    paintingTools/brush/eraser.cpp \
-    paintingTools/brush/brush.cpp \
-    paintingTools/brush/pencil.cpp \
     widgets/colorspinboxgroup.cpp \
     widgets/colorbox.cpp \
     widgets/newroomwindow.cpp \
@@ -63,9 +59,7 @@ SOURCES += main.cpp\
     widgets/canvascontainer.cpp \
     widgets/memberlistwidget.cpp \
     misc/errortable.cpp \
-    paintingTools/brush/abstractbrush.cpp \
     paintingTools/brush/brushmanager.cpp \
-    paintingTools/brush/wetfingure.cpp \
     widgets/brushsettingswidget.cpp \
     widgets/helpdialog.cpp \
     widgets/panoramaview.cpp \
@@ -88,7 +82,15 @@ SOURCES += main.cpp\
     widgets/developerconsole.cpp \
     widgets/canvasbackend.cpp \
     widgets/irclineedit.cpp \
-    widgets/waitupdaterdialog.cpp
+    widgets/waitupdaterdialog.cpp \
+    paintingTools/brush/abstractbrush.cpp \
+    paintingTools/brush/basicbrush.cpp \
+    paintingTools/brush/basiceraser.cpp \
+    paintingTools/brush/binarybrush.cpp \
+    paintingTools/brush/brushfeature.cpp \
+    paintingTools/brush/maskbased.cpp \
+    paintingTools/brush/sketchbrush.cpp \
+    paintingTools/brush/waterbased.cpp
 
 
 HEADERS  += widgets/mainwindow.h \
@@ -106,10 +108,6 @@ HEADERS  += widgets/mainwindow.h \
     widgets/layeritem.h \
     widgets/iconcheckbox.h \
     misc/layer.h \
-    paintingTools/brush/sketchbrush.h \
-    paintingTools/brush/eraser.h \
-    paintingTools/brush/brush.h \
-    paintingTools/brush/pencil.h \
     widgets/colorspinboxgroup.h \
     widgets/colorbox.h \
     widgets/newroomwindow.h \
@@ -120,9 +118,6 @@ HEADERS  += widgets/mainwindow.h \
     widgets/memberlistwidget.h \
     misc/router.h \
     misc/errortable.h \
-    paintingTools/brush/abstractbrush.h \
-    paintingTools/brush/brushmanager.h \
-    paintingTools/brush/wetfingure.h \
     widgets/brushsettingswidget.h \
     widgets/helpdialog.h \
     widgets/panoramaview.h \
@@ -145,7 +140,17 @@ HEADERS  += widgets/mainwindow.h \
     widgets/developerconsole.h \
     widgets/irclineedit.h \
     widgets/canvasbackend.h \
-    widgets/waitupdaterdialog.h
+    widgets/waitupdaterdialog.h \
+    paintingTools/brush/brushmanager.h \
+    paintingTools/brush/abstractbrush.h \
+    paintingTools/brush/basicbrush.h \
+    paintingTools/brush/basiceraser.h \
+    paintingTools/brush/binarybrush.h \
+    paintingTools/brush/brushfeature.h \
+    paintingTools/brush/brushsettings.h \
+    paintingTools/brush/maskbased.h \
+    paintingTools/brush/sketchbrush.h \
+    paintingTools/brush/waterbased.h
 
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \

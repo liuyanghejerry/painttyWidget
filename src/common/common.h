@@ -2,11 +2,8 @@
 #define COMMON_H
 
 #include <QtGlobal>
-#include <QMetaMethod>
 #include <QString>
 #include <QTimer>
-#include <type_traits>
-#include <QDebug>
 
 namespace GlobalDef
 {
@@ -17,9 +14,9 @@ const static int CLIENT_VER = 50;
 const static char SETTINGS_NAME[] = "mrpaint.ini";
 
 #ifdef PAINTTY_DEV
-const static QString HOST_ADDR_IPV4("192.81.128.68");
+const static QString HOST_ADDR_IPV4("192.168.1.104");
 const static QString HOST_ADDR_IPV6("2600:3c01::f03c:91ff:fe70:bc64");
-const static int HOST_MGR_PORT = 7575;
+const static int HOST_MGR_PORT = 7070;
 #else
 const static QString HOST_ADDR_IPV4("192.81.128.68");
 const static QString HOST_ADDR_IPV6("2600:3c01::f03c:91ff:fe70:bc64");
@@ -34,18 +31,14 @@ const qreal MIN_SCALE_FACTOR = 0.125;
 template<typename Func>
 void delayJob(Func f, int ms=2000)
 {
-    if( std::is_function<decltype(f)>::value
-            || std::is_object<decltype(f)>::value){
-        QTimer* t = new QTimer;
-        t->setSingleShot(true);
-        QObject::connect(t, &QTimer::timeout,
-                [&f, t](){
-            qDebug()<<"delayJob";
-            f();
-            t->deleteLater();
-        });
-        t->start(ms);
-    }
+    QTimer* t = new QTimer;
+    t->setSingleShot(true);
+    QObject::connect(t, &QTimer::timeout,
+            [&f, t](){
+        f();
+        t->deleteLater();
+    });
+    t->start(ms);
 }
 
 } // namespace GlobalDef

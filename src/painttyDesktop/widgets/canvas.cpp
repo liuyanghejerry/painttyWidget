@@ -17,10 +17,12 @@
 #include "../../common/common.h"
 #include "../../common/network/clientsocket.h"
 #include "../paintingTools/brush/brushmanager.h"
-#include "../paintingTools/brush/brush.h"
+#include "../paintingTools/brush/basicbrush.h"
 #include "../paintingTools/brush/sketchbrush.h"
-#include "../paintingTools/brush/eraser.h"
-#include "../paintingTools/brush/pencil.h"
+#include "../paintingTools/brush/basiceraser.h"
+#include "../paintingTools/brush/binarybrush.h"
+#include "../paintingTools/brush/waterbased.h"
+#include "../paintingTools/brush/maskbased.h"
 #include "../misc/platformextend.h"
 #include "../misc/singleton.h"
 #include "../misc/archivefile.h"
@@ -69,7 +71,7 @@ Canvas::Canvas(QWidget *parent) :
     setAttribute(Qt::WA_StaticContents);
     inPicker = false;
     drawing = false;
-    brush_ = BrushPointer(new Brush);
+    brush_ = BrushPointer(new BasicBrush);
     updateCursor();
 
     setMouseTracking(true);
@@ -77,14 +79,24 @@ Canvas::Canvas(QWidget *parent) :
     resize(canvasSize);
 
     auto& brush_manager = Singleton<BrushManager>::instance();
-    BrushPointer p1(new Brush);
-    BrushPointer p2(new Pencil);
+    BrushPointer p1(new BasicBrush);
+    p1->setSettings(p1->defaultSettings());
+    BrushPointer p2(new BinaryBrush);
+    p2->setSettings(p1->defaultSettings());
     BrushPointer p3(new SketchBrush);
-    BrushPointer p4(new Eraser);
+    p3->setSettings(p1->defaultSettings());
+    BrushPointer p4(new BasicEraser);
+    p4->setSettings(p1->defaultSettings());
+    BrushPointer p5(new WaterBased);
+    p5->setSettings(p1->defaultSettings());
+    BrushPointer p6(new MaskBased);
+    p6->setSettings(p1->defaultSettings());
     brush_manager.addBrush(p1);
     brush_manager.addBrush(p2);
     brush_manager.addBrush(p3);
     brush_manager.addBrush(p4);
+    brush_manager.addBrush(p5);
+    brush_manager.addBrush(p6);
     setJitterCorrectionLevel(5);
 
     auto& client_socket = Singleton<ClientSocket>::instance();
@@ -95,6 +107,8 @@ Canvas::Canvas(QWidget *parent) :
             this, &Canvas::remoteDrawLine);
     connect(backend_, &CanvasBackend::remoteDrawPoint,
             this, &Canvas::remoteDrawPoint);
+    connect(backend_, &CanvasBackend::repaintHint,
+            this, static_cast<void (Canvas::*)()>(&Canvas::update));
 //    connect(this, &Canvas::destroyed,
 //            backend_, &CanvasBackend::deleteLater);
 //    connect(this, &Canvas::destroyed,
@@ -103,8 +117,6 @@ Canvas::Canvas(QWidget *parent) :
             backend_, &CanvasBackend::deleteLater);
     connect(this, &Canvas::newPaintAction,
             backend_, &CanvasBackend::onDataBlock);
-    connect(this, &Canvas::paintActionComplete,
-            backend_, &CanvasBackend::commit);
     connect(this, &Canvas::parsePaused,
             backend_, &CanvasBackend::pauseParse);
 
@@ -311,9 +323,16 @@ void Canvas::tryJitterCorrection()
     \sa Brush::brushInfo()
 */
 
-QVariantMap Canvas::brushInfo()
+QVariantMap Canvas::brushSettings() const
 {
-    return brush_->brushInfo();
+    auto m = brush_->settings();
+    m.insert("name", brush_->name().toLower());
+    return m;
+}
+
+BrushFeature Canvas::brushFeatures() const
+{
+    return brush_->features();
 }
 
 void Canvas::setShareColor(bool b)
@@ -343,22 +362,51 @@ void Canvas::setBrushColor(const QColor &newColor)
 
 void Canvas::setBrushWidth(int newWidth)
 {
-    if(brush_->width() != newWidth){
-        brush_->setWidth(newWidth);
-        updateCursor();
-    }
+    setBrushFeature("width", newWidth);
+    updateCursor();
 }
 
+// TODO: correct name
 void Canvas::setBrushHardness(int h)
 {
-    if(brush_->hardness() != h){
-        brush_->setHardness(h);
-    }
+    setBrushFeature("hardness", h);
+}
+
+void Canvas::setBrushThickness(int t)
+{
+    setBrushFeature("thickness", t);
+}
+
+void Canvas::setBrushWater(int w)
+{
+    setBrushFeature("water", w);
+}
+
+void Canvas::setBrushExtend(int e)
+{
+    setBrushFeature("extend", e);
+}
+
+void Canvas::setBrushMixin(int e)
+{
+    setBrushFeature("mixin", e);
+}
+
+void Canvas::setBrushSettings(const QVariantMap &settings)
+{
+    brush_->setSettings(settings);
 }
 
 BrushPointer Canvas::brushFactory(const QString &name)
 {
     return Singleton<BrushManager>::instance().makeBrush(name);
+}
+
+void Canvas::setBrushFeature(const QString &key, const QVariant &value)
+{
+    auto&& settings = brushSettings();
+    settings.insert(key, value);
+    setBrushSettings(settings);
 }
 
 void Canvas::loadLayers()
@@ -413,25 +461,24 @@ void Canvas::changeBrush(const QString &name)
 {
     QVariantMap currentSettings;
     LayerPointer sur = brush_->surface();
-    QPointF lp = brush_->lastPoint();
-    QVariantMap colorMap = brush_->brushInfo()
+    QVariantMap colorMap = brush_->settings()
             .value("color").toMap();
 
     QString brushName = name;
     if(localBrush.contains(brushName)){
         brush_ = localBrush[brushName];
-        currentSettings = brush_->brushInfo();
+        currentSettings = brush_->settings();
     }else{
         brush_ = brushFactory(brushName);
         localBrush.insert(brushName, brush_);
-        currentSettings = brush_->defaultInfo();
+        currentSettings = brush_->settings();
     }
     // share same color between brushes
     if(shareColor_){
         currentSettings["color"] = colorMap;
     }
 
-    brush_->setLastPoint(lp);
+//    brush_->setLastPoint(lp);
     brush_->setSurface(sur);
     updateCursor();
 
@@ -470,35 +517,17 @@ void Canvas::drawLineTo(const QPoint &endPoint, qreal pressure)
     }
     updateCursor();
     brush_->setSurface(l);
-    brush_->lineTo(endPoint, pressure);
+    brush_->drawLineTo(endPoint, pressure);
 
     update();
 
-    QVariantMap start_j;
-    start_j.insert("x", this->lastPoint.x());
-    start_j.insert("y", this->lastPoint.y());
-    QVariantMap end_j;
-    end_j.insert("x", endPoint.x());
-    end_j.insert("y", endPoint.y());
-
-    QVariantMap map;
-    map.insert("brush", QVariant(brushInfo()));
-    map.insert("start", QVariant(start_j));
-    map.insert("end", QVariant(end_j));
+    QVariantMap point;
+    point.insert("x", endPoint.x());
+    point.insert("y", endPoint.y());
     // guarantee that pressure is double
-    map.insert("pressure", QVariant(double(pressure)));
-    map.insert("layer", QVariant(currentLayer()));
-    map.insert("clientid",
-               Singleton<ClientSocket>::instance().clientId());
-    map.insert("name",
-               Singleton<ClientSocket>::instance().userName());
+    point.insert("pressure", double(pressure));
 
-    QVariantMap bigMap;
-    bigMap.insert("info", map);
-    bigMap.insert("action", "drawline");
-    bigMap.insert("type", "data");
-
-    emit newPaintAction(bigMap);
+    storeAction(point);
 }
 
 /*!
@@ -518,7 +547,7 @@ void Canvas::drawPoint(const QPoint &point, qreal pressure)
     }
     updateCursor();
     brush_->setSurface(l);
-    brush_->start(point, pressure);
+    brush_->drawPoint(point, pressure);
 
     int rad = (brush_->width() / 2) + 2;
     update(QRect(lastPoint, point).normalized()
@@ -527,30 +556,38 @@ void Canvas::drawPoint(const QPoint &point, qreal pressure)
     QVariantMap point_j;
     point_j.insert("x", point.x());
     point_j.insert("y", point.y());
-
-    QVariantMap map;
-    map.insert("brush", QVariant(brushInfo()));
     // guarantee that pressure is double
-    map.insert("pressure", QVariant(double(pressure)));
-    map.insert("layer", QVariant(currentLayer()));
-    map.insert("point", QVariant(point_j));
-    map.insert("clientid",
-               QVariant(Singleton<ClientSocket>::instance().clientId()));
-    map.insert("name",
+    point_j.insert("pressure", double(pressure));
+
+    storeAction(point_j);
+}
+
+void Canvas::storeAction(const QVariantMap &map)
+{
+    action_buffer_.push_back(map);
+}
+
+void Canvas::sendAction()
+{
+    QVariantMap store;
+    store.insert("layer", currentLayer());
+    store.insert("clientid",
+               Singleton<ClientSocket>::instance().clientId());
+    store.insert("name",
                Singleton<ClientSocket>::instance().userName());
+    store.insert("type", "data");
+    store.insert("brush", brushSettings());
+    store.insert("action", "block");
+    store.insert("block", action_buffer_);
 
-    QVariantMap bigMap;
-    bigMap.insert("info", map);
-    bigMap.insert("action", "drawpoint");
-    bigMap.insert("type", "data");
-
-    emit newPaintAction(bigMap);
+    emit newPaintAction(store);
+    action_buffer_.clear();
 }
 
 void Canvas::pickColor(const QPoint &point)
 {
     brush_->setColor(image.pixel(point));
-    newBrushSettings(brush_->brushInfo());
+    newBrushSettings(brush_->settings());
 }
 
 void Canvas::updateCursor()
@@ -577,44 +614,35 @@ void Canvas::remoteDrawPoint(const QPoint &point,
     if(!layers.exists(layer)) return;
     LayerPointer l = layers.layerFrom(layer);
 
-    QString brushName = brushInfo["name"].toString();
-    int width = brushInfo["width"].toInt();
-    int hardness = brushInfo["hardness"].toInt();
-    QVariantMap colorMap = brushInfo["color"].toMap();
-    QColor color(colorMap["red"].toInt(),
-            colorMap["green"].toInt(),
-            colorMap["blue"].toInt());
+    QVariantMap cpd_brushInfo = brushInfo;
+    QString brushName = cpd_brushInfo["name"].toString().toLower();
+
+    cpd_brushInfo.remove("name"); // remove useless info
 
     if(remoteBrush.contains(clientid)){
         BrushPointer t = remoteBrush[clientid];
-        if(brushInfo != t->brushInfo()){
+        if(brushName != t->name().toLower()){
             BrushPointer newOne = brushFactory(brushName);
             newOne->setSurface(l);
-            newOne->setWidth(width);
-            newOne->setHardness(hardness);
-            newOne->setColor(color);
-            newOne->start(point, pressure);
+            newOne->setSettings(cpd_brushInfo);
+            newOne->drawPoint(point, pressure);
             remoteBrush[clientid] = newOne;
-            t.clear();
+//            t.clear();
         }else{
             BrushPointer original = remoteBrush[clientid];
             original->setSurface(l);
-            original->setWidth(width);
-            original->setHardness(hardness);
-            original->setColor(color);
-            original->start(point, pressure);
+            original->setSettings(cpd_brushInfo);
+            original->drawPoint(point, pressure);
         }
     }else{
         BrushPointer newOne = brushFactory(brushName);
         newOne->setSurface(l);
-        newOne->setWidth(width);
-        newOne->setHardness(hardness);
-        newOne->setColor(color);
-        newOne->start(point, pressure);
+        newOne->setSettings(cpd_brushInfo);
+        newOne->drawPoint(point, pressure);
         remoteBrush[clientid] = newOne;
     }
 
-    update();
+//    update();
 }
 
 /*!
@@ -639,43 +667,33 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
     }
     LayerPointer l = layers.layerFrom(layer);
 
-    QString brushName = brushInfo["name"].toString();
-    int width = brushInfo["width"].toInt();
-    int hardness = brushInfo["hardness"].toInt();
-    QVariantMap colorMap = brushInfo["color"].toMap();
-    QColor color(colorMap["red"].toInt(),
-            colorMap["green"].toInt(),
-            colorMap["blue"].toInt());
+    QVariantMap cpd_brushInfo = brushInfo;
+    QString brushName = cpd_brushInfo["name"].toString().toLower();
 
     if(remoteBrush.contains(clientid)){
         BrushPointer t = remoteBrush[clientid];
-        if(brushName != t->brushInfo()["name"].toString()){
+        if(brushName != t->name().toLower()){
             BrushPointer newOne = brushFactory(brushName);
             newOne->setSurface(l);
-            newOne->setWidth(width);
-            newOne->setHardness(hardness);
-            newOne->setColor(color);
-            newOne->lineTo(end, pressure);
+            newOne->setSettings(cpd_brushInfo);
+            newOne->drawLineTo(end, pressure);
             remoteBrush[clientid] = newOne;
-            t.clear();
+//            t.clear();
         }else{
             BrushPointer original = remoteBrush[clientid];
             original->setSurface(l);
-            original->setWidth(width);
-            original->setHardness(hardness);
-            original->setColor(color);
-            original->lineTo(end, pressure);
+            original->setSettings(cpd_brushInfo);
+            original->drawLineTo(end, pressure);
         }
     }else{
         BrushPointer newOne = brushFactory(brushName);
         newOne->setSurface(l);
-        newOne->setWidth(width);
-        newOne->setHardness(hardness);
-        newOne->setColor(color);
-        newOne->lineTo(end, pressure);
+        newOne->setSettings(cpd_brushInfo);
+        qDebug()<<"warning, remote drawing starts with line drawing";
+        newOne->drawLineTo(end, pressure);
         remoteBrush[clientid] = newOne;
     }
-    update();
+//    update();
 }
 
 void Canvas::onMembersSorted(const QList<MS>& list)
@@ -928,7 +946,7 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
                 drawing = false;
                 stackPoints.clear();
                 updateCursor();
-                emit paintActionComplete();
+                sendAction();
             }
         }
     }

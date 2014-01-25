@@ -35,6 +35,7 @@ public slots:
     void about();
     void onPickColorComplete();
     void openConsole();
+    void changeToBrush(const QString& brushName);
 
     /* layer operations */
     void remoteAddLayer(const QString &layerName);

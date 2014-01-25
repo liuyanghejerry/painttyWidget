@@ -14,10 +14,11 @@ class Canvas : public QWidget
 public:
     explicit Canvas(QWidget *parent = 0);
     ~Canvas();
-    QVariantMap brushInfo();
+    QVariantMap brushSettings() const;
+    BrushFeature brushFeatures() const;
     QString currentLayer();
-    int count(){return layers.count();}
-    int layerNum(){return layerNameCounter;}
+    int count() const{return layers.count();}
+    int layerNum() const{return layerNameCounter;}
     QImage currentCanvas();
     QImage allCanvas();
     int jitterCorrectionLevel() const;
@@ -33,6 +34,11 @@ public slots:
     void setBrushColor(const QColor &newColor);
     void setBrushWidth(int newWidth);
     void setBrushHardness(int h);
+    void setBrushThickness(int t);
+    void setBrushWater(int w);
+    void setBrushExtend(int e);
+    void setBrushMixin(int e);
+    void setBrushSettings(const QVariantMap& settings);
     void addLayer(const QString &name);
     bool deleteLayer(const QString &name);
     void clearLayer(const QString &name);
@@ -55,7 +61,6 @@ signals:
     void newBrushSettings(const QVariantMap &map);
     void historyComplete();
     void newPaintAction(const QVariantMap m);
-    void paintActionComplete();
     void requestSortedMembers(CanvasBackend::MemberSectionIndex index
                                = CanvasBackend::MemberSectionIndex::Count);
     void requestClearMembers();
@@ -75,13 +80,13 @@ protected:
 
 private slots:
     void remoteDrawPoint(const QPoint &point,
-                         const QVariantMap &brushInfo,
+                         const QVariantMap &brushSettings,
                          const QString &layer,
                          const QString clientid,
                          const qreal pressure=1.0);
     void remoteDrawLine(const QPoint &start,
                         const QPoint &end,
-                        const QVariantMap &brushInfo,
+                        const QVariantMap &brushSettings,
                         const QString &layer,
                         const QString clientid,
                         const qreal pressure=1.0);
@@ -90,12 +95,14 @@ private slots:
 private:
     void drawLineTo(const QPoint &endPoint, qreal pressure=1.0);
     void drawPoint(const QPoint &point, qreal pressure=1.0);
+    void storeAction(const QVariantMap& map);
+    void sendAction();
     void pickColor(const QPoint &point);
     void updateCursor();
     void tryJitterCorrection();
     QImage appendAuthorSignature(QImage target);
     BrushPointer brushFactory(const QString &name);
-
+    void setBrushFeature(const QString& key, const QVariant& value);
 
     bool inPicker;
     bool drawing;
@@ -116,6 +123,8 @@ private:
     CanvasBackend* backend_;
     QThread *worker_;
     QList<CanvasBackend::MemberSection> author_list_;
+    QVariantList action_buffer_;
+
 };
 
 #endif // CANVAS_H

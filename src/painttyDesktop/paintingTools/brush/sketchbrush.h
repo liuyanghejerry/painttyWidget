@@ -1,29 +1,24 @@
 #ifndef SKETCHBRUSH_H
 #define SKETCHBRUSH_H
 
-#include <QList>
 #include "abstractbrush.h"
+#include <QList>
+#include <QPen>
 
 class SketchBrush : public AbstractBrush
 {
 public:
     SketchBrush();
-    ~SketchBrush();
-    void start(const QPointF &st, qreal pressure=1.0);
-    void setColor(const QColor &color);
-    int width();
-    void setWidth(int w);
-    void setLastPoint(const QPointF &p);
-    void lineTo(const QPointF &st, qreal pressure=1.0);
-    QVariantMap brushInfo();
-    QVariantMap defaultInfo();
-    AbstractBrush* createBrush();
-    
+    void setColor(const QColor& c) Q_DECL_OVERRIDE;
+    void drawPoint(const QPoint& p, qreal pressure=1) Q_DECL_OVERRIDE;
+    void drawLineTo(const QPoint& end, qreal pressure=1) Q_DECL_OVERRIDE;
+    AbstractBrush* createBrush() Q_DECL_OVERRIDE;
+    void setSettings(const BrushSettings &settings) Q_DECL_OVERRIDE;
 protected:
-    QList<QPointF> points;
-    QPen sketchPen;
-    void sketch();
     void preparePen();
+    QPen sketchPen;
+    QList<QPoint> points;
+    void sketch();
 };
 
 #endif // SKETCHBRUSH_H
