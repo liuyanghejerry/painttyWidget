@@ -943,7 +943,18 @@ Do you want to retry?</source>
         <translation type="vanished">指先</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="116"/>
+        <location filename="../main.cpp" line="105"/>
+        <source>Update Disabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="106"/>
+        <source>Sorry, we do not support auto-update on Mac OSX.
+You may want to check &lt;a href=&quot;http://mrspaint.com&quot;&gt;our site&lt;/a&gt;for new versions manually.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="124"/>
         <source>We cannot find updater.
 You may need to check update yourself.</source>
         <translation type="unfinished"></translation>
