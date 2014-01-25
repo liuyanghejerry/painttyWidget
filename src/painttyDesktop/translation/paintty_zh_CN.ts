@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="zh_CN">
+<TS version="2.1" language="zh_CN">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -25,10 +25,30 @@
         <translation>大小</translation>
     </message>
     <message>
-        <location filename="../widgets/brushsettingswidget.cpp" line="17"/>
+        <location filename="../widgets/brushsettingswidget.cpp" line="16"/>
         <source>Hardness</source>
         <translatorcomment>硬さ</translatorcomment>
         <translation>硬度</translation>
+    </message>
+    <message>
+        <location filename="../widgets/brushsettingswidget.cpp" line="19"/>
+        <source>Thickness</source>
+        <translation>浓度</translation>
+    </message>
+    <message>
+        <location filename="../widgets/brushsettingswidget.cpp" line="22"/>
+        <source>Water</source>
+        <translation>水分量</translation>
+    </message>
+    <message>
+        <location filename="../widgets/brushsettingswidget.cpp" line="25"/>
+        <source>Extend</source>
+        <translation>色延伸</translation>
+    </message>
+    <message>
+        <location filename="../widgets/brushsettingswidget.cpp" line="28"/>
+        <source>Mixin</source>
+        <translation>混色</translation>
     </message>
 </context>
 <context>
@@ -145,105 +165,109 @@
         <translation>常规</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="33"/>
+        <location filename="../widgets/configuredialog.ui" line="30"/>
         <source>&amp;Language:</source>
         <translation>语言(&amp;L)：</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="46"/>
         <source>&amp;Connection:</source>
-        <translation>连接(&amp;C)：</translation>
+        <translation type="vanished">连接(&amp;C)：</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="56"/>
+        <location filename="../widgets/configuredialog.ui" line="130"/>
         <source>Try to use IPv6 to connect to server</source>
         <translation>尝试使用IPv6连接服务器</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="63"/>
+        <location filename="../widgets/configuredialog.ui" line="71"/>
         <source>Clear Cache</source>
         <translation>清除缓存</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="70"/>
+        <location filename="../widgets/configuredialog.ui" line="43"/>
         <source>Custom Font:</source>
         <translation>自定义字体：</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="77"/>
+        <location filename="../widgets/configuredialog.ui" line="50"/>
         <source>Use Droid Sans Font</source>
         <translation>使用Droid Sans字体</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="85"/>
-        <location filename="../widgets/configuredialog.ui" line="106"/>
+        <location filename="../widgets/configuredialog.ui" line="79"/>
+        <location filename="../widgets/configuredialog.ui" line="100"/>
         <source>Shortcut</source>
         <translation>快捷键</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="101"/>
+        <location filename="../widgets/configuredialog.ui" line="95"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="111"/>
+        <location filename="../widgets/configuredialog.ui" line="105"/>
         <source>Type</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="119"/>
+        <location filename="../widgets/configuredialog.ui" line="113"/>
         <source>Double click the shortcut and press your shortcut keys.</source>
         <translation>双击要修改的快捷键，然后按下您要设置的按键。</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="130"/>
+        <location filename="../widgets/configuredialog.ui" line="124"/>
         <source>Server</source>
         <translation>服务器</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="136"/>
+        <location filename="../widgets/configuredialog.ui" line="146"/>
         <source>IPv4 address</source>
         <translation>IPv4地址</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="146"/>
+        <location filename="../widgets/configuredialog.ui" line="156"/>
         <source>IPv6 address</source>
         <translation>IPv6地址</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="156"/>
+        <location filename="../widgets/configuredialog.ui" line="166"/>
         <source>Server Port</source>
         <translation>服务器端口</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="166"/>
+        <location filename="../widgets/configuredialog.ui" line="228"/>
+        <source>Full speed replay (May cause UI lock)</source>
+        <translation>全速回放 (可能会导致界面短暂不响应)</translation>
+    </message>
+    <message>
+        <location filename="../widgets/configuredialog.ui" line="137"/>
         <source>Use default server</source>
         <translation>使用默认配置</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="178"/>
+        <location filename="../widgets/configuredialog.ui" line="183"/>
         <source>Warning, non-default server may lead to software crush.
 Use at your own risk.</source>
         <translation>警告：使用非默认配置可能会导致软件崩溃。
 使用自担风险。</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="196"/>
+        <location filename="../widgets/configuredialog.ui" line="64"/>
         <source>Disable IME when painting (Windows exclusive)</source>
         <translation>绘画时禁用输入法（Windows）</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="203"/>
+        <location filename="../widgets/configuredialog.ui" line="57"/>
         <source>Message Notification (Windows exclusive)</source>
         <translation>消息提示（Windows）</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="210"/>
+        <location filename="../widgets/configuredialog.ui" line="214"/>
         <source>Enable Wacom Tablet (Windows exclusive)</source>
         <translation>支持绘图板（暂不可用）</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="217"/>
+        <location filename="../widgets/configuredialog.ui" line="221"/>
         <source>Always skip replay if possible</source>
         <translation>可能的话总是跳过回放</translation>
     </message>
@@ -252,7 +276,7 @@ Use at your own risk.</source>
         <translation type="obsolete">提示：我们目前还没有加入快捷键的编辑功能（赶进度神马的</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.ui" line="190"/>
+        <location filename="../widgets/configuredialog.ui" line="208"/>
         <source>Experimental Fetures</source>
         <translation>试验特性</translation>
     </message>
@@ -289,20 +313,20 @@ Use at your own risk.</source>
         <translation>松开后触发</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="263"/>
-        <location filename="../widgets/configuredialog.cpp" line="276"/>
+        <location filename="../widgets/configuredialog.cpp" line="271"/>
+        <location filename="../widgets/configuredialog.cpp" line="284"/>
         <source>Restart</source>
         <translation>重新启动</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="264"/>
+        <location filename="../widgets/configuredialog.cpp" line="272"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation>程序必须重新启动才可以应用一些新的设置。
 是否立即重新启动？</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="277"/>
+        <location filename="../widgets/configuredialog.cpp" line="285"/>
         <source>New settings will be applied on next start.</source>
         <translation>新设置将在下次启动程序时生效。</translation>
     </message>
@@ -572,16 +596,16 @@ Do you want to restart right now?</source>
         <translation type="obsolete">语言更改将在下次启动程序时生效。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="480"/>
-        <location filename="../widgets/mainwindow.cpp" line="560"/>
-        <location filename="../widgets/mainwindow.cpp" line="586"/>
-        <location filename="../widgets/mainwindow.cpp" line="920"/>
+        <location filename="../widgets/mainwindow.cpp" line="526"/>
+        <location filename="../widgets/mainwindow.cpp" line="606"/>
+        <location filename="../widgets/mainwindow.cpp" line="632"/>
+        <location filename="../widgets/mainwindow.cpp" line="991"/>
         <source>Sorry</source>
         <translatorcomment>すみません</translatorcomment>
         <translation>抱歉</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="481"/>
+        <location filename="../widgets/mainwindow.cpp" line="527"/>
         <source>Only room owner is authorized to close the room.
 It seems you&apos;re not room manager.</source>
         <translatorcomment>家主さんしかこのルームを閉じられませんから、
@@ -610,7 +634,7 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="373"/>
+        <location filename="../widgets/mainwindow.cpp" line="419"/>
         <source>Room Share</source>
         <translation>分享房间</translation>
     </message>
@@ -622,23 +646,23 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="382"/>
+        <location filename="../widgets/mainwindow.cpp" line="428"/>
         <source>Notice, we detected you&apos;re using IPv6 protocol which may result in that your Room URL is not available for IPv4 users.</source>
         <translation>提示：检测到您正在使用IPv6协议连接房间，您的房间URL将无法与IPv4用户通用。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="534"/>
+        <location filename="../widgets/mainwindow.cpp" line="580"/>
         <source>Server Connection Failed.</source>
         <translation>服务器断开了连接。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="547"/>
+        <location filename="../widgets/mainwindow.cpp" line="593"/>
         <source>Closing</source>
         <translatorcomment>ルームを閉じます</translatorcomment>
         <translation>房间关闭</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="548"/>
+        <location filename="../widgets/mainwindow.cpp" line="594"/>
         <source>Warning, the room owner has closed the room. This room will close when everyone leaves.
 Save your work if you like it!</source>
         <translatorcomment>警告、家主さんはこのルームを閉じました。誰もいなかったらこのルームを閉じますから、
@@ -647,55 +671,55 @@ Save your work if you like it!</source>
 请保存好您的得意之作！</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="561"/>
-        <location filename="../widgets/mainwindow.cpp" line="587"/>
+        <location filename="../widgets/mainwindow.cpp" line="607"/>
+        <location filename="../widgets/mainwindow.cpp" line="633"/>
         <source>Sorry, it seems you&apos;re notroom owner.</source>
         <translatorcomment>申し訳ないが、貴方樣は家主さんではありません。</translatorcomment>
         <translation>对不起，您似乎不是房主。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="576"/>
+        <location filename="../widgets/mainwindow.cpp" line="622"/>
         <source>Close Request Completed.</source>
         <translation>关闭请求成功</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="590"/>
+        <location filename="../widgets/mainwindow.cpp" line="636"/>
         <source>Clear Request Completed.</source>
         <translation>清空请求完成</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="614"/>
+        <location filename="../widgets/mainwindow.cpp" line="660"/>
         <source>Checkout Completed.</source>
         <translation>签到完成</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="642"/>
+        <location filename="../widgets/mainwindow.cpp" line="688"/>
         <source>Online List Refreshed.</source>
         <translation>在线列表刷新完成</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="674"/>
-        <location filename="../widgets/mainwindow.cpp" line="697"/>
+        <location filename="../widgets/mainwindow.cpp" line="720"/>
+        <location filename="../widgets/mainwindow.cpp" line="743"/>
         <source>Error</source>
         <translation>出错</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="675"/>
-        <location filename="../widgets/mainwindow.cpp" line="698"/>
+        <location filename="../widgets/mainwindow.cpp" line="721"/>
+        <location filename="../widgets/mainwindow.cpp" line="744"/>
         <source>Sorry, an error occurred.
 Error: %1, %2</source>
         <translation>对不起，发生了错误。
 错误：%1，%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="888"/>
-        <location filename="../widgets/mainwindow.cpp" line="909"/>
+        <location filename="../widgets/mainwindow.cpp" line="959"/>
+        <location filename="../widgets/mainwindow.cpp" line="980"/>
         <source>OMG</source>
         <translatorcomment>OMG</translatorcomment>
         <translation>额滴神呐</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="889"/>
+        <location filename="../widgets/mainwindow.cpp" line="960"/>
         <source>You&apos;re going to clear layer %1. All the work of that layerwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translatorcomment>全消しますか。 %1全てのレイヤーが全消されます、やり直しはできませんので、
@@ -704,7 +728,7 @@ Do you really want to do so?</source>
 您确定要这么做吗？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="910"/>
+        <location filename="../widgets/mainwindow.cpp" line="981"/>
         <source>You&apos;re going to clear ALL LAYERS. All of work in this roomwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translatorcomment>全消しますか。全てのレイヤーが全消されます、やり直しはできませんので、
@@ -713,44 +737,44 @@ Do you really want to do so?</source>
 您确定要这么做吗？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="921"/>
+        <location filename="../widgets/mainwindow.cpp" line="992"/>
         <source>Only room owner is authorized to clear the canvas.
 It seems you&apos;re not room manager.</source>
         <translation>只有房主才可以清除画布，你似乎不是房主。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="972"/>
+        <location filename="../widgets/mainwindow.cpp" line="1043"/>
         <source>Waiting for sync, please do not close.
 This will cost you 1 minute at most.</source>
         <translation>正在同步，请勿关闭...
 整个过程至多需要1分钟。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1011"/>
+        <location filename="../widgets/mainwindow.cpp" line="1082"/>
         <source>Export all to file</source>
         <translatorcomment>全てのレイヤー画像を書き出し</translatorcomment>
         <translation>全部导出至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1013"/>
-        <location filename="../widgets/mainwindow.cpp" line="1031"/>
+        <location filename="../widgets/mainwindow.cpp" line="1084"/>
+        <location filename="../widgets/mainwindow.cpp" line="1102"/>
         <source>Images (*.png)</source>
         <translatorcomment>画像 (*.png)</translatorcomment>
         <translation>图片 (*.png)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1029"/>
+        <location filename="../widgets/mainwindow.cpp" line="1100"/>
         <source>Export visible part to file</source>
         <translatorcomment>表示レイヤーを書き出し</translatorcomment>
         <translation>导出可见图层至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1048"/>
+        <location filename="../widgets/mainwindow.cpp" line="1119"/>
         <source>Export contents to psd file</source>
         <translation>导出为PSD文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1050"/>
+        <location filename="../widgets/mainwindow.cpp" line="1121"/>
         <source>Photoshop Images (*.psd)</source>
         <translation>Photoshop格式</translation>
     </message>
@@ -1020,45 +1044,70 @@ Do you want to retry?</source>
         <translation>未命名错误：%1。</translation>
     </message>
     <message>
-        <location filename="../paintingTools/brush/brush.cpp" line="51"/>
         <source>Brush</source>
         <translatorcomment>ブラシ</translatorcomment>
-        <translation>画笔</translation>
+        <translation type="vanished">画笔</translation>
     </message>
     <message>
-        <location filename="../paintingTools/brush/eraser.cpp" line="9"/>
         <source>Eraser</source>
         <translatorcomment>消しゴム</translatorcomment>
-        <translation>橡皮</translation>
+        <translation type="vanished">橡皮</translation>
     </message>
     <message>
-        <location filename="../paintingTools/brush/pencil.cpp" line="13"/>
         <source>Pencil</source>
         <translatorcomment>鉛筆</translatorcomment>
-        <translation>铅笔</translation>
+        <translation type="vanished">铅笔</translation>
     </message>
     <message>
-        <location filename="../paintingTools/brush/sketchbrush.cpp" line="9"/>
         <source>Sketch</source>
         <translatorcomment>スケッチブラシ</translatorcomment>
-        <translation>素描笔</translation>
+        <translation type="vanished">素描笔</translation>
     </message>
     <message>
-        <location filename="../paintingTools/brush/wetfingure.cpp" line="6"/>
         <source>Wet Fingure</source>
         <translatorcomment>指先</translatorcomment>
-        <translation>涂抹工具</translation>
+        <translation type="vanished">涂抹工具</translation>
     </message>
     <message>
         <source>No Updater?</source>
         <translation type="obsolete">找不到更新器？</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="108"/>
+        <location filename="../main.cpp" line="116"/>
         <source>We cannot find updater.
 You may need to check update yourself.</source>
         <translation>未找到更新器。
 您可能需要手动检查更新。</translation>
+    </message>
+    <message>
+        <location filename="../paintingTools/brush/basicbrush.cpp" line="32"/>
+        <source>BasicBrush</source>
+        <translation>画笔</translation>
+    </message>
+    <message>
+        <location filename="../paintingTools/brush/basiceraser.cpp" line="19"/>
+        <source>BasicEraser</source>
+        <translation>橡皮</translation>
+    </message>
+    <message>
+        <location filename="../paintingTools/brush/binarybrush.cpp" line="20"/>
+        <source>BinaryBrush</source>
+        <translation>二值笔</translation>
+    </message>
+    <message>
+        <location filename="../paintingTools/brush/maskbased.cpp" line="19"/>
+        <source>Crayon</source>
+        <translation>蜡笔</translation>
+    </message>
+    <message>
+        <location filename="../paintingTools/brush/sketchbrush.cpp" line="18"/>
+        <source>SketchBrush</source>
+        <translation>素描笔</translation>
+    </message>
+    <message>
+        <location filename="../paintingTools/brush/waterbased.cpp" line="36"/>
+        <source>WaterBrush</source>
+        <translation>水彩笔</translation>
     </message>
 </context>
 <context>
@@ -1330,16 +1379,16 @@ Use this software only when you accept it.</source>
 <context>
     <name>ShortcutDelegate</name>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="296"/>
-        <location filename="../widgets/configuredialog.cpp" line="317"/>
-        <location filename="../widgets/configuredialog.cpp" line="336"/>
+        <location filename="../widgets/configuredialog.cpp" line="304"/>
+        <location filename="../widgets/configuredialog.cpp" line="325"/>
+        <location filename="../widgets/configuredialog.cpp" line="344"/>
         <source>Immediately</source>
         <translation>立即触发</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="297"/>
-        <location filename="../widgets/configuredialog.cpp" line="319"/>
-        <location filename="../widgets/configuredialog.cpp" line="338"/>
+        <location filename="../widgets/configuredialog.cpp" line="305"/>
+        <location filename="../widgets/configuredialog.cpp" line="327"/>
+        <location filename="../widgets/configuredialog.cpp" line="346"/>
         <source>When Release</source>
         <translation>松开后触发</translation>
     </message>
@@ -1385,6 +1434,19 @@ Use this software only when you accept it.</source>
         <location filename="../misc/shortcutmanager.cpp" line="56"/>
         <source>Decrease brush hardness</source>
         <translation>减小画笔硬度</translation>
+    </message>
+</context>
+<context>
+    <name>WaitUpdaterDialog</name>
+    <message>
+        <location filename="../widgets/waitupdaterdialog.ui" line="14"/>
+        <source>Update checking</source>
+        <translation>检查更新</translation>
+    </message>
+    <message>
+        <location filename="../widgets/waitupdaterdialog.ui" line="20"/>
+        <source>Checking updates...</source>
+        <translation>检查更新中...</translation>
     </message>
 </context>
 </TS>

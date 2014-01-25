@@ -83,8 +83,7 @@ void ClientSocket::setArchiveSignature(const QString &as)
 {
     archive_.setSignature(as);
     QSettings settings(GlobalDef::SETTINGS_NAME,
-                       QSettings::defaultFormat(),
-                       qApp);
+                       QSettings::defaultFormat());
     bool skip_replay = settings.value("canvas/skip_replay", false).toBool();
     if(!skip_replay){
         no_save_ = true;
