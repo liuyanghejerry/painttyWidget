@@ -13,12 +13,14 @@ MaskBased::MaskBased() :
     bits.set(BF::WIDTH);
     bits.set(BF::COLOR);
     bits.set(BF::THICKNESS);
+    bits.set(BF::HARDNESS);
     features_ = bits;
 
     name_ = "Crayon";
     displayName_ = QObject::tr("Crayon");
     shortcut_ = Singleton<ShortcutManager>::instance()
             .shortcut("crayon")["key"].toString();
+    this->setMask(QImage(":/iconset/canvas-print.png"));
 }
 
 void MaskBased::makeStencil(QColor color)
@@ -38,6 +40,7 @@ void MaskBased::drawPointInternal(const QPoint &p, const QImage &stencil, QPaint
         need_delete = true;
         painter->setRenderHint(QPainter::Antialiasing);
         painter->begin(surface_->imagePtr());
+//        painter->setOpacity(thickness_/qreal(BrushFeature::LIMIT::THICKNESS_MAX));
     }
 
     int lineLength = copied_stencil.width();
