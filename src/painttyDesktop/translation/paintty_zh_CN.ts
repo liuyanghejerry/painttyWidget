@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="zh_CN">
+<TS version="2.1" language="zh_CN">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -171,7 +171,7 @@
     </message>
     <message>
         <source>&amp;Connection:</source>
-        <translation>连接(&amp;C)：</translation>
+        <translation type="vanished">连接(&amp;C)：</translation>
     </message>
     <message>
         <location filename="../widgets/configuredialog.ui" line="130"/>
@@ -1046,45 +1046,49 @@ Do you want to retry?</source>
     <message>
         <source>Brush</source>
         <translatorcomment>ブラシ</translatorcomment>
-        <translation>画笔</translation>
+        <translation type="vanished">画笔</translation>
     </message>
     <message>
         <source>Eraser</source>
         <translatorcomment>消しゴム</translatorcomment>
-        <translation>橡皮</translation>
+        <translation type="vanished">橡皮</translation>
     </message>
     <message>
         <source>Pencil</source>
         <translatorcomment>鉛筆</translatorcomment>
-        <translation>铅笔</translation>
+        <translation type="vanished">铅笔</translation>
     </message>
     <message>
         <source>Sketch</source>
         <translatorcomment>スケッチブラシ</translatorcomment>
-        <translation>素描笔</translation>
+        <translation type="vanished">素描笔</translation>
     </message>
     <message>
         <source>Wet Fingure</source>
         <translatorcomment>指先</translatorcomment>
-        <translation>涂抹工具</translation>
+        <translation type="vanished">涂抹工具</translation>
     </message>
     <message>
         <source>No Updater?</source>
         <translation type="obsolete">找不到更新器？</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="105"/>
+        <location filename="../main.cpp" line="106"/>
         <source>Update Disabled</source>
         <translation>更新器不可用</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="106"/>
-        <source>Sorry, we do not support auto-update on Mac OSX.
-You may want to check &lt;a href=&quot;http://mrspaint.com&quot;&gt;our site&lt;/a&gt;for new versions manually.</source>
-        <translation>抱歉，我们现在还不支持Mac OSX系统上的自动更新。\n您可能需要手动访问&lt;a href=&quot;http://mrspaint.com&quot;&gt;我们的网站&lt;/a&gt;来检查版本。</translation>
+        <location filename="../main.cpp" line="107"/>
+        <source>Sorry, we do not support auto-update on Mac OSX.&lt;br/&gt;You may want to check &lt;a href=&quot;http://mrspaint.com&quot;&gt;our site&lt;/a&gt;for new versions manually.</source>
+        <translation>抱歉，我们现在还不支持Mac OSX系统上的自动更新。&lt;br/&gt;您可能需要手动访问&lt;a href=&quot;http://mrspaint.com&quot;&gt;我们的网站&lt;/a&gt;来检查版本。</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="124"/>
+        <source>Sorry, we do not support auto-update on Mac OSX.
+You may want to check &lt;a href=&quot;http://mrspaint.com&quot;&gt;our site&lt;/a&gt;for new versions manually.</source>
+        <translation type="vanished">抱歉，我们现在还不支持Mac OSX系统上的自动更新。\n您可能需要手动访问&lt;a href=&quot;http://mrspaint.com&quot;&gt;我们的网站&lt;/a&gt;来检查版本。</translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="127"/>
         <source>We cannot find updater.
 You may need to check update yourself.</source>
         <translation>未找到更新器。
@@ -1106,7 +1110,7 @@ You may need to check update yourself.</source>
         <translation>二值笔</translation>
     </message>
     <message>
-        <location filename="../paintingTools/brush/maskbased.cpp" line="19"/>
+        <location filename="../paintingTools/brush/maskbased.cpp" line="20"/>
         <source>Crayon</source>
         <translation>蜡笔</translation>
     </message>

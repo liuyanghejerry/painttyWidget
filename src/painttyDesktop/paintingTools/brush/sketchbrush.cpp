@@ -26,7 +26,7 @@ void SketchBrush::setColor(const QColor &c)
     preparePen();
 }
 
-void SketchBrush::drawPoint(const QPoint &p, qreal pressure)
+void SketchBrush::drawPoint(const QPoint &p, qreal )
 {
 //    preparePen();
     points.clear();
@@ -84,4 +84,12 @@ void SketchBrush::sketch()
         painter.strokePath(path, sketchPen);
         painter.end();
     }
+}
+
+BrushSettings SketchBrush::defaultSettings() const
+{
+    BrushSettings s = AbstractBrush::defaultSettings();
+    s.insert("width", 1);
+    s.insert("thickness", 15);
+    return s;
 }

@@ -5,6 +5,7 @@
 #include <QFontDatabase>
 #include <QVariant>
 #include <QDir>
+#include <QMessageBox>
 #include "../common/common.h"
 #include "widgets/mainwindow.h"
 #include "widgets/roomlistdialog.h"
@@ -101,11 +102,13 @@ bool runUpdater()
 {
     // TODO:  support auto-update on Mac
 #ifdef Q_OS_MACX
-    qDebug()<<"Skip update check on Mac OSX"<<args;
-    QMessageBox::warning(qApp, QObject::tr("Update Disabled"),
-                         QObject::tr("Sorry, we do not support auto-update on Mac OSX.\n"\
+    qDebug()<<"Skip update check on Mac OSX";
+    QMessageBox::warning(0, QObject::tr("Update Disabled"),
+                         QObject::tr("Sorry, we do not support auto-update on Mac OSX.<br/>"\
                                      "You may want to check <a href=\"http://mrspaint.com\">our site</a>"\
-                                     "for new versions manually."));
+                                     "for new versions manually."),
+                         QMessageBox::Ok,
+                         QMessageBox::Ok);
 #else
     QStringList args;
     args<<"-v"<< QString::number(GlobalDef::CLIENT_VER, 10)

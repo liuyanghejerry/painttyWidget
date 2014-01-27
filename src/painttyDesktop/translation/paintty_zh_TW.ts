@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="zh_TW">
+<TS version="2.1" language="zh_TW">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -153,7 +153,7 @@
     </message>
     <message>
         <source>&amp;Connection:</source>
-        <translation>連結</translation>
+        <translation type="vanished">連結</translation>
     </message>
     <message>
         <location filename="../widgets/configuredialog.ui" line="130"/>
@@ -932,41 +932,45 @@ Do you want to retry?</source>
     </message>
     <message>
         <source>Brush</source>
-        <translation>畫刷</translation>
+        <translation type="vanished">畫刷</translation>
     </message>
     <message>
         <source>Eraser</source>
-        <translation>橡皮</translation>
+        <translation type="vanished">橡皮</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>鉛筆</translation>
+        <translation type="vanished">鉛筆</translation>
     </message>
     <message>
         <source>Sketch</source>
-        <translation>素描筆</translation>
+        <translation type="vanished">素描筆</translation>
     </message>
     <message>
         <source>Wet Fingure</source>
-        <translation>濕手指</translation>
+        <translation type="vanished">濕手指</translation>
     </message>
     <message>
         <source>No Updater?</source>
         <translation type="obsolete">找不到更新器</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="105"/>
+        <location filename="../main.cpp" line="106"/>
         <source>Update Disabled</source>
         <translation>更新器不可用</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="106"/>
-        <source>Sorry, we do not support auto-update on Mac OSX.
-You may want to check &lt;a href=&quot;http://mrspaint.com&quot;&gt;our site&lt;/a&gt;for new versions manually.</source>
-        <translation>抱歉，我們現在仍不支持Mac OSX平台上的自動更新。\n您可能需要手動訪問&lt;a href=&quot;http://mrspaint.com&quot;&gt;我們的網站&lt;/a&gt;來查詢更新。</translation>
+        <location filename="../main.cpp" line="107"/>
+        <source>Sorry, we do not support auto-update on Mac OSX.&lt;br/&gt;You may want to check &lt;a href=&quot;http://mrspaint.com&quot;&gt;our site&lt;/a&gt;for new versions manually.</source>
+        <translation>抱歉，我們現在仍不支持Mac OSX平台上的自動更新。&lt;br/&gt;您可能需要手動訪問&lt;a href=&quot;http://mrspaint.com&quot;&gt;我們的網站&lt;/a&gt;來查詢更新。</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="124"/>
+        <source>Sorry, we do not support auto-update on Mac OSX.
+You may want to check &lt;a href=&quot;http://mrspaint.com&quot;&gt;our site&lt;/a&gt;for new versions manually.</source>
+        <translation type="vanished">抱歉，我們現在仍不支持Mac OSX平台上的自動更新。\n您可能需要手動訪問&lt;a href=&quot;http://mrspaint.com&quot;&gt;我們的網站&lt;/a&gt;來查詢更新。</translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="127"/>
         <source>We cannot find updater.
 You may need to check update yourself.</source>
         <translation>我們無法找到更新器。
@@ -988,7 +992,7 @@ You may need to check update yourself.</source>
         <translation>二值筆</translation>
     </message>
     <message>
-        <location filename="../paintingTools/brush/maskbased.cpp" line="19"/>
+        <location filename="../paintingTools/brush/maskbased.cpp" line="20"/>
         <source>Crayon</source>
         <translation>蠟筆</translation>
     </message>
