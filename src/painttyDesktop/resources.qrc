@@ -45,5 +45,6 @@
         <file>iconset/ui/visibility-on.png</file>
         <file>iconset/ui/unlock.png</file>
         <file>fonts/DroidSansFallback.ttf</file>
+        <file>iconset/canvas-print.png</file>
     </qresource>
 </RCC>
