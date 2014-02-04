@@ -29,11 +29,7 @@ protected:
     QColor mingled_color_;
     QColor last_color_;
     int color_remain_;
-    virtual QColor mingleColor(const QColor& new_c);
     virtual QColor fetchColor(const QPoint& center) const;
-    template<typename COLOR_FUNC>
-    int mingleSubColor(const QColor& color1, const QColor& color2, COLOR_FUNC f) const;
-    virtual int mingleValue(int a, int b) const;
 };
 
 #endif // WATERBASED_H
