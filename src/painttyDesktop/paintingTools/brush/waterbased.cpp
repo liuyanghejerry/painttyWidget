@@ -214,16 +214,16 @@ static inline QColor watering_color(int water, QColor color)
 {
     color.setAlpha((BFL::WATER_MAX - water) * color.alpha() / BFL::WATER_MAX);
     return color;
-//    auto proc = [&water](int v) -> int {
-//        return qBound(0,
-//                      v + water*255 / 100,
-//                      255);
-//    };
+    //    auto proc = [&water](int v) -> int {
+    //        return qBound(0,
+    //                      v + water*255 / 100,
+    //                      255);
+    //    };
 
-//    int r = proc(color.red());
-//    int g = proc(color.green());
-//    int b = proc(color.blue());
-//    return QColor(r, g, b, color.alpha());
+    //    int r = proc(color.red());
+    //    int g = proc(color.green());
+    //    int b = proc(color.blue());
+    //    return QColor(r, g, b, color.alpha());
 }
 
 QColor WaterBased::fetchColor(const QPoint& center) const
@@ -261,7 +261,7 @@ inline static QColor mingle_color(QColor c1, QColor c2, int percent, int max)
                    255);
 
     return QColor(r, g, b, a);
-//    return QColor(r, g, b);
+    //    return QColor(r, g, b);
 }
 
 static inline QColor mixin_color(QColor brush_color, QColor paper_color, int mixin)
@@ -283,18 +283,82 @@ void WaterBased::drawPoint(const QPoint &p, qreal )
 
 void WaterBased::drawLineTo(const QPoint &end, qreal presure)
 {
-    auto p = end - last_point_;
-    int length = (int)sqrt(pow(p.x(), 2) + pow(p.y(), 2));
-    color_remain_ -= length / 2 * (BFL::EXTEND_MAX-extend_)/BFL::EXTEND_MAX;
-//    color_remain_ = BFL::EXTEND_MAX / 2;
-    color_remain_ = qBound(0, color_remain_, 255);
+    if(end.x() > surface_->imageConstPtr()->width() || end.x() < 0
+            || end.y() > surface_->imageConstPtr()->height() || end.y() < 0) {
+        return;
+    }
+    const QPoint& start = last_point_;
     last_color_ = fetchColor(last_point_);
+    // TODO: spacing needs to be calc with thickness and hardness, too
+    const qreal spacing = width_*presure*0.07;
 
-    auto watered_color = watering_color(water_, color_);
-    auto extended_color = extend_color(watered_color, last_color_, color_remain_);
-    auto mixed_color = mixin_color(extended_color, last_color_, mixin_);
-    makeStencil(mixed_color);
-    BasicBrush::drawLineTo(end, presure);
+    const qreal deltaX = end.x() - start.x();
+    const qreal deltaY = end.y() - start.y();
+
+    const qreal distance = sqrt( deltaX * deltaX + deltaY * deltaY );
+    qreal stepX = 0.0;
+    qreal stepY = 0.0;
+    if ( distance > 0.0 ) {
+        qreal invertDistance = 1.0 / distance;
+        stepX = deltaX * invertDistance;
+        stepY = deltaY * invertDistance;
+    }
+
+    qreal offsetX = 0.0;
+    qreal offsetY = 0.0;
+
+    qreal seg_X = 0.0;
+    qreal seg_Y = 0.0;
+
+    qreal totalDistance = left_ + distance;
+
+    QPainter painter(surface_->imagePtr());
+    painter.setRenderHint(QPainter::Antialiasing);
+    while ( totalDistance >= spacing ) {
+        if ( left_ > 0.0 ) {
+            seg_X = stepX * (spacing - left_);
+            seg_Y = stepY * (spacing - left_);
+
+            offsetX += seg_X;
+            offsetY += seg_Y;
+
+            int length = (int)sqrt(pow(seg_X, 2) + pow(seg_Y, 2));
+            color_remain_ -= (length >>1) * (BFL::EXTEND_MAX-extend_)/BFL::EXTEND_MAX;
+            color_remain_ = qBound(0, color_remain_, 255);
+
+            auto watered_color = watering_color(water_, color_);
+            auto extended_color = extend_color(watered_color, last_color_, color_remain_);
+            auto mixed_color = mixin_color(extended_color, last_color_, mixin_);
+            makeStencil(mixed_color);
+            drawPointInternal(QPoint(start.x() + offsetX - (stencil_.width()>>1),
+                                     start.y() + offsetY - (stencil_.height()>>1)),
+                              stencil_,
+                              &painter);
+            left_ -= spacing;
+        } else {
+            seg_X = stepX * spacing;
+            seg_Y = stepY * spacing;
+
+            offsetX += seg_X;
+            offsetY += seg_Y;
+
+            int length = (int)sqrt(pow(seg_X, 2) + pow(seg_Y, 2));
+            color_remain_ -= (length >>1) * (BFL::EXTEND_MAX-extend_)/BFL::EXTEND_MAX;
+            color_remain_ = qBound(0, color_remain_, 255);
+
+            auto watered_color = watering_color(water_, color_);
+            auto extended_color = extend_color(watered_color, last_color_, color_remain_);
+            auto mixed_color = mixin_color(extended_color, last_color_, mixin_);
+            makeStencil(mixed_color);
+            drawPointInternal(QPoint(start.x() + offsetX - (stencil_.width()>>1),
+                                     start.y() + offsetY - (stencil_.height()>>1)),
+                              stencil_,
+                              &painter);
+        }
+        totalDistance -= spacing;
+    }
+    left_ = totalDistance;
+    last_point_ = end;
 }
 
 void WaterBased::setSettings(const BrushSettings &settings)
