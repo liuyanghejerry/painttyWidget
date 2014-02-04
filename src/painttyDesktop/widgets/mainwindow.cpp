@@ -318,8 +318,10 @@ void MainWindow::toolbarInit()
             connect(b, &QToolButton::clicked,
                     this, &MainWindow::onColorPickerPressed);
 
+            auto colorpicker_key = Singleton<ShortcutManager>::instance()
+                    .shortcut("colorpicker")["key"].toString();
             SingleShortcut *pickerShortcut = new SingleShortcut(this);
-            pickerShortcut->setKey(Qt::Key_C);
+            pickerShortcut->setKey(colorpicker_key);
             connect(pickerShortcut, &SingleShortcut::activated,
                     b, &QToolButton::click);
             connect(pickerShortcut, &SingleShortcut::inactivated,
@@ -328,8 +330,7 @@ void MainWindow::toolbarInit()
                         tr("%1\n"
                            "Shortcut: %2")
                         .arg(colorpicker->text())
-                        .arg(pickerShortcut->key()
-                             .toString()));
+                        .arg(colorpicker_key));
         }
     }
 

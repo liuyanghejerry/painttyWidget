@@ -8,29 +8,48 @@ ShortcutManager::ShortcutManager(QObject *parent) :
     QObject(parent)
 {
     QVariantMap map;
-    map.insert("name", "binarybrush");
-    map.insert("key", QKeySequence("Z"));
-    map.insert("type", ShortcutType::Single);
-    map.insert("description", tr("Pencil"));
-    default_conf.insert("pencil", map);
 
     map.insert("name", "basicbrush");
-    map.insert("key", QKeySequence("P"));
+    map.insert("key", QKeySequence("Z"));
     map.insert("type", ShortcutType::Single);
     map.insert("description", tr("Brush"));
-    default_conf.insert("brush", map);
-
-    map.insert("name", "sketchbrush");
-    map.insert("key", QKeySequence("S"));
-    map.insert("type", ShortcutType::Single);
-    map.insert("description", tr("Sketch"));
-    default_conf.insert("sketch", map);
+    default_conf.insert("basicbrush", map);
 
     map.insert("name", "basiceraser");
     map.insert("key", QKeySequence("E"));
     map.insert("type", ShortcutType::Single);
     map.insert("description", tr("Eraser"));
-    default_conf.insert("eraser", map);
+    default_conf.insert("basiceraser", map);
+
+    map.insert("name", "binarybrush");
+    map.insert("key", QKeySequence("B"));
+    map.insert("type", ShortcutType::Single);
+    map.insert("description", tr("BinaryBrush"));
+    default_conf.insert("binarybrush", map);
+
+    map.insert("name", "crayon");
+    map.insert("key", QKeySequence("V"));
+    map.insert("type", ShortcutType::Single);
+    map.insert("description", tr("Crayon"));
+    default_conf.insert("crayon", map);
+
+    map.insert("name", "sketchbrush");
+    map.insert("key", QKeySequence("B"));
+    map.insert("type", ShortcutType::Single);
+    map.insert("description", tr("Sketch"));
+    default_conf.insert("sketchbrush", map);
+
+    map.insert("name", "waterbrush");
+    map.insert("key", QKeySequence("N"));
+    map.insert("type", ShortcutType::Single);
+    map.insert("description", tr("WaterBrush"));
+    default_conf.insert("waterbrush", map);
+
+    map.insert("name", "colorpicker");
+    map.insert("key", QKeySequence("C"));
+    map.insert("type", ShortcutType::Single);
+    map.insert("description", tr("ColorPicker"));
+    default_conf.insert("colorpicker", map);
 
     map.insert("name", "addwidth");
     map.insert("key", QKeySequence("W"));
@@ -44,17 +63,35 @@ ShortcutManager::ShortcutManager(QObject *parent) :
     map.insert("description", tr("Decrease brush width"));
     default_conf.insert("subwidth", map);
 
-    map.insert("name", "addhardness");
-    map.insert("key", QKeySequence("F"));
-    map.insert("type", ShortcutType::Single);
-    map.insert("description", tr("Increase brush hardness"));
-    default_conf.insert("addhardness", map);
+//    map.insert("name", "addhardness");
+//    map.insert("key", QKeySequence("A"));
+//    map.insert("type", ShortcutType::Single);
+//    map.insert("description", tr("Increase brush hardness"));
+//    default_conf.insert("addhardness", map);
 
-    map.insert("name", "subhardness");
-    map.insert("key", QKeySequence("D"));
-    map.insert("type", ShortcutType::Single);
-    map.insert("description", tr("Decrease brush hardness"));
-    default_conf.insert("subhardness", map);
+//    map.insert("name", "subhardness");
+//    map.insert("key", QKeySequence("S"));
+//    map.insert("type", ShortcutType::Single);
+//    map.insert("description", tr("Decrease brush hardness"));
+//    default_conf.insert("subhardness", map);
+
+//    map.insert("name", "addwater");
+//    map.insert("key", QKeySequence("S"));
+//    map.insert("type", ShortcutType::Single);
+//    map.insert("description", tr("Decrease brush hardness"));
+//    default_conf.insert("subhardness", map);
+
+    map.insert("name", "zoomin");
+    map.insert("key", QKeySequence("="));
+    map.insert("type", ShortcutType::Multiple);
+    map.insert("description", tr("Zoom in canvas"));
+    default_conf.insert("zoomin", map);
+
+    map.insert("name", "zoomout");
+    map.insert("key", QKeySequence("-"));
+    map.insert("type", ShortcutType::Multiple);
+    map.insert("description", tr("Zoom out canvas"));
+    default_conf.insert("zoomout", map);
 
     if( !loadFromConfigure() ){
         shortcut_conf = default_conf;
