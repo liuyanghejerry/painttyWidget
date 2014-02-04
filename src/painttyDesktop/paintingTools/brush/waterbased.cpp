@@ -7,6 +7,7 @@
 #include <QBitmap>
 #include <QObject>
 #include <QDebug>
+#include <cmath>
 
 #include "../../misc/shortcutmanager.h"
 #include "../../misc/singleton.h"
@@ -145,6 +146,23 @@ static inline QRgb avg_rgb(const QImage& square)
     return target;
 }
 
+static inline QColor watering_color(int water, QColor color)
+{
+    //    auto proc = [&water](int v) -> int {
+    //        return qBound(0,
+    //                      v + water*255 / 100,
+    //                      255);
+    //    };
+
+    //    int r = proc(color.red());
+    //    int g = proc(color.green());
+    //    int b = proc(color.blue());
+    //    return QColor(r, g, b, color.alpha());
+
+    color.setAlpha(water*color.alpha() / 100);
+    return color;
+}
+
 QColor WaterBased::fetchColor(const QPoint& center) const
 {
     const int delta_width = width_ >>1;
@@ -166,11 +184,10 @@ QColor WaterBased::fetchColor(const QPoint& center) const
 
 int WaterBased::mingleValue(int a, int b) const
 {
-    const qreal new_part = mixin_ / 100.0;
-    const qreal old_part = 1 - new_part;
-    return qBound(0,
-                  int((a*old_part) + (b*new_part)),
-                  255);
+    int r = qBound(0,
+                   (a * color_remain_ + b * (255 - color_remain_)) / 255,
+                   255);
+    return r;
 }
 
 template<typename COLOR_FUNC>
@@ -196,22 +213,40 @@ QColor WaterBased::mingleColor(const QColor &new_c)
     const int b = mingleSubColor
             <decltype(&QColor::blue)>(mingled_color_, new_c, &QColor::blue);
 
-    color_remain_ -= (100 - water_)/1000.0;
-    color_remain_ = qBound(0, color_remain_, 255);
     return mingled_color_ = QColor(r, g, b, new_c.alpha());
 }
-
+static inline QColor mixin_color(QColor brush_color, QColor paper_color, int mixin)
+{
+//    mixin *= 10;
+    int r = qBound(0,
+                   (paper_color.red() * mixin + brush_color.red() * (100-mixin)) / 100,
+                   255);
+    int g = qBound(0,
+                   (paper_color.green() * mixin + brush_color.green() * (100-mixin)) / 100,
+                   255);
+    int b = qBound(0,
+                   (paper_color.blue() * mixin + brush_color.blue() * (100-mixin)) / 100,
+                   255);
+    return QColor(r, g, b);
+}
 void WaterBased::drawPoint(const QPoint &p, qreal )
 {
-    last_color_ = mingled_color_ = fetchColor(p);
+    last_color_ = fetchColor(p);
     last_point_ = p;
     color_remain_ = 255;
+    //    auto watered_color = watering_color(water_, color_);
+    last_color_ = mingled_color_ = mixin_color(last_color_, color_, mixin_);
 }
 
 void WaterBased::drawLineTo(const QPoint &end, qreal presure)
 {
-    last_color_ = fetchColor(last_point_);
-    makeStencil(mingleColor(last_color_));
+    auto p = end - last_point_;
+    int length = (int)sqrt(pow(p.x(), 2) + pow(p.y(), 2));
+    color_remain_ -= length / 2 * (100-extend_)/100;
+    color_remain_ = qBound(0, color_remain_, 255);
+//        auto watered_color = watering_color(water_, color_);
+    makeStencil(mingleColor(color_));
+    //    makeStencil(watered_color);
     BasicBrush::drawLineTo(end, presure);
 }
 
