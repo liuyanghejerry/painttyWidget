@@ -167,9 +167,9 @@ static inline QRgb avg_rgb2(const QImage& square)
     unsigned int b_sum = 0;
     unsigned int a_sum = 0;
 
-    unsigned int r = 255;
-    unsigned int g = 255;
-    unsigned int b = 255;
+    unsigned int r = 0;
+    unsigned int g = 0;
+    unsigned int b = 0;
     unsigned int a = 0;
 
     size_t colored = 0;
@@ -212,18 +212,18 @@ static inline QRgb avg_rgb2(const QImage& square)
 
 static inline QColor watering_color(int water, QColor color)
 {
-    color.setAlpha((BFL::WATER_MAX - water) * color.alpha() / BFL::WATER_MAX);
-    return color;
-    //    auto proc = [&water](int v) -> int {
-    //        return qBound(0,
-    //                      v + water*255 / 100,
-    //                      255);
-    //    };
+//    color.setAlpha((BFL::WATER_MAX - water) * color.alpha() / BFL::WATER_MAX);
+//    return color;
+    auto proc = [&water](int v) -> int {
+        return qBound(0,
+                      v + water*255 / 100,
+                      255);
+    };
 
-    //    int r = proc(color.red());
-    //    int g = proc(color.green());
-    //    int b = proc(color.blue());
-    //    return QColor(r, g, b, color.alpha());
+    int r = proc(color.red());
+    int g = proc(color.green());
+    int b = proc(color.blue());
+    return QColor(r, g, b, color.alpha());
 }
 
 QColor WaterBased::fetchColor(const QPoint& center) const
@@ -288,9 +288,9 @@ void WaterBased::drawLineTo(const QPoint &end, qreal presure)
         return;
     }
     const QPoint& start = last_point_;
-    last_color_ = fetchColor(last_point_);
+//    last_color_ = fetchColor(last_point_);
     // TODO: spacing needs to be calc with thickness and hardness, too
-    const qreal spacing = width_*presure*0.07;
+    const qreal spacing = width_*presure*0.04;
 
     const qreal deltaX = end.x() - start.x();
     const qreal deltaY = end.y() - start.y();
@@ -315,34 +315,29 @@ void WaterBased::drawLineTo(const QPoint &end, qreal presure)
     QPainter painter(surface_->imagePtr());
     painter.setRenderHint(QPainter::Antialiasing);
     while ( totalDistance >= spacing ) {
+        bool l_f_ = false;
         if ( left_ > 0.0 ) {
+            l_f_ = true;
             seg_X = stepX * (spacing - left_);
             seg_Y = stepY * (spacing - left_);
-
-            offsetX += seg_X;
-            offsetY += seg_Y;
-
-            int length = (int)sqrt(pow(seg_X, 2) + pow(seg_Y, 2));
-            color_remain_ -= (length >>1) * (BFL::EXTEND_MAX-extend_)/BFL::EXTEND_MAX;
-            color_remain_ = qBound(0, color_remain_, 255);
-
-            auto watered_color = watering_color(water_, color_);
-            auto extended_color = extend_color(watered_color, last_color_, color_remain_);
-            auto mixed_color = mixin_color(extended_color, last_color_, mixin_);
-            makeStencil(mixed_color);
-            drawPointInternal(QPoint(start.x() + offsetX - (stencil_.width()>>1),
-                                     start.y() + offsetY - (stencil_.height()>>1)),
-                              stencil_,
-                              &painter);
             left_ -= spacing;
         } else {
             seg_X = stepX * spacing;
             seg_Y = stepY * spacing;
+        }
 
-            offsetX += seg_X;
-            offsetY += seg_Y;
+        offsetX += seg_X;
+        offsetY += seg_Y;
 
-            int length = (int)sqrt(pow(seg_X, 2) + pow(seg_Y, 2));
+        QPoint cur_point(start.x() + offsetX - (stencil_.width()>>1),
+                         start.y() + offsetY - (stencil_.height()>>1));
+
+        if(l_f_){
+            makeStencil(last_color_);
+        }else{
+            last_color_ = fetchColor(cur_point);
+
+            int length = distance;
             color_remain_ -= (length >>1) * (BFL::EXTEND_MAX-extend_)/BFL::EXTEND_MAX;
             color_remain_ = qBound(0, color_remain_, 255);
 
@@ -350,11 +345,12 @@ void WaterBased::drawLineTo(const QPoint &end, qreal presure)
             auto extended_color = extend_color(watered_color, last_color_, color_remain_);
             auto mixed_color = mixin_color(extended_color, last_color_, mixin_);
             makeStencil(mixed_color);
-            drawPointInternal(QPoint(start.x() + offsetX - (stencil_.width()>>1),
-                                     start.y() + offsetY - (stencil_.height()>>1)),
-                              stencil_,
-                              &painter);
         }
+
+        drawPointInternal(cur_point,
+                          stencil_,
+                          &painter);
+
         totalDistance -= spacing;
     }
     left_ = totalDistance;
