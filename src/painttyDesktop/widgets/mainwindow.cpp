@@ -544,6 +544,24 @@ void MainWindow::shortcutInit()
     QShortcut* console_shortcut = new QShortcut(QKeySequence("F12"), this);
     connect(console_shortcut, &QShortcut::activated,
             this, &MainWindow::openConsole);
+
+    auto& sm = Singleton<ShortcutManager>::instance();
+    {
+        QShortcut* zoomin_shortcut = new QShortcut(QKeySequence(sm.shortcut("zoomin")["key"].toString()), this);
+        connect(zoomin_shortcut, &QShortcut::activated,
+                [this](){
+            // TODO: should be configurable
+            this->ui->centralWidget->scaleBy(1.2);
+        });
+    }
+    {
+        QShortcut* zoomout_shortcut = new QShortcut(QKeySequence(sm.shortcut("zoomout")["key"].toString()), this);
+        connect(zoomout_shortcut, &QShortcut::activated,
+                [this](){
+            // TODO: should be configurable
+            this->ui->centralWidget->scaleBy(0.8);
+        });
+    }
 }
 
 void MainWindow::socketInit()
