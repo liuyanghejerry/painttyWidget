@@ -34,15 +34,9 @@ void ColorSpinBoxGroup::setColor(const QColor &c)
         ui->GreenspinBox->setValue(c.green());
         ui->BluespinBox->setValue(c.blue());
     }else{
-        ui->RedspinBox->setValue(
-                    qBound(0.0, c.hsvHueF()*359, 359.0)
-                    );
-        ui->GreenspinBox->setValue(
-                    qBound(0.0, c.hsvSaturationF()*100, 100.0)
-                    );
-        ui->BluespinBox->setValue(
-                    qBound(0.0, c.valueF()*100, 100.0)
-                    );
+        ui->RedspinBox->setValue(c.hsvHue());
+        ui->GreenspinBox->setValue(c.hsvSaturation()*100/255);
+        ui->BluespinBox->setValue(c.value()*100/255);
     }
     color_ = c;
 
@@ -74,15 +68,9 @@ void ColorSpinBoxGroup::onModeChanged()
         ui->BluespinBox->setRange(0,100);
         ui->BluespinBox->setSuffix("%");
         color_ = color_.toHsv();
-        ui->RedspinBox->setValue(
-                    qBound(0.0, color_.hsvHueF()*359, 359.0)
-                    );
-        ui->GreenspinBox->setValue(
-                    qBound(0.0, color_.hsvSaturationF()*100, 100.0)
-                    );
-        ui->BluespinBox->setValue(
-                    qBound(0.0, color_.valueF()*100, 100.0)
-                    );
+        ui->RedspinBox->setValue(color_.hsvHue());
+        ui->GreenspinBox->setValue(color_.hsvSaturation()*100/255);
+        ui->BluespinBox->setValue(color_.value()*100/255);
     }else{
         ui->red->setText(tr("Red"));
         ui->green->setText(tr("Green"));
@@ -114,16 +102,16 @@ void ColorSpinBoxGroup::onColorChanged()
                             );
 
     }else{
-        c = QColor::fromHsvF(qBound(0.0,
-                                    ui->RedspinBox->value()/359.0,
-                                    1.0),
-                             qBound(0.0,
-                                    ui->GreenspinBox->value()/100.0,
-                                    1.0),
-                             qBound(0.0,
-                                    ui->BluespinBox->value()/100.0,
-                                    1.0)
-                             );
+        c = QColor::fromHsv(qBound(0,
+                                   ui->RedspinBox->value(),
+                                   359),
+                            qBound(0,
+                                   ui->GreenspinBox->value()/100,
+                                   100),
+                            qBound(0,
+                                   ui->BluespinBox->value()/100,
+                                   100)
+                            );
     }
 
     color_ = c;

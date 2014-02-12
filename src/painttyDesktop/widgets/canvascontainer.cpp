@@ -76,6 +76,12 @@ void CanvasContainer::setSmoothScale(bool smooth)
     }
 }
 
+void CanvasContainer::scaleBy(qreal factor)
+{
+    factor *= currentScaleFactor();
+    setScaleFactorInternal(factor);
+}
+
 QRectF CanvasContainer::visualRect() const
 {
     return proxy->mapFromScene(
