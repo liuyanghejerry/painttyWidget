@@ -75,12 +75,13 @@ QColor ColorWheel::posColor(const QPoint &point)
         auto square_rect = squareRegion.boundingRect();
         int w = qMin(square_rect.width(), square_rect.height());
         QPoint square_left_bottom = square_rect.bottomLeft();
-        QPoint p(point.x() - square_left_bottom.x()+1,
-                 square_left_bottom.y() - point.y()+1);
+        QPoint p(point.x() - square_left_bottom.x(),
+                 square_left_bottom.y() - point.y());
 
+        // NOTICE: if width is 98px, then we only have 0~97px as range. That's why we decrase w by 1.
         return QColor::fromHsv(current.hue(),
-                               qBound(0, p.x() * 255 / w, 255),
-                               qBound(0, 255 - p.y() * 255 / w, 255));
+                               qBound(0, p.x() * 255 / (w-1), 255),
+                               qBound(0, 255 - p.y() * 255 / (w-1), 255));
     }
     return QColor();
 }
@@ -126,7 +127,7 @@ void ColorWheel::mouseMoveEvent(QMouseEvent *event)
         if(inWheel){
             auto delta = lastPos - square.center();
             qreal hue =  - (qAtan2( (delta.y()) , (delta.x()) )  / 3.14 / 2 * 360);
-            hue = hue < 0 ? hue+360 : hue;
+            hue = hue < 0 ? hue + 360 : hue;
             hue = qBound(0.0, hue, 359.0);
             hueChanged(hue);
         }else if(inSquare){
@@ -295,7 +296,7 @@ void ColorWheel::composeWheel()
 
 void ColorWheel::hueChanged(const int &hue)
 {
-    if( hue<0 ||hue>359)return;
+    if( hue<0 || hue>359 )return;
     int s = current.saturation();
     int v = current.value();
     current.setHsv(hue, s, v);
