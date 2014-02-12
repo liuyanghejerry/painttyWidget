@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "../misc/router.h"
+#include "../misc/shortcutmanager.h"
 
 class QToolButton;
 class BrushSettingsWidget;
@@ -12,6 +13,7 @@ class QScriptEngine;
 class DeveloperConsole;
 
 typedef Router<> RegularRouter;
+typedef ShortcutManager::ShortcutType ShT;
 
 namespace Ui {
 class MainWindow;
@@ -25,8 +27,12 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    template<typename T, typename U>
+    bool regShortcut(const QString& name, T func, U func2);
     template<typename T>
     bool regShortcut(const QString& name, T func);
+    template<typename T, typename U>
+    bool regShortcut(const QKeySequence& k, T func, U func2);
     template<typename T>
     bool regShortcut(const QKeySequence& k, T func);
 

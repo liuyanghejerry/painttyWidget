@@ -257,7 +257,7 @@ void MainWindow::toolbarInit()
         }
     };
 
-    auto brushes = Singleton<BrushManager>::instance().allBrushes();
+    auto brushes = std::move(Singleton<BrushManager>::instance().allBrushes());
 
     for(auto &item: brushes){
         // create action on tool bar
@@ -271,21 +271,43 @@ void MainWindow::toolbarInit()
         brushActionGroup_->addAction(action);
 
         // set shortcut for the brush
-        SingleShortcut *shortcut = new SingleShortcut(this);
-        shortcut->setKey(item->shortcut());
-        connect(shortcut, &SingleShortcut::activated,
-                [=](){
+        // TODO: enable other type of shortcut
+        //        ShT shortcut_type = (ShT)config["type"].toInt();
+
+        //        switch(shortcut_type){
+        //        case ShT::Single:
+        //        {
+        //            regShortcut<>(item->shortcut(),
+        //                          [this, action](){
+        //                      lastBrushAction = brushActionGroup_->checkedAction();
+        //                      action->trigger();
+        //                  },
+        //            restoreAction);
+        //        }
+        //            break;
+        //        case ShT::Multiple:
+        //        default:
+        //        {
+        //            regShortcut<>(item->shortcut(),
+        //                          [this, action](){
+        //                      lastBrushAction = brushActionGroup_->checkedAction();
+        //                      action->trigger();
+        //                  });
+        //        }
+        //            break;
+        //        }
+        regShortcut<>(item->shortcut(),
+                      [this, action](){
             lastBrushAction = brushActionGroup_->checkedAction();
             action->trigger();
-        });
-        connect(shortcut, &SingleShortcut::inactivated,
-                restoreAction);
+        },
+        restoreAction);
+
         action->setToolTip(
                     tr("%1\n"
                        "Shortcut: %2")
                     .arg(item->displayName())
-                    .arg(shortcut->key()
-                         .toString()));
+                    .arg(item->shortcut().toString()));
         if(toolbar_->actions().count() < 2){
             action->trigger();
         }
@@ -295,16 +317,16 @@ void MainWindow::toolbarInit()
     // doing hacking to color picker
     QIcon colorpickerIcon;
     // TODO: use icon until all brushes have icons
-//    colorpickerIcon.addFile(":/iconset/ui/picker-1.png",
-//                            QSize(), QIcon::Disabled);
-//    colorpickerIcon.addFile(":/iconset/ui/picker-2.png",
-//                            QSize(), QIcon::Active);
-//    colorpickerIcon.addFile(":/iconset/ui/picker-3.png",
-//                            QSize(), QIcon::Selected);
-//    colorpickerIcon.addFile(":/iconset/ui/picker-3.png",
-//                            QSize(), QIcon::Normal, QIcon::On);
-//    colorpickerIcon.addFile(":/iconset/ui/picker-4.png",
-//                            QSize(), QIcon::Normal);
+    //    colorpickerIcon.addFile(":/iconset/ui/picker-1.png",
+    //                            QSize(), QIcon::Disabled);
+    //    colorpickerIcon.addFile(":/iconset/ui/picker-2.png",
+    //                            QSize(), QIcon::Active);
+    //    colorpickerIcon.addFile(":/iconset/ui/picker-3.png",
+    //                            QSize(), QIcon::Selected);
+    //    colorpickerIcon.addFile(":/iconset/ui/picker-3.png",
+    //                            QSize(), QIcon::Normal, QIcon::On);
+    //    colorpickerIcon.addFile(":/iconset/ui/picker-4.png",
+    //                            QSize(), QIcon::Normal);
     QAction *colorpicker = toolbar_->addAction(colorpickerIcon,
                                                tr("Color Picker"));
     colorpicker->setCheckable(true);
@@ -355,61 +377,50 @@ void MainWindow::toolbarInit()
     connect(brushSettingToolbar, &QToolBar::orientationChanged,
             brushSettingWidget, &BrushSettingsWidget::setOrientation);
 
-    // shortcuts for width control
-    ShortcutManager &stctmgr = Singleton<ShortcutManager>::instance();
-    QShortcut* widthActionSub = new QShortcut(this);
-    widthActionSub->setKey(stctmgr.shortcut("subwidth")["key"].toString());
-    connect(widthActionSub, &QShortcut::activated,
-            brushSettingWidget, &BrushSettingsWidget::widthDown);
-    QShortcut* widthActionAdd = new QShortcut(this);
-    widthActionAdd->setKey(stctmgr.shortcut("addwidth")["key"].toString());
-    connect(widthActionAdd, &QShortcut::activated,
-            brushSettingWidget, &BrushSettingsWidget::widthUp);
-    // shortcuts for hardness control
-    QShortcut* hardnessActionSub = new QShortcut(this);
-    hardnessActionSub->setKey(stctmgr.shortcut("subhardness")["key"].toString());
-    connect(hardnessActionSub, &QShortcut::activated,
-            brushSettingWidget, &BrushSettingsWidget::hardnessDown);
-    QShortcut* hardnessActionAdd = new QShortcut(this);
-    hardnessActionAdd->setKey(stctmgr.shortcut("addhardness")["key"].toString());
-    connect(hardnessActionAdd, &QShortcut::activated,
-            brushSettingWidget, &BrushSettingsWidget::hardnessUp);
-    // shortcuts for thickness control
-    QShortcut* thicknessActionSub = new QShortcut(this);
-    thicknessActionSub->setKey(stctmgr.shortcut("subthickness")["key"].toString());
-    connect(thicknessActionSub, &QShortcut::activated,
-            brushSettingWidget, &BrushSettingsWidget::thicknessDown);
-    QShortcut* thicknessActionAdd = new QShortcut(this);
-    thicknessActionAdd->setKey(stctmgr.shortcut("addthickness")["key"].toString());
-    connect(thicknessActionAdd, &QShortcut::activated,
-            brushSettingWidget, &BrushSettingsWidget::thicknessUp);
-    // shortcuts for water control
-    QShortcut* waterActionSub = new QShortcut(this);
-    waterActionSub->setKey(stctmgr.shortcut("subwater")["key"].toString());
-    connect(waterActionSub, &QShortcut::activated,
-            brushSettingWidget, &BrushSettingsWidget::waterDown);
-    QShortcut* waterActionAdd = new QShortcut(this);
-    waterActionAdd->setKey(stctmgr.shortcut("addwater")["key"].toString());
-    connect(waterActionAdd, &QShortcut::activated,
-            brushSettingWidget, &BrushSettingsWidget::waterUp);
-    // shortcuts for extend control
-    QShortcut* extendActionSub = new QShortcut(this);
-    extendActionSub->setKey(stctmgr.shortcut("subextend")["key"].toString());
-    connect(extendActionSub, &QShortcut::activated,
-            brushSettingWidget, &BrushSettingsWidget::extendDown);
-    QShortcut* extendActionAdd = new QShortcut(this);
-    extendActionAdd->setKey(stctmgr.shortcut("addextend")["key"].toString());
-    connect(extendActionAdd, &QShortcut::activated,
-            brushSettingWidget, &BrushSettingsWidget::extendUp);
-    // shortcuts for mixin control
-    QShortcut* mixinActionSub = new QShortcut(this);
-    mixinActionSub->setKey(stctmgr.shortcut("submixin")["key"].toString());
-    connect(mixinActionSub, &QShortcut::activated,
-            brushSettingWidget, &BrushSettingsWidget::mixinDown);
-    QShortcut* mixinActionAdd = new QShortcut(this);
-    mixinActionAdd->setKey(stctmgr.shortcut("addmixin")["key"].toString());
-    connect(mixinActionAdd, &QShortcut::activated,
-            brushSettingWidget, &BrushSettingsWidget::mixinUp);
+
+    //    ShortcutManager &stctmgr = Singleton<ShortcutManager>::instance();
+    regShortcut<>("subwidth",
+                  std::bind(&BrushSettingsWidget::widthDown, brushSettingWidget));
+    regShortcut<>("addwidth",
+                  std::bind(&BrushSettingsWidget::widthUp, brushSettingWidget));
+
+    regShortcut<>("subhardness",
+                  std::bind(&BrushSettingsWidget::hardnessDown, brushSettingWidget));
+    regShortcut<>("addhardness",
+                  std::bind(&BrushSettingsWidget::hardnessUp, brushSettingWidget));
+
+    regShortcut<>("subthickness",
+                  std::bind(&BrushSettingsWidget::thicknessDown, brushSettingWidget));
+    regShortcut<>("addthickness",
+                  std::bind(&BrushSettingsWidget::thicknessUp, brushSettingWidget));
+
+    //    // shortcuts for water control
+    //    QShortcut* waterActionSub = new QShortcut(this);
+    //    waterActionSub->setKey(stctmgr.shortcut("subwater")["key"].toString());
+    //    connect(waterActionSub, &QShortcut::activated,
+    //            brushSettingWidget, &BrushSettingsWidget::waterDown);
+    //    QShortcut* waterActionAdd = new QShortcut(this);
+    //    waterActionAdd->setKey(stctmgr.shortcut("addwater")["key"].toString());
+    //    connect(waterActionAdd, &QShortcut::activated,
+    //            brushSettingWidget, &BrushSettingsWidget::waterUp);
+    //    // shortcuts for extend control
+    //    QShortcut* extendActionSub = new QShortcut(this);
+    //    extendActionSub->setKey(stctmgr.shortcut("subextend")["key"].toString());
+    //    connect(extendActionSub, &QShortcut::activated,
+    //            brushSettingWidget, &BrushSettingsWidget::extendDown);
+    //    QShortcut* extendActionAdd = new QShortcut(this);
+    //    extendActionAdd->setKey(stctmgr.shortcut("addextend")["key"].toString());
+    //    connect(extendActionAdd, &QShortcut::activated,
+    //            brushSettingWidget, &BrushSettingsWidget::extendUp);
+    //    // shortcuts for mixin control
+    //    QShortcut* mixinActionSub = new QShortcut(this);
+    //    mixinActionSub->setKey(stctmgr.shortcut("submixin")["key"].toString());
+    //    connect(mixinActionSub, &QShortcut::activated,
+    //            brushSettingWidget, &BrushSettingsWidget::mixinDown);
+    //    QShortcut* mixinActionAdd = new QShortcut(this);
+    //    mixinActionAdd->setKey(stctmgr.shortcut("addmixin")["key"].toString());
+    //    connect(mixinActionAdd, &QShortcut::activated,
+    //            brushSettingWidget, &BrushSettingsWidget::mixinUp);
 
     brushSettingControl_ = brushSettingWidget;
     brushSettingToolbar->addWidget(brushSettingWidget);
@@ -462,7 +473,7 @@ void MainWindow::requestOnlinelist()
     obj.insert("request", QString("onlinelist"));
     obj.insert("type", QString("command"));
     obj.insert("clientid", Singleton<ClientSocket>::instance().clientId());
-//    qDebug()<<"clientid: "<<Singleton<ClientSocket>::instance().clientId();
+    //    qDebug()<<"clientid: "<<Singleton<ClientSocket>::instance().clientId();
 
     Singleton<ClientSocket>::instance().sendCmdPack(obj);
 }
@@ -533,8 +544,8 @@ void MainWindow::shortcutInit()
             this, &MainWindow::about);
     connect(ui->actionAbout_Qt, &QAction::triggered,
             &QApplication::aboutQt);
-//    connect(ui->actionExport_to_PSD, &QAction::triggered,
-//            this, &MainWindow::exportToPSD);
+    //    connect(ui->actionExport_to_PSD, &QAction::triggered,
+    //            this, &MainWindow::exportToPSD);
     connect(ui->actionClose_Room, &QAction::triggered,
             this, &MainWindow::requestCloseRoom);
     connect(ui->actionAll_Layers, &QAction::triggered,
@@ -545,21 +556,16 @@ void MainWindow::shortcutInit()
         conf_dialog.exec();
     });
 
-    auto console_f = std::bind(&MainWindow::openConsole, this);
-
-    auto zoomin_f = [this](){
+    regShortcut<>("zoomin", [this](){
         // TODO: should be configurable
         this->ui->centralWidget->scaleBy(1.2);
-    };
-
-    auto zoomout_f = [this](){
+    });
+    regShortcut<>("zoomout", [this](){
         // TODO: should be configurable
-        this->ui->centralWidget->scaleBy(1.2);
-    };
-
-    regShortcut<decltype(zoomin_f)>("zoomin", zoomin_f);
-    regShortcut<decltype(zoomout_f)>("zoomout", zoomout_f);
-    regShortcut<decltype(console_f)>(QKeySequence("F12"), console_f);
+        this->ui->centralWidget->scaleBy(0.8);
+    });
+    regShortcut<>(QKeySequence("F12"),
+                  std::bind(&MainWindow::openConsole, this));
 }
 
 void MainWindow::socketInit()
@@ -1059,7 +1065,7 @@ void MainWindow::closeEvent( QCloseEvent * event )
 
     QMessageBox msgBox;
     msgBox.setText(tr("Waiting for sync, please do not close.\n"\
-                   "This will cost you 1 minute at most."));
+                      "This will cost you 1 minute at most."));
     msgBox.setStandardButtons(QMessageBox::NoButton);
     msgBox.setWindowModality(Qt::ApplicationModal);
     msgBox.setModal(true);
@@ -1084,7 +1090,7 @@ void MainWindow::closeEvent( QCloseEvent * event )
     settings.sync();
 
     disconnect(&client_socket, &ClientSocket::disconnected,
-            this, &MainWindow::onServerDisconnected);
+               this, &MainWindow::onServerDisconnected);
 
     client_socket.close();
     client_socket.reset();
@@ -1173,12 +1179,33 @@ void MainWindow::about()
     dialog.exec();
 }
 
+template<typename T, typename U>
+bool MainWindow::regShortcut(const QString& name, T func, U func2)
+{
+    //    auto shortcut_type = (ShT)config["type"].toInt();
+    auto& sm = Singleton<ShortcutManager>::instance();
+    return regShortcut<>(QKeySequence(sm.shortcut(name)["key"].toString()),
+            func, func2);
+}
 
 template<typename T>
 bool MainWindow::regShortcut(const QString& name, T func)
 {
     auto& sm = Singleton<ShortcutManager>::instance();
-    return regShortcut(QKeySequence(sm.shortcut(name)["key"].toString()), func);
+    return regShortcut<>(QKeySequence(sm.shortcut(name)["key"].toString()), func);
+}
+
+template<typename T, typename U>
+bool MainWindow::regShortcut(const QKeySequence& k, T func, U func2)
+{
+    SingleShortcut *shortcut = new SingleShortcut(this);
+    shortcut->setKey(k);
+    connect(shortcut, &SingleShortcut::activated,
+            func);
+    connect(shortcut, &SingleShortcut::inactivated,
+            func2);
+    // TODO: return false if key has been used
+    return true;
 }
 
 template<typename T>
@@ -1187,7 +1214,6 @@ bool MainWindow::regShortcut(const QKeySequence& k, T func)
     QShortcut* shortcut = new QShortcut(k, this);
     connect(shortcut, &QShortcut::activated,
             func);
-
     // TODO: return false if key has been used
     return true;
 }
