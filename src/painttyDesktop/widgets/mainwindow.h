@@ -27,6 +27,8 @@ public:
 
     template<typename T>
     bool regShortcut(const QString& name, T func);
+    template<typename T>
+    bool regShortcut(const QKeySequence& k, T func);
 
 public slots:
     void exportAllToFile();
@@ -78,6 +80,7 @@ private:
     void requestCheckout();
     void requestArchiveSign();
     void requestArchive();
+    void requestCloseRoom();
 
     Ui::MainWindow *ui;
 
@@ -110,7 +113,6 @@ private slots:
     void onActionNotify(const QJsonObject &o);
     void onResponseArchiveSign(const QJsonObject &o);
     void onResponseArchive(const QJsonObject &o);
-
 };
 
 #endif // MAINWINDOW_H

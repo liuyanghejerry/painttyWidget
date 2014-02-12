@@ -294,16 +294,17 @@ void MainWindow::toolbarInit()
 
     // doing hacking to color picker
     QIcon colorpickerIcon;
-    colorpickerIcon.addFile(":/iconset/ui/picker-1.png",
-                            QSize(), QIcon::Disabled);
-    colorpickerIcon.addFile(":/iconset/ui/picker-2.png",
-                            QSize(), QIcon::Active);
-    colorpickerIcon.addFile(":/iconset/ui/picker-3.png",
-                            QSize(), QIcon::Selected);
-    colorpickerIcon.addFile(":/iconset/ui/picker-3.png",
-                            QSize(), QIcon::Normal, QIcon::On);
-    colorpickerIcon.addFile(":/iconset/ui/picker-4.png",
-                            QSize(), QIcon::Normal);
+    // TODO: use icon until all brushes have icons
+//    colorpickerIcon.addFile(":/iconset/ui/picker-1.png",
+//                            QSize(), QIcon::Disabled);
+//    colorpickerIcon.addFile(":/iconset/ui/picker-2.png",
+//                            QSize(), QIcon::Active);
+//    colorpickerIcon.addFile(":/iconset/ui/picker-3.png",
+//                            QSize(), QIcon::Selected);
+//    colorpickerIcon.addFile(":/iconset/ui/picker-3.png",
+//                            QSize(), QIcon::Normal, QIcon::On);
+//    colorpickerIcon.addFile(":/iconset/ui/picker-4.png",
+//                            QSize(), QIcon::Normal);
     QAction *colorpicker = toolbar_->addAction(colorpickerIcon,
                                                tr("Color Picker"));
     colorpicker->setCheckable(true);
@@ -477,6 +478,23 @@ void MainWindow::requestCheckout()
     Singleton<ClientSocket>::instance().sendCmdPack(obj);
 }
 
+void MainWindow::requestCloseRoom()
+{
+    QJsonObject obj;
+    QString r_key = getRoomKey();
+    obj.insert("request", QString("close"));
+    if(r_key.isEmpty()){
+        QMessageBox::warning(this,
+                             tr("Sorry"),
+                             tr("Only room owner is authorized "
+                                "to close the room.\n"
+                                "It seems you're not room manager."));
+        return;
+    }
+    obj.insert("key", r_key);
+    Singleton<ClientSocket>::instance().sendCmdPack(obj);
+}
+
 void MainWindow::requestArchiveSign()
 {
     QJsonObject obj;
@@ -518,21 +536,7 @@ void MainWindow::shortcutInit()
 //    connect(ui->actionExport_to_PSD, &QAction::triggered,
 //            this, &MainWindow::exportToPSD);
     connect(ui->actionClose_Room, &QAction::triggered,
-            [&](){
-        QJsonObject obj;
-        QString r_key = getRoomKey();
-        obj.insert("request", QString("close"));
-        if(r_key.isEmpty()){
-            QMessageBox::warning(this,
-                                 tr("Sorry"),
-                                 tr("Only room owner is authorized "
-                                    "to close the room.\n"
-                                    "It seems you're not room manager."));
-            return;
-        }
-        obj.insert("key", r_key);
-        Singleton<ClientSocket>::instance().sendCmdPack(obj);
-    });
+            this, &MainWindow::requestCloseRoom);
     connect(ui->actionAll_Layers, &QAction::triggered,
             this, &MainWindow::clearAllLayer);
     connect(ui->actionConfiguration, &QAction::triggered,
@@ -541,9 +545,7 @@ void MainWindow::shortcutInit()
         conf_dialog.exec();
     });
 
-    QShortcut* console_shortcut = new QShortcut(QKeySequence("F12"), this);
-    connect(console_shortcut, &QShortcut::activated,
-            this, &MainWindow::openConsole);
+    auto console_f = std::bind(&MainWindow::openConsole, this);
 
     auto zoomin_f = [this](){
         // TODO: should be configurable
@@ -557,6 +559,7 @@ void MainWindow::shortcutInit()
 
     regShortcut<decltype(zoomin_f)>("zoomin", zoomin_f);
     regShortcut<decltype(zoomout_f)>("zoomout", zoomout_f);
+    regShortcut<decltype(console_f)>(QKeySequence("F12"), console_f);
 }
 
 void MainWindow::socketInit()
@@ -573,7 +576,8 @@ void MainWindow::socketInit()
     connect(&client_socket, &ClientSocket::disconnected,
             this, &MainWindow::onServerDisconnected);
     cmdRouterInit();
-    auto fff = [this](){
+
+    GlobalDef::delayJob([this](){
         Singleton<ClientSocket>::instance().setPoolEnabled(false);
         requestArchiveSign();
 
@@ -581,8 +585,8 @@ void MainWindow::socketInit()
         if(!getRoomKey().isNull()){
             requestCheckout();
         }
-    };
-    GlobalDef::delayJob(fff);
+    });
+
     QTimer *t = new QTimer(this);
     connect(t, &QTimer::timeout,
             this, &MainWindow::requestOnlinelist);
@@ -1174,8 +1178,13 @@ template<typename T>
 bool MainWindow::regShortcut(const QString& name, T func)
 {
     auto& sm = Singleton<ShortcutManager>::instance();
+    return regShortcut(QKeySequence(sm.shortcut(name)["key"].toString()), func);
+}
 
-    QShortcut* shortcut = new QShortcut(QKeySequence(sm.shortcut(name)["key"].toString()), this);
+template<typename T>
+bool MainWindow::regShortcut(const QKeySequence& k, T func)
+{
+    QShortcut* shortcut = new QShortcut(k, this);
     connect(shortcut, &QShortcut::activated,
             func);
 
