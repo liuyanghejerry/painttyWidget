@@ -545,23 +545,18 @@ void MainWindow::shortcutInit()
     connect(console_shortcut, &QShortcut::activated,
             this, &MainWindow::openConsole);
 
-    auto& sm = Singleton<ShortcutManager>::instance();
-    {
-        QShortcut* zoomin_shortcut = new QShortcut(QKeySequence(sm.shortcut("zoomin")["key"].toString()), this);
-        connect(zoomin_shortcut, &QShortcut::activated,
-                [this](){
-            // TODO: should be configurable
-            this->ui->centralWidget->scaleBy(1.2);
-        });
-    }
-    {
-        QShortcut* zoomout_shortcut = new QShortcut(QKeySequence(sm.shortcut("zoomout")["key"].toString()), this);
-        connect(zoomout_shortcut, &QShortcut::activated,
-                [this](){
-            // TODO: should be configurable
-            this->ui->centralWidget->scaleBy(0.8);
-        });
-    }
+    auto zoomin_f = [this](){
+        // TODO: should be configurable
+        this->ui->centralWidget->scaleBy(1.2);
+    };
+
+    auto zoomout_f = [this](){
+        // TODO: should be configurable
+        this->ui->centralWidget->scaleBy(1.2);
+    };
+
+    regShortcut<decltype(zoomin_f)>("zoomin", zoomin_f);
+    regShortcut<decltype(zoomout_f)>("zoomout", zoomout_f);
 }
 
 void MainWindow::socketInit()
@@ -1172,4 +1167,18 @@ void MainWindow::about()
 {
     AboutDialog dialog(this);
     dialog.exec();
+}
+
+
+template<typename T>
+bool MainWindow::regShortcut(const QString& name, T func)
+{
+    auto& sm = Singleton<ShortcutManager>::instance();
+
+    QShortcut* shortcut = new QShortcut(QKeySequence(sm.shortcut(name)["key"].toString()), this);
+    connect(shortcut, &QShortcut::activated,
+            func);
+
+    // TODO: return false if key has been used
+    return true;
 }

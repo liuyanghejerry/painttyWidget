@@ -25,6 +25,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    template<typename T>
+    bool regShortcut(const QString& name, T func);
+
 public slots:
     void exportAllToFile();
     void exportVisibleToFile();
@@ -48,6 +51,7 @@ public slots:
     /* script */
     void evaluateScript(const QString& script);
     void runScript(const QString& script);
+
 signals:
     void sendMessage(QString);
     void brushColorChange(const QColor &color);
