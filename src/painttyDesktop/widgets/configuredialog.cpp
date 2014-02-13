@@ -51,8 +51,8 @@ void ConfigureDialog::readSettings()
     auto_disable_ime = settings.value("canvas/auto_disable_ime", false).toBool();
     enable_tablet = settings.value("canvas/enable_tablet", false).toBool();
     use_defalut_server = settings.value("global/server/use_default", true).toBool();
-    IPv4_addr = settings.value("global/server/ipv4_addr", QString()).toString();
-    IPv6_addr = settings.value("global/server/ipv6_addr", QString()).toString();
+    IPv4_addr = settings.value("global/server/ipv4_addr").toString();
+    IPv6_addr = settings.value("global/server/ipv6_addr").toString();
     server_port = settings.value("global/server/server_port", 0).toUInt();
     skip_replay = settings.value("canvas/skip_replay", false).toBool();
     use_droid_font = settings.value("global/use_droid_font", false).toBool();
@@ -242,11 +242,35 @@ void ConfigureDialog::acceptConfigure()
     }
 
     // save server settings
-    settings.setValue("global/server/use_default", use_defalut_server);
-    settings.setValue("global/server/ipv4_addr", IPv4_addr);
-    settings.setValue("global/server/ipv6_addr", IPv6_addr);
-    settings.setValue("global/server/server_port", server_port);
-    needRestart = true;
+    {
+        if (ui->use_default_server_checkbox->isChecked() != use_defalut_server)
+        {
+            settings.setValue("global/server/use_default",
+                              ui->use_default_server_checkbox->isChecked());
+            needRestart = true;
+        }
+        auto ip_t = std::move(ui->ipv4_lineedit->text().trimmed());
+        if (ip_t != IPv4_addr)
+        {
+            settings.setValue("global/server/ipv4_addr",
+                              ip_t);
+            needRestart = true;
+        }
+        ip_t = std::move(ui->ipv6_lineedit->text().trimmed());
+        if (ip_t != IPv6_addr)
+        {
+            settings.setValue("global/server/ipv6_addr",
+                              ip_t);
+            needRestart = true;
+        }
+        auto p = (quint16)ui->port_lineedit->text().trimmed().toInt();
+        if (p != server_port)
+        {
+            settings.setValue("global/server/server_port",
+                              p);
+            needRestart = true;
+        }
+    }
 
     // save canvas replay-skip settings
     if (ui->skip_replay->isChecked() != skip_replay)
