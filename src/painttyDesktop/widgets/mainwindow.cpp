@@ -90,6 +90,10 @@ void MainWindow::init()
             ui->centralWidget, &CanvasContainer::setScaleFactor);
     connect(ui->centralWidget, &CanvasContainer::scaled,
             ui->panorama, &PanoramaWidget::setScaled);
+    connect(ui->panorama, &PanoramaWidget::rotated,
+            ui->centralWidget, &CanvasContainer::setRotation);
+    connect(ui->centralWidget, &CanvasContainer::rotated,
+            ui->panorama, &PanoramaWidget::setRotation);
 
     connect(ui->lineEdit,&QLineEdit::returnPressed,
             this,&MainWindow::onSendPressed);

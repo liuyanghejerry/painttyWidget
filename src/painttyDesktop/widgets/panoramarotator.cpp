@@ -4,6 +4,7 @@
 #include <QLineEdit>
 #include <QSlider>
 #include <QIntValidator>
+#include <QDebug>
 
 PanoramaRotator::PanoramaRotator(QWidget *parent) :
     QWidget(parent),
@@ -27,19 +28,18 @@ PanoramaRotator::PanoramaRotator(QWidget *parent) :
 
     connect(slider_, &QSlider::valueChanged, this, &PanoramaRotator::setRotation);
     connect(slider_, &QSlider::valueChanged, [this](int v){
-        lineEdit_->setText(QString::number(v));
+        if(v != lineEdit_->text().toInt()){
+            lineEdit_->setText(QString::number(v));
+        }
     });
-    connect(lineEdit_, &QLineEdit::textChanged,
-            [this](const QString &v){
-        this->setRotation(v.toInt());
+    connect(lineEdit_, &QLineEdit::returnPressed,
+            [this](){
+        this->setRotation(lineEdit_->text().toInt());
     });
 }
 
 void PanoramaRotator::setRotation(int deg)
 {
-    if(deg == slider_->value()){
-        return;
-    }
     slider_->setValue(deg);
     emit rotated(deg);
 }

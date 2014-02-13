@@ -21,6 +21,7 @@ public:
     
 signals:
     void scaled(qreal factor);
+    void rotated(int deg);
     void rectChanged(const QRect&);
 
 public slots:
