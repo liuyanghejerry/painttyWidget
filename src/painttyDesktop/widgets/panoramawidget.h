@@ -4,6 +4,7 @@
 #include <QWidget>
 
 class PanoramaSlider;
+class PanoramaRotator;
 class PanoramaView;
 
 class PanoramaWidget : public QWidget
@@ -16,12 +17,15 @@ signals:
     void moveTo(const QPointF &p);
     void viewportChange(const QRectF &r);
     void scaled(qreal);
+    void rotated(int);
 public slots:
     void setScaled(qreal);
+    void setRotation(int);
     void onImageChange(const QPixmap &p, const QRect &r);
     void onRectChange(const QRect &r);
 private:
     PanoramaSlider *slider;
+    PanoramaRotator *rotator;
     PanoramaView *view;
 };
 
