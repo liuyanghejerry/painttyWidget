@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="zh_TW">
+<TS version="2.1" language="zh_TW">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -15,7 +15,7 @@
     </message>
     <message>
         <source>&lt;p&gt;Mr.Paint is a free software for paint-chat. However, it&apos;s in alpha state.&lt;/p&gt;&lt;p&gt;If you have any questions about Mr.Paint, please visit &lt;a href=&quot;http://mrspaint.com&quot;&gt;our site&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Copyright Information:&lt;/p&gt;&lt;p&gt;painttyWidget : The client of Mr.Paint built with Qt&lt;/p&gt;&lt;p&gt;Copyright (C) 2013 Project Paintty&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.&lt;/p&gt;&lt;p&gt;This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.&lt;/p&gt;&lt;p&gt;You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA&lt;/p&gt;</source>
-        <translation>&lt;p&gt;茶繪君是一個免費的茶繪軟體。但它還處於構思階段。&lt;/p&gt;&lt;p&gt;如果您有任何問題，請訪問&lt;a href=&quot;http://mrspaint.com&quot;&gt;我們的網站&lt;/a&gt;&lt;/p&gt;&lt;p&gt;版權信息：&lt;/p&gt;&lt;p&gt;painttyWidget : The client of Mr.Paint built with Qt&lt;/p&gt;&lt;p&gt;Copyright (C) 2013 Project Paintty&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.&lt;/p&gt;&lt;p&gt;This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.&lt;/p&gt;&lt;p&gt;You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA&lt;/p&gt;</translation>
+        <translation type="vanished">&lt;p&gt;茶繪君是一個免費的茶繪軟體。但它還處於構思階段。&lt;/p&gt;&lt;p&gt;如果您有任何問題，請訪問&lt;a href=&quot;http://mrspaint.com&quot;&gt;我們的網站&lt;/a&gt;&lt;/p&gt;&lt;p&gt;版權信息：&lt;/p&gt;&lt;p&gt;painttyWidget : The client of Mr.Paint built with Qt&lt;/p&gt;&lt;p&gt;Copyright (C) 2013 Project Paintty&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.&lt;/p&gt;&lt;p&gt;This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.&lt;/p&gt;&lt;p&gt;You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -106,34 +106,34 @@
     </message>
     <message>
         <location filename="../widgets/colorspinboxgroup.ui" line="90"/>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="89"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="77"/>
         <source>Blue</source>
         <translation>藍</translation>
     </message>
     <message>
         <location filename="../widgets/colorspinboxgroup.ui" line="76"/>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="88"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="76"/>
         <source>Green</source>
         <translation>綠</translation>
     </message>
     <message>
         <location filename="../widgets/colorspinboxgroup.ui" line="62"/>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="87"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="75"/>
         <source>Red</source>
         <translation>紅</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="67"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="61"/>
         <source>Hue</source>
         <translation>色調</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="68"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="62"/>
         <source>Saturation</source>
         <translation>飽和度</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="69"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="63"/>
         <source>Value</source>
         <translation>亮度</translation>
     </message>
@@ -157,7 +157,7 @@
     </message>
     <message>
         <source>&amp;Connection:</source>
-        <translation>連結</translation>
+        <translation type="vanished">連結</translation>
     </message>
     <message>
         <location filename="../widgets/configuredialog.ui" line="130"/>
@@ -503,20 +503,20 @@ Do you want to restart right now?</source>
         <translation>畫刷</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="284"/>
-        <location filename="../widgets/mainwindow.cpp" line="328"/>
+        <location filename="../widgets/mainwindow.cpp" line="307"/>
+        <location filename="../widgets/mainwindow.cpp" line="353"/>
         <source>%1
 Shortcut: %2</source>
         <translation>%1
 快捷鍵：%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="308"/>
+        <location filename="../widgets/mainwindow.cpp" line="331"/>
         <source>Color Picker</source>
         <translation>拾色器</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="337"/>
+        <location filename="../widgets/mainwindow.cpp" line="361"/>
         <source>Brush Settings</source>
         <translation>畫刷設定</translation>
     </message>
@@ -543,15 +543,15 @@ Do you want to restart right now?</source>
         <translation type="obsolete">語言更改將在下次啟動程式時生效。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="526"/>
-        <location filename="../widgets/mainwindow.cpp" line="606"/>
-        <location filename="../widgets/mainwindow.cpp" line="632"/>
-        <location filename="../widgets/mainwindow.cpp" line="991"/>
+        <location filename="../widgets/mainwindow.cpp" line="499"/>
+        <location filename="../widgets/mainwindow.cpp" line="630"/>
+        <location filename="../widgets/mainwindow.cpp" line="656"/>
+        <location filename="../widgets/mainwindow.cpp" line="1015"/>
         <source>Sorry</source>
         <translation>抱歉</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="527"/>
+        <location filename="../widgets/mainwindow.cpp" line="500"/>
         <source>Only room owner is authorized to close the room.
 It seems you&apos;re not room manager.</source>
         <translation>只有房主才有權限關閉房間。
@@ -575,7 +575,7 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="419"/>
+        <location filename="../widgets/mainwindow.cpp" line="432"/>
         <source>Room Share</source>
         <translation>分享房間</translation>
     </message>
@@ -586,124 +586,124 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="428"/>
+        <location filename="../widgets/mainwindow.cpp" line="441"/>
         <source>Notice, we detected you&apos;re using IPv6 protocol which may result in that your Room URL is not available for IPv4 users.</source>
         <translation>提示：檢測到您正在使用IPv6協定，這將導致您的房間URL無法與IPv4用戶共通。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="580"/>
+        <location filename="../widgets/mainwindow.cpp" line="604"/>
         <source>Server Connection Failed.</source>
         <translation>伺服器斷開了連接。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="593"/>
+        <location filename="../widgets/mainwindow.cpp" line="617"/>
         <source>Closing</source>
         <translation>房間關閉</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="594"/>
+        <location filename="../widgets/mainwindow.cpp" line="618"/>
         <source>Warning, the room owner has closed the room. This room will close when everyone leaves.
 Save your work if you like it!</source>
         <translation>警告，房主已經關閉了本房間。所有人離開後本房間將刪除。
 請保存好您的得意之作！</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="607"/>
-        <location filename="../widgets/mainwindow.cpp" line="633"/>
+        <location filename="../widgets/mainwindow.cpp" line="631"/>
+        <location filename="../widgets/mainwindow.cpp" line="657"/>
         <source>Sorry, it seems you&apos;re notroom owner.</source>
         <translation>抱歉，您似乎不是房主。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="622"/>
+        <location filename="../widgets/mainwindow.cpp" line="646"/>
         <source>Close Request Completed.</source>
         <translation>關閉命令已發送</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="636"/>
+        <location filename="../widgets/mainwindow.cpp" line="660"/>
         <source>Clear Request Completed.</source>
         <translation>清空命令已發送</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="660"/>
+        <location filename="../widgets/mainwindow.cpp" line="684"/>
         <source>Checkout Completed.</source>
         <translation>簽到完畢</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="688"/>
+        <location filename="../widgets/mainwindow.cpp" line="712"/>
         <source>Online List Refreshed.</source>
         <translation>在線列表刷新完畢</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="720"/>
-        <location filename="../widgets/mainwindow.cpp" line="743"/>
+        <location filename="../widgets/mainwindow.cpp" line="744"/>
+        <location filename="../widgets/mainwindow.cpp" line="767"/>
         <source>Error</source>
         <translation>出錯</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="721"/>
-        <location filename="../widgets/mainwindow.cpp" line="744"/>
+        <location filename="../widgets/mainwindow.cpp" line="745"/>
+        <location filename="../widgets/mainwindow.cpp" line="768"/>
         <source>Sorry, an error occurred.
 Error: %1, %2</source>
         <translation>抱歉，出錯了。
 錯誤：%1，%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="959"/>
-        <location filename="../widgets/mainwindow.cpp" line="980"/>
+        <location filename="../widgets/mainwindow.cpp" line="983"/>
+        <location filename="../widgets/mainwindow.cpp" line="1004"/>
         <source>OMG</source>
         <translation>天吶</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="960"/>
+        <location filename="../widgets/mainwindow.cpp" line="984"/>
         <source>You&apos;re going to clear layer %1. All the work of that layerwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translation>您將清空圖層 %1。該圖層的所有內容將被清空，並且&lt;b&gt;無法&lt;/b&gt;恢復。
 您確定您要這麼做嗎？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="981"/>
+        <location filename="../widgets/mainwindow.cpp" line="1005"/>
         <source>You&apos;re going to clear ALL LAYERS. All of work in this roomwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translation>您將清空所有圖層。本房間的所有內容將被清空，並且&lt;b&gt;無法&lt;/b&gt;恢復。
 您確定要這麼做嗎？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="992"/>
+        <location filename="../widgets/mainwindow.cpp" line="1016"/>
         <source>Only room owner is authorized to clear the canvas.
 It seems you&apos;re not room manager.</source>
         <translation>只有房間所有者才可清理畫布。
 您似乎不是所有者。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1043"/>
+        <location filename="../widgets/mainwindow.cpp" line="1067"/>
         <source>Waiting for sync, please do not close.
 This will cost you 1 minute at most.</source>
         <translation>正在等待同步，請不要關閉。
 整個過程至多需要1分鐘。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1082"/>
+        <location filename="../widgets/mainwindow.cpp" line="1106"/>
         <source>Export all to file</source>
         <translation>全部導出至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1084"/>
-        <location filename="../widgets/mainwindow.cpp" line="1102"/>
+        <location filename="../widgets/mainwindow.cpp" line="1108"/>
+        <location filename="../widgets/mainwindow.cpp" line="1126"/>
         <source>Images (*.png)</source>
         <translation>圖像 (*.png)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1100"/>
+        <location filename="../widgets/mainwindow.cpp" line="1124"/>
         <source>Export visible part to file</source>
         <translation>導出可見圖層至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1119"/>
+        <location filename="../widgets/mainwindow.cpp" line="1143"/>
         <source>Export contents to psd file</source>
         <translation>導出為PSD文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1121"/>
+        <location filename="../widgets/mainwindow.cpp" line="1145"/>
         <source>Photoshop Images (*.psd)</source>
         <translation>Photoshop格式</translation>
     </message>
@@ -814,145 +814,145 @@ Do you want to retry?</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../misc/errortable.cpp" line="43"/>
-        <location filename="../misc/errortable.cpp" line="67"/>
-        <location filename="../misc/errortable.cpp" line="83"/>
-        <location filename="../misc/errortable.cpp" line="87"/>
-        <location filename="../misc/errortable.cpp" line="93"/>
-        <location filename="../misc/errortable.cpp" line="95"/>
+        <location filename="../misc/errortable.cpp" line="9"/>
+        <location filename="../misc/errortable.cpp" line="33"/>
+        <location filename="../misc/errortable.cpp" line="49"/>
+        <location filename="../misc/errortable.cpp" line="53"/>
+        <location filename="../misc/errortable.cpp" line="59"/>
+        <location filename="../misc/errortable.cpp" line="61"/>
         <source>unknown error.</source>
         <translation>未知錯誤。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="45"/>
+        <location filename="../misc/errortable.cpp" line="11"/>
         <source>server is busy.</source>
         <translation>伺服器很忙。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="47"/>
+        <location filename="../misc/errortable.cpp" line="13"/>
         <source>name collision.</source>
         <translation>名稱衝突。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="49"/>
-        <location filename="../misc/errortable.cpp" line="69"/>
+        <location filename="../misc/errortable.cpp" line="15"/>
+        <location filename="../misc/errortable.cpp" line="35"/>
         <source>invalid name.</source>
         <translation>無效的名字。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="51"/>
+        <location filename="../misc/errortable.cpp" line="17"/>
         <source>invalid max member.</source>
         <translation>無效的最大人數。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="53"/>
+        <location filename="../misc/errortable.cpp" line="19"/>
         <source>invalid welcome words.</source>
         <translation>無效的歡迎辭。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="55"/>
+        <location filename="../misc/errortable.cpp" line="21"/>
         <source>invalid auto closing empty room.</source>
         <translation>無效的自動關房。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="57"/>
+        <location filename="../misc/errortable.cpp" line="23"/>
         <source>invalid password.</source>
         <translation>無效的密碼。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="59"/>
+        <location filename="../misc/errortable.cpp" line="25"/>
         <source>auto closing empty room not supported.</source>
         <translation>不支持自動關房。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="61"/>
+        <location filename="../misc/errortable.cpp" line="27"/>
         <source>private room not supported.</source>
         <translation>不支持私密房間。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="63"/>
+        <location filename="../misc/errortable.cpp" line="29"/>
         <source>too many rooms.</source>
         <translation>房間太多了。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="65"/>
+        <location filename="../misc/errortable.cpp" line="31"/>
         <source>invalid canvas size.</source>
         <translation>無效的畫布大小。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="71"/>
+        <location filename="../misc/errortable.cpp" line="37"/>
         <source>invalid password or lack of password.</source>
         <translation>無效的密碼，或缺少密碼。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="73"/>
+        <location filename="../misc/errortable.cpp" line="39"/>
         <source>room is full.</source>
         <translation>房間已滿。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="75"/>
+        <location filename="../misc/errortable.cpp" line="41"/>
         <source>you&apos;re banned.</source>
         <translation>您已被封禁。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="77"/>
+        <location filename="../misc/errortable.cpp" line="43"/>
         <source>server is too busy.</source>
         <translation>伺服器繁忙。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="79"/>
+        <location filename="../misc/errortable.cpp" line="45"/>
         <source>closed by room or room manager.</source>
         <translation>被房間或管理員關閉。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="81"/>
+        <location filename="../misc/errortable.cpp" line="47"/>
         <source>closed by room owner.</source>
         <translation>被房主關閉。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="85"/>
+        <location filename="../misc/errortable.cpp" line="51"/>
         <source>room is closed already.</source>
         <translation>房間已經關閉了。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="89"/>
+        <location filename="../misc/errortable.cpp" line="55"/>
         <source>wrong key.</source>
         <translation>錯誤的密鑰。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="91"/>
+        <location filename="../misc/errortable.cpp" line="57"/>
         <source>timeout, which means too late.</source>
         <translation>已超時。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="97"/>
+        <location filename="../misc/errortable.cpp" line="63"/>
         <source>out of range.</source>
         <translation>超出範圍。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="99"/>
+        <location filename="../misc/errortable.cpp" line="65"/>
         <source>Unnamed error: %1.</source>
         <translation>未命名的錯誤：%1。</translation>
     </message>
     <message>
         <source>Brush</source>
-        <translation>畫刷</translation>
+        <translation type="vanished">畫刷</translation>
     </message>
     <message>
         <source>Eraser</source>
-        <translation>橡皮</translation>
+        <translation type="vanished">橡皮</translation>
     </message>
     <message>
         <source>Pencil</source>
-        <translation>鉛筆</translation>
+        <translation type="vanished">鉛筆</translation>
     </message>
     <message>
         <source>Sketch</source>
-        <translation>素描筆</translation>
+        <translation type="vanished">素描筆</translation>
     </message>
     <message>
         <source>Wet Fingure</source>
-        <translation>濕手指</translation>
+        <translation type="vanished">濕手指</translation>
     </message>
     <message>
         <source>No Updater?</source>
@@ -971,7 +971,7 @@ Do you want to retry?</source>
     <message>
         <source>Sorry, we do not support auto-update on Mac OSX.
 You may want to check &lt;a href=&quot;http://mrspaint.com&quot;&gt;our site&lt;/a&gt;for new versions manually.</source>
-        <translation>抱歉，我們現在仍不支持Mac OSX平台上的自動更新。\n您可能需要手動訪問&lt;a href=&quot;http://mrspaint.com&quot;&gt;我們的網站&lt;/a&gt;來查詢更新。</translation>
+        <translation type="vanished">抱歉，我們現在仍不支持Mac OSX平台上的自動更新。\n您可能需要手動訪問&lt;a href=&quot;http://mrspaint.com&quot;&gt;我們的網站&lt;/a&gt;來查詢更新。</translation>
     </message>
     <message>
         <location filename="../main.cpp" line="127"/>
@@ -1006,7 +1006,7 @@ You may need to check update yourself.</source>
         <translation>速寫筆</translation>
     </message>
     <message>
-        <location filename="../paintingTools/brush/waterbased.cpp" line="36"/>
+        <location filename="../paintingTools/brush/waterbased.cpp" line="44"/>
         <source>WaterBrush</source>
         <translation>水彩筆</translation>
     </message>
@@ -1268,44 +1268,78 @@ Use this software only when you accept it.</source>
 <context>
     <name>ShortcutManager</name>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="14"/>
         <source>Pencil</source>
-        <translation>鉛筆</translation>
+        <translation type="vanished">鉛筆</translation>
     </message>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="20"/>
+        <location filename="../misc/shortcutmanager.cpp" line="15"/>
         <source>Brush</source>
         <translation>畫刷</translation>
     </message>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="26"/>
+        <location filename="../misc/shortcutmanager.cpp" line="39"/>
         <source>Sketch</source>
         <translation>素描筆</translation>
     </message>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="32"/>
+        <location filename="../misc/shortcutmanager.cpp" line="21"/>
         <source>Eraser</source>
         <translation>橡皮</translation>
     </message>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="38"/>
+        <location filename="../misc/shortcutmanager.cpp" line="27"/>
+        <source>BinaryBrush</source>
+        <translation>二值筆</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="33"/>
+        <source>Crayon</source>
+        <translation>蠟筆</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="52"/>
+        <source>ColorPicker</source>
+        <translation>拾色器</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="58"/>
         <source>Increase brush width</source>
         <translation>加粗</translation>
     </message>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="44"/>
+        <location filename="../misc/shortcutmanager.cpp" line="64"/>
         <source>Decrease brush width</source>
         <translation>變細</translation>
     </message>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="50"/>
+        <location filename="../misc/shortcutmanager.cpp" line="70"/>
         <source>Increase brush hardness</source>
         <translation>增加硬度</translation>
     </message>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="56"/>
+        <location filename="../misc/shortcutmanager.cpp" line="76"/>
         <source>Decrease brush hardness</source>
         <translation>減少硬度</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="82"/>
+        <source>Increase brush thickness</source>
+        <translation>增加濃度</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="88"/>
+        <source>Decrease brush thickness</source>
+        <translation>減少濃度</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="100"/>
+        <source>Zoom in canvas</source>
+        <translation>放大畫布</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="106"/>
+        <source>Zoom out canvas</source>
+        <translation>縮小畫布</translation>
     </message>
 </context>
 <context>

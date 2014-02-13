@@ -106,34 +106,34 @@
     </message>
     <message>
         <location filename="../widgets/colorspinboxgroup.ui" line="62"/>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="87"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="75"/>
         <source>Red</source>
         <translation>赤</translation>
     </message>
     <message>
         <location filename="../widgets/colorspinboxgroup.ui" line="76"/>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="88"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="76"/>
         <source>Green</source>
         <translation>緑</translation>
     </message>
     <message>
         <location filename="../widgets/colorspinboxgroup.ui" line="90"/>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="89"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="77"/>
         <source>Blue</source>
         <translation>青</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="67"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="61"/>
         <source>Hue</source>
         <translation>色相</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="68"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="62"/>
         <source>Saturation</source>
         <translation>彩度</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="69"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="63"/>
         <source>Value</source>
         <translation>明度</translation>
     </message>
@@ -497,20 +497,20 @@ Do you want to restart right now?</source>
         <translation>ブラシ</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="284"/>
-        <location filename="../widgets/mainwindow.cpp" line="328"/>
+        <location filename="../widgets/mainwindow.cpp" line="307"/>
+        <location filename="../widgets/mainwindow.cpp" line="353"/>
         <source>%1
 Shortcut: %2</source>
         <translation>%1
 ショートカットキー：%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="308"/>
+        <location filename="../widgets/mainwindow.cpp" line="331"/>
         <source>Color Picker</source>
         <translation>スポイト</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="337"/>
+        <location filename="../widgets/mainwindow.cpp" line="361"/>
         <source>Brush Settings</source>
         <translation>ブラシ設定</translation>
     </message>
@@ -537,15 +537,15 @@ Do you want to restart right now?</source>
         <translation type="obsolete">言語変換は次の起動から有効になる。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="526"/>
-        <location filename="../widgets/mainwindow.cpp" line="606"/>
-        <location filename="../widgets/mainwindow.cpp" line="632"/>
-        <location filename="../widgets/mainwindow.cpp" line="991"/>
+        <location filename="../widgets/mainwindow.cpp" line="499"/>
+        <location filename="../widgets/mainwindow.cpp" line="630"/>
+        <location filename="../widgets/mainwindow.cpp" line="656"/>
+        <location filename="../widgets/mainwindow.cpp" line="1015"/>
         <source>Sorry</source>
         <translation>すみません</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="527"/>
+        <location filename="../widgets/mainwindow.cpp" line="500"/>
         <source>Only room owner is authorized to close the room.
 It seems you&apos;re not room manager.</source>
         <translation>家主さんしかこのルームを閉じられませんから、
@@ -569,7 +569,7 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="419"/>
+        <location filename="../widgets/mainwindow.cpp" line="432"/>
         <source>Room Share</source>
         <translation type="unfinished"></translation>
     </message>
@@ -580,122 +580,122 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="428"/>
+        <location filename="../widgets/mainwindow.cpp" line="441"/>
         <source>Notice, we detected you&apos;re using IPv6 protocol which may result in that your Room URL is not available for IPv4 users.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="580"/>
+        <location filename="../widgets/mainwindow.cpp" line="604"/>
         <source>Server Connection Failed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="593"/>
+        <location filename="../widgets/mainwindow.cpp" line="617"/>
         <source>Closing</source>
         <translation>ルームを閉じます</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="594"/>
+        <location filename="../widgets/mainwindow.cpp" line="618"/>
         <source>Warning, the room owner has closed the room. This room will close when everyone leaves.
 Save your work if you like it!</source>
         <translation>警告、家主さんはこのルームを閉じました。誰もいなかったらこのルームを閉じますから、
 自慢な作品を保存するのをお忘れないください。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="607"/>
-        <location filename="../widgets/mainwindow.cpp" line="633"/>
+        <location filename="../widgets/mainwindow.cpp" line="631"/>
+        <location filename="../widgets/mainwindow.cpp" line="657"/>
         <source>Sorry, it seems you&apos;re notroom owner.</source>
         <translation>申し訳ないが、貴方樣は家主さんではありません。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="622"/>
+        <location filename="../widgets/mainwindow.cpp" line="646"/>
         <source>Close Request Completed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="636"/>
+        <location filename="../widgets/mainwindow.cpp" line="660"/>
         <source>Clear Request Completed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="660"/>
+        <location filename="../widgets/mainwindow.cpp" line="684"/>
         <source>Checkout Completed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="688"/>
+        <location filename="../widgets/mainwindow.cpp" line="712"/>
         <source>Online List Refreshed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="720"/>
-        <location filename="../widgets/mainwindow.cpp" line="743"/>
+        <location filename="../widgets/mainwindow.cpp" line="744"/>
+        <location filename="../widgets/mainwindow.cpp" line="767"/>
         <source>Error</source>
         <translation type="unfinished">エラー</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="721"/>
-        <location filename="../widgets/mainwindow.cpp" line="744"/>
+        <location filename="../widgets/mainwindow.cpp" line="745"/>
+        <location filename="../widgets/mainwindow.cpp" line="768"/>
         <source>Sorry, an error occurred.
 Error: %1, %2</source>
         <translation type="unfinished">エラーが発生しました、申し訳ありません。
 エラー: %1，%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="959"/>
-        <location filename="../widgets/mainwindow.cpp" line="980"/>
+        <location filename="../widgets/mainwindow.cpp" line="983"/>
+        <location filename="../widgets/mainwindow.cpp" line="1004"/>
         <source>OMG</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="960"/>
+        <location filename="../widgets/mainwindow.cpp" line="984"/>
         <source>You&apos;re going to clear layer %1. All the work of that layerwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translation>全消しますか。 %1全てのレイヤーが全消されます、やり直しはできませんので、
 本当にいいですか。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="981"/>
+        <location filename="../widgets/mainwindow.cpp" line="1005"/>
         <source>You&apos;re going to clear ALL LAYERS. All of work in this roomwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translation>全消しますか。全てのレイヤーが全消されます、やり直しはできませんので、
 本当にいいですか。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="992"/>
+        <location filename="../widgets/mainwindow.cpp" line="1016"/>
         <source>Only room owner is authorized to clear the canvas.
 It seems you&apos;re not room manager.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1043"/>
+        <location filename="../widgets/mainwindow.cpp" line="1067"/>
         <source>Waiting for sync, please do not close.
 This will cost you 1 minute at most.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1082"/>
+        <location filename="../widgets/mainwindow.cpp" line="1106"/>
         <source>Export all to file</source>
         <translation>全てのレイヤー画像を書き出し</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1084"/>
-        <location filename="../widgets/mainwindow.cpp" line="1102"/>
+        <location filename="../widgets/mainwindow.cpp" line="1108"/>
+        <location filename="../widgets/mainwindow.cpp" line="1126"/>
         <source>Images (*.png)</source>
         <translation>画像 (*.png)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1100"/>
+        <location filename="../widgets/mainwindow.cpp" line="1124"/>
         <source>Export visible part to file</source>
         <translation>表示レイヤーを書き出し</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1119"/>
+        <location filename="../widgets/mainwindow.cpp" line="1143"/>
         <source>Export contents to psd file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1121"/>
+        <location filename="../widgets/mainwindow.cpp" line="1145"/>
         <source>Photoshop Images (*.psd)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -806,123 +806,123 @@ Do you want to retry?</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../misc/errortable.cpp" line="43"/>
-        <location filename="../misc/errortable.cpp" line="67"/>
-        <location filename="../misc/errortable.cpp" line="83"/>
-        <location filename="../misc/errortable.cpp" line="87"/>
-        <location filename="../misc/errortable.cpp" line="93"/>
-        <location filename="../misc/errortable.cpp" line="95"/>
+        <location filename="../misc/errortable.cpp" line="9"/>
+        <location filename="../misc/errortable.cpp" line="33"/>
+        <location filename="../misc/errortable.cpp" line="49"/>
+        <location filename="../misc/errortable.cpp" line="53"/>
+        <location filename="../misc/errortable.cpp" line="59"/>
+        <location filename="../misc/errortable.cpp" line="61"/>
         <source>unknown error.</source>
         <translation>未知のエラー。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="45"/>
+        <location filename="../misc/errortable.cpp" line="11"/>
         <source>server is busy.</source>
         <translation>サーバは忙しいです。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="47"/>
+        <location filename="../misc/errortable.cpp" line="13"/>
         <source>name collision.</source>
         <translation>ルーム名が繰り返されました。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="49"/>
-        <location filename="../misc/errortable.cpp" line="69"/>
+        <location filename="../misc/errortable.cpp" line="15"/>
+        <location filename="../misc/errortable.cpp" line="35"/>
         <source>invalid name.</source>
         <translation>無効なルーム名。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="51"/>
+        <location filename="../misc/errortable.cpp" line="17"/>
         <source>invalid max member.</source>
         <translation>無効な最大人数。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="53"/>
+        <location filename="../misc/errortable.cpp" line="19"/>
         <source>invalid welcome words.</source>
         <translation>無効な歓迎の言葉。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="55"/>
+        <location filename="../misc/errortable.cpp" line="21"/>
         <source>invalid auto closing empty room.</source>
         <translation>空室が自動的に終了するのは無効化されました。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="57"/>
+        <location filename="../misc/errortable.cpp" line="23"/>
         <source>invalid password.</source>
         <translation>無効なパスワード。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="59"/>
+        <location filename="../misc/errortable.cpp" line="25"/>
         <source>auto closing empty room not supported.</source>
         <translation>空室が自動的に終了するのはサポートされていません。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="61"/>
+        <location filename="../misc/errortable.cpp" line="27"/>
         <source>private room not supported.</source>
         <translation>非公開のルームはサポートされていません。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="63"/>
+        <location filename="../misc/errortable.cpp" line="29"/>
         <source>too many rooms.</source>
         <translation>ルームは多過ぎました。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="65"/>
+        <location filename="../misc/errortable.cpp" line="31"/>
         <source>invalid canvas size.</source>
         <translation>無効な画像サイズ。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="71"/>
+        <location filename="../misc/errortable.cpp" line="37"/>
         <source>invalid password or lack of password.</source>
         <translation>無効なパスワードか、パスワードが欠けていますか。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="73"/>
+        <location filename="../misc/errortable.cpp" line="39"/>
         <source>room is full.</source>
         <translation>ルームは満員されました。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="75"/>
+        <location filename="../misc/errortable.cpp" line="41"/>
         <source>you&apos;re banned.</source>
         <translation>禁止された。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="77"/>
+        <location filename="../misc/errortable.cpp" line="43"/>
         <source>server is too busy.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="79"/>
+        <location filename="../misc/errortable.cpp" line="45"/>
         <source>closed by room or room manager.</source>
         <translation>管理者に閉じられました。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="81"/>
+        <location filename="../misc/errortable.cpp" line="47"/>
         <source>closed by room owner.</source>
         <translation>家主さんに閉じられました。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="85"/>
+        <location filename="../misc/errortable.cpp" line="51"/>
         <source>room is closed already.</source>
         <translation>ルームはもう閉じられました。</translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="89"/>
+        <location filename="../misc/errortable.cpp" line="55"/>
         <source>wrong key.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="91"/>
+        <location filename="../misc/errortable.cpp" line="57"/>
         <source>timeout, which means too late.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="97"/>
+        <location filename="../misc/errortable.cpp" line="63"/>
         <source>out of range.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../misc/errortable.cpp" line="99"/>
+        <location filename="../misc/errortable.cpp" line="65"/>
         <source>Unnamed error: %1.</source>
         <translation>未知なエラー: %1。</translation>
     </message>
@@ -988,7 +988,7 @@ You may need to check update yourself.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../paintingTools/brush/waterbased.cpp" line="36"/>
+        <location filename="../paintingTools/brush/waterbased.cpp" line="44"/>
         <source>WaterBrush</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1249,43 +1249,77 @@ Use this software only when you accept it.</source>
 <context>
     <name>ShortcutManager</name>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="14"/>
         <source>Pencil</source>
-        <translation type="unfinished">鉛筆</translation>
+        <translation type="obsolete">鉛筆</translation>
     </message>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="20"/>
+        <location filename="../misc/shortcutmanager.cpp" line="15"/>
         <source>Brush</source>
         <translation type="unfinished">ブラシ</translation>
     </message>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="26"/>
+        <location filename="../misc/shortcutmanager.cpp" line="39"/>
         <source>Sketch</source>
         <translation type="unfinished">スケッチブラシ</translation>
     </message>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="32"/>
+        <location filename="../misc/shortcutmanager.cpp" line="21"/>
         <source>Eraser</source>
         <translation type="unfinished">消しゴム</translation>
     </message>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="38"/>
+        <location filename="../misc/shortcutmanager.cpp" line="27"/>
+        <source>BinaryBrush</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="33"/>
+        <source>Crayon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="52"/>
+        <source>ColorPicker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="58"/>
         <source>Increase brush width</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="44"/>
+        <location filename="../misc/shortcutmanager.cpp" line="64"/>
         <source>Decrease brush width</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="50"/>
+        <location filename="../misc/shortcutmanager.cpp" line="70"/>
         <source>Increase brush hardness</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../misc/shortcutmanager.cpp" line="56"/>
+        <location filename="../misc/shortcutmanager.cpp" line="76"/>
         <source>Decrease brush hardness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="82"/>
+        <source>Increase brush thickness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="88"/>
+        <source>Decrease brush thickness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="100"/>
+        <source>Zoom in canvas</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="106"/>
+        <source>Zoom out canvas</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
