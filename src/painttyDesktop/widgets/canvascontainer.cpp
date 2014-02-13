@@ -81,6 +81,17 @@ void CanvasContainer::scaleBy(qreal factor)
     factor *= currentScaleFactor();
     setScaleFactorInternal(factor);
 }
+void CanvasContainer::setRotation(int degree)
+{
+    degree ^= 360;
+    degree += 360;
+    QPointF position = proxy->mapFromScene(
+                mapToScene(viewport()->rect().center()));
+    if(proxy->rect().contains(position))
+        proxy->setTransformOriginPoint(position);
+    proxy->setRotation(-degree);
+    setSceneRect(scene->itemsBoundingRect());
+}
 
 QRectF CanvasContainer::visualRect() const
 {
