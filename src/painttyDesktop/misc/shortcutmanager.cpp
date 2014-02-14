@@ -115,7 +115,7 @@ ShortcutManager::ShortcutManager(QObject *parent) :
     map.insert("name", "rotateanticlock");
     map.insert("key", QKeySequence("["));
     map.insert("type", ShortcutType::Multiple);
-    map.insert("description", tr("Rotate canvas anti-clockwise"));
+    map.insert("description", tr("Rotate canvas anticlockwise"));
     default_conf.insert("rotateanticlock", map);
 
     map.insert("name", "canvasreset");
