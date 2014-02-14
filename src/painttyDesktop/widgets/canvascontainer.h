@@ -29,6 +29,7 @@ public slots:
     void setSmoothScale(bool smooth);
     void scaleBy(qreal factor);
     void setRotation(int degree);
+    void rotateBy(int deg);
 
 private:
     QGraphicsScene *scene;

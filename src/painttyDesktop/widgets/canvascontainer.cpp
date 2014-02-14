@@ -83,6 +83,7 @@ void CanvasContainer::scaleBy(qreal factor)
 }
 void CanvasContainer::setRotation(int degree)
 {
+    degree = qBound(-180, degree, 180);
     if(int(proxy->rotation()) == degree){
         return;
     }
@@ -93,6 +94,11 @@ void CanvasContainer::setRotation(int degree)
     proxy->setRotation(degree);
     setSceneRect(scene->itemsBoundingRect());
     emit rotated(degree);
+}
+
+void CanvasContainer::rotateBy(int deg)
+{
+    setRotation(int(proxy->rotation())+deg);
 }
 
 QRectF CanvasContainer::visualRect() const

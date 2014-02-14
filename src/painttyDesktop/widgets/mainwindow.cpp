@@ -568,6 +568,19 @@ void MainWindow::shortcutInit()
         // TODO: should be configurable
         this->ui->centralWidget->scaleBy(0.8);
     });
+    regShortcut<>("rotateclock", [this](){
+        // TODO: should be configurable
+        this->ui->centralWidget->rotateBy(10);
+    });
+    regShortcut<>("rotateanticlock", [this](){
+        // TODO: should be configurable
+        this->ui->centralWidget->rotateBy(-10);
+    });
+    regShortcut<>("canvasreset", [this](){
+        // TODO: should be configurable
+        this->ui->centralWidget->setRotation(0);
+        this->ui->centralWidget->setScaleFactor(1);
+    });
     regShortcut<>(QKeySequence("F12"),
                   std::bind(&MainWindow::openConsole, this));
 }

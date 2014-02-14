@@ -106,6 +106,24 @@ ShortcutManager::ShortcutManager(QObject *parent) :
     map.insert("description", tr("Zoom out canvas"));
     default_conf.insert("zoomout", map);
 
+    map.insert("name", "rotateclock");
+    map.insert("key", QKeySequence("]"));
+    map.insert("type", ShortcutType::Multiple);
+    map.insert("description", tr("Rotate canvas clockwise"));
+    default_conf.insert("rotateclock", map);
+
+    map.insert("name", "rotateanticlock");
+    map.insert("key", QKeySequence("["));
+    map.insert("type", ShortcutType::Multiple);
+    map.insert("description", tr("Rotate canvas anti-clockwise"));
+    default_conf.insert("rotateanticlock", map);
+
+    map.insert("name", "canvasreset");
+    map.insert("key", QKeySequence("\\"));
+    map.insert("type", ShortcutType::Multiple);
+    map.insert("description", tr("Reset canvas transformations"));
+    default_conf.insert("canvasreset", map);
+
     if( !loadFromConfigure() ){
         shortcut_conf = default_conf;
     }
