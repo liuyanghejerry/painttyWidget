@@ -295,20 +295,20 @@ Use at your own risk.</source>
         <translation>鬆開</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="271"/>
-        <location filename="../widgets/configuredialog.cpp" line="284"/>
+        <location filename="../widgets/configuredialog.cpp" line="295"/>
+        <location filename="../widgets/configuredialog.cpp" line="308"/>
         <source>Restart</source>
         <translation>重新啟動</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="272"/>
+        <location filename="../widgets/configuredialog.cpp" line="296"/>
         <source>Application must restart to enable some of the settings.
 Do you want to restart right now?</source>
         <translation>程式必須重新啟動才可以應用新的語言設置。
 是否立即重新啟動？</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="285"/>
+        <location filename="../widgets/configuredialog.cpp" line="309"/>
         <source>New settings will be applied on next start.</source>
         <translation>語言更改將在下次啟動程式時生效。</translation>
     </message>
@@ -498,25 +498,25 @@ Do you want to restart right now?</source>
         <translation>所有圖層</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="248"/>
+        <location filename="../widgets/mainwindow.cpp" line="252"/>
         <source>Brushes</source>
         <translation>畫刷</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="307"/>
-        <location filename="../widgets/mainwindow.cpp" line="353"/>
+        <location filename="../widgets/mainwindow.cpp" line="311"/>
+        <location filename="../widgets/mainwindow.cpp" line="357"/>
         <source>%1
 Shortcut: %2</source>
         <translation>%1
 快捷鍵：%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="331"/>
+        <location filename="../widgets/mainwindow.cpp" line="335"/>
         <source>Color Picker</source>
         <translation>拾色器</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="361"/>
+        <location filename="../widgets/mainwindow.cpp" line="365"/>
         <source>Brush Settings</source>
         <translation>畫刷設定</translation>
     </message>
@@ -543,15 +543,15 @@ Do you want to restart right now?</source>
         <translation type="obsolete">語言更改將在下次啟動程式時生效。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="499"/>
-        <location filename="../widgets/mainwindow.cpp" line="630"/>
-        <location filename="../widgets/mainwindow.cpp" line="656"/>
-        <location filename="../widgets/mainwindow.cpp" line="1015"/>
+        <location filename="../widgets/mainwindow.cpp" line="503"/>
+        <location filename="../widgets/mainwindow.cpp" line="647"/>
+        <location filename="../widgets/mainwindow.cpp" line="673"/>
+        <location filename="../widgets/mainwindow.cpp" line="1032"/>
         <source>Sorry</source>
         <translation>抱歉</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="500"/>
+        <location filename="../widgets/mainwindow.cpp" line="504"/>
         <source>Only room owner is authorized to close the room.
 It seems you&apos;re not room manager.</source>
         <translation>只有房主才有權限關閉房間。
@@ -575,7 +575,7 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="432"/>
+        <location filename="../widgets/mainwindow.cpp" line="436"/>
         <source>Room Share</source>
         <translation>分享房間</translation>
     </message>
@@ -586,124 +586,124 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="441"/>
+        <location filename="../widgets/mainwindow.cpp" line="445"/>
         <source>Notice, we detected you&apos;re using IPv6 protocol which may result in that your Room URL is not available for IPv4 users.</source>
         <translation>提示：檢測到您正在使用IPv6協定，這將導致您的房間URL無法與IPv4用戶共通。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="604"/>
+        <location filename="../widgets/mainwindow.cpp" line="621"/>
         <source>Server Connection Failed.</source>
         <translation>伺服器斷開了連接。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="617"/>
+        <location filename="../widgets/mainwindow.cpp" line="634"/>
         <source>Closing</source>
         <translation>房間關閉</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="618"/>
+        <location filename="../widgets/mainwindow.cpp" line="635"/>
         <source>Warning, the room owner has closed the room. This room will close when everyone leaves.
 Save your work if you like it!</source>
         <translation>警告，房主已經關閉了本房間。所有人離開後本房間將刪除。
 請保存好您的得意之作！</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="631"/>
-        <location filename="../widgets/mainwindow.cpp" line="657"/>
+        <location filename="../widgets/mainwindow.cpp" line="648"/>
+        <location filename="../widgets/mainwindow.cpp" line="674"/>
         <source>Sorry, it seems you&apos;re notroom owner.</source>
         <translation>抱歉，您似乎不是房主。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="646"/>
+        <location filename="../widgets/mainwindow.cpp" line="663"/>
         <source>Close Request Completed.</source>
         <translation>關閉命令已發送</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="660"/>
+        <location filename="../widgets/mainwindow.cpp" line="677"/>
         <source>Clear Request Completed.</source>
         <translation>清空命令已發送</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="684"/>
+        <location filename="../widgets/mainwindow.cpp" line="701"/>
         <source>Checkout Completed.</source>
         <translation>簽到完畢</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="712"/>
+        <location filename="../widgets/mainwindow.cpp" line="729"/>
         <source>Online List Refreshed.</source>
         <translation>在線列表刷新完畢</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="744"/>
-        <location filename="../widgets/mainwindow.cpp" line="767"/>
+        <location filename="../widgets/mainwindow.cpp" line="761"/>
+        <location filename="../widgets/mainwindow.cpp" line="784"/>
         <source>Error</source>
         <translation>出錯</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="745"/>
-        <location filename="../widgets/mainwindow.cpp" line="768"/>
+        <location filename="../widgets/mainwindow.cpp" line="762"/>
+        <location filename="../widgets/mainwindow.cpp" line="785"/>
         <source>Sorry, an error occurred.
 Error: %1, %2</source>
         <translation>抱歉，出錯了。
 錯誤：%1，%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="983"/>
-        <location filename="../widgets/mainwindow.cpp" line="1004"/>
+        <location filename="../widgets/mainwindow.cpp" line="1000"/>
+        <location filename="../widgets/mainwindow.cpp" line="1021"/>
         <source>OMG</source>
         <translation>天吶</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="984"/>
+        <location filename="../widgets/mainwindow.cpp" line="1001"/>
         <source>You&apos;re going to clear layer %1. All the work of that layerwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translation>您將清空圖層 %1。該圖層的所有內容將被清空，並且&lt;b&gt;無法&lt;/b&gt;恢復。
 您確定您要這麼做嗎？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1005"/>
+        <location filename="../widgets/mainwindow.cpp" line="1022"/>
         <source>You&apos;re going to clear ALL LAYERS. All of work in this roomwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translation>您將清空所有圖層。本房間的所有內容將被清空，並且&lt;b&gt;無法&lt;/b&gt;恢復。
 您確定要這麼做嗎？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1016"/>
+        <location filename="../widgets/mainwindow.cpp" line="1033"/>
         <source>Only room owner is authorized to clear the canvas.
 It seems you&apos;re not room manager.</source>
         <translation>只有房間所有者才可清理畫布。
 您似乎不是所有者。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1067"/>
+        <location filename="../widgets/mainwindow.cpp" line="1084"/>
         <source>Waiting for sync, please do not close.
 This will cost you 1 minute at most.</source>
         <translation>正在等待同步，請不要關閉。
 整個過程至多需要1分鐘。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1106"/>
+        <location filename="../widgets/mainwindow.cpp" line="1123"/>
         <source>Export all to file</source>
         <translation>全部導出至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1108"/>
-        <location filename="../widgets/mainwindow.cpp" line="1126"/>
+        <location filename="../widgets/mainwindow.cpp" line="1125"/>
+        <location filename="../widgets/mainwindow.cpp" line="1143"/>
         <source>Images (*.png)</source>
         <translation>圖像 (*.png)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1124"/>
+        <location filename="../widgets/mainwindow.cpp" line="1141"/>
         <source>Export visible part to file</source>
         <translation>導出可見圖層至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1143"/>
+        <location filename="../widgets/mainwindow.cpp" line="1160"/>
         <source>Export contents to psd file</source>
         <translation>導出為PSD文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1145"/>
+        <location filename="../widgets/mainwindow.cpp" line="1162"/>
         <source>Photoshop Images (*.psd)</source>
         <translation>Photoshop格式</translation>
     </message>
@@ -1251,16 +1251,16 @@ Use this software only when you accept it.</source>
 <context>
     <name>ShortcutDelegate</name>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="304"/>
-        <location filename="../widgets/configuredialog.cpp" line="325"/>
-        <location filename="../widgets/configuredialog.cpp" line="344"/>
+        <location filename="../widgets/configuredialog.cpp" line="328"/>
+        <location filename="../widgets/configuredialog.cpp" line="349"/>
+        <location filename="../widgets/configuredialog.cpp" line="368"/>
         <source>Immediately</source>
         <translation>立即模式</translation>
     </message>
     <message>
-        <location filename="../widgets/configuredialog.cpp" line="305"/>
-        <location filename="../widgets/configuredialog.cpp" line="327"/>
-        <location filename="../widgets/configuredialog.cpp" line="346"/>
+        <location filename="../widgets/configuredialog.cpp" line="329"/>
+        <location filename="../widgets/configuredialog.cpp" line="351"/>
+        <location filename="../widgets/configuredialog.cpp" line="370"/>
         <source>When Release</source>
         <translation>傳統模式</translation>
     </message>
@@ -1340,6 +1340,21 @@ Use this software only when you accept it.</source>
         <location filename="../misc/shortcutmanager.cpp" line="106"/>
         <source>Zoom out canvas</source>
         <translation>縮小畫布</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="112"/>
+        <source>Rotate canvas clockwise</source>
+        <translation>順時針旋轉畫布</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="118"/>
+        <source>Rotate canvas anticlockwise</source>
+        <translation>逆時針旋轉畫布</translation>
+    </message>
+    <message>
+        <location filename="../misc/shortcutmanager.cpp" line="124"/>
+        <source>Reset canvas transformations</source>
+        <translation>重置畫布平面變換</translation>
     </message>
 </context>
 <context>
