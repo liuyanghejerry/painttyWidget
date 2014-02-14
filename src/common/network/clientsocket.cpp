@@ -10,6 +10,7 @@
 #include <QSettings>
 #include <QTimer>
 #include <QRegularExpression>
+#include <QDateTime>
 
 using std::tuple;
 
@@ -36,13 +37,17 @@ ClientSocket::ClientSocket(QObject *parent) :
     archive_(Singleton<ArchiveFile>::instance()),
     no_save_(false),
     remove_after_close_(false),
-    canceled_(false)
+    canceled_(false),
+    hb_timer_(new QTimer(this))
 {
     connect(this, &ClientSocket::newData,
             this, &ClientSocket::onPending);
     connect(timer_, &QTimer::timeout,
             this, &ClientSocket::processPending);
     timer_->start(WAIT_TIME);
+
+    connect(hb_timer_, &QTimer::timeout,
+            this, &ClientSocket::sendHeartbeat);
 }
 
 void ClientSocket::setPoolEnabled(bool on)
@@ -111,6 +116,16 @@ QString ClientSocket::toUrl() const
                             this->passwd());
 }
 
+void ClientSocket::startHeartbeat()
+{
+    hb_timer_->start(1000 * 60 / HEARTBEAT_RATE);
+}
+
+void ClientSocket::stopHeartbeat()
+{
+    hb_timer_->stop();
+}
+
 void ClientSocket::setClientId(const QString &id)
 {
     clientid_ = id;
@@ -175,6 +190,15 @@ void ClientSocket::onNewMessage(const QJsonObject &map)
 
     QString string = map["content"].toString();
     emit newMessage(string);
+}
+
+void ClientSocket::sendHeartbeat()
+{
+    QJsonObject obj;
+    obj.insert("request", QString("heartbeat"));
+    int now = QDateTime::currentMSecsSinceEpoch() / 1000;
+    obj.insert("timestamp", now);
+    this->sendCmdPack(obj);
 }
 
 void ClientSocket::sendDataPack(const QByteArray &content)

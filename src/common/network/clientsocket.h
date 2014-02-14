@@ -57,6 +57,8 @@ public:
     quint64 archiveSize() const;
     void setRoomCloseFlag();
     QString toUrl() const;
+    void startHeartbeat();
+    void stopHeartbeat();
 
     static QString genRoomUrl(const QString& addr,
                               const quint16 port,
@@ -91,6 +93,7 @@ public slots:
     void sendCmdPack(const QJsonObject &content);
     void sendManagerPack(const QJsonObject &content);
     void cancelPendings();
+    void sendHeartbeat();
     void close() Q_DECL_OVERRIDE;
 private:
     Q_DISABLE_COPY(ClientSocket)
@@ -111,6 +114,8 @@ private:
     bool remove_after_close_;
     bool canceled_;
     const static int WAIT_TIME = 1000;
+    const static int HEARTBEAT_RATE = 2; // sends 2 heartbeat packs per min
+    QTimer *hb_timer_;
 private slots:
     ParserResult parserPack(const QByteArray& data);
     QByteArray assamblePack(bool compress, PACK_TYPE pt, const QByteArray& bytes);

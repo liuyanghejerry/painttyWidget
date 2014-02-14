@@ -610,6 +610,9 @@ void MainWindow::socketInit()
         }
     });
 
+    // starts heartbeat
+    Singleton<ClientSocket>::instance().startHeartbeat();
+
     QTimer *t = new QTimer(this);
     connect(t, &QTimer::timeout,
             this, &MainWindow::requestOnlinelist);
@@ -620,6 +623,7 @@ void MainWindow::onServerDisconnected()
 {
     GradualBox::showText(tr("Server Connection Failed."));
     ui->canvas->setEnabled(false);
+    client_socket.stopHeartbeat();
     // TODO: reconnect to room and request login
 }
 
@@ -1078,6 +1082,7 @@ void MainWindow::closeEvent( QCloseEvent * event )
     auto& client_socket = Singleton<ClientSocket>::instance();
 
     client_socket.cancelPendings();
+    client_socket.stopHeartbeat();
     ui->canvas->pause();
 
     QMessageBox msgBox;
