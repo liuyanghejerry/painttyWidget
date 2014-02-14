@@ -13,7 +13,6 @@
 #include "../../common/common.h"
 #include "../misc/shortcutmanager.h"
 #include "../misc/singleton.h"
-//#include "shortcutgrabberedit.h"
 
 ConfigureDialog::ConfigureDialog(QWidget *parent) :
     QDialog(parent),
