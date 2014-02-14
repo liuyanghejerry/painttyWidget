@@ -623,7 +623,7 @@ void MainWindow::onServerDisconnected()
 {
     GradualBox::showText(tr("Server Connection Failed."));
     ui->canvas->setEnabled(false);
-    client_socket.stopHeartbeat();
+    Singleton<ClientSocket>::instance().stopHeartbeat();
     // TODO: reconnect to room and request login
 }
 
