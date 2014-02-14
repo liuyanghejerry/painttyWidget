@@ -7,12 +7,13 @@
 #include <QTreeWidgetItem>
 #include <QMapIterator>
 #include <QComboBox>
+#include <QKeySequenceEdit>
 #include "configuredialog.h"
 #include "ui_configuredialog.h"
 #include "../../common/common.h"
 #include "../misc/shortcutmanager.h"
 #include "../misc/singleton.h"
-#include "shortcutgrabberedit.h"
+//#include "shortcutgrabberedit.h"
 
 ConfigureDialog::ConfigureDialog(QWidget *parent) :
     QDialog(parent),
@@ -321,7 +322,7 @@ QWidget* ShortcutDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
     if (!index.isValid() || !index.parent().isValid() || !index.column())
         return 0;
     if (index.column() == 1)
-        return new ShortcutGrabberEdit(parent);
+        return new QKeySequenceEdit(parent);
     else if (index.column() == 2)
     {
         QComboBox *comboBox = new QComboBox(parent);
@@ -339,8 +340,8 @@ void ShortcutDelegate::setEditorData(QWidget *editor, const QModelIndex &index) 
         return;
     if (index.column() == 1)
     {
-        ShortcutGrabberEdit *shortcutEditor = qobject_cast<ShortcutGrabberEdit*>(editor);
-        shortcutEditor->setShortcut(index.data(Qt::UserRole).value<QKeySequence>());
+        QKeySequenceEdit *shortcutEditor = qobject_cast<QKeySequenceEdit*>(editor);
+        shortcutEditor->setKeySequence(index.data(Qt::UserRole).value<QKeySequence>());
     }
     else if (index.column() == 2)
     {
@@ -358,9 +359,9 @@ void ShortcutDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, 
         return;
     if (index.column() == 1)
     {
-        ShortcutGrabberEdit *shortcutEditor = qobject_cast<ShortcutGrabberEdit*>(editor);
-        model->setData(index, shortcutEditor->shortcut(), Qt::UserRole);
-        model->setData(index, shortcutEditor->text(), Qt::DisplayRole);
+        QKeySequenceEdit *shortcutEditor = qobject_cast<QKeySequenceEdit*>(editor);
+        model->setData(index, shortcutEditor->keySequence(), Qt::UserRole);
+        model->setData(index, shortcutEditor->keySequence().toString(), Qt::DisplayRole);
     }
     else if (index.column() == 2)
     {
