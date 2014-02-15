@@ -39,16 +39,20 @@ void ColorSpinBoxGroup::setColor(const QColor &c)
         ui->BluespinBox->setValue(c.value()*100/255);
     }
     color_ = c;
-
-    QPalette p = ui->label->palette();
-    p.setColor(QPalette::Background, color_);
-    ui->label->setPalette(p);
+    updateLabel();
     noColorUpdate = false;
 }
 
 QColor ColorSpinBoxGroup::color()
 {
     return color_;
+}
+
+void ColorSpinBoxGroup::updateLabel()
+{
+    QPalette p = ui->label->palette();
+    p.setColor(QPalette::Background, color_);
+    ui->label->setPalette(p);
 }
 
 void ColorSpinBoxGroup::onModeChanged()
@@ -106,14 +110,15 @@ void ColorSpinBoxGroup::onColorChanged()
                                    ui->RedspinBox->value(),
                                    359),
                             qBound(0,
-                                   ui->GreenspinBox->value()/100,
+                                   ui->GreenspinBox->value(),
                                    100),
                             qBound(0,
-                                   ui->BluespinBox->value()/100,
+                                   ui->BluespinBox->value(),
                                    100)
                             );
     }
 
     color_ = c;
+    updateLabel();
     emit colorChange(c);
 }

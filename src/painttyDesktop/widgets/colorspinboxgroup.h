@@ -23,6 +23,7 @@ public slots:
 private slots:
     void onModeChanged();
     void onColorChanged();
+    void updateLabel();
     
 private:
     Ui::ColorSpinBoxGroup *ui;
