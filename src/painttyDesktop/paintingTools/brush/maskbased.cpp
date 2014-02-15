@@ -48,33 +48,18 @@ void MaskBased::drawPointInternal(const QPoint &p, const QImage &stencil, QPaint
     int mask_start_x = (p.x()+mask_.width()) % mask_.width();
     int mask_start_y = (p.y()+mask_.height()) % mask_.height();
 
-//    for(int y = 0; y<copied_stencil.height();++y){
-//        for(int x = 0; x<lineLength;++x) {
-//            int mask_x = (mask_start_x + x) % mask_.width();
-//            int mask_y = (mask_start_y + y) % mask_.height();
-//            data[y*lineLength+x] = qRgba(
-//                        qRed(data[y*lineLength+x]),
-//                        qGreen(data[y*lineLength+x]),
-//                        qBlue(data[y*lineLength+x]),
-//                        qAlpha(mask_.pixel(mask_x, mask_y)));
-//        }
-//    }
-
-    for(int y = 0;y<copied_stencil.height();++y){
-        for(int x = 0; x<copied_stencil.width();++x){
+    for(int y = 0; y<copied_stencil.height();++y){
+        for(int x = 0; x<lineLength;++x) {
             int mask_x = (mask_start_x + x) % mask_.width();
             int mask_y = (mask_start_y + y) % mask_.height();
-            auto oc = copied_stencil.pixel(x, y);
-            auto c = qRgba(
-                        qRed(oc),
-                        qGreen(oc),
-                        qBlue(oc),
-                        qAlpha(mask_.pixel(mask_x, mask_y)));
-            copied_stencil.setPixel(x, y, c);
+            auto p = data[y*lineLength+x];
+            data[y*lineLength+x] = qRgba(
+                        qRed(p),
+                        qGreen(p),
+                        qBlue(p),
+                        qAlpha(p)*qAlpha(mask_.pixel(mask_x, mask_y))/255);
         }
     }
-
-//    copied_stencil.save(QString("./d/%1-%2.png").arg(p.x()).arg(p.y()));
 
     painter->drawImage(p.x(), p.y(), copied_stencil);
 
@@ -94,7 +79,6 @@ void MaskBased::setMask(const QImage &mask)
         qDebug()<<"null mask";
         return;
     }
-//    mask_ = mask.createAlphaMask();
     mask_ = mask.convertToFormat(QImage::Format_ARGB32);
     makeStencil(color_);
 }
