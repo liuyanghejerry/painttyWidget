@@ -33,7 +33,7 @@ void MaskBased::makeStencil(QColor color)
 
 void MaskBased::drawPointInternal(const QPoint &p, const QImage &stencil, QPainter *painter)
 {
-    QImage copied_stencil = stencil;
+    QImage copied_stencil = stencil.convertToFormat(QImage::Format_ARGB32);
     bool need_delete = false;
     if(!painter) {
         painter = new QPainter;
@@ -48,15 +48,33 @@ void MaskBased::drawPointInternal(const QPoint &p, const QImage &stencil, QPaint
     int mask_start_x = (p.x()+mask_.width()) % mask_.width();
     int mask_start_y = (p.y()+mask_.height()) % mask_.height();
 
-    for(int y = 0; y<copied_stencil.height();++y){
-        for(int x = 0; x<lineLength;++x) {
+//    for(int y = 0; y<copied_stencil.height();++y){
+//        for(int x = 0; x<lineLength;++x) {
+//            int mask_x = (mask_start_x + x) % mask_.width();
+//            int mask_y = (mask_start_y + y) % mask_.height();
+//            data[y*lineLength+x] = qRgba(
+//                        qRed(data[y*lineLength+x]),
+//                        qGreen(data[y*lineLength+x]),
+//                        qBlue(data[y*lineLength+x]),
+//                        qAlpha(mask_.pixel(mask_x, mask_y)));
+//        }
+//    }
+
+    for(int y = 0;y<copied_stencil.height();++y){
+        for(int x = 0; x<copied_stencil.width();++x){
             int mask_x = (mask_start_x + x) % mask_.width();
             int mask_y = (mask_start_y + y) % mask_.height();
-            if(!mask_.pixelIndex(mask_x, mask_y)) {
-                data[y*lineLength+x] = qRgba(0, 0, 0, 0);
-            }
+            auto oc = copied_stencil.pixel(x, y);
+            auto c = qRgba(
+                        qRed(oc),
+                        qGreen(oc),
+                        qBlue(oc),
+                        qAlpha(mask_.pixel(mask_x, mask_y)));
+            copied_stencil.setPixel(x, y, c);
         }
     }
+
+//    copied_stencil.save(QString("./d/%1-%2.png").arg(p.x()).arg(p.y()));
 
     painter->drawImage(p.x(), p.y(), copied_stencil);
 
@@ -76,7 +94,8 @@ void MaskBased::setMask(const QImage &mask)
         qDebug()<<"null mask";
         return;
     }
-    mask_ = mask.createAlphaMask();
+//    mask_ = mask.createAlphaMask();
+    mask_ = mask.convertToFormat(QImage::Format_ARGB32);
     makeStencil(color_);
 }
 
