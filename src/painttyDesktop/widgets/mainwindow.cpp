@@ -22,6 +22,7 @@
 #include <QProcess>
 #include <QTimer>
 #include <QScriptEngine>
+#include <QDateTime>
 
 #include "../misc/singleshortcut.h"
 #include "layerwidget.h"
@@ -33,6 +34,7 @@
 #include "gradualbox.h"
 #include "roomsharebar.h"
 #include "developerconsole.h"
+#include "networkindicator.h"
 #include "../../common/network/clientsocket.h"
 #include "../../common/network/localnetworkinterface.h"
 #include "../paintingTools/brush/brushmanager.h"
@@ -51,7 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
     brushActionGroup_(nullptr),
     colorPickerButton_(nullptr),
     scriptEngine_(nullptr),
-    console_(nullptr)
+    console_(nullptr),
+    networkIndicator_(nullptr)
 {
     ui->setupUi(this);
     defaultView = saveState();
@@ -138,6 +141,7 @@ void MainWindow::init()
 
     layerWidgetInit();
     colorGridInit();
+    statusBarInit();
     toolbarInit();
     viewInit();
     shortcutInit();
@@ -192,6 +196,11 @@ void MainWindow::cmdRouterInit()
     cmdRouter_.regHandler("response",
                           "archive",
                           std::bind(&MainWindow::onResponseArchive,
+                                    this,
+                                    std::placeholders::_1));
+    cmdRouter_.regHandler("response",
+                          "heartbeat",
+                          std::bind(&MainWindow::onResponseHeartbeat,
                                     this,
                                     std::placeholders::_1));
 }
@@ -449,6 +458,12 @@ void MainWindow::toolbarInit()
 
         GlobalDef::delayJob(f, 5000);
     }
+}
+
+void MainWindow::statusBarInit()
+{
+    networkIndicator_ = new NetworkIndicator(this);
+    this->statusBar()->addPermanentWidget(networkIndicator_);
 }
 
 QString MainWindow::getRoomKey()
@@ -797,6 +812,38 @@ void MainWindow::onResponseArchive(const QJsonObject &o)
     // TODO: re-match signature and receive archive data
     auto& socket = Singleton<ClientSocket>::instance();
     socket.setSchedualDataLength(datalength);
+}
+
+void MainWindow::onResponseHeartbeat(const QJsonObject &o)
+{
+    if(!o.contains("timestamp") || !networkIndicator_){
+        return;
+    }
+    qDebug()<<o;
+    int server_time = o.value("timestamp").toInt();
+    int now = QDateTime::currentMSecsSinceEpoch() / 1000;
+    int delta = now - server_time;
+    typedef NetworkIndicator::LEVEL NL;
+    if(delta > 60){
+        networkIndicator_->setLevel(NL::NONE);
+        return;
+    }
+    if(delta > 20){
+        networkIndicator_->setLevel(NL::LOW);
+        return;
+    }
+    if(delta > 10){
+        networkIndicator_->setLevel(NL::MEDIUM);
+        return;
+    }
+    if(delta > 0){
+        networkIndicator_->setLevel(NL::GOOD);
+        return;
+    }
+    if(delta < 0){
+        networkIndicator_->setLevel(NL::UNKNOWN);
+        return;
+    }
 }
 
 void MainWindow::onNewMessage(const QString &content)

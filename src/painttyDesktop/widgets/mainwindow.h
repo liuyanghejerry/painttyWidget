@@ -11,6 +11,7 @@ class BrushSettingsWidget;
 class QActionGroup;
 class QScriptEngine;
 class DeveloperConsole;
+class NetworkIndicator;
 
 typedef Router<> RegularRouter;
 typedef ShortcutManager::ShortcutType ShT;
@@ -72,6 +73,7 @@ private:
     void layerWidgetInit();
     void colorGridInit();
     void viewInit();
+    void statusBarInit();
     void toolbarInit();
     void shortcutInit();
     void socketInit();
@@ -99,6 +101,8 @@ private:
     QToolButton *colorPickerButton_;
     QScriptEngine* scriptEngine_;
     DeveloperConsole* console_;
+    NetworkIndicator* networkIndicator_;
+
 private slots:
     void onServerDisconnected();
     void onNewMessage(const QString &content);
@@ -119,6 +123,7 @@ private slots:
     void onActionNotify(const QJsonObject &o);
     void onResponseArchiveSign(const QJsonObject &o);
     void onResponseArchive(const QJsonObject &o);
+    void onResponseHeartbeat(const QJsonObject &o);
 };
 
 #endif // MAINWINDOW_H
