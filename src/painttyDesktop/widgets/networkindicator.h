@@ -32,6 +32,8 @@ protected:
 
 private:
     LEVEL level_;
+    QString display_text_;
+    QColor display_color_;
 };
 
 #endif // NETWORKINDICATOR_H
