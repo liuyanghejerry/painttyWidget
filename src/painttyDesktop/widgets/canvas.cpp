@@ -980,6 +980,7 @@ void Canvas::drawAuthorTips(QPainter& painter,
     painter.save();
     QPen pen(Qt::transparent);
     QBrush brush(Qt::black);
+    painter.setRenderHints(QPainter::Antialiasing|QPainter::TextAntialiasing, true);
     painter.setOpacity(0.6);
     painter.setPen(pen);
     painter.setBrush(brush);
