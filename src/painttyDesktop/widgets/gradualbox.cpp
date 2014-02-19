@@ -164,7 +164,7 @@ void GradualBox::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     QPen pen(Qt::transparent);
-    QBrush brush(Qt::black);
+    QBrush brush(QColor(99, 99, 99));
     pen.setWidth(5);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
