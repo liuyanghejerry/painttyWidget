@@ -103,6 +103,7 @@ private:
     QImage appendAuthorSignature(QImage target);
     BrushPointer brushFactory(const QString &name);
     void setBrushFeature(const QString& key, const QVariant& value);
+    void drawAuthorTips(QPainter &painter, const QPoint &pos, const QString &name);
 
     bool inPicker;
     bool drawing;
@@ -124,7 +125,6 @@ private:
     QThread *worker_;
     QList<CanvasBackend::MemberSection> author_list_;
     QVariantList action_buffer_;
-
 };
 
 #endif // CANVAS_H

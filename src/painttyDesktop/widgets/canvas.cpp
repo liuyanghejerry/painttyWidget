@@ -953,6 +953,44 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
+static inline qint64 find_newest_active(const QList<CanvasBackend::MemberSection>& al)
+{
+    qint64 longest = 0;
+    for(auto &item: al) {
+        qint64 stamp = std::get<MSI::LastActiveStamp>(item);
+        if(stamp > longest){
+            longest = stamp;
+        }
+    }
+    if(!longest){
+        longest = QDateTime::currentMSecsSinceEpoch();
+    }
+    return longest;
+}
+
+void Canvas::drawAuthorTips(QPainter& painter,
+                            const QPoint& pos,
+                            const QString& name)
+{
+    QFontMetrics fm(this->font());
+    int t_width = fm.width(name)+15;
+    int t_height = fm.height()+15;
+    QRect box_rect(pos.x(), pos.y(), t_width, t_height);
+
+    painter.save();
+    QPen pen(Qt::transparent);
+    QBrush brush(Qt::black);
+    painter.setOpacity(0.6);
+    painter.setPen(pen);
+    painter.setBrush(brush);
+    painter.drawRoundedRect(box_rect, 10, 10);
+
+    pen.setColor(Qt::white);
+    painter.setPen(pen);
+    painter.drawText(box_rect, Qt::AlignCenter, name);
+    painter.restore();
+}
+
 void Canvas::paintEvent(QPaintEvent *event)
 {
 
@@ -963,33 +1001,9 @@ void Canvas::paintEvent(QPaintEvent *event)
 
     painter.drawImage(dirtyRect, image, dirtyRect);
 
-    // draw painter's name.
-    // Considering move out of paintEvent.
-    auto f_draw_name = [this](QPainter& painter,
-            const QPoint& pos,
-            const QString& name){
-        QFontMetrics fm(this->font());
-        int t_width = fm.width(name)+15;
-        int t_height = fm.height()+15;
-        QRect box_rect(pos.x(), pos.y(), t_width, t_height);
-
-        painter.save();
-        QPen pen(Qt::transparent);
-        QBrush brush(Qt::black);
-        painter.setOpacity(0.6);
-        painter.setPen(pen);
-        painter.setBrush(brush);
-        painter.drawRoundedRect(box_rect, 10, 10);
-
-        pen.setColor(Qt::white);
-        painter.setPen(pen);
-        painter.drawText(box_rect, Qt::AlignCenter, name);
-        painter.restore();
-    };
-
     // filter outdated names.
     // Considering using another QImage instead of direct draw
-    qint64 now = QDateTime::currentMSecsSinceEpoch();
+    qint64 longest = find_newest_active(author_list_);
     for(auto& item: author_list_){
         QPoint point = std::get<MSI::Footprint>(item);
         QString name = std::get<MSI::Name>(item);
@@ -997,14 +1011,14 @@ void Canvas::paintEvent(QPaintEvent *event)
         if(name.isEmpty()){
             name = std::get<MSI::Id>(item);
         }
-        if(now - stamp > 1000*10){
+        if(longest - stamp > 1000*10){
             break;
         }
         if(point.isNull()){
             break;
         }
 
-        f_draw_name(painter, point, name);
+        drawAuthorTips(painter, point, name);
     }
 
     if(!isEnabled()){
