@@ -131,7 +131,7 @@
         <number>2</number>
        </property>
        <item>
-        <widget class="QLineEdit" name="lineEdit">
+        <widget class="IRCLineEdit" name="lineEdit">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>1</horstretch>
@@ -385,6 +385,11 @@
    <class>MemberListWidget</class>
    <extends>QListWidget</extends>
    <header>memberlistwidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>IRCLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>irclineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources>
