@@ -146,7 +146,13 @@ bool ShortcutManager::loadFromConfigure()
         return false;
     }
 
-    shortcut_conf = confs.toMap();
+    shortcut_conf = default_conf; // make defaults
+    auto config_map = confs.toMap();
+
+    // apply user defined settings
+    for(const auto& item: config_map.keys()) {
+        shortcut_conf.insert(item, config_map.value(item));
+    }
 
     return true;
 }
