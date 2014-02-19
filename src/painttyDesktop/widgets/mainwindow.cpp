@@ -875,7 +875,7 @@ void MainWindow::onSendPressed()
                    + ": ");
     string.append('\n');
     emit sendMessage(string);
-    ui->lineEdit->clear();
+    ui->lineEdit->commit();
 }
 
 void MainWindow::onColorGridDroped(int id)
