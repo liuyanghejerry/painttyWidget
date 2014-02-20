@@ -118,39 +118,39 @@
     </message>
     <message>
         <location filename="../widgets/colorspinboxgroup.ui" line="90"/>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="77"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="81"/>
         <source>Blue</source>
         <translatorcomment>青</translatorcomment>
         <translation>蓝</translation>
     </message>
     <message>
         <location filename="../widgets/colorspinboxgroup.ui" line="76"/>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="76"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="80"/>
         <source>Green</source>
         <translatorcomment>緑</translatorcomment>
         <translation>绿</translation>
     </message>
     <message>
         <location filename="../widgets/colorspinboxgroup.ui" line="62"/>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="75"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="79"/>
         <source>Red</source>
         <translatorcomment>赤</translatorcomment>
         <translation>红</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="61"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="65"/>
         <source>Hue</source>
         <translatorcomment>色相</translatorcomment>
         <translation>色调</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="62"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="66"/>
         <source>Saturation</source>
         <translatorcomment>彩度</translatorcomment>
         <translation>饱和度</translation>
     </message>
     <message>
-        <location filename="../widgets/colorspinboxgroup.cpp" line="63"/>
+        <location filename="../widgets/colorspinboxgroup.cpp" line="67"/>
         <source>Value</source>
         <translatorcomment>明度</translatorcomment>
         <translation>亮度</translation>
@@ -544,14 +544,14 @@ Do you want to restart right now?</source>
         <translation>所有图层</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="252"/>
+        <location filename="../widgets/mainwindow.cpp" line="261"/>
         <source>Brushes</source>
         <translatorcomment>ブラシ</translatorcomment>
         <translation>画笔</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="311"/>
-        <location filename="../widgets/mainwindow.cpp" line="357"/>
+        <location filename="../widgets/mainwindow.cpp" line="320"/>
+        <location filename="../widgets/mainwindow.cpp" line="366"/>
         <source>%1
 Shortcut: %2</source>
         <translatorcomment>%1
@@ -560,13 +560,13 @@ Shortcut: %2</source>
 快捷键：%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="335"/>
+        <location filename="../widgets/mainwindow.cpp" line="344"/>
         <source>Color Picker</source>
         <translatorcomment>スポイト</translatorcomment>
         <translation>吸管工具</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="365"/>
+        <location filename="../widgets/mainwindow.cpp" line="374"/>
         <source>Brush Settings</source>
         <translatorcomment>ブラシ設定</translatorcomment>
         <translation>画笔设置</translation>
@@ -600,16 +600,16 @@ Do you want to restart right now?</source>
         <translation type="obsolete">语言更改将在下次启动程序时生效。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="503"/>
-        <location filename="../widgets/mainwindow.cpp" line="647"/>
-        <location filename="../widgets/mainwindow.cpp" line="673"/>
-        <location filename="../widgets/mainwindow.cpp" line="1032"/>
+        <location filename="../widgets/mainwindow.cpp" line="518"/>
+        <location filename="../widgets/mainwindow.cpp" line="666"/>
+        <location filename="../widgets/mainwindow.cpp" line="692"/>
+        <location filename="../widgets/mainwindow.cpp" line="1083"/>
         <source>Sorry</source>
         <translatorcomment>すみません</translatorcomment>
         <translation>抱歉</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="504"/>
+        <location filename="../widgets/mainwindow.cpp" line="519"/>
         <source>Only room owner is authorized to close the room.
 It seems you&apos;re not room manager.</source>
         <translatorcomment>家主さんしかこのルームを閉じられませんから、
@@ -625,7 +625,7 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="83"/>
+        <location filename="../widgets/mainwindow.cpp" line="86"/>
         <source> - Mr.Paint</source>
         <translatorcomment>- チャエ君</translatorcomment>
         <translation> - 茶绘君</translation>
@@ -638,7 +638,7 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="436"/>
+        <location filename="../widgets/mainwindow.cpp" line="445"/>
         <source>Room Share</source>
         <translation>分享房间</translation>
     </message>
@@ -650,23 +650,23 @@ It seems you&apos;re not room manager.</source>
 </translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="445"/>
+        <location filename="../widgets/mainwindow.cpp" line="454"/>
         <source>Notice, we detected you&apos;re using IPv6 protocol which may result in that your Room URL is not available for IPv4 users.</source>
         <translation>提示：检测到您正在使用IPv6协议连接房间，您的房间URL将无法与IPv4用户通用。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="621"/>
+        <location filename="../widgets/mainwindow.cpp" line="639"/>
         <source>Server Connection Failed.</source>
         <translation>服务器断开了连接。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="634"/>
+        <location filename="../widgets/mainwindow.cpp" line="653"/>
         <source>Closing</source>
         <translatorcomment>ルームを閉じます</translatorcomment>
         <translation>房间关闭</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="635"/>
+        <location filename="../widgets/mainwindow.cpp" line="654"/>
         <source>Warning, the room owner has closed the room. This room will close when everyone leaves.
 Save your work if you like it!</source>
         <translatorcomment>警告、家主さんはこのルームを閉じました。誰もいなかったらこのルームを閉じますから、
@@ -675,55 +675,55 @@ Save your work if you like it!</source>
 请保存好您的得意之作！</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="648"/>
-        <location filename="../widgets/mainwindow.cpp" line="674"/>
+        <location filename="../widgets/mainwindow.cpp" line="667"/>
+        <location filename="../widgets/mainwindow.cpp" line="693"/>
         <source>Sorry, it seems you&apos;re notroom owner.</source>
         <translatorcomment>申し訳ないが、貴方樣は家主さんではありません。</translatorcomment>
         <translation>对不起，您似乎不是房主。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="663"/>
+        <location filename="../widgets/mainwindow.cpp" line="682"/>
         <source>Close Request Completed.</source>
         <translation>关闭请求成功</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="677"/>
+        <location filename="../widgets/mainwindow.cpp" line="696"/>
         <source>Clear Request Completed.</source>
         <translation>清空请求完成</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="701"/>
+        <location filename="../widgets/mainwindow.cpp" line="720"/>
         <source>Checkout Completed.</source>
         <translation>签到完成</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="729"/>
+        <location filename="../widgets/mainwindow.cpp" line="748"/>
         <source>Online List Refreshed.</source>
         <translation>在线列表刷新完成</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="761"/>
-        <location filename="../widgets/mainwindow.cpp" line="784"/>
+        <location filename="../widgets/mainwindow.cpp" line="780"/>
+        <location filename="../widgets/mainwindow.cpp" line="803"/>
         <source>Error</source>
         <translation>出错</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="762"/>
-        <location filename="../widgets/mainwindow.cpp" line="785"/>
+        <location filename="../widgets/mainwindow.cpp" line="781"/>
+        <location filename="../widgets/mainwindow.cpp" line="804"/>
         <source>Sorry, an error occurred.
 Error: %1, %2</source>
         <translation>对不起，发生了错误。
 错误：%1，%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1000"/>
-        <location filename="../widgets/mainwindow.cpp" line="1021"/>
+        <location filename="../widgets/mainwindow.cpp" line="1051"/>
+        <location filename="../widgets/mainwindow.cpp" line="1072"/>
         <source>OMG</source>
         <translatorcomment>OMG</translatorcomment>
         <translation>额滴神呐</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1001"/>
+        <location filename="../widgets/mainwindow.cpp" line="1052"/>
         <source>You&apos;re going to clear layer %1. All the work of that layerwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translatorcomment>全消しますか。 %1全てのレイヤーが全消されます、やり直しはできませんので、
@@ -732,7 +732,7 @@ Do you really want to do so?</source>
 您确定要这么做吗？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1022"/>
+        <location filename="../widgets/mainwindow.cpp" line="1073"/>
         <source>You&apos;re going to clear ALL LAYERS. All of work in this roomwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translatorcomment>全消しますか。全てのレイヤーが全消されます、やり直しはできませんので、
@@ -741,46 +741,105 @@ Do you really want to do so?</source>
 您确定要这么做吗？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1033"/>
+        <location filename="../widgets/mainwindow.cpp" line="1084"/>
         <source>Only room owner is authorized to clear the canvas.
 It seems you&apos;re not room manager.</source>
         <translation>只有房主才可以清除画布，你似乎不是房主。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1084"/>
+        <location filename="../widgets/mainwindow.cpp" line="1136"/>
         <source>Waiting for sync, please do not close.
 This will cost you 1 minute at most.</source>
         <translation>正在同步，请勿关闭...
 整个过程至多需要1分钟。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1123"/>
+        <location filename="../widgets/mainwindow.cpp" line="1175"/>
         <source>Export all to file</source>
         <translatorcomment>全てのレイヤー画像を書き出し</translatorcomment>
         <translation>全部导出至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1125"/>
-        <location filename="../widgets/mainwindow.cpp" line="1143"/>
+        <location filename="../widgets/mainwindow.cpp" line="1177"/>
+        <location filename="../widgets/mainwindow.cpp" line="1195"/>
         <source>Images (*.png)</source>
         <translatorcomment>画像 (*.png)</translatorcomment>
         <translation>图片 (*.png)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1141"/>
+        <location filename="../widgets/mainwindow.cpp" line="1193"/>
         <source>Export visible part to file</source>
         <translatorcomment>表示レイヤーを書き出し</translatorcomment>
         <translation>导出可见图层至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1160"/>
+        <location filename="../widgets/mainwindow.cpp" line="1212"/>
         <source>Export contents to psd file</source>
         <translation>导出为PSD文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1162"/>
+        <location filename="../widgets/mainwindow.cpp" line="1214"/>
         <source>Photoshop Images (*.psd)</source>
         <translation>Photoshop格式</translation>
+    </message>
+</context>
+<context>
+    <name>NetworkIndicator</name>
+    <message>
+        <location filename="../widgets/networkindicator.cpp" line="7"/>
+        <source>- %1</source>
+        <translation>- %1</translation>
+    </message>
+    <message>
+        <location filename="../widgets/networkindicator.cpp" line="10"/>
+        <location filename="../widgets/networkindicator.cpp" line="75"/>
+        <source>Network speed unknown</source>
+        <translation>网速未知</translation>
+    </message>
+    <message>
+        <location filename="../widgets/networkindicator.cpp" line="53"/>
+        <source>Dead</source>
+        <translation>河蟹</translation>
+    </message>
+    <message>
+        <location filename="../widgets/networkindicator.cpp" line="54"/>
+        <source>Network sucks now</source>
+        <translation>基本没有速度可言</translation>
+    </message>
+    <message>
+        <location filename="../widgets/networkindicator.cpp" line="58"/>
+        <source>Bad</source>
+        <translation>渣渣</translation>
+    </message>
+    <message>
+        <location filename="../widgets/networkindicator.cpp" line="59"/>
+        <source>Network is very bad</source>
+        <translation>渣网速</translation>
+    </message>
+    <message>
+        <location filename="../widgets/networkindicator.cpp" line="63"/>
+        <source>Medium</source>
+        <translation>中速</translation>
+    </message>
+    <message>
+        <location filename="../widgets/networkindicator.cpp" line="64"/>
+        <source>Network is ok</source>
+        <translation>尚且人意</translation>
+    </message>
+    <message>
+        <location filename="../widgets/networkindicator.cpp" line="68"/>
+        <source>Good</source>
+        <translation>高速</translation>
+    </message>
+    <message>
+        <location filename="../widgets/networkindicator.cpp" line="69"/>
+        <source>Excellent network</source>
+        <translation>大触般的网络!</translation>
+    </message>
+    <message>
+        <location filename="../widgets/networkindicator.cpp" line="74"/>
+        <source>Unknown</source>
+        <translation>未知</translation>
     </message>
 </context>
 <context>
