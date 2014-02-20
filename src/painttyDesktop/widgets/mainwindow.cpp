@@ -824,6 +824,11 @@ void MainWindow::onResponseHeartbeat(const QJsonObject &o)
     int now = QDateTime::currentMSecsSinceEpoch() / 1000;
     int delta = now - server_time;
     typedef NetworkIndicator::LEVEL NL;
+    if(delta < 0){
+        qDebug()<<now<<server_time;
+        networkIndicator_->setLevel(NL::UNKNOWN);
+        return;
+    }
     if(delta > 60){
         networkIndicator_->setLevel(NL::NONE);
         return;
@@ -836,12 +841,8 @@ void MainWindow::onResponseHeartbeat(const QJsonObject &o)
         networkIndicator_->setLevel(NL::MEDIUM);
         return;
     }
-    if(delta > 0){
+    if(delta < 10){
         networkIndicator_->setLevel(NL::GOOD);
-        return;
-    }
-    if(delta < 0){
-        networkIndicator_->setLevel(NL::UNKNOWN);
         return;
     }
 }
