@@ -4,7 +4,7 @@
 NetworkIndicator::NetworkIndicator(QWidget *parent) :
     QWidget(parent),
     level_(UNKNOWN),
-    display_text_(tr("- %1").arg("Unknown")),
+    display_text_(tr("- %1").arg(tr("Unknown"))),
     display_color_(112, 112, 112)
 {
     setToolTip(tr("Network speed unknown"));

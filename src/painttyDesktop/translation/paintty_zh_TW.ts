@@ -546,7 +546,7 @@ Do you want to restart right now?</source>
         <location filename="../widgets/mainwindow.cpp" line="518"/>
         <location filename="../widgets/mainwindow.cpp" line="666"/>
         <location filename="../widgets/mainwindow.cpp" line="692"/>
-        <location filename="../widgets/mainwindow.cpp" line="1083"/>
+        <location filename="../widgets/mainwindow.cpp" line="1084"/>
         <source>Sorry</source>
         <translation>抱歉</translation>
     </message>
@@ -648,62 +648,62 @@ Error: %1, %2</source>
 錯誤：%1，%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1051"/>
-        <location filename="../widgets/mainwindow.cpp" line="1072"/>
+        <location filename="../widgets/mainwindow.cpp" line="1052"/>
+        <location filename="../widgets/mainwindow.cpp" line="1073"/>
         <source>OMG</source>
         <translation>天吶</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1052"/>
+        <location filename="../widgets/mainwindow.cpp" line="1053"/>
         <source>You&apos;re going to clear layer %1. All the work of that layerwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translation>您將清空圖層 %1。該圖層的所有內容將被清空，並且&lt;b&gt;無法&lt;/b&gt;恢復。
 您確定您要這麼做嗎？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1073"/>
+        <location filename="../widgets/mainwindow.cpp" line="1074"/>
         <source>You&apos;re going to clear ALL LAYERS. All of work in this roomwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translation>您將清空所有圖層。本房間的所有內容將被清空，並且&lt;b&gt;無法&lt;/b&gt;恢復。
 您確定要這麼做嗎？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1084"/>
+        <location filename="../widgets/mainwindow.cpp" line="1085"/>
         <source>Only room owner is authorized to clear the canvas.
 It seems you&apos;re not room manager.</source>
         <translation>只有房間所有者才可清理畫布。
 您似乎不是所有者。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1136"/>
+        <location filename="../widgets/mainwindow.cpp" line="1137"/>
         <source>Waiting for sync, please do not close.
 This will cost you 1 minute at most.</source>
         <translation>正在等待同步，請不要關閉。
 整個過程至多需要1分鐘。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1175"/>
+        <location filename="../widgets/mainwindow.cpp" line="1176"/>
         <source>Export all to file</source>
         <translation>全部導出至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1177"/>
-        <location filename="../widgets/mainwindow.cpp" line="1195"/>
+        <location filename="../widgets/mainwindow.cpp" line="1178"/>
+        <location filename="../widgets/mainwindow.cpp" line="1196"/>
         <source>Images (*.png)</source>
         <translation>圖像 (*.png)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1193"/>
+        <location filename="../widgets/mainwindow.cpp" line="1194"/>
         <source>Export visible part to file</source>
         <translation>導出可見圖層至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1212"/>
+        <location filename="../widgets/mainwindow.cpp" line="1213"/>
         <source>Export contents to psd file</source>
         <translation>導出為PSD文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1214"/>
+        <location filename="../widgets/mainwindow.cpp" line="1215"/>
         <source>Photoshop Images (*.psd)</source>
         <translation>Photoshop格式</translation>
     </message>
@@ -762,6 +762,7 @@ This will cost you 1 minute at most.</source>
         <translation>大觸般的網速!</translation>
     </message>
     <message>
+        <location filename="../widgets/networkindicator.cpp" line="7"/>
         <location filename="../widgets/networkindicator.cpp" line="74"/>
         <source>Unknown</source>
         <translation>不可知</translation>

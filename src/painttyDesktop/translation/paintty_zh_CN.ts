@@ -603,7 +603,7 @@ Do you want to restart right now?</source>
         <location filename="../widgets/mainwindow.cpp" line="518"/>
         <location filename="../widgets/mainwindow.cpp" line="666"/>
         <location filename="../widgets/mainwindow.cpp" line="692"/>
-        <location filename="../widgets/mainwindow.cpp" line="1083"/>
+        <location filename="../widgets/mainwindow.cpp" line="1084"/>
         <source>Sorry</source>
         <translatorcomment>すみません</translatorcomment>
         <translation>抱歉</translation>
@@ -716,14 +716,14 @@ Error: %1, %2</source>
 错误：%1，%2</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1051"/>
-        <location filename="../widgets/mainwindow.cpp" line="1072"/>
+        <location filename="../widgets/mainwindow.cpp" line="1052"/>
+        <location filename="../widgets/mainwindow.cpp" line="1073"/>
         <source>OMG</source>
         <translatorcomment>OMG</translatorcomment>
         <translation>额滴神呐</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1052"/>
+        <location filename="../widgets/mainwindow.cpp" line="1053"/>
         <source>You&apos;re going to clear layer %1. All the work of that layerwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translatorcomment>全消しますか。 %1全てのレイヤーが全消されます、やり直しはできませんので、
@@ -732,7 +732,7 @@ Do you really want to do so?</source>
 您确定要这么做吗？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1073"/>
+        <location filename="../widgets/mainwindow.cpp" line="1074"/>
         <source>You&apos;re going to clear ALL LAYERS. All of work in this roomwill be deleted and CANNOT be undone.
 Do you really want to do so?</source>
         <translatorcomment>全消しますか。全てのレイヤーが全消されます、やり直しはできませんので、
@@ -741,44 +741,44 @@ Do you really want to do so?</source>
 您确定要这么做吗？</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1084"/>
+        <location filename="../widgets/mainwindow.cpp" line="1085"/>
         <source>Only room owner is authorized to clear the canvas.
 It seems you&apos;re not room manager.</source>
         <translation>只有房主才可以清除画布，你似乎不是房主。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1136"/>
+        <location filename="../widgets/mainwindow.cpp" line="1137"/>
         <source>Waiting for sync, please do not close.
 This will cost you 1 minute at most.</source>
         <translation>正在同步，请勿关闭...
 整个过程至多需要1分钟。</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1175"/>
+        <location filename="../widgets/mainwindow.cpp" line="1176"/>
         <source>Export all to file</source>
         <translatorcomment>全てのレイヤー画像を書き出し</translatorcomment>
         <translation>全部导出至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1177"/>
-        <location filename="../widgets/mainwindow.cpp" line="1195"/>
+        <location filename="../widgets/mainwindow.cpp" line="1178"/>
+        <location filename="../widgets/mainwindow.cpp" line="1196"/>
         <source>Images (*.png)</source>
         <translatorcomment>画像 (*.png)</translatorcomment>
         <translation>图片 (*.png)</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1193"/>
+        <location filename="../widgets/mainwindow.cpp" line="1194"/>
         <source>Export visible part to file</source>
         <translatorcomment>表示レイヤーを書き出し</translatorcomment>
         <translation>导出可见图层至文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1212"/>
+        <location filename="../widgets/mainwindow.cpp" line="1213"/>
         <source>Export contents to psd file</source>
         <translation>导出为PSD文件</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwindow.cpp" line="1214"/>
+        <location filename="../widgets/mainwindow.cpp" line="1215"/>
         <source>Photoshop Images (*.psd)</source>
         <translation>Photoshop格式</translation>
     </message>
@@ -837,6 +837,7 @@ This will cost you 1 minute at most.</source>
         <translation>大触般的网络!</translation>
     </message>
     <message>
+        <location filename="../widgets/networkindicator.cpp" line="7"/>
         <location filename="../widgets/networkindicator.cpp" line="74"/>
         <source>Unknown</source>
         <translation>未知</translation>
