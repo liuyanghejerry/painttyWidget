@@ -71,6 +71,8 @@ protected:
     QIcon icon_;
     QCursor cursor_;
     QKeySequence shortcut_;
+
+    virtual void updateCursor(int w);
 };
 
 #endif // ABSTRACTBRUSH_H

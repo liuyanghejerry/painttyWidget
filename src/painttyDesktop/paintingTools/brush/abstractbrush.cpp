@@ -1,5 +1,6 @@
 #include "abstractbrush.h"
 #include <QDebug>
+#include <QPainter>
 
 typedef BrushFeature::LIMIT BFL;
 
@@ -61,6 +62,7 @@ void AbstractBrush::setWidth(int width)
 {
     width_ = boundValueSet<int>(BFL::WIDTH_MIN, width, BFL::WIDTH_MAX);
     settings_.insert("width", width_);
+    updateCursor(width);
 }
 int AbstractBrush::thickness() const
 {
@@ -122,6 +124,19 @@ BrushSettings AbstractBrush::defaultSettings() const
     color.insert("blue", 0);
     s.insert("color", color);
     return s;
+}
+
+void AbstractBrush::updateCursor(int w)
+{
+    int frame = w+2+w%2; // +2 for a border padding
+    QPixmap img(frame, frame);
+    img.fill(Qt::transparent);
+    QPainter painter(&img);
+    painter.drawEllipse(0, 0, w, w);
+    const int half_frame = frame>>1;
+    if (w > 10)
+        painter.drawPoint(half_frame, half_frame);
+    cursor_ = QCursor(img, half_frame, half_frame);
 }
 
 QColor AbstractBrush::color() const
