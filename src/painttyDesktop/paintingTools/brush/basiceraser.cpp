@@ -19,6 +19,7 @@ BasicEraser::BasicEraser()
     displayName_ = QObject::tr("BasicEraser");
     shortcut_ = Singleton<ShortcutManager>::instance()
             .shortcut("basiceraser")["key"].toString();
+    icon_ = QIcon(":/iconset/ui/brush/basiceraser.png");
 }
 
 void BasicEraser::drawPoint(const QPoint &p, qreal )

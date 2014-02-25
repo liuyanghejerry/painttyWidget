@@ -21,6 +21,7 @@ MaskBased::MaskBased() :
     shortcut_ = Singleton<ShortcutManager>::instance()
             .shortcut("crayon")["key"].toString();
     this->setMask(QImage(":/iconset/canvas-print.png"));
+    icon_ = QIcon(":/iconset/ui/brush/crayon.png");
 }
 
 void MaskBased::makeStencil(QColor color)

@@ -18,6 +18,7 @@ SketchBrush::SketchBrush()
     displayName_ = QObject::tr("SketchBrush");
     shortcut_ = Singleton<ShortcutManager>::instance()
             .shortcut("sketchbrush")["key"].toString();
+    icon_ = QIcon(":/iconset/ui/brush/sketchbrush.png");
 }
 
 void SketchBrush::setColor(const QColor &c)

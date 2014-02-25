@@ -328,18 +328,7 @@ void MainWindow::toolbarInit()
 
 
     // doing hacking to color picker
-    QIcon colorpickerIcon;
-    // TODO: use icon until all brushes have icons
-    //    colorpickerIcon.addFile(":/iconset/ui/picker-1.png",
-    //                            QSize(), QIcon::Disabled);
-    //    colorpickerIcon.addFile(":/iconset/ui/picker-2.png",
-    //                            QSize(), QIcon::Active);
-    //    colorpickerIcon.addFile(":/iconset/ui/picker-3.png",
-    //                            QSize(), QIcon::Selected);
-    //    colorpickerIcon.addFile(":/iconset/ui/picker-3.png",
-    //                            QSize(), QIcon::Normal, QIcon::On);
-    //    colorpickerIcon.addFile(":/iconset/ui/picker-4.png",
-    //                            QSize(), QIcon::Normal);
+    QIcon colorpickerIcon(":/iconset/ui/brush/colorpicker.png");
     QAction *colorpicker = toolbar_->addAction(colorpickerIcon,
                                                tr("Color Picker"));
     colorpicker->setCheckable(true);

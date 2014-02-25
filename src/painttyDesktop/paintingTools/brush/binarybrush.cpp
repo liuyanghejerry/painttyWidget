@@ -20,6 +20,7 @@ BinaryBrush::BinaryBrush() :
     displayName_ = QObject::tr("BinaryBrush");
     shortcut_ = Singleton<ShortcutManager>::instance()
             .shortcut("binarybrush")["key"].toString();
+    icon_ = QIcon(":/iconset/ui/brush/binarybrush.png");
 }
 
 AbstractBrush *BinaryBrush::createBrush()

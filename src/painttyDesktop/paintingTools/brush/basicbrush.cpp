@@ -32,6 +32,7 @@ BasicBrush::BasicBrush() :
     displayName_ = QObject::tr("BasicBrush");
     shortcut_ = Singleton<ShortcutManager>::instance()
             .shortcut("basicbrush")["key"].toString();
+    icon_ = QIcon(":/iconset/ui/brush/basicbrush.png");
 }
 
 void BasicBrush::setWidth(int width)

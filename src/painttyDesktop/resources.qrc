@@ -7,36 +7,7 @@
         <file>translation/qt_zh_TW.qm</file>
         <file>translation/qt_ja.qm</file>
         <file>iconset/icon.png</file>
-        <file>iconset/ui/brush-1.png</file>
-        <file>iconset/ui/brush-2.png</file>
-        <file>iconset/ui/brush-3.png</file>
-        <file>iconset/ui/brush-4.png</file>
-        <file>iconset/ui/eraser-1.png</file>
-        <file>iconset/ui/eraser-2.png</file>
-        <file>iconset/ui/eraser-3.png</file>
-        <file>iconset/ui/eraser-4.png</file>
-        <file>iconset/ui/layer-lock-1.png</file>
-        <file>iconset/ui/layer-lock-2.png</file>
-        <file>iconset/ui/layer-lock-3.png</file>
-        <file>iconset/ui/layer-lock-4.png</file>
-        <file>iconset/ui/layer-unlock-1.png</file>
-        <file>iconset/ui/layer-unlock-2.png</file>
-        <file>iconset/ui/layer-unlock-3.png</file>
-        <file>iconset/ui/layer-unlock-4.png</file>
-        <file>iconset/ui/pencil-1.png</file>
-        <file>iconset/ui/pencil-2.png</file>
-        <file>iconset/ui/pencil-3.png</file>
-        <file>iconset/ui/pencil-4.png</file>
-        <file>iconset/ui/picker-1.png</file>
-        <file>iconset/ui/picker-2.png</file>
-        <file>iconset/ui/picker-3.png</file>
-        <file>iconset/ui/picker-4.png</file>
         <file>iconset/ui/picker-cursor.png</file>
-        <file>iconset/ui/sketch-1.png</file>
-        <file>iconset/ui/sketch-2.png</file>
-        <file>iconset/ui/sketch-3.png</file>
-        <file>iconset/ui/sketch-4.png</file>
-        <file>iconset/ui/picker-cursor-1.png</file>
         <file>iconset/ui/cross_16x16.png</file>
         <file>iconset/ui/cross_32x32.png</file>
         <file>iconset/ui/picker-cursor-small.png</file>
@@ -46,5 +17,11 @@
         <file>iconset/ui/unlock.png</file>
         <file>fonts/DroidSansFallback.ttf</file>
         <file>iconset/canvas-print.png</file>
+        <file>iconset/ui/brush/basicbrush.png</file>
+        <file>iconset/ui/brush/basiceraser.png</file>
+        <file>iconset/ui/brush/binarybrush.png</file>
+        <file>iconset/ui/brush/crayon.png</file>
+        <file>iconset/ui/brush/sketchbrush.png</file>
+        <file>iconset/ui/brush/colorpicker.png</file>
     </qresource>
 </RCC>
