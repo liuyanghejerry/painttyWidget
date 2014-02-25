@@ -52,7 +52,7 @@ int WaterBased::water() const
 
 void WaterBased::setWater(int water)
 {
-    water_ = boundValueSet<int>(BFL::WATER_MIN, water, BFL::WATER_MAX);
+    water_ = qBound<int>(BFL::WATER_MIN, water, BFL::WATER_MAX);
 }
 int WaterBased::extend() const
 {
@@ -61,7 +61,7 @@ int WaterBased::extend() const
 
 void WaterBased::setExtend(int extend)
 {
-    extend_ = boundValueSet<int>(BFL::EXTEND_MIN, extend, BFL::EXTEND_MAX);
+    extend_ = qBound<int>(BFL::EXTEND_MIN, extend, BFL::EXTEND_MAX);
 }
 int WaterBased::mixin() const
 {
@@ -70,7 +70,7 @@ int WaterBased::mixin() const
 
 void WaterBased::setMixin(int mixin)
 {
-    mixin_ = boundValueSet<int>(BFL::MIXIN_MIN, mixin, BFL::MIXIN_MAX);
+    mixin_ = qBound<int>(BFL::MIXIN_MIN, mixin, BFL::MIXIN_MAX);
 }
 
 // non-reentrant.

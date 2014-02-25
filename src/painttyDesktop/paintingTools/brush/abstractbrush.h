@@ -50,12 +50,6 @@ public:
     virtual BrushSettings defaultSettings() const;
     virtual AbstractBrush* createBrush()=0;
 
-    template<typename A>
-    static A boundValueSet(A min, A value, A max)
-    {
-        return qBound(min, value, max);
-    }
-
 protected:
     int width_;
     int thickness_;

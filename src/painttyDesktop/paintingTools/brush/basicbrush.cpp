@@ -185,7 +185,7 @@ int BasicBrush::hardness() const
 
 void BasicBrush::setHardness(int hardness)
 {
-    hardness_ = boundValueSet<int>(BFL::HARDNESS_MIN, hardness, BFL::HARDNESS_MAX);
+    hardness_ = qBound<int>(BFL::HARDNESS_MIN, hardness, BFL::HARDNESS_MAX);
     settings_.insert("hardness", hardness_);
     makeStencil(color_);
 }

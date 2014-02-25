@@ -60,7 +60,7 @@ int AbstractBrush::width() const
 
 void AbstractBrush::setWidth(int width)
 {
-    width_ = boundValueSet<int>(BFL::WIDTH_MIN, width, BFL::WIDTH_MAX);
+    width_ = qBound<int>(BFL::WIDTH_MIN, width, BFL::WIDTH_MAX);
     settings_.insert("width", width_);
     updateCursor(width);
 }
@@ -71,7 +71,7 @@ int AbstractBrush::thickness() const
 
 void AbstractBrush::setThickness(int thickness)
 {
-    thickness_ = boundValueSet<int>(BFL::THICKNESS_MIN, thickness, BFL::THICKNESS_MAX);
+    thickness_ = qBound<int>(BFL::THICKNESS_MIN, thickness, BFL::THICKNESS_MAX);
     settings_.insert("thickness", thickness_);
 }
 
