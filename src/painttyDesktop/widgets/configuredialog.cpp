@@ -324,10 +324,11 @@ QWidget* ShortcutDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
         return new QKeySequenceEdit(parent);
     else if (index.column() == 2)
     {
-        QComboBox *comboBox = new QComboBox(parent);
-        comboBox->addItems(QStringList() << tr("Immediately")
-                           << tr("When Release"));
-        return comboBox;
+//        QComboBox *comboBox = new QComboBox(parent);
+//        comboBox->addItems(QStringList() << tr("Immediately")
+//                           << tr("When Release"));
+//        return comboBox;
+        return 0;
     }
     else
         return 0;
