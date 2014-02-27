@@ -20,11 +20,13 @@ QPalette& rePalette(QPalette &p)
     p.setColor(QPalette::ToolTipText, QColor::fromRgb(38, 38, 53));
     p.setColor(QPalette::WindowText, QColor::fromRgb(38, 38, 53));
     p.setColor(QPalette::Text, QColor::fromRgb(38, 38, 53));
-    p.setColor(QPalette::Button, QColor::fromRgb(255, 68, 0));
+    p.setColor(QPalette::Button, QColor::fromRgb(249, 249, 249));
     p.setColor(QPalette::ButtonText, QColor::fromRgb(38, 38, 53));
     p.setColor(QPalette::BrightText, QColor::fromRgb(249, 249, 249));
     p.setColor(QPalette::Highlight, QColor::fromRgb(255, 68, 0));
     p.setColor(QPalette::HighlightedText, QColor::fromRgb(249, 249, 249));
+    p.setColor(QPalette::Window, QColor::fromRgb(249, 249, 249));
+    p.setColor(QPalette::Base, QColor::fromRgb(249, 249, 249));
     return p;
 }
 
