@@ -20,6 +20,11 @@ public:
     QString currentMemberId() const;
     QString currentMemberNickName() const;
 
+signals:
+    void memberGetKicked(const QString& id);
+
+protected:
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 private:
     QHash<QString, QListWidgetItem*> memberItemList;
 };

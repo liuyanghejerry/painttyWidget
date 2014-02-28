@@ -1,4 +1,6 @@
 #include "memberlistwidget.h"
+#include <QMenu>
+#include <QContextMenuEvent>
 
 MemberListWidget::MemberListWidget(QWidget *parent)
     : QListWidget(parent)
@@ -58,4 +60,20 @@ QString MemberListWidget::currentMemberNickName() const
     if (item)
         return currentItem()->text();
     return QString();
+}
+
+void MemberListWidget::contextMenuEvent ( QContextMenuEvent * event )
+{
+    QMenu* popMenu = new QMenu(this);
+    auto kick_action = new QAction(tr("Kick"), this);
+    itemAt(event->pos())->setSelected(true);
+    kick_action->setData(currentMemberId());
+    connect(kick_action, &QAction::triggered,
+            [this](){
+        emit memberGetKicked(currentMemberId());
+    });
+    popMenu->addAction(kick_action);
+
+    popMenu->exec(event->globalPos());
+    event->accept();
 }
