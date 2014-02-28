@@ -60,7 +60,6 @@ public slots:
     /* script */
     void evaluateScript(const QString& script);
     void runScript(const QString& script);
-
 signals:
     void sendMessage(QString);
     void brushColorChange(const QColor &color);
@@ -122,6 +121,7 @@ private slots:
     void onCommandActionClearAll(const QJsonObject &);
     void onCommandResponseOnlinelist(const QJsonObject &o);
     void onActionNotify(const QJsonObject &o);
+    void onActionKick(const QJsonObject &o);
     void onResponseArchiveSign(const QJsonObject &o);
     void onResponseArchive(const QJsonObject &o);
     void onResponseHeartbeat(const QJsonObject &o);

@@ -191,6 +191,11 @@ void MainWindow::cmdRouterInit()
                           std::bind(&MainWindow::onActionNotify,
                                     this,
                                     std::placeholders::_1));
+    cmdRouter_.regHandler("action",
+                          "kick",
+                          std::bind(&MainWindow::onActionKick,
+                                    this,
+                                    std::placeholders::_1));
     cmdRouter_.regHandler("response",
                           "archivesign",
                           std::bind(&MainWindow::onResponseArchiveSign,
@@ -779,6 +784,12 @@ void MainWindow::onActionNotify(const QJsonObject &o)
     ui->textEdit->insertPlainText("\n");
 
     qDebug()<<"notified with: "<<o;
+}
+
+void MainWindow::onActionKick(const QJsonObject &)
+{
+    qDebug()<<"Get kicked";
+    GradualBox::showText(tr("You've been kicked by room owner."), true, 3000);
 }
 
 void MainWindow::onResponseArchiveSign(const QJsonObject &o)
