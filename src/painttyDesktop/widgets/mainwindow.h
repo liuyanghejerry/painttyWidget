@@ -89,6 +89,7 @@ private:
     void requestArchiveSign();
     void requestArchive();
     void requestCloseRoom();
+    void requestKickUser(const QString& id);
 
     Ui::MainWindow *ui;
 

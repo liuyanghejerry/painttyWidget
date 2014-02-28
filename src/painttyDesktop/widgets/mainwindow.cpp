@@ -139,6 +139,9 @@ void MainWindow::init()
             static_cast<void (CanvasContainer::*)(const QPointF&)>
             (&CanvasContainer::centerOn));
 
+    connect(ui->memberList, &MemberListWidget::memberGetKicked,
+            this, &MainWindow::requestKickUser);
+
     layerWidgetInit();
     colorGridInit();
     statusBarInit();
@@ -530,6 +533,27 @@ void MainWindow::requestArchive()
     obj.insert("request", QString("archive"));
     obj.insert("start", (int)socket.archiveSize());
     qDebug()<<"request archive"<<obj;
+
+    socket.sendCmdPack(obj);
+}
+
+void MainWindow::requestKickUser(const QString& id)
+{
+    auto& socket = Singleton<ClientSocket>::instance();
+    QJsonObject obj;
+    QString r_key = getRoomKey();
+    obj.insert("request", QString("kick"));
+    obj.insert("clientid", id);
+    if(r_key.isEmpty()){
+        QMessageBox::warning(this,
+                             tr("Sorry"),
+                             tr("Only room owner is authorized "
+                                "to close the room.\n"
+                                "It seems you're not room manager."));
+        return;
+    }
+    obj.insert("key", r_key);
+    qDebug()<<"request kick"<<obj;
 
     socket.sendCmdPack(obj);
 }
