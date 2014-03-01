@@ -207,7 +207,6 @@ QImage Canvas::appendAuthorSignature(QImage target)
 
     QPainter painter(&target);
     QPen textPen;
-    // TODO: use contrast color to render text
     textPen.setColor(Qt::black);
     painter.setOpacity(0.4);
     painter.setPen(textPen);
@@ -367,7 +366,6 @@ void Canvas::setBrushWidth(int newWidth)
     updateCursor();
 }
 
-// TODO: correct name
 void Canvas::setBrushHardness(int h)
 {
     setBrushFeature("hardness", h);

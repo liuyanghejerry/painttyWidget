@@ -594,23 +594,18 @@ void MainWindow::shortcutInit()
     });
 
     regShortcut<>("zoomin", [this](){
-        // TODO: should be configurable
         this->ui->centralWidget->scaleBy(1.2);
     });
     regShortcut<>("zoomout", [this](){
-        // TODO: should be configurable
         this->ui->centralWidget->scaleBy(0.8);
     });
     regShortcut<>("rotateclock", [this](){
-        // TODO: should be configurable
         this->ui->centralWidget->rotateBy(10);
     });
     regShortcut<>("rotateanticlock", [this](){
-        // TODO: should be configurable
         this->ui->centralWidget->rotateBy(-10);
     });
     regShortcut<>("canvasreset", [this](){
-        // TODO: should be configurable
         this->ui->centralWidget->setRotation(0);
         this->ui->centralWidget->setScaleFactor(1);
     });
@@ -1292,22 +1287,29 @@ bool MainWindow::regShortcut(const QString& name, T func)
 template<typename T, typename U>
 bool MainWindow::regShortcut(const QKeySequence& k, T func, U func2)
 {
+    if(keyMap_.contains(k.toString())){
+        return false;
+    }
+    keyMap_.insert(k.toString(), true);
+
     SingleShortcut *shortcut = new SingleShortcut(this);
     shortcut->setKey(k);
     connect(shortcut, &SingleShortcut::activated,
             func);
     connect(shortcut, &SingleShortcut::inactivated,
             func2);
-    // TODO: return false if key has been used
     return true;
 }
 
 template<typename T>
 bool MainWindow::regShortcut(const QKeySequence& k, T func)
 {
+    if(keyMap_.contains(k.toString())){
+        return false;
+    }
+    keyMap_.insert(k.toString(), true);
     QShortcut* shortcut = new QShortcut(k, this);
     connect(shortcut, &QShortcut::activated,
             func);
-    // TODO: return false if key has been used
     return true;
 }

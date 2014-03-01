@@ -271,7 +271,6 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
         QJsonObject map;
         map["request"] = QString("newroom");
         map["info"] = m;
-        // TODO: add owner info
 
         Singleton<ClientSocket>::instance().sendManagerPack(map);
 

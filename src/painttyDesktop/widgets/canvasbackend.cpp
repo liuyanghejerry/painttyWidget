@@ -80,73 +80,7 @@ void CanvasBackend::onIncomingData(const QJsonObject& obj)
 
 void CanvasBackend::parseIncoming()
 {
-    // TODO: remove drawPoint and drawLine maybe.
-    auto drawPoint = [this](const QVariantMap& map){
-        QPoint point;
-        QString layerName;
-
-        QString clientid = map["clientid"].toString();
-        // don't draw your own move from remote
-        if(clientid == cached_clientid_){
-            return;
-        }
-
-        QVariantMap point_j = map["point"].toMap();
-        point.setX(point_j["x"].toInt());
-        point.setY(point_j["y"].toInt());
-        layerName = map["layer"].toString();
-        QVariantMap brushInfo = map["brush"].toMap();
-        qreal pressure = 1.0;
-        if(map.contains("pressure")){
-            pressure = map["pressure"].toDouble();
-        }
-
-        if(map.contains("name")){
-            QString author = map["name"].toString();
-            upsertFootprint(clientid, author, point);
-        }
-
-        emit remoteDrawPoint(point, brushInfo,
-                             layerName, clientid,
-                             pressure);
-    };
-
-    auto drawLine = [this](const QVariantMap& map){
-        QPoint start;
-        QPoint end;
-        QString layerName;
-
-        QString clientid = map["clientid"].toString();
-        // don't draw your own move from remote
-        if(clientid == cached_clientid_){
-            return;
-        }
-
-        QVariantMap start_j = map["start"].toMap();
-        start.setX(start_j["x"].toInt());
-        start.setY(start_j["y"].toInt());
-        QVariantMap end_j = map["end"].toMap();
-        end.setX(end_j["x"].toInt());
-        end.setY(end_j["y"].toInt());
-        layerName = map["layer"].toString();
-        QVariantMap brushInfo = map["brush"].toMap();
-        qreal pressure = 1.0;
-        if(map.contains("pressure")){
-            pressure = map["pressure"].toDouble();
-        }
-
-        if(map.contains("name")){
-            QString author = map["name"].toString();
-            upsertFootprint(clientid, author, end);
-        }
-
-        emit remoteDrawLine(start, end,
-                            brushInfo, layerName,
-                            clientid, pressure);
-    };
-
-    auto dataBlock = [&drawPoint,
-            &drawLine, this](const QVariantMap& m){
+    auto dataBlock = [this](const QVariantMap& m){
         QString clientid(m["clientid"].toString());
         // don't draw your own move from remote
         if(clientid == cached_clientid_){
@@ -212,12 +146,6 @@ void CanvasBackend::parseIncoming()
             }else{
                 emit repaintHint();
             }
-        }else if(action == "drawline"){
-            drawLine(obj.toVariantMap());
-            emit repaintHint();
-        }else if(action == "drawpoint"){
-            drawPoint(obj.toVariantMap());
-            emit repaintHint();
         }
     }else{
         if(need_repaint){

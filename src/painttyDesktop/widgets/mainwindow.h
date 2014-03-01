@@ -102,6 +102,7 @@ private:
     QScriptEngine* scriptEngine_;
     DeveloperConsole* console_;
     NetworkIndicator* networkIndicator_;
+    QHash<QString, bool> keyMap_;
 
 private slots:
     void onServerDisconnected();
