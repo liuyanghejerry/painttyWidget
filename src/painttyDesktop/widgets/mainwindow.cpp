@@ -43,6 +43,7 @@
 #include "../misc/singleton.h"
 #include "../misc/shortcutmanager.h"
 #include "../misc/errortable.h"
+#include "../misc/archivefile.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -581,8 +582,8 @@ void MainWindow::shortcutInit()
             this, &MainWindow::about);
     connect(ui->actionAbout_Qt, &QAction::triggered,
             &QApplication::aboutQt);
-    //    connect(ui->actionExport_to_PSD, &QAction::triggered,
-    //            this, &MainWindow::exportToPSD);
+    connect(ui->actionExport_to_PSD, &QAction::triggered,
+            this, &MainWindow::exportToPSD);
     connect(ui->actionClose_Room, &QAction::triggered,
             this, &MainWindow::requestCloseRoom);
     connect(ui->actionAll_Layers, &QAction::triggered,
@@ -1239,8 +1240,33 @@ void MainWindow::exportToPSD()
     if(!fileName.endsWith(".psd", Qt::CaseInsensitive)){
         fileName = fileName + ".psd";
     }
-    //QImage image = ui->canvas->currentCanvas();
 
+    ui->canvas->saveLayers();
+
+    QString dir_name = Singleton<ArchiveFile>::instance().dirName();
+    QDir dir(dir_name);
+    QStringList filters("*.png");
+    QStringList file_list = dir.entryList(filters, QDir::Files, QDir::Name);
+
+    if(!file_list.length()){
+        // no any png files found
+        return;
+    }
+
+    QString single_pattern("( -page +0+0 %1[0] -background transparent -mosaic -set colorspace Transparent ) ");
+    QString multi_pattern("( -clone 0--1 -background transparent -mosaic ) -alpha On -reverse %1");
+    multi_pattern = multi_pattern.arg(QDir::toNativeSeparators(fileName));
+    QString patterns;
+    for(auto file_name: file_list){
+        QString p = QDir::currentPath()+"/"+dir_name+"/"+file_name;
+        patterns.append(single_pattern.arg(QDir::toNativeSeparators(p)));
+    }
+    patterns.append(multi_pattern);
+
+    QProcess *process = new QProcess(this);
+
+    process->setWorkingDirectory(QDir::current().absolutePath());
+    process->start("convert", patterns.trimmed().split(" ", QString::SkipEmptyParts));
 }
 
 void MainWindow::exportAllToClipboard()

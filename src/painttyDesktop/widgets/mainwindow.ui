@@ -203,6 +203,7 @@
      <addaction name="actionExport_All"/>
      <addaction name="actionExport_Visible_To_ClipBorad"/>
      <addaction name="actionExport_All_To_Clipboard"/>
+     <addaction name="actionExport_to_PSD"/>
     </widget>
     <addaction name="menuExport"/>
     <addaction name="action_Quit"/>
@@ -341,6 +342,11 @@
   <action name="actionConfiguration">
    <property name="text">
     <string>Configuration</string>
+   </property>
+  </action>
+  <action name="actionExport_to_PSD">
+   <property name="text">
+    <string>Export to PSD File</string>
    </property>
   </action>
  </widget>
