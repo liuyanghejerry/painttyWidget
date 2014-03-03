@@ -1225,7 +1225,6 @@ void MainWindow::exportVisibleToFile()
     image.save(fileName, "PNG");
 }
 
-// TODO
 void MainWindow::exportToPSD()
 {
     QString fileName =
@@ -1241,8 +1240,9 @@ void MainWindow::exportToPSD()
         fileName = fileName + ".psd";
     }
 
+    // save all layers into png
     ui->canvas->saveLayers();
-
+    // get all png files from cache dir
     QString dir_name = Singleton<ArchiveFile>::instance().dirName();
     QDir dir(dir_name);
     QStringList filters("*.png");
@@ -1253,20 +1253,28 @@ void MainWindow::exportToPSD()
         return;
     }
 
-    QString single_pattern("( -page +0+0 %1[0] -background transparent -mosaic -set colorspace Transparent ) ");
-    QString multi_pattern("( -clone 0--1 -background transparent -mosaic ) -alpha On -reverse %1");
-    multi_pattern = multi_pattern.arg(QDir::toNativeSeparators(fileName));
-    QString patterns;
-    for(auto file_name: file_list){
+    // prepare args for ImageMagick convert
+    const static QString single_pattern("( -page +0+0 %1[0] -background transparent -mosaic -set colorspace Transparent )");
+    const static QString multi_pattern("( -clone 0--1 -background transparent -mosaic ) -alpha On -reverse %1");
+
+    const static QStringList single_pattern_list = single_pattern.split(" ", QString::SkipEmptyParts);
+    const static QStringList multi_pattern_list = multi_pattern.split(" ", QString::SkipEmptyParts);
+
+    QStringList result_args;
+
+    for(const auto& file_name: file_list){
+        auto dup_single_list = single_pattern_list;
         QString p = QDir::currentPath()+"/"+dir_name+"/"+file_name;
-        patterns.append(single_pattern.arg(QDir::toNativeSeparators(p)));
+        result_args += dup_single_list.replaceInStrings("%1", QDir::toNativeSeparators(p));
     }
-    patterns.append(multi_pattern);
+
+    auto dup_multi_list = multi_pattern_list;
+    result_args += dup_multi_list.replaceInStrings("%1", QDir::toNativeSeparators(fileName));
 
     QProcess *process = new QProcess(this);
 
     process->setWorkingDirectory(QDir::current().absolutePath());
-    process->start("convert", patterns.trimmed().split(" ", QString::SkipEmptyParts));
+    process->start("convert", result_args);
 }
 
 void MainWindow::exportAllToClipboard()
