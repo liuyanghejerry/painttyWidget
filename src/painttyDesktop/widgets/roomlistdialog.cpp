@@ -600,9 +600,11 @@ void RoomListDialog::filterRoomList()
     ui->tableWidget->setSortingEnabled(false);
     for(auto& info: roomsInfo){
         QString name = info["name"].toString();
+        int currentLoad = info["currentload"].toDouble();
+        int maxLoad = info["maxload"].toDouble();
         if(ui->checkBox->isChecked()){
             //Don't show it if room is full
-            if(info["maxload"] == info["currentload"]){
+            if(currentLoad >= maxLoad){
                 continue;
             }
         }
@@ -627,17 +629,21 @@ void RoomListDialog::filterRoomList()
 
         item = new QTableWidgetItem;
         item->setTextAlignment(Qt::AlignCenter);
-        item->setData(Qt::DisplayRole, info["currentload"].toDouble());
+        // if current > max, there must be people joining via url
+        if(currentLoad > maxLoad) {
+            item->setData(Qt::DisplayRole, QString("%1+%1").arg(maxLoad).arg(currentLoad - maxLoad));
+        } else {
+            item->setData(Qt::DisplayRole, currentLoad);
+        }
         ui->tableWidget->setItem(0, column++, item);
-        members += info["currentload"].toDouble();
+        members += currentLoad;
 
         item = new QTableWidgetItem;
         item->setTextAlignment(Qt::AlignCenter);
-        item->setData(Qt::DisplayRole, info["maxload"].toDouble());
+        item->setData(Qt::DisplayRole, maxLoad);
         ui->tableWidget->setItem(0, column++, item);
 
         row++;
-        //        ui->progressBar->setValue(100*row/roomsInfo.count());
     }
     ui->counter_label->setText(tr("Rooms: %1, Members: %2")
                                .arg(row)
