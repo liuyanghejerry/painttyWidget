@@ -1010,7 +1010,7 @@ void Canvas::paintEvent(QPaintEvent *event)
         if(name.isEmpty()){
             name = std::get<MSI::Id>(item);
         }
-        if(longest - stamp > 1000*10){
+        if(longest - stamp > 1000*30){
             break;
         }
         if(point.isNull()){
