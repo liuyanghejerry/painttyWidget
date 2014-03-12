@@ -58,6 +58,7 @@
 
 Canvas::Canvas(QWidget *parent) :
     QWidget(parent),
+    control_mode_(UNKNOWN),
     canvasSize(Singleton<ClientSocket>::instance().canvasSize()),
     layers(canvasSize),
     image(canvasSize, QImage::Format_ARGB32_Premultiplied),
@@ -69,8 +70,6 @@ Canvas::Canvas(QWidget *parent) :
     worker_(new QThread(this))
 {
     setAttribute(Qt::WA_StaticContents);
-    inPicker = false;
-    drawing = false;
     brush_ = BrushPointer(new BasicBrush);
     updateCursor();
 
@@ -88,15 +87,15 @@ Canvas::Canvas(QWidget *parent) :
     BrushPointer p4(new BasicEraser);
     p4->setSettings(p1->defaultSettings());
     // TODO
-//    BrushPointer p5(new WaterBased);
-//    p5->setSettings(p1->defaultSettings());
+    //    BrushPointer p5(new WaterBased);
+    //    p5->setSettings(p1->defaultSettings());
     BrushPointer p6(new MaskBased);
     p6->setSettings(p1->defaultSettings());
     brush_manager.addBrush(p1);
     brush_manager.addBrush(p2);
     brush_manager.addBrush(p3);
     brush_manager.addBrush(p4);
-//    brush_manager.addBrush(p5);
+    //    brush_manager.addBrush(p5);
     brush_manager.addBrush(p6);
     setJitterCorrectionLevel(5);
 
@@ -110,10 +109,10 @@ Canvas::Canvas(QWidget *parent) :
             this, &Canvas::remoteDrawPoint);
     connect(backend_, &CanvasBackend::repaintHint,
             this, static_cast<void (Canvas::*)()>(&Canvas::update));
-//    connect(this, &Canvas::destroyed,
-//            backend_, &CanvasBackend::deleteLater);
-//    connect(this, &Canvas::destroyed,
-//            worker_, &QThread::terminate);
+    //    connect(this, &Canvas::destroyed,
+    //            backend_, &CanvasBackend::deleteLater);
+    //    connect(this, &Canvas::destroyed,
+    //            worker_, &QThread::terminate);
     connect(worker_, &QThread::finished,
             backend_, &CanvasBackend::deleteLater);
     connect(this, &Canvas::newPaintAction,
@@ -421,12 +420,12 @@ void Canvas::loadLayers()
         QPainter painter(layers.layerFrom(i)->imagePtr());
         painter.drawImage(0, 0, img);
     }
-//    connect(&Singleton<ArchiveFile>::instance(), &ArchiveFile::newSignature,
-//            [this](){
-//        this->clearAllLayer();
-//    });
+    //    connect(&Singleton<ArchiveFile>::instance(), &ArchiveFile::newSignature,
+    //            [this](){
+    //        this->clearAllLayer();
+    //    });
     connect(&Singleton<ArchiveFile>::instance(), &ArchiveFile::newSignature,
-           this, &Canvas::clearAllLayer);
+            this, &Canvas::clearAllLayer);
 }
 
 void Canvas::saveLayers()
@@ -477,7 +476,7 @@ void Canvas::changeBrush(const QString &name)
         currentSettings["color"] = colorMap;
     }
 
-//    brush_->setLastPoint(lp);
+    //    brush_->setLastPoint(lp);
     brush_->setSurface(sur);
     updateCursor();
 
@@ -487,11 +486,11 @@ void Canvas::changeBrush(const QString &name)
 void Canvas::onColorPicker(bool in)
 {
     if(in){
-        inPicker = true;
+        control_mode_ = PICKING;
         QPixmap icon = QPixmap(":/iconset/ui/picker-cursor.png");
         setCursor(QCursor(icon, 11, 20));
     }else{
-        inPicker = false;
+        control_mode_ = NONE;
         updateCursor();
         emit pickColorComplete();
     }
@@ -571,9 +570,9 @@ void Canvas::sendAction()
     QVariantMap store;
     store.insert("layer", currentLayer());
     store.insert("clientid",
-               Singleton<ClientSocket>::instance().clientId());
+                 Singleton<ClientSocket>::instance().clientId());
     store.insert("name",
-               Singleton<ClientSocket>::instance().userName());
+                 Singleton<ClientSocket>::instance().userName());
     store.insert("type", "data");
     store.insert("brush", brushSettings());
     store.insert("action", "block");
@@ -626,7 +625,7 @@ void Canvas::remoteDrawPoint(const QPoint &point,
             newOne->setSettings(cpd_brushInfo);
             newOne->drawPoint(point, pressure);
             remoteBrush[clientid] = newOne;
-//            t.clear();
+            //            t.clear();
         }else{
             BrushPointer original = remoteBrush[clientid];
             original->setSurface(l);
@@ -641,7 +640,7 @@ void Canvas::remoteDrawPoint(const QPoint &point,
         remoteBrush[clientid] = newOne;
     }
 
-//    update();
+    //    update();
 }
 
 /*!
@@ -677,7 +676,7 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
             newOne->setSettings(cpd_brushInfo);
             newOne->drawLineTo(end, pressure);
             remoteBrush[clientid] = newOne;
-//            t.clear();
+            //            t.clear();
         }else{
             BrushPointer original = remoteBrush[clientid];
             original->setSurface(l);
@@ -692,7 +691,7 @@ void Canvas::remoteDrawLine(const QPoint &, const QPoint &end,
         newOne->drawLineTo(end, pressure);
         remoteBrush[clientid] = newOne;
     }
-//    update();
+    //    update();
 }
 
 void Canvas::onMembersSorted(const QList<MS>& list)
@@ -896,10 +895,15 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         lastPoint = event->pos();
-        if(inPicker){
+        switch(control_mode_) {
+        case PICKING:
             pickColor(event->pos());
-        }else{
-            drawing = true;
+            break;
+        default:
+            // fall-through
+        case NONE:
+            control_mode_ = DRAWING;
+        case DRAWING:
             stackPoints.push_back(lastPoint);
             drawPoint(lastPoint);
         }
@@ -909,12 +913,11 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 void Canvas::mouseMoveEvent(QMouseEvent *event)
 {
     if ((event->buttons() & Qt::LeftButton)){
-        if(inPicker){
+        switch(control_mode_) {
+        case PICKING:
             pickColor(event->pos());
-        }else{
-            if(!drawing){
-                return;
-            }
+            break;
+        case DRAWING:
             if(jitterCorrection_){
                 if(stackPoints.length() < qBound(3, jitterCorrectionLevel_, 10)){
                     stackPoints.push_back(event->pos());
@@ -930,6 +933,9 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
                 drawLineTo(event->pos());
                 lastPoint = event->pos();
             }
+            break;
+        default:
+            break;
         }
     }
 }
@@ -937,16 +943,18 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-        if(inPicker){
+        switch(control_mode_) {
+        case PICKING:
             pickColor(event->pos());
             onColorPicker(false);
-        }else{
-            if(drawing){
-                drawing = false;
-                stackPoints.clear();
-                updateCursor();
-                sendAction();
-            }
+            break;
+        default:
+            // fall-through
+        case DRAWING:
+            stackPoints.clear();
+            updateCursor();
+            sendAction();
+            control_mode_ = NONE;
         }
     }
 }

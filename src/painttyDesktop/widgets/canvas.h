@@ -105,8 +105,15 @@ private:
     void setBrushFeature(const QString& key, const QVariant& value);
     void drawAuthorTips(QPainter &painter, const QPoint &pos, const QString &name);
 
-    bool inPicker;
-    bool drawing;
+    enum CONTROL_MODE {
+        UNKNOWN = -1,
+        NONE = 0,
+        PICKING,
+        DRAWING,
+        MOVING
+    };
+
+    CONTROL_MODE control_mode_;
     QSize canvasSize;
     LayerManager layers;
     QImage image;
