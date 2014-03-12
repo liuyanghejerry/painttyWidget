@@ -23,5 +23,6 @@
         <file>iconset/ui/brush/crayon.png</file>
         <file>iconset/ui/brush/sketchbrush.png</file>
         <file>iconset/ui/brush/colorpicker.png</file>
+        <file>iconset/ui/brush/move.png</file>
     </qresource>
 </RCC>
