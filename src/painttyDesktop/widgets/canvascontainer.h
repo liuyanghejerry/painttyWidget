@@ -18,6 +18,7 @@ public:
     QRectF visualRect() const;
     void centerOn(const QPointF &pos);
     void centerOn(qreal x, qreal y);
+    void moveBy(const QPoint &p);
     
 signals:
     void scaled(qreal factor);

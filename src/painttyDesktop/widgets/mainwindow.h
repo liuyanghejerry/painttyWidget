@@ -99,6 +99,7 @@ private:
     QToolBar *toolbar_;
     QActionGroup *brushActionGroup_;
     QToolButton *colorPickerButton_;
+    QToolButton *moveToolButton_;
     QScriptEngine* scriptEngine_;
     DeveloperConsole* console_;
     NetworkIndicator* networkIndicator_;
@@ -113,6 +114,7 @@ private slots:
     void onBrushTypeChange();
     void onBrushSettingsChanged(const QVariantMap &m);
     void onColorPickerPressed(bool c);
+    void onMoveToolPressed(bool c);
     void onCmdData(const QJsonObject &data);
     void onPanoramaRefresh();
     void onCommandActionClose(const QJsonObject &);

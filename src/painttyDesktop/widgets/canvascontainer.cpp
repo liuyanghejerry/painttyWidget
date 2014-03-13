@@ -119,6 +119,12 @@ void CanvasContainer::centerOn(qreal x, qreal y)
     centerOn(QPoint(x, y));
 }
 
+void CanvasContainer::moveBy(const QPoint &p)
+{
+    horizontalScrollBar()->setValue(horizontalScrollBar()->value() + p.x());
+    verticalScrollBar()->setValue(verticalScrollBar()->value() + p.y());
+}
+
 qreal CanvasContainer::calculateFactor(qreal current, bool zoomIn)
 {
     if (current <= MIN_SCALE_FACTOR && !zoomIn)
@@ -207,8 +213,6 @@ void CanvasContainer::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::RightButton)
     {
-        horizontalScrollValue = horizontalScrollBar()->value();
-        verticalScrollValue = verticalScrollBar()->value();
         moveStartPoint = event->pos();
     }
     QGraphicsView::mousePressEvent(event);
@@ -218,10 +222,7 @@ void CanvasContainer::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() & Qt::RightButton)
     {
-        horizontalScrollValue += (moveStartPoint - event->pos()).x();
-        verticalScrollValue += (moveStartPoint - event->pos()).y();
-        horizontalScrollBar()->setValue(horizontalScrollValue);
-        verticalScrollBar()->setValue(verticalScrollValue);
+        moveBy(moveStartPoint - event->pos());
         moveStartPoint = event->pos();
     }
     QGraphicsView::mouseMoveEvent(event);

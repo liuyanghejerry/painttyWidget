@@ -496,6 +496,19 @@ void Canvas::onColorPicker(bool in)
     }
 }
 
+void Canvas::onMoveTool(bool in)
+{
+    if(in){
+        control_mode_ = MOVING;
+        QPixmap icon = QPixmap(":/iconset/ui/brush/move.png");
+        setCursor(QCursor(icon, 11, 20));
+    }else{
+        control_mode_ = NONE;
+        updateCursor();
+        emit pickColorComplete();
+    }
+}
+
 /*!
     \fn void Canvas::drawLineTo(const QPoint &endPoint)
 
@@ -899,6 +912,8 @@ void Canvas::mousePressEvent(QMouseEvent *event)
         case PICKING:
             pickColor(event->pos());
             break;
+        case MOVING:
+            break;
         default:
             // fall-through
         case NONE:
@@ -916,6 +931,10 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
         switch(control_mode_) {
         case PICKING:
             pickColor(event->pos());
+            break;
+        case MOVING:
+            emit contentMovedBy(lastPoint - event->pos());
+            lastPoint = event->pos();
             break;
         case DRAWING:
             if(jitterCorrection_){
@@ -947,6 +966,9 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
         case PICKING:
             pickColor(event->pos());
             onColorPicker(false);
+            break;
+        case MOVING:
+//            control_mode_ = NONE;
             break;
         default:
             // fall-through

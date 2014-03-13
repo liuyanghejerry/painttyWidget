@@ -52,11 +52,13 @@ public slots:
     void layerSelected(const QString &name);
     void changeBrush(const QString &name);
     void onColorPicker(bool in);
+    void onMoveTool(bool in);
     void loadLayers();
     void saveLayers();
     void pause();
 
 signals:
+    void contentMovedBy(const QPoint&);
     void pickColorComplete();
     void newBrushSettings(const QVariantMap &map);
     void historyComplete();
