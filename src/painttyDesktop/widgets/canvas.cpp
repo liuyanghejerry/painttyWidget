@@ -934,7 +934,6 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
             break;
         case MOVING:
             emit contentMovedBy(lastPoint - event->pos());
-            lastPoint = event->pos();
             break;
         case DRAWING:
             if(jitterCorrection_){

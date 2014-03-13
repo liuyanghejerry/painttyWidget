@@ -92,12 +92,9 @@ void MainWindow::init()
     ui->centralWidget->setCanvas(ui->canvas);
 
     connect(ui->canvas, &Canvas::contentMovedBy,
-            [this](const QPoint& p) {
-        ui->centralWidget->moveBy(p);
+            [this](QPoint p){
+        ui->centralWidget->moveBy(p * ui->centralWidget->currentScaleFactor());
     });
-//    connect(ui->canvas, &Canvas::contentCentered,
-//            ui->centralWidget,
-//            static_cast<void (CanvasContainer::*)(const QPointF&)>(&CanvasContainer::centerOn));
 
     connect(ui->panorama, &PanoramaWidget::scaled,
             ui->centralWidget, &CanvasContainer::setScaleFactor);
@@ -380,7 +377,7 @@ void MainWindow::toolbarInit()
     // doing hacking for move tool
     QIcon moveIcon(":/iconset/ui/brush/move.png");
     QAction *moveTool = toolbar_->addAction(moveIcon,
-                                               tr("Move Tool"));
+                                            tr("Move Tool"));
     moveTool->setCheckable(true);
     moveTool->setAutoRepeat(false);
     // we need the real QToolButton to know weather the tool is
@@ -393,14 +390,14 @@ void MainWindow::toolbarInit()
             connect(b, &QToolButton::clicked,
                     this, &MainWindow::onMoveToolPressed);
 
-//            auto colorpicker_key = Singleton<ShortcutManager>::instance()
-//                    .shortcut("colorpicker")["key"].toString();
-//            SingleShortcut *pickerShortcut = new SingleShortcut(this);
-//            pickerShortcut->setKey(colorpicker_key);
-//            connect(pickerShortcut, &SingleShortcut::activated,
-//                    b, &QToolButton::click);
-//            connect(pickerShortcut, &SingleShortcut::inactivated,
-//                    b, &QToolButton::click);
+            //            auto colorpicker_key = Singleton<ShortcutManager>::instance()
+            //                    .shortcut("colorpicker")["key"].toString();
+            //            SingleShortcut *pickerShortcut = new SingleShortcut(this);
+            //            pickerShortcut->setKey(colorpicker_key);
+            //            connect(pickerShortcut, &SingleShortcut::activated,
+            //                    b, &QToolButton::click);
+            //            connect(pickerShortcut, &SingleShortcut::inactivated,
+            //                    b, &QToolButton::click);
             moveTool->setToolTip(
                         tr("%1\n"
                            "Shortcut: %2")
