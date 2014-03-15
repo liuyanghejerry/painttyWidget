@@ -229,7 +229,7 @@ static inline QColor watering_color(int water, QColor color)
 QColor WaterBased::fetchColor(const QPoint& center) const
 {
     const int delta_width = width_ >>1;
-    const QPoint start_point = std::move(center - QPoint(delta_width, delta_width));
+    const QPoint start_point(center - QPoint(delta_width, delta_width));
 
     QImage square = surface_->imagePtr()->copy(QRect(start_point, QSize(width_, width_)));
 

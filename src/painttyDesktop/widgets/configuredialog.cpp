@@ -249,14 +249,14 @@ void ConfigureDialog::acceptConfigure()
                               ui->use_default_server_checkbox->isChecked());
             needRestart = true;
         }
-        auto ip_t = std::move(ui->ipv4_lineedit->text().trimmed());
+        QString ip_t(ui->ipv4_lineedit->text().trimmed());
         if (ip_t != IPv4_addr)
         {
             settings.setValue("global/server/ipv4_addr",
                               ip_t);
             needRestart = true;
         }
-        ip_t = std::move(ui->ipv6_lineedit->text().trimmed());
+        ip_t = ui->ipv6_lineedit->text().trimmed();
         if (ip_t != IPv6_addr)
         {
             settings.setValue("global/server/ipv6_addr",

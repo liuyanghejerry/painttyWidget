@@ -285,7 +285,7 @@ void MainWindow::toolbarInit()
         }
     };
 
-    auto brushes = std::move(Singleton<BrushManager>::instance().allBrushes());
+    auto brushes = Singleton<BrushManager>::instance().allBrushes();
 
     for(auto &item: brushes){
         // create action on tool bar
