@@ -36,8 +36,6 @@ private:
     QGraphicsScene *scene;
     QGraphicsProxyWidget *proxy;
     QPoint moveStartPoint;
-    int horizontalScrollValue;
-    int verticalScrollValue;
     bool smoothScaleFlag;
     qreal calculateFactor(qreal current, bool zoomIn);
     void setScaleFactorInternal(qreal factor, const QPoint scaleCenter = QPoint());

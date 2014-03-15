@@ -52,6 +52,12 @@ ShortcutManager::ShortcutManager(QObject *parent) :
     map.insert("description", tr("ColorPicker"));
     default_conf.insert("colorpicker", map);
 
+    map.insert("name", "movetool");
+    map.insert("key", QKeySequence("C"));
+    map.insert("type", ShortcutType::Single);
+    map.insert("description", tr("MoveTool"));
+    default_conf.insert("movetool", map);
+
     map.insert("name", "addwidth");
     map.insert("key", QKeySequence("W"));
     map.insert("type", ShortcutType::Single);

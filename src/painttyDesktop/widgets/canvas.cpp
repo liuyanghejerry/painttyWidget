@@ -492,7 +492,7 @@ void Canvas::onColorPicker(bool in)
     }else{
         control_mode_ = NONE;
         updateCursor();
-        emit pickColorComplete();
+        emit canvasToolComplete();
     }
 }
 
@@ -500,12 +500,12 @@ void Canvas::onMoveTool(bool in)
 {
     if(in){
         control_mode_ = MOVING;
-        QPixmap icon = QPixmap(":/iconset/ui/brush/move.png");
-        setCursor(QCursor(icon, 11, 20));
+        QPixmap icon = QPixmap(":/iconset/ui/brush/move-cursor.png");
+        setCursor(QCursor(icon, 15, 15));
     }else{
         control_mode_ = NONE;
         updateCursor();
-        emit pickColorComplete();
+        emit canvasToolComplete();
     }
 }
 
@@ -933,7 +933,13 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
             pickColor(event->pos());
             break;
         case MOVING:
-            emit contentMovedBy(lastPoint - event->pos());
+        {
+            auto p(lastPoint - event->pos());
+            // FIXME: if we don't limit move events here, stack may overflow
+            if(p.manhattanLength() > 10){
+                emit contentMovedBy(p);
+            }
+        }
             break;
         case DRAWING:
             if(jitterCorrection_){

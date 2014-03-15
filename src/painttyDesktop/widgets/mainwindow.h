@@ -45,7 +45,7 @@ public slots:
     void exportToPSD();
     void resetView();
     void about();
-    void onPickColorComplete();
+    void onCanvasToolComplete();
     void openConsole();
     void changeToBrush(const QString& brushName);
 

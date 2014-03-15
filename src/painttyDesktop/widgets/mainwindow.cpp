@@ -92,7 +92,7 @@ void MainWindow::init()
     ui->centralWidget->setCanvas(ui->canvas);
 
     connect(ui->canvas, &Canvas::contentMovedBy,
-            [this](QPoint p){
+            [this](const QPoint& p){
         ui->centralWidget->moveBy(p * ui->centralWidget->currentScaleFactor());
     });
 
@@ -128,8 +128,8 @@ void MainWindow::init()
             this, &MainWindow::brushColorChange);
     connect(this, &MainWindow::brushColorChange,
             ui->canvas, &Canvas::setBrushColor);
-    connect(ui->canvas, &Canvas::pickColorComplete,
-            this, &MainWindow::onPickColorComplete);
+    connect(ui->canvas, &Canvas::canvasToolComplete,
+            this, &MainWindow::onCanvasToolComplete);
 
     connect(ui->colorGrid,
             static_cast<void (ColorGrid::*)(const int&)>
@@ -389,20 +389,19 @@ void MainWindow::toolbarInit()
             moveToolButton_ = b;
             connect(b, &QToolButton::clicked,
                     this, &MainWindow::onMoveToolPressed);
-
-            //            auto colorpicker_key = Singleton<ShortcutManager>::instance()
-            //                    .shortcut("colorpicker")["key"].toString();
-            //            SingleShortcut *pickerShortcut = new SingleShortcut(this);
-            //            pickerShortcut->setKey(colorpicker_key);
-            //            connect(pickerShortcut, &SingleShortcut::activated,
-            //                    b, &QToolButton::click);
-            //            connect(pickerShortcut, &SingleShortcut::inactivated,
-            //                    b, &QToolButton::click);
+            auto movetool_key = Singleton<ShortcutManager>::instance()
+                    .shortcut("movetool")["key"].toString();
+            SingleShortcut *moveToolShortcut = new SingleShortcut(this);
+            moveToolShortcut->setKey(movetool_key);
+            connect(moveToolShortcut, &SingleShortcut::activated,
+                    b, &QToolButton::click);
+            connect(moveToolShortcut, &SingleShortcut::inactivated,
+                    b, &QToolButton::click);
             moveTool->setToolTip(
                         tr("%1\n"
                            "Shortcut: %2")
                         .arg(moveTool->text())
-                        .arg("?"));
+                        .arg(movetool_key));
         }
     }
 
@@ -1009,13 +1008,16 @@ void MainWindow::onColorPickerPressed(bool c)
     }
 }
 
-void MainWindow::onPickColorComplete()
+void MainWindow::onCanvasToolComplete()
 {
     if(brushActionGroup_){
         brushActionGroup_->setDisabled(false);
     }
     if(colorPickerButton_){
         colorPickerButton_->setChecked(false);
+    }
+    if(moveToolButton_){
+        moveToolButton_->setChecked(false);
     }
 }
 

@@ -121,8 +121,11 @@ void CanvasContainer::centerOn(qreal x, qreal y)
 
 void CanvasContainer::moveBy(const QPoint &p)
 {
-    horizontalScrollBar()->setValue(horizontalScrollBar()->value() + p.x());
-    verticalScrollBar()->setValue(verticalScrollBar()->value() + p.y());
+    qDebug()<<p;
+    auto v = qBound(horizontalScrollBar()->minimum(), horizontalScrollBar()->value() + p.x(), horizontalScrollBar()->maximum());
+    horizontalScrollBar()->setValue(v);
+    v = qBound(verticalScrollBar()->minimum(), verticalScrollBar()->value() + p.y(), verticalScrollBar()->maximum());
+    verticalScrollBar()->setValue(v);
 }
 
 qreal CanvasContainer::calculateFactor(qreal current, bool zoomIn)

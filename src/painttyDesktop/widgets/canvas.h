@@ -59,7 +59,7 @@ public slots:
 
 signals:
     void contentMovedBy(const QPoint&);
-    void pickColorComplete();
+    void canvasToolComplete();
     void newBrushSettings(const QVariantMap &map);
     void historyComplete();
     void newPaintAction(const QVariantMap m);
