@@ -1,6 +1,7 @@
 #include "abstractbrush.h"
 #include <QDebug>
 #include <QPainter>
+#include <QPixmapCache>
 
 typedef BrushFeature::LIMIT BFL;
 
@@ -129,14 +130,26 @@ BrushSettings AbstractBrush::defaultSettings() const
 void AbstractBrush::updateCursor(int w)
 {
     int frame = w+2+w%2; // +2 for a border padding
-    QPixmap img(frame, frame);
-    img.fill(Qt::transparent);
-    QPainter painter(&img);
-    painter.drawEllipse(0, 0, w, w);
     const int half_frame = frame>>1;
-    if (w > 10)
-        painter.drawPoint(half_frame, half_frame);
-    cursor_ = QCursor(img, half_frame, half_frame);
+    auto p_pixmap = QPixmapCache::find(QString("brush_cursor_%1").arg(frame));
+    if(p_pixmap){
+        cursor_ = QCursor(*p_pixmap, half_frame, half_frame);
+    } else {
+        QPixmap img(frame, frame);
+        img.fill(Qt::transparent);
+        QPainter painter(&img);
+        QPen white_pen(Qt::white);
+        painter.drawEllipse(0, 0, w, w);
+        painter.save();
+        painter.setPen(white_pen);
+        painter.drawEllipse(0, 0, w-1, w-1);
+        painter.restore();
+        if (w > 10)
+            painter.drawPoint(half_frame, half_frame);
+        cursor_ = QCursor(img, half_frame, half_frame);
+        QPixmapCache::insert(QString("brush_cursor_%1").arg(frame), img);
+    }
+
 }
 
 QColor AbstractBrush::color() const
