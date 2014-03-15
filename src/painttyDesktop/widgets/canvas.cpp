@@ -969,11 +969,8 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
         switch(control_mode_) {
         case PICKING:
-            pickColor(event->pos());
-            onColorPicker(false);
             break;
         case MOVING:
-//            control_mode_ = NONE;
             break;
         default:
             // fall-through
