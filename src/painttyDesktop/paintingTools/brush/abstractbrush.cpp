@@ -135,17 +135,15 @@ void AbstractBrush::updateCursor(int w)
     if(p_pixmap){
         cursor_ = QCursor(*p_pixmap, half_frame, half_frame);
     } else {
+        QPoint circle_center(half_frame, half_frame);
         QPixmap img(frame, frame);
         img.fill(Qt::transparent);
         QPainter painter(&img);
+        painter.drawEllipse(circle_center, w>>1, w>>1);
+        painter.setRenderHint(QPainter::Antialiasing, false);
         QPen white_pen(Qt::white);
-        painter.drawEllipse(0, 0, w, w);
-        painter.save();
         painter.setPen(white_pen);
-        painter.drawEllipse(0, 0, w-1, w-1);
-        painter.restore();
-        if (w > 10)
-            painter.drawPoint(half_frame, half_frame);
+        painter.drawEllipse(circle_center, (w>>1)-1, (w>>1)-1);
         cursor_ = QCursor(img, half_frame, half_frame);
         QPixmapCache::insert(QString("brush_cursor_%1").arg(frame), img);
     }
