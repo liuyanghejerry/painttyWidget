@@ -55,14 +55,15 @@ void BasicBrush::setThickness(int thickness)
 
 void BasicBrush::makeStencil(QColor color)
 {
-    if(stencil_.isNull() || stencil_.width() != width_){
-        stencil_ = QImage(width_, width_, QImage::Format_ARGB32_Premultiplied);
+    auto checked_width = width_ < 4 ? 4 : width_;
+    if(stencil_.isNull() || stencil_.width() != checked_width){
+        stencil_ = QImage(checked_width, checked_width, QImage::Format_ARGB32_Premultiplied);
     }
     auto oc = color;
     stencil_.fill(Qt::transparent);
     const QEasingCurve easing(QEasingCurve::OutQuart);
 
-    const int half_width = width_>>1;
+    const int half_width = checked_width>>1;
 
     const QPoint center(half_width, half_width);
     QPainter painter;
@@ -83,7 +84,7 @@ void BasicBrush::makeStencil(QColor color)
 //    qreal r_h = 0.8;
     gradient.setFocalRadius(half_width*r_h -1);
     const QBrush brush(gradient);
-    const QPen pen(brush, width_);
+    const QPen pen(brush, checked_width);
     painter.setPen(pen);
     painter.setOpacity(thickness_/100.0*oc.alphaF());
     painter.drawPoint(half_width, half_width);

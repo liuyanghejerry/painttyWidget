@@ -36,11 +36,12 @@ void BinaryBrush::setSettings(const BrushSettings &settings)
 
 void BinaryBrush::makeStencil(QColor color)
 {
-    if(stencil_.isNull() || stencil_.width() != width_){
-        stencil_ = QImage(width_, width_, QImage::Format_ARGB32_Premultiplied);
+    auto checked_width = width_ < 4 ? 4 : width_;
+    if(stencil_.isNull() || stencil_.width() != checked_width){
+        stencil_ = QImage(checked_width, checked_width, QImage::Format_ARGB32_Premultiplied);
     }
     stencil_.fill(Qt::transparent);
-    const int half_width = width_>>1;
+    const int half_width = checked_width>>1;
 
     const QPoint center(half_width, half_width);
     QPainter painter;
