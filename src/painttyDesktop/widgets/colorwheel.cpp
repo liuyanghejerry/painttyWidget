@@ -7,7 +7,7 @@
 
 ColorWheel::ColorWheel(QWidget *parent) :
     QWidget(parent),
-    initSize(200,200),
+    initSize(200*logicalDpiX()/96,200*logicalDpiY()/96),
     mouseDown(false),
     margin(0),
     wheelWidth(30),
@@ -19,6 +19,7 @@ ColorWheel::ColorWheel(QWidget *parent) :
     current = current.toHsv();
     //    setMinimumSize(200,200);
     setCursor(Qt::CrossCursor);
+    qDebug() << initSize;
 }
 
 QColor ColorWheel::color()
@@ -88,7 +89,8 @@ QColor ColorWheel::posColor(const QPoint &point)
 
 QSize ColorWheel::sizeHint () const
 {
-    return QSize(height(),height());
+    //return QSize(height(),height());
+    return initSize;
 }
 QSize ColorWheel::minimumSizeHint () const
 {
