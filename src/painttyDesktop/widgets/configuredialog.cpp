@@ -47,16 +47,16 @@ void ConfigureDialog::readSettings()
                        QSettings::defaultFormat());
     selectedLanguage = settings.value("global/language").toString();
     tryIpv6 = settings.value("global/ipv6", false).toBool();
-    msg_notify = settings.value("chat/msg_notify", false).toBool();
-    auto_disable_ime = settings.value("canvas/auto_disable_ime", false).toBool();
+    msg_notify = settings.value("chat/msg_notify", true).toBool();
+    auto_disable_ime = settings.value("canvas/auto_disable_ime", true).toBool();
     enable_tablet = settings.value("canvas/enable_tablet", false).toBool();
     use_defalut_server = settings.value("global/server/use_default", true).toBool();
     IPv4_addr = settings.value("global/server/ipv4_addr").toString();
     IPv6_addr = settings.value("global/server/ipv6_addr").toString();
     server_port = settings.value("global/server/server_port", 0).toUInt();
-    skip_replay = settings.value("canvas/skip_replay", false).toBool();
+    skip_replay = settings.value("canvas/skip_replay", true).toBool();
     use_droid_font = settings.value("global/use_droid_font", false).toBool();
-    fullspeed_replay = settings.value("canvas/fullspeed_replay", false).toBool();
+    fullspeed_replay = settings.value("canvas/fullspeed_replay", true).toBool();
 }
 
 void ConfigureDialog::initLanguageList()

@@ -28,7 +28,7 @@ CanvasBackend::CanvasBackend(QObject *parent)
                        QSettings::defaultFormat());
 
     fullspeed_replay = settings.value("canvas/fullspeed_replay",
-                                       false).toBool();
+                                       true).toBool();
 
     connect(&client_socket, &ClientSocket::dataPack,
             this, &CanvasBackend::onIncomingData);

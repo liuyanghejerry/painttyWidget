@@ -917,7 +917,7 @@ void MainWindow::onNewMessage(const QString &content)
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
                        qApp);
-    bool msg_notify = settings.value("chat/msg_notify").toBool();
+    bool msg_notify = settings.value("chat/msg_notify", true).toBool();
     if(!this->isActiveWindow() && msg_notify)
         PlatformExtend::notify(this);
 }
@@ -1226,7 +1226,7 @@ void MainWindow::closeEvent( QCloseEvent * event )
                       ui->colorGrid->dataExport());
     settings.setValue("mainwindow/view",
                       saveState());
-    bool skip_replay = settings.value("canvas/skip_replay", false).toBool();
+    bool skip_replay = settings.value("canvas/skip_replay", true).toBool();
     if(skip_replay){
         qDebug()<<"skip replay detected, save layers";
         ui->canvas->saveLayers();

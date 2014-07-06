@@ -889,7 +889,7 @@ void Canvas::focusInEvent(QFocusEvent *)
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
                        qApp);
-    bool disable_ime = settings.value("canvas/auto_disable_ime").toBool();
+    bool disable_ime = settings.value("canvas/auto_disable_ime", true).toBool();
     if(disable_ime)
         PlatformExtend::setIMEState(this, false);
 }
@@ -899,7 +899,7 @@ void Canvas::focusOutEvent(QFocusEvent *)
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
                        qApp);
-    bool disable_ime = settings.value("canvas/auto_disable_ime").toBool();
+    bool disable_ime = settings.value("canvas/auto_disable_ime", true).toBool();
     if(disable_ime)
         PlatformExtend::setIMEState(this, true);
 }
