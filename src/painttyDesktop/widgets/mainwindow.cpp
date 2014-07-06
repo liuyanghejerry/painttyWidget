@@ -998,6 +998,9 @@ void MainWindow::onMoveToolPressed(bool c)
     if(brushActionGroup_){
         brushActionGroup_->setDisabled(c);
     }
+    if(colorPickerButton_){
+        colorPickerButton_->setDisabled(c);
+    }
 }
 
 void MainWindow::onColorPickerPressed(bool c)
@@ -1005,6 +1008,9 @@ void MainWindow::onColorPickerPressed(bool c)
     ui->canvas->onColorPicker(c);
     if(brushActionGroup_){
         brushActionGroup_->setDisabled(c);
+    }
+    if(moveToolButton_){
+        moveToolButton_->setDisabled(c);
     }
 }
 
