@@ -23,6 +23,7 @@
 #include <QTimer>
 #include <QScriptEngine>
 #include <QDateTime>
+#include <QProcessEnvironment>
 
 #include "../misc/singleshortcut.h"
 #include "layerwidget.h"
@@ -1248,7 +1249,7 @@ void MainWindow::exportAllToFile()
     QString fileName =
             QFileDialog::getSaveFileName(this,
                                          tr("Export all to file"),
-                                         QDir::currentPath(),
+                                         "",
                                          tr("Images (*.png)"));
     fileName = fileName.trimmed();
     if(fileName.isEmpty()){
@@ -1266,7 +1267,7 @@ void MainWindow::exportVisibleToFile()
     QString fileName =
             QFileDialog::getSaveFileName(this,
                                          tr("Export visible part to file"),
-                                         QDir::currentPath(),
+                                         "",
                                          tr("Images (*.png)"));
     fileName = fileName.trimmed();
     if(fileName.isEmpty()){
@@ -1284,7 +1285,7 @@ void MainWindow::exportToPSD()
     QString fileName =
             QFileDialog::getSaveFileName(this,
                                          tr("Export contents to psd file"),
-                                         QDir::currentPath(),
+                                         "",
                                          tr("Photoshop Images (*.psd)"));
     fileName = fileName.trimmed();
     if(fileName.isEmpty()){
@@ -1308,6 +1309,7 @@ void MainWindow::exportToPSD()
     }
 
     // prepare args for ImageMagick convert
+    // FIXME: colors seems not right in some conditions
     const static QString single_pattern("( -page +0+0 %1[0] -background transparent -mosaic -set colorspace Transparent )");
     const static QString multi_pattern("( -clone 0--1 -background transparent -mosaic ) -alpha On -reverse %1");
 
@@ -1327,8 +1329,11 @@ void MainWindow::exportToPSD()
 
     QProcess *process = new QProcess(this);
 
-    process->setWorkingDirectory(QDir::current().absolutePath());
-    process->start("convert", result_args);
+    // ImageMagick Mac needs env to work
+    auto MAGICK_HOME = QString("MAGICK_HOME=%1").arg(QDir::current().absolutePath());
+    auto DYLD_LIBRARY_PATH = QString("DYLD_LIBRARY_PATH=%1%2lib%2").arg(QDir::current().absolutePath()).arg(QDir::separator());
+    process->setEnvironment(QStringList{MAGICK_HOME, DYLD_LIBRARY_PATH});
+    process->start(QString("%1%2convert").arg(QDir::current().absolutePath()).arg(QDir::separator()), result_args);
 }
 
 void MainWindow::exportAllToClipboard()
