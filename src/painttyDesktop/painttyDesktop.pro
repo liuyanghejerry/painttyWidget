@@ -91,7 +91,8 @@ SOURCES += main.cpp\
     paintingTools/brush/sketchbrush.cpp \
     paintingTools/brush/waterbased.cpp \
     widgets/panoramarotator.cpp \
-    widgets/networkindicator.cpp
+    widgets/networkindicator.cpp \
+    widgets/sponsorlabel.cpp
 
 
 HEADERS  += widgets/mainwindow.h \
@@ -152,7 +153,8 @@ HEADERS  += widgets/mainwindow.h \
     paintingTools/brush/sketchbrush.h \
     paintingTools/brush/waterbased.h \
     widgets/panoramarotator.h \
-    widgets/networkindicator.h
+    widgets/networkindicator.h \
+    widgets/sponsorlabel.h
 
 FORMS    += widgets/mainwindow.ui \
     widgets/roomlistdialog.ui \

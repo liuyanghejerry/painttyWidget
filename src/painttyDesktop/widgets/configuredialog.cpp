@@ -22,6 +22,7 @@ ConfigureDialog::ConfigureDialog(QWidget *parent) :
     auto_disable_ime(false),
     skip_replay(false),
     use_droid_font(false),
+    hide_sponser(false),
     use_defalut_server(true),
     server_port(0)
 {
@@ -57,6 +58,7 @@ void ConfigureDialog::readSettings()
     skip_replay = settings.value("canvas/skip_replay", true).toBool();
     use_droid_font = settings.value("global/use_droid_font", false).toBool();
     fullspeed_replay = settings.value("canvas/fullspeed_replay", true).toBool();
+    hide_sponser = settings.value("global/hide_sponser", false).toBool();
 }
 
 void ConfigureDialog::initLanguageList()
@@ -148,6 +150,7 @@ void ConfigureDialog::initUi()
     ui->skip_replay->setChecked(skip_replay);
     ui->droid_font_checkbox->setChecked(use_droid_font);
     ui->fullspeed_replay->setChecked(fullspeed_replay);
+    ui->hide_sponser->setChecked(hide_sponser);
     connect(ui->clearCache, &QPushButton::clicked,
             [](){
         QDir cacheDir("cache");
@@ -287,27 +290,30 @@ void ConfigureDialog::acceptConfigure()
         needRestart = true;
     }
 
+    if(ui->hide_sponser->isChecked() != hide_sponser) {
+        settings.setValue("global/hide_sponser",
+                          ui->hide_sponser->isChecked());
+        needRestart = true;
+    }
     settings.sync();
 
     //see if we need to restart
-    if (needRestart)
-    {
-        int result = QMessageBox::warning(this, tr("Restart"),
-                                          tr("Application must restart to "
-                                             "enable some of the settings.\n"
-                                             "Do you want to restart right now?"),
-                                          QMessageBox::Yes | QMessageBox::No);
-        if (result == QMessageBox::Yes)
-        {
-            qApp->closeAllWindows();
-            qApp->exit(1);
-            QProcess::startDetached(qApp->applicationFilePath(), QStringList());
-        }
-        else if (result == QMessageBox::No)
-        {
-            QMessageBox::warning(this , tr("Restart"),
-                                 tr("New settings will be applied on next start."));
-        }
+    if (!needRestart) {
+        return;
+    }
+
+    int result = QMessageBox::warning(this, tr("Restart"),
+                                      tr("Application must restart to "
+                                         "enable some of the settings.\n"
+                                         "Do you want to restart right now?"),
+                                      QMessageBox::Yes | QMessageBox::No);
+    if (result == QMessageBox::Yes) {
+        qApp->closeAllWindows();
+        qApp->exit(1);
+        QProcess::startDetached(qApp->applicationFilePath(), QStringList());
+    } else if (result == QMessageBox::No) {
+        QMessageBox::warning(this , tr("Restart"),
+                             tr("New settings will be applied on next start."));
     }
 }
 

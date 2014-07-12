@@ -27,6 +27,8 @@ QPalette& rePalette(QPalette &p)
     p.setColor(QPalette::HighlightedText, QColor::fromRgb(249, 249, 249));
     p.setColor(QPalette::Window, QColor::fromRgb(249, 249, 249));
     p.setColor(QPalette::Base, QColor::fromRgb(249, 249, 249));
+    p.setColor(QPalette::Link, QColor::fromRgb(255, 68, 0));
+    p.setColor(QPalette::LinkVisited, QColor::fromRgb(255, 68, 0));
     return p;
 }
 

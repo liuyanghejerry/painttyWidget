@@ -65,10 +65,17 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item row="5" column="0">
         <widget class="QPushButton" name="clearCache">
          <property name="text">
           <string>Clear Cache</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <widget class="QCheckBox" name="hide_sponser">
+         <property name="text">
+          <string>Hide sponsor content</string>
          </property>
         </widget>
        </item>

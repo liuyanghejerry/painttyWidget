@@ -31,6 +31,7 @@ private:
     bool skip_replay;
     bool use_droid_font;
     bool fullspeed_replay;
+    bool hide_sponser;
 
     bool use_defalut_server;
     QString IPv4_addr;
