@@ -569,7 +569,6 @@ Do you want to restart right now?</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="555"/>
-        <location filename="../widgets/mainwindow.cpp" line="594"/>
         <source>Only room owner is authorized to close the room.
 It seems you&apos;re not room manager.</source>
         <translation>只有房主才有權限關閉房間。
@@ -607,6 +606,13 @@ It seems you&apos;re not room manager.</source>
         <location filename="../widgets/mainwindow.cpp" line="490"/>
         <source>Notice, we detected you&apos;re using IPv6 protocol which may result in that your Room URL is not available for IPv4 users.</source>
         <translation>提示：檢測到您正在使用IPv6協定，這將導致您的房間URL無法與IPv4用戶共通。</translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwindow.cpp" line="594"/>
+        <source>Only room owner is authorized to kick members.
+It seems you&apos;re not room manager.</source>
+        <translation>僅有房主才可移出成員。
+您似乎不是房主。</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="691"/>
@@ -1181,148 +1187,148 @@ You may need to check update yourself.</source>
         <translation type="obsolete">注意：我們還在構思階段，至多提供50個房間。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="73"/>
-        <location filename="../widgets/roomlistdialog.cpp" line="648"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="74"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="649"/>
         <source>Rooms: %1, Members: %2</source>
         <translation>房間：%1，人數：%2</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="101"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="102"/>
         <source>Room Name</source>
         <translation>房間名</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="102"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="103"/>
         <source>Privacy</source>
         <translation>私密性</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="103"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="104"/>
         <source>Current Member</source>
         <translation>在線人數</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="104"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="105"/>
         <source>Max Member</source>
         <translation>最大人數</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="192"/>
-        <location filename="../widgets/roomlistdialog.cpp" line="214"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="193"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="215"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="193"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="194"/>
         <source>You must have a valid nick name.</source>
         <translation>您必須有一個合法的暱稱</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="215"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="216"/>
         <source>You didn&apos;t choose any room.</source>
         <translation>您沒有選擇任何房間。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="236"/>
-        <location filename="../widgets/roomlistdialog.cpp" line="262"/>
-        <location filename="../widgets/roomlistdialog.cpp" line="578"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="237"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="263"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="579"/>
         <source>Error!</source>
         <translation>出錯啦！</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="237"/>
-        <location filename="../widgets/roomlistdialog.cpp" line="263"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="238"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="264"/>
         <source>Cannot connect to server.
 If this situation continues, you should consider &lt;a href=&apos;http://mrspaint.com&apos;&gt;update&lt;/a&gt; manually.</source>
         <translation>無法連接伺服器。
 如果始終無法連接，請嘗試&lt;a href=&apos;http://mrspaint.com&apos;&gt;手動更新&lt;/a&gt;。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="539"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="540"/>
         <source>Succeed!</source>
         <translation>建立成功！</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="540"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="541"/>
         <source>Go get your room!</source>
         <translation>快去房間吧！</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="574"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="575"/>
         <source>Error: %1, %2
 Do you want to retry?</source>
         <translation>錯誤：%1，%2
 想要重試嗎？</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="626"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="627"/>
         <source>Private</source>
         <translation>私</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="626"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="627"/>
         <source>Public</source>
         <translation>公</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="454"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="455"/>
         <source>Connection</source>
         <translation>連接</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="455"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="456"/>
         <source>Sorry, server has closed.</source>
         <translation>抱歉，伺服器好像斷開了。</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="317"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="318"/>
         <source>Full loaded</source>
         <translation>滿載</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="39"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="40"/>
         <source>Room Url</source>
         <translation>房間URL</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="40"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="41"/>
         <source>Input room url:</source>
         <translation>輸入房間URL：</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="318"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="319"/>
         <source>Cannot join a full loaded room.</source>
         <translation>無法加入一個滿房</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="327"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="328"/>
         <source>Password</source>
         <translation>密碼</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="328"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="329"/>
         <source>This is a private room, please input password:</source>
         <translation>這是一個私人房間，請您輸入密碼：</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="489"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="490"/>
         <source>Error</source>
         <translation>出錯</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="490"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="491"/>
         <source>Sorry, an error occurred.
 Error: %1, %2</source>
         <translation>抱歉，出錯了。
 錯誤：%1，%2</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="682"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="683"/>
         <source>Notice</source>
         <translation>注意</translation>
     </message>
     <message>
-        <location filename="../widgets/roomlistdialog.cpp" line="683"/>
+        <location filename="../widgets/roomlistdialog.cpp" line="684"/>
         <source>We&apos;re still in alpha test. This means the program may crash at any time in any condition.
 Use this software only when you accept it.</source>
         <translation>我們仍處於早期測試階段。這意味著軟體隨時有可能宕機。
