@@ -1,11 +1,11 @@
-#include "PSDExport.h"
+#include "psdexport.h"
 #include <QList>
 #include <QDataStream>
 #include <QDebug>
 
 QByteArray imageToLayerData(const QList<QImage> &imageList);
-QByteArray imageToChannelData(const QImage &image, int *alphaSize, int *redSize, int *greenSize, int *blueSize);
-QByteArray RLECompress(const QByteArray &source);
+QByteArray imageToChannelData(const QImage &image, bool imageData, int *alphaSize = 0,
+                              int *redSize = 0, int *greenSize = 0, int *blueSize = 0);
 
 #define BYTE_ORDER QDataStream::BigEndian
 
@@ -40,10 +40,11 @@ QByteArray RLECompress(const QByteArray &source);
 #define FLAGS quint8(8)
 #define FILTER quint8(0)
 
-QByteArray imagesToPSD(const QList<QImage> &imageList)
+QByteArray imagesToPSD(const QList<QImage> &imageList, const QImage &preview)
 {
     QByteArray psdData;
     QDataStream psdDataStream(&psdData, QIODevice::WriteOnly);
+    psdDataStream.setByteOrder(BYTE_ORDER);
     psdDataStream << SIGNATURE << VERSION << RESERVED_P1 << RESERVED_P2 << RESERVED_P3;
     psdDataStream << IMAGE_CHANNEL_NUMBER;
     psdDataStream << IMAGE_HEIGHT(imageList.at(0).height())
@@ -53,12 +54,13 @@ QByteArray imagesToPSD(const QList<QImage> &imageList)
 
     QByteArray layerAndMaskInfoSection;
     QDataStream layerAndMaskInfoSectionStream(&layerAndMaskInfoSection, QIODevice::WriteOnly);
+    layerAndMaskInfoSectionStream.setByteOrder(BYTE_ORDER);
     layerAndMaskInfoSectionStream << quint32(0);
     layerAndMaskInfoSection.append(imageToLayerData(imageList));
     layerAndMaskInfoSectionStream.device()->seek(0);
     layerAndMaskInfoSectionStream << quint32(layerAndMaskInfoSection.size() - 4);
     psdData.append(layerAndMaskInfoSection);
-    psdData.append(QByteArray(6, 0));
+    psdData.append(imageToChannelData(preview, true));
     return psdData;
 }
 
@@ -74,7 +76,7 @@ QByteArray imageToLayerData(const QList<QImage> &imageList)
     foreach (const QImage &image, imageList)
     {
         int a, r, g, b;
-        QByteArray channelData = imageToChannelData(image, &a, &r, &g, &b);
+        QByteArray channelData = imageToChannelData(image, false, &a, &r, &g, &b);
         layerRecordStream << quint32(0) << quint32(0) //top, left
                           << IMAGE_HEIGHT(image.height()) //bottom
                           << IMAGE_WIDTH(image.width()); //right
@@ -95,6 +97,7 @@ QByteArray imageToLayerData(const QList<QImage> &imageList)
 
     QByteArray layerInfo;
     QDataStream layerInfoStream(&layerInfo, QIODevice::WriteOnly);
+    layerInfoStream.setByteOrder(BYTE_ORDER);
     layerInfoStream << quint32(0); //Length of the layers info section, rounded up to a multiple of 2
     layerInfoStream << qint16(-imageList.count()); //Layer count
     layerInfoStream.writeRawData(layerRecord.constData(), layerRecord.size());
@@ -106,10 +109,10 @@ QByteArray imageToLayerData(const QList<QImage> &imageList)
     return layerInfo;
 }
 
-QByteArray imageToChannelData(const QImage &image, int *alphaSize, int *redSize, int *greenSize, int *blueSize)
+QByteArray imageToChannelData(const QImage &image, bool imageData, int *alphaSize, int *redSize, int *greenSize, int *blueSize)
 {
     if (image.format() != QImage::Format_ARGB32)
-        return imageToChannelData(image.convertToFormat(QImage::Format_ARGB32),
+        return imageToChannelData(image.convertToFormat(QImage::Format_ARGB32), imageData,
                                   alphaSize, redSize, greenSize, blueSize);
 
     int pixelCount = image.width() * image.height();
@@ -142,51 +145,39 @@ QByteArray imageToChannelData(const QImage &image, int *alphaSize, int *redSize,
             blueChannel.append(qBlue(lineData[col]));
         }
     }
-    alphaChannel = qCompress(alphaChannel);
-    alphaChannel.remove(0, 2);
-    alphaChannel[0] = 0;
-    alphaChannel[1] = 2;
-    *alphaSize = alphaChannel.size();
-    redChannel = qCompress(redChannel);
-    redChannel.remove(0, 2);
-    redChannel[0] = 0;
-    redChannel[1] = 2;
-    *redSize = redChannel.size();
-    greenChannel = qCompress(greenChannel);
-    greenChannel.remove(0, 2);
-    greenChannel[0] = 0;
-    greenChannel[1] = 2;
-    *greenSize = greenChannel.size();
-    blueChannel = qCompress(blueChannel);
-    blueChannel.remove(0, 2);
-    blueChannel[0] = 0;
-    blueChannel[1] = 2;
-    *blueSize = blueChannel.size();
-    return alphaChannel + redChannel + greenChannel + blueChannel;
-}
-
-QByteArray RLECompress(const QByteArray &source)
-{
-    qint8 count = 1;
-    quint8 lastChar = source.at(0);
-    QByteArray dest;
-    for(int i = 1; i < source.size(); i++)
+    if (!imageData)
     {
-        if (source.at(i) == lastChar && count < 127)
-        {
-            count++;
-        }
-        else
-        {
-            //output same char
-            dest.append(char(-count + 1)); //-(cout-1)
-            dest.append(lastChar);
-            lastChar = source.at(i);
-            count = 1;
-        }
+        alphaChannel = qCompress(alphaChannel);
+        alphaChannel.remove(0, 2);
+        alphaChannel[0] = 0;
+        alphaChannel[1] = 2;
+        *alphaSize = alphaChannel.size();
+        redChannel = qCompress(redChannel);
+        redChannel.remove(0, 2);
+        redChannel[0] = 0;
+        redChannel[1] = 2;
+        *redSize = redChannel.size();
+        greenChannel = qCompress(greenChannel);
+        greenChannel.remove(0, 2);
+        greenChannel[0] = 0;
+        greenChannel[1] = 2;
+        *greenSize = greenChannel.size();
+        blueChannel = qCompress(blueChannel);
+        blueChannel.remove(0, 2);
+        blueChannel[0] = 0;
+        blueChannel[1] = 2;
+        *blueSize = blueChannel.size();
+        return alphaChannel + redChannel + greenChannel + blueChannel;
     }
-    //output same char
-    dest.append(char(-count + 1)); //-(cout-1)
-    dest.append(lastChar);
-    return dest;
+    else
+    {
+//        alphaChannel = qCompress(alphaChannel + redChannel + greenChannel + blueChannel);
+//        alphaChannel.remove(0, 2);
+//        alphaChannel[0] = 0;
+//        alphaChannel[1] = 2;
+        alphaChannel = alphaChannel + redChannel + greenChannel + blueChannel;
+        alphaChannel.prepend(char(0));
+        alphaChannel.prepend(char(0));
+        return alphaChannel;
+    }
 }
