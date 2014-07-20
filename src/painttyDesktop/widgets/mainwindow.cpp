@@ -593,7 +593,7 @@ void MainWindow::requestKickUser(const QString& id)
         QMessageBox::warning(this,
                              tr("Sorry"),
                              tr("Only room owner is authorized "
-                                "to close the room.\n"
+                                "to kick members.\n"
                                 "It seems you're not room manager."));
         return;
     }
