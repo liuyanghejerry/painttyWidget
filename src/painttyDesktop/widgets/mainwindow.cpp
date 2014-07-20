@@ -1250,7 +1250,7 @@ void MainWindow::exportAllToFile()
     QString fileName =
             QFileDialog::getSaveFileName(this,
                                          tr("Export all to file"),
-                                         "",
+                                         this->windowTitle(),
                                          tr("Images (*.png)"));
     fileName = fileName.trimmed();
     if(fileName.isEmpty()){
@@ -1268,7 +1268,7 @@ void MainWindow::exportVisibleToFile()
     QString fileName =
             QFileDialog::getSaveFileName(this,
                                          tr("Export visible part to file"),
-                                         "",
+                                         this->windowTitle(),
                                          tr("Images (*.png)"));
     fileName = fileName.trimmed();
     if(fileName.isEmpty()){
@@ -1286,7 +1286,7 @@ void MainWindow::exportToPSD()
     QString fileName =
             QFileDialog::getSaveFileName(this,
                                          tr("Export contents to psd file"),
-                                         "",
+                                         this->windowTitle(),
                                          tr("Photoshop Images (*.psd)"));
     fileName = fileName.trimmed();
     if(fileName.isEmpty()){
@@ -1296,8 +1296,8 @@ void MainWindow::exportToPSD()
         fileName = fileName + ".psd";
     }
 
-    // save all layers into png
-    QByteArray data = imagesToPSD(ui->canvas->layerImages());
+    // save all layers into psd
+    QByteArray data = imagesToPSD(ui->canvas->layerImages(), ui->canvas->allCanvas());
     QFile file(fileName);
     if(!file.open(QIODevice::Truncate|QIODevice::WriteOnly)) {
         return;

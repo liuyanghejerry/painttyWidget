@@ -445,9 +445,7 @@ void Canvas::saveLayers()
 QList<QImage> Canvas::layerImages() const
 {
     QList<QImage> lists;
-    QString dir_name = Singleton<ArchiveFile>::instance().dirName();
-    QDir::current().mkpath(dir_name);
-    for(int i=layers.count()-1;i>=0;--i){
+    for(int i=0;i<layers.count();++i){
         if(!layers.layerFrom(i)->isTouched()){
             continue;
         }

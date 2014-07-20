@@ -3,9 +3,9 @@
 #include <QDataStream>
 #include <QDebug>
 
-QByteArray imageToLayerData(const QList<QImage> &imageList);
-QByteArray imageToChannelData(const QImage &image, bool imageData, int *alphaSize = 0,
-                              int *redSize = 0, int *greenSize = 0, int *blueSize = 0);
+static QByteArray imageToLayerData(const QList<QImage> &imageList);
+static QByteArray imageToChannelData(const QImage &image, bool imageData, int *alphaSize = 0,
+                                     int *redSize = 0, int *greenSize = 0, int *blueSize = 0);
 
 #define BYTE_ORDER QDataStream::BigEndian
 
@@ -81,10 +81,10 @@ QByteArray imageToLayerData(const QList<QImage> &imageList)
                           << IMAGE_HEIGHT(image.height()) //bottom
                           << IMAGE_WIDTH(image.width()); //right
         layerRecordStream << LAYER_CHANNEL_COUNT;
-//        layerRecordStream << ALPHA_CHANNEL_ID << quint32(channelData.size() / 4);
-//        layerRecordStream << RED_CHANNEL_ID << quint32(channelData.size() / 4);
-//        layerRecordStream << GREEN_CHANNEL_ID << quint32(channelData.size() / 4);
-//        layerRecordStream << BLUE_CHANNEL_ID << quint32(channelData.size() / 4);
+        //        layerRecordStream << ALPHA_CHANNEL_ID << quint32(channelData.size() / 4);
+        //        layerRecordStream << RED_CHANNEL_ID << quint32(channelData.size() / 4);
+        //        layerRecordStream << GREEN_CHANNEL_ID << quint32(channelData.size() / 4);
+        //        layerRecordStream << BLUE_CHANNEL_ID << quint32(channelData.size() / 4);
         layerRecordStream << ALPHA_CHANNEL_ID << quint32(a);
         layerRecordStream << RED_CHANNEL_ID << quint32(r);
         layerRecordStream << GREEN_CHANNEL_ID << quint32(g);
@@ -125,14 +125,14 @@ QByteArray imageToChannelData(const QImage &image, bool imageData, int *alphaSiz
     greenChannel.reserve(pixelCount + 2);
     blueChannel.reserve(pixelCount + 2);
 
-//    alphaChannel.append(char(0));
-//    alphaChannel.append(char(0));
-//    redChannel.append(char(0));
-//    redChannel.append(char(0));
-//    greenChannel.append(char(0));
-//    greenChannel.append(char(0));
-//    blueChannel.append(char(0));
-//    blueChannel.append(char(0));
+    //    alphaChannel.append(char(0));
+    //    alphaChannel.append(char(0));
+    //    redChannel.append(char(0));
+    //    redChannel.append(char(0));
+    //    greenChannel.append(char(0));
+    //    greenChannel.append(char(0));
+    //    blueChannel.append(char(0));
+    //    blueChannel.append(char(0));
 
     for (int line = 0; line < image.height(); line++)
     {
@@ -171,10 +171,10 @@ QByteArray imageToChannelData(const QImage &image, bool imageData, int *alphaSiz
     }
     else
     {
-//        alphaChannel = qCompress(alphaChannel + redChannel + greenChannel + blueChannel);
-//        alphaChannel.remove(0, 2);
-//        alphaChannel[0] = 0;
-//        alphaChannel[1] = 2;
+        //        alphaChannel = qCompress(alphaChannel + redChannel + greenChannel + blueChannel);
+        //        alphaChannel.remove(0, 2);
+        //        alphaChannel[0] = 0;
+        //        alphaChannel[1] = 2;
         alphaChannel = alphaChannel + redChannel + greenChannel + blueChannel;
         alphaChannel.prepend(char(0));
         alphaChannel.prepend(char(0));
