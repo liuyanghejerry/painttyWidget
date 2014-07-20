@@ -442,6 +442,20 @@ void Canvas::saveLayers()
     }
 }
 
+QList<QImage> Canvas::layerImages() const
+{
+    QList<QImage> lists;
+    QString dir_name = Singleton<ArchiveFile>::instance().dirName();
+    QDir::current().mkpath(dir_name);
+    for(int i=layers.count()-1;i>=0;--i){
+        if(!layers.layerFrom(i)->isTouched()){
+            continue;
+        }
+        lists.append(*(layers.layerFrom(i)->imageConstPtr()));
+    }
+    return lists;
+}
+
 void Canvas::pause()
 {
     emit parsePaused();

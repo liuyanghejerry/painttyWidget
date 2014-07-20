@@ -55,6 +55,7 @@ public slots:
     void onMoveTool(bool in);
     void loadLayers();
     void saveLayers();
+    QList<QImage> layerImages() const;
     void pause();
 
 signals:

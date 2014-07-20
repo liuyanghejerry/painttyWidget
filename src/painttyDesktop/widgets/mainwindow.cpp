@@ -45,6 +45,7 @@
 #include "../misc/shortcutmanager.h"
 #include "../misc/errortable.h"
 #include "../misc/archivefile.h"
+#include "../misc/psdexport.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -1296,44 +1297,13 @@ void MainWindow::exportToPSD()
     }
 
     // save all layers into png
-    ui->canvas->saveLayers();
-    // get all png files from cache dir
-    QString dir_name = Singleton<ArchiveFile>::instance().dirName();
-    QDir dir(dir_name);
-    QStringList filters("*.png");
-    QStringList file_list = dir.entryList(filters, QDir::Files, QDir::Name);
-
-    if(!file_list.length()){
-        // no any png files found
+    QByteArray data = imagesToPSD(ui->canvas->layerImages());
+    QFile file(fileName);
+    if(!file.open(QIODevice::Truncate|QIODevice::WriteOnly)) {
         return;
     }
-
-    // prepare args for ImageMagick convert
-    // FIXME: colors seems not right in some conditions
-    const static QString single_pattern("( -page +0+0 %1[0] -background transparent -mosaic -set colorspace Transparent )");
-    const static QString multi_pattern("( -clone 0--1 -background transparent -mosaic ) -alpha On -reverse %1");
-
-    const static QStringList single_pattern_list = single_pattern.split(" ", QString::SkipEmptyParts);
-    const static QStringList multi_pattern_list = multi_pattern.split(" ", QString::SkipEmptyParts);
-
-    QStringList result_args;
-
-    for(const auto& file_name: file_list){
-        auto dup_single_list = single_pattern_list;
-        QString p = QDir::currentPath()+"/"+dir_name+"/"+file_name;
-        result_args += dup_single_list.replaceInStrings("%1", QDir::toNativeSeparators(p));
-    }
-
-    auto dup_multi_list = multi_pattern_list;
-    result_args += dup_multi_list.replaceInStrings("%1", QDir::toNativeSeparators(fileName));
-
-    QProcess *process = new QProcess(this);
-
-    // ImageMagick Mac needs env to work
-    auto MAGICK_HOME = QString("MAGICK_HOME=%1").arg(QDir::current().absolutePath());
-    auto DYLD_LIBRARY_PATH = QString("DYLD_LIBRARY_PATH=%1%2lib%2").arg(QDir::current().absolutePath()).arg(QDir::separator());
-    process->setEnvironment(QStringList{MAGICK_HOME, DYLD_LIBRARY_PATH});
-    process->start(QString("%1%2convert").arg(QDir::current().absolutePath()).arg(QDir::separator()), result_args);
+    file.write(data);
+    file.close();
 }
 
 void MainWindow::exportAllToClipboard()
