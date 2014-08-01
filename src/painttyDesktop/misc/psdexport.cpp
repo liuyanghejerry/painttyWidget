@@ -7,7 +7,7 @@ static QByteArray imageToLayerData(const QList<QImage> &imageList);
 static QByteArray imageToChannelData(const QImage &image, bool imageData, int *alphaSize = 0,
                                      int *redSize = 0, int *greenSize = 0, int *blueSize = 0);
 
-#define BYTE_ORDER QDataStream::BigEndian
+#define P_BYTE_ORDER QDataStream::BigEndian
 
 //File Header Section
 #define SIGNATURE quint32(0x38425053) //"8BPS"
@@ -44,7 +44,7 @@ QByteArray imagesToPSD(const QList<QImage> &imageList, const QImage &preview)
 {
     QByteArray psdData;
     QDataStream psdDataStream(&psdData, QIODevice::WriteOnly);
-    psdDataStream.setByteOrder(BYTE_ORDER);
+    psdDataStream.setByteOrder(P_BYTE_ORDER);
     psdDataStream << SIGNATURE << VERSION << RESERVED_P1 << RESERVED_P2 << RESERVED_P3;
     psdDataStream << IMAGE_CHANNEL_NUMBER;
     psdDataStream << IMAGE_HEIGHT(imageList.at(0).height())
@@ -54,7 +54,7 @@ QByteArray imagesToPSD(const QList<QImage> &imageList, const QImage &preview)
 
     QByteArray layerAndMaskInfoSection;
     QDataStream layerAndMaskInfoSectionStream(&layerAndMaskInfoSection, QIODevice::WriteOnly);
-    layerAndMaskInfoSectionStream.setByteOrder(BYTE_ORDER);
+    layerAndMaskInfoSectionStream.setByteOrder(P_BYTE_ORDER);
     layerAndMaskInfoSectionStream << quint32(0);
     layerAndMaskInfoSection.append(imageToLayerData(imageList));
     layerAndMaskInfoSectionStream.device()->seek(0);
@@ -70,8 +70,8 @@ QByteArray imageToLayerData(const QList<QImage> &imageList)
     QByteArray channelImageData;
     QDataStream layerRecordStream(&layerRecord, QIODevice::WriteOnly);
     QDataStream channelImageDataStream(&channelImageData, QIODevice::WriteOnly);
-    layerRecordStream.setByteOrder(BYTE_ORDER);
-    channelImageDataStream.setByteOrder(BYTE_ORDER);
+    layerRecordStream.setByteOrder(P_BYTE_ORDER);
+    channelImageDataStream.setByteOrder(P_BYTE_ORDER);
 
     foreach (const QImage &image, imageList)
     {
@@ -97,7 +97,7 @@ QByteArray imageToLayerData(const QList<QImage> &imageList)
 
     QByteArray layerInfo;
     QDataStream layerInfoStream(&layerInfo, QIODevice::WriteOnly);
-    layerInfoStream.setByteOrder(BYTE_ORDER);
+    layerInfoStream.setByteOrder(P_BYTE_ORDER);
     layerInfoStream << quint32(0); //Length of the layers info section, rounded up to a multiple of 2
     layerInfoStream << qint16(-imageList.count()); //Layer count
     layerInfoStream.writeRawData(layerRecord.constData(), layerRecord.size());
