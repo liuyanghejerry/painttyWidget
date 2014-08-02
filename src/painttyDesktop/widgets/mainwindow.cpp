@@ -24,6 +24,8 @@
 #include <QScriptEngine>
 #include <QDateTime>
 #include <QProcessEnvironment>
+#include <QtConcurrent>
+#include <QProgressDialog>
 
 #include "../misc/singleshortcut.h"
 #include "layerwidget.h"
@@ -1297,7 +1299,17 @@ void MainWindow::exportToPSD()
     }
 
     // save all layers into psd
-    QByteArray data = imagesToPSD(ui->canvas->layerImages(), ui->canvas->allCanvas());
+
+    QProgressDialog dialog(tr("Exporting..."), QString(), 0, 0, this);
+    dialog.setWindowModality(Qt::WindowModal);
+    QFutureWatcher<QByteArray> watcher;
+    connect(&watcher, &QFutureWatcher<QByteArray>::finished, &dialog, &QDialog::close);
+    QFuture<QByteArray> future = QtConcurrent::run(imagesToPSD, ui->canvas->layerImages(), ui->canvas->allCanvas());
+    watcher.setFuture(future);
+    dialog.show();
+
+    QByteArray data = future.result();
+    //QByteArray data = imagesToPSD(ui->canvas->layerImages(), ui->canvas->allCanvas());
     QFile file(fileName);
     if(!file.open(QIODevice::Truncate|QIODevice::WriteOnly)) {
         return;

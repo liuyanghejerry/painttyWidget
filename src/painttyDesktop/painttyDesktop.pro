@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 DEFINES += PAINTTY_DEV
-QT       += core gui network widgets script
+QT       += core gui network widgets script concurrent
 
 DEFINES += PAINTTY_DESKTOP
 
