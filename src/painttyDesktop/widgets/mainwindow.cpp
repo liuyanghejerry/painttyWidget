@@ -1300,22 +1300,26 @@ void MainWindow::exportToPSD()
 
     // save all layers into psd
 
-    QProgressDialog dialog(tr("Exporting..."), QString(), 0, 0, this);
-    dialog.setWindowModality(Qt::WindowModal);
-    QFutureWatcher<QByteArray> watcher;
-    connect(&watcher, &QFutureWatcher<QByteArray>::finished, &dialog, &QDialog::close);
-    QFuture<QByteArray> future = QtConcurrent::run(imagesToPSD, ui->canvas->layerImages(), ui->canvas->allCanvas());
-    watcher.setFuture(future);
-    dialog.show();
-
-    QByteArray data = future.result();
-    //QByteArray data = imagesToPSD(ui->canvas->layerImages(), ui->canvas->allCanvas());
-    QFile file(fileName);
-    if(!file.open(QIODevice::Truncate|QIODevice::WriteOnly)) {
-        return;
-    }
-    file.write(data);
-    file.close();
+    QProgressDialog *dialog = new QProgressDialog(tr("Exporting..."), QString(), 0, 0, this);
+    dialog->setWindowModality(Qt::WindowModal);
+    dialog->show();
+    QFutureWatcher<QByteArray> *watcher = new QFutureWatcher<QByteArray>;
+    QFuture<QByteArray> *future = new QFuture<QByteArray>(QtConcurrent::run(imagesToPSD,
+                                                                ui->canvas->layerImages(),
+                                                                ui->canvas->allCanvas()));
+    watcher->setFuture(*future);
+    connect(watcher, &QFutureWatcher<QByteArray>::finished, [dialog, future, fileName](){
+        QByteArray data = future->result();
+        QFile file(fileName);
+        if(!file.open(QIODevice::Truncate|QIODevice::WriteOnly)) {
+            return;
+        }
+        qDebug()<<data.length();
+        file.write(data);
+        file.close();
+        dialog->close();
+        dialog->deleteLater();
+    });
 }
 
 void MainWindow::exportAllToClipboard()
