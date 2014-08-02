@@ -1211,15 +1211,13 @@ void MainWindow::closeEvent( QCloseEvent * event )
     client_socket.stopHeartbeat();
     ui->canvas->pause();
 
-    QMessageBox msgBox;
-    msgBox.setText(tr("Waiting for sync, please do not close.\n"\
-                      "This will cost you 1 minute at most."));
-    msgBox.setStandardButtons(QMessageBox::NoButton);
-    msgBox.setWindowModality(Qt::ApplicationModal);
-    msgBox.setModal(true);
-    msgBox.setWindowFlags(Qt::WindowTitleHint
-                          | Qt::CustomizeWindowHint);
-    msgBox.show();
+    QProgressDialog dialog(tr("Waiting for sync, please do not close.\n"\
+                              "This will cost you 1 minute at most."),
+                           QString(),
+                           0, 0, this);
+    dialog.setWindowModality(Qt::ApplicationModal);
+    dialog.show();
+
     // This is a workaround to make msgBox text shown
     QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 
@@ -1242,7 +1240,7 @@ void MainWindow::closeEvent( QCloseEvent * event )
 
     client_socket.close();
     client_socket.reset();
-    msgBox.close();
+    dialog.close();
 
     event->accept();
 }
@@ -1305,8 +1303,8 @@ void MainWindow::exportToPSD()
     dialog->show();
     QFutureWatcher<QByteArray> *watcher = new QFutureWatcher<QByteArray>;
     QFuture<QByteArray> *future = new QFuture<QByteArray>(QtConcurrent::run(imagesToPSD,
-                                                                ui->canvas->layerImages(),
-                                                                ui->canvas->allCanvas()));
+                                                                            ui->canvas->layerImages(),
+                                                                            ui->canvas->allCanvas()));
     watcher->setFuture(*future);
     connect(watcher, &QFutureWatcher<QByteArray>::finished, [dialog, future, fileName](){
         QByteArray data = future->result();
