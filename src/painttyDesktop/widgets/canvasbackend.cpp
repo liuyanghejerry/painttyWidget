@@ -8,6 +8,8 @@
 #include <QJsonDocument>
 #include <QSettings>
 
+#define client_socket (Singleton<ClientSocket>::instance())
+
 CanvasBackend::CanvasBackend(QObject *parent)
     :QObject(parent),
       parse_timer_id_(0),
@@ -17,8 +19,6 @@ CanvasBackend::CanvasBackend(QObject *parent)
       fullspeed_replay(false)
 {
     parse_timer_id_ = this->startTimer(50);
-
-    auto& client_socket = Singleton<ClientSocket>::instance();
 
     // NOTICE: This is a direct call,
     // hence CanvasBackend must be inited at main thread.
@@ -42,7 +42,6 @@ CanvasBackend::CanvasBackend(QObject *parent)
 
 CanvasBackend::~CanvasBackend()
 {
-    auto& client_socket = Singleton<ClientSocket>::instance();
     disconnect(&client_socket, &ClientSocket::dataPack,
                this, &CanvasBackend::onIncomingData);
     this->disconnect();

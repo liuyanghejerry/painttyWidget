@@ -30,6 +30,9 @@
 #include "canvas.h"
 
 
+#define brush_manager (Singleton<BrushManager>::instance())
+#define client_socket (Singleton<ClientSocket>::instance())
+
 /*!
      \class Canvas
 
@@ -77,7 +80,6 @@ Canvas::Canvas(QWidget *parent) :
     setFocusPolicy(Qt::WheelFocus); // necessary for IME control
     resize(canvasSize);
 
-    auto& brush_manager = Singleton<BrushManager>::instance();
     BrushPointer p1(new BasicBrush);
     p1->setSettings(p1->defaultSettings());
     BrushPointer p2(new BinaryBrush);
@@ -98,8 +100,6 @@ Canvas::Canvas(QWidget *parent) :
     //    brush_manager.addBrush(p5);
     brush_manager.addBrush(p6);
     setJitterCorrectionLevel(5);
-
-    auto& client_socket = Singleton<ClientSocket>::instance();
 
     worker_->start();
     backend_->moveToThread(worker_);

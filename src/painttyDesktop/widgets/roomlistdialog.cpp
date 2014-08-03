@@ -25,6 +25,8 @@
 #include "../misc/errortable.h"
 #include "gradualbox.h"
 
+#define client_socket (Singleton<ClientSocket>::instance())
+
 RoomListDialog::RoomListDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::RoomListDialog),
@@ -84,14 +86,13 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
 
 RoomListDialog::~RoomListDialog()
 {
-    auto& socket = Singleton<ClientSocket>::instance();
-    disconnect(&socket, &ClientSocket::connected,
+    disconnect(&client_socket, &ClientSocket::connected,
                this, &RoomListDialog::onManagerServerConnected);
-    disconnect(&socket, &ClientSocket::disconnected,
+    disconnect(&client_socket, &ClientSocket::disconnected,
                this, &RoomListDialog::onManagerServerClosed);
-    disconnect(&socket, &ClientSocket::managerPack,
+    disconnect(&client_socket, &ClientSocket::managerPack,
                this, &RoomListDialog::onManagerData);
-    socket.close();
+    client_socket.close();
     delete ui;
 }
 
@@ -111,7 +112,6 @@ void RoomListDialog::connectToManager()
 {
     state_ = ManagerConnecting;
     ui->progressBar->setRange(0,0);
-    auto& client_socket = Singleton<ClientSocket>::instance();
 
     disconnect(&client_socket, &ClientSocket::managerPack,
             0, 0);
@@ -246,7 +246,7 @@ void RoomListDialog::requestRoomList()
         QJsonObject map;
         map.insert("request", QString("roomlist"));
 
-        Singleton<ClientSocket>::instance().sendManagerPack(map);
+        client_socket.sendManagerPack(map);
         ui->progressBar->setRange(0,0);
     }else{
         qDebug()<<"Unexpected State in requestRoomList"<<state_;
@@ -273,7 +273,7 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
         map["request"] = QString("newroom");
         map["info"] = m;
 
-        Singleton<ClientSocket>::instance().sendManagerPack(map);
+        client_socket.sendManagerPack(map);
 
         ui->progressBar->setRange(0,0);
         wantedRoomName_ = m["name"].toString();
@@ -286,7 +286,6 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
 void RoomListDialog::connectRoomByPort(const int &p)
 {
     state_ = RoomConnecting;
-    auto& client_socket = Singleton<ClientSocket>::instance();
     QHostAddress address = client_socket.address();
 
     disconnect(&client_socket, &ClientSocket::connected,
@@ -331,8 +330,8 @@ void RoomListDialog::tryJoinRoomManually()
                                        QString(),
                                        &isOk);
         if(!isOk) {
-            Singleton<ClientSocket>::instance().close();
-            Singleton<ClientSocket>::instance().reset();
+            client_socket.close();
+            client_socket.reset();
             connectToManager();
             return;
         }
@@ -347,7 +346,7 @@ void RoomListDialog::tryJoinRoomManually()
     map.insert("password", passwd);
     map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
 
-    Singleton<ClientSocket>::instance().sendCmdPack(map);
+    client_socket.sendCmdPack(map);
     ui->progressBar->setRange(0, 0);
 }
 
@@ -364,7 +363,7 @@ void RoomListDialog::tryJoinRoomAutomated()
     map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
 
     qDebug()<<"try auto join room";
-    Singleton<ClientSocket>::instance().sendCmdPack(map);
+    client_socket.sendCmdPack(map);
     ui->progressBar->setRange(0, 0);
 }
 
@@ -381,14 +380,13 @@ void RoomListDialog::tryJoinRoomByUrl(const ClientSocket::RoomUrl& url)
     map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
 
     qDebug()<<"try auto join room via url";
-    Singleton<ClientSocket>::instance().sendCmdPack(map);
+    client_socket.sendCmdPack(map);
     ui->progressBar->setRange(0, 0);
 }
 
 void RoomListDialog::connectRoomByUrl(const QString& url)
 {
     state_ = RoomConnecting;
-    auto& client_socket = Singleton<ClientSocket>::instance();
     auto decoded_addr = client_socket.decodeRoomUrl(url);
 
     disconnect(&client_socket, &ClientSocket::connected,
@@ -401,7 +399,7 @@ void RoomListDialog::connectRoomByUrl(const QString& url)
 
     connect(&client_socket, &ClientSocket::connected,
             [this, decoded_addr](){
-        disconnect(&Singleton<ClientSocket>::instance(), &ClientSocket::connected,
+        disconnect(&client_socket, &ClientSocket::connected,
                    0, 0);
         qDebug()<<"Room connected";
         state_ = RoomConnected;
@@ -473,7 +471,6 @@ void RoomListDialog::onCmdServerConnected()
 void RoomListDialog::onCmdData(const QJsonObject &map)
 {
     qDebug()<<"onCmdData"<<map;
-    auto& client_socket = Singleton<ClientSocket>::instance();
     client_socket.setPoolEnabled(true);
     QString response = map["response"].toString();
 
@@ -702,7 +699,7 @@ void RoomListDialog::saveNick()
     settings.setValue("global/personal/nick",
                       name.toUtf8());
     settings.sync();
-    Singleton<ClientSocket>::instance().setUserName(nickName_);
+    client_socket.setUserName(nickName_);
 }
 
 void RoomListDialog::openConfigure()

@@ -49,6 +49,8 @@
 #include "../misc/archivefile.h"
 #include "../misc/psdexport.h"
 
+#define client_socket (Singleton<ClientSocket>::instance())
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -69,8 +71,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    Singleton<ClientSocket>::instance().reset();
-    Singleton<ClientSocket>::instance().close();
+    client_socket.reset();
+    client_socket.close();
     delete ui;
 }
 
@@ -87,7 +89,6 @@ void MainWindow::stylize()
 
 void MainWindow::init()
 {
-    auto& client_socket = Singleton<ClientSocket>::instance();
     auto&& roomName = client_socket.roomName();
     setWindowTitle(roomName+tr(" - Mr.Paint"));
     ui->canvas->resize(client_socket.canvasSize());
@@ -480,7 +481,6 @@ void MainWindow::toolbarInit()
     changeToBrush("BasicBrush");
 
     // for room share
-    auto& client_socket = Singleton<ClientSocket>::instance();
     QToolBar* roomShareToolbar = new QToolBar(tr("Room Share"), this);
     roomShareToolbar->setObjectName("RoomShareToolbar");
     this->addToolBar(Qt::TopToolBarArea, roomShareToolbar);
@@ -508,7 +508,7 @@ void MainWindow::statusBarInit()
 QString MainWindow::getRoomKey()
 {
     QCryptographicHash hash(QCryptographicHash::Md5);
-    auto&& roomName = Singleton<ClientSocket>::instance().roomName();
+    auto&& roomName = client_socket.roomName();
     hash.addData(roomName.toUtf8());
     QString hashed_name = hash.result().toHex();
     QSettings settings(GlobalDef::SETTINGS_NAME,
@@ -530,10 +530,10 @@ void MainWindow::requestOnlinelist()
     QJsonObject obj;
     obj.insert("request", QString("onlinelist"));
     obj.insert("type", QString("command"));
-    obj.insert("clientid", Singleton<ClientSocket>::instance().clientId());
+    obj.insert("clientid", client_socket.clientId());
     //    qDebug()<<"clientid: "<<Singleton<ClientSocket>::instance().clientId();
 
-    Singleton<ClientSocket>::instance().sendCmdPack(obj);
+    client_socket.sendCmdPack(obj);
 }
 
 void MainWindow::requestCheckout()
@@ -544,7 +544,7 @@ void MainWindow::requestCheckout()
     obj.insert("key", getRoomKey());
     qDebug()<<"checkout with key: "<<getRoomKey();
 
-    Singleton<ClientSocket>::instance().sendCmdPack(obj);
+    client_socket.sendCmdPack(obj);
 }
 
 void MainWindow::requestCloseRoom()
@@ -561,7 +561,7 @@ void MainWindow::requestCloseRoom()
         return;
     }
     obj.insert("key", r_key);
-    Singleton<ClientSocket>::instance().sendCmdPack(obj);
+    client_socket.sendCmdPack(obj);
 }
 
 void MainWindow::requestArchiveSign()
@@ -570,23 +570,21 @@ void MainWindow::requestArchiveSign()
     obj.insert("request", QString("archivesign"));
     qDebug()<<"request archive signature";
 
-    Singleton<ClientSocket>::instance().sendCmdPack(obj);
+    client_socket.sendCmdPack(obj);
 }
 
 void MainWindow::requestArchive()
 {
-    auto& socket = Singleton<ClientSocket>::instance();
     QJsonObject obj;
     obj.insert("request", QString("archive"));
-    obj.insert("start", (int)socket.archiveSize());
+    obj.insert("start", (int)client_socket.archiveSize());
     qDebug()<<"request archive"<<obj;
 
-    socket.sendCmdPack(obj);
+    client_socket.sendCmdPack(obj);
 }
 
 void MainWindow::requestKickUser(const QString& id)
 {
-    auto& socket = Singleton<ClientSocket>::instance();
     QJsonObject obj;
     QString r_key = getRoomKey();
     obj.insert("request", QString("kick"));
@@ -602,7 +600,7 @@ void MainWindow::requestKickUser(const QString& id)
     obj.insert("key", r_key);
     qDebug()<<"request kick"<<obj;
 
-    socket.sendCmdPack(obj);
+    client_socket.sendCmdPack(obj);
 }
 
 void MainWindow::shortcutInit()
@@ -657,8 +655,6 @@ void MainWindow::shortcutInit()
 
 void MainWindow::socketInit()
 {
-    auto& client_socket = Singleton<ClientSocket>::instance();
-
     connect(&client_socket, &ClientSocket::newMessage,
             this, &MainWindow::onNewMessage);
     connect(this, &MainWindow::sendMessage,
@@ -671,7 +667,7 @@ void MainWindow::socketInit()
     cmdRouterInit();
 
     GlobalDef::delayJob([this](){
-        Singleton<ClientSocket>::instance().setPoolEnabled(false);
+        client_socket.setPoolEnabled(false);
         requestArchiveSign();
 
         // checkout if client is room owner
@@ -681,7 +677,7 @@ void MainWindow::socketInit()
     });
 
     // starts heartbeat
-    Singleton<ClientSocket>::instance().startHeartbeat();
+    client_socket.startHeartbeat();
 
     QTimer *t = new QTimer(this);
     connect(t, &QTimer::timeout,
@@ -693,7 +689,7 @@ void MainWindow::onServerDisconnected()
 {
     GradualBox::showText(tr("Server Connection Failed."));
     ui->canvas->setEnabled(false);
-    Singleton<ClientSocket>::instance().stopHeartbeat();
+    client_socket.stopHeartbeat();
     // TODO: reconnect to room and request login
 }
 
@@ -710,7 +706,7 @@ void MainWindow::onCommandActionClose(const QJsonObject &)
                             "closed the room. This room will close"
                             " when everyone leaves.\n"
                             "Save your work if you like it!"));
-    Singleton<ClientSocket>::instance().setRoomCloseFlag();
+    client_socket.setRoomCloseFlag();
 }
 
 void MainWindow::onCommandResponseClose(const QJsonObject &m)
@@ -726,7 +722,7 @@ void MainWindow::onCommandResponseClose(const QJsonObject &m)
         // wait for close now.
         // of course, delete the key. it's useless.
         QCryptographicHash hash(QCryptographicHash::Md5);
-        auto&& roomName = Singleton<ClientSocket>::instance().roomName();
+        auto&& roomName = client_socket.roomName();
         hash.addData(roomName.toUtf8());
         QString hashed_name = hash.result().toHex();
         QSettings settings(GlobalDef::SETTINGS_NAME,
@@ -782,7 +778,7 @@ void MainWindow::onCommandActionClearAll(const QJsonObject &obj)
     qDebug()<<"on action clearall"<<obj;
     if(obj.contains("signature")){
         auto&& s = obj.value("signature").toString();
-        Singleton<ClientSocket>::instance().setArchiveSignature(s);
+        client_socket.setArchiveSignature(s);
     }
     ui->canvas->clearAllLayer();
 }
@@ -847,8 +843,7 @@ void MainWindow::onResponseArchiveSign(const QJsonObject &o)
 
     QString signature = o.value("signature").toString();
 
-    auto& socket = Singleton<ClientSocket>::instance();
-    socket.setArchiveSignature(signature);
+    client_socket.setArchiveSignature(signature);
     requestArchive();
 }
 
@@ -871,8 +866,7 @@ void MainWindow::onResponseArchive(const QJsonObject &o)
     quint64 datalength = o.value("datalength").toDouble();
 
     // TODO: re-match signature and receive archive data
-    auto& socket = Singleton<ClientSocket>::instance();
-    socket.setSchedualDataLength(datalength);
+    client_socket.setSchedualDataLength(datalength);
 }
 
 void MainWindow::onResponseHeartbeat(const QJsonObject &o)
@@ -933,7 +927,7 @@ void MainWindow::onSendPressed()
         qDebug()<<"Warnning: text too long or empty.";
         return;
     }
-    string.prepend(Singleton<ClientSocket>::instance().userName()
+    string.prepend(client_socket.userName()
                    + ": ");
     string.append('\n');
     emit sendMessage(string);
@@ -1140,7 +1134,7 @@ void MainWindow::clearLayer(const QString &name)
         map.insert("type", QString("command"));
         map.insert("key", getRoomKey());
         map.insert("layer", name);
-        Singleton<ClientSocket>::instance().sendCmdPack(map);
+        client_socket.sendCmdPack(map);
     }
 
 }
@@ -1168,7 +1162,7 @@ void MainWindow::clearAllLayer()
         map.insert("request", QString("clearall"));
         map.insert("type", QString("command"));
         map.insert("key", getRoomKey());
-        Singleton<ClientSocket>::instance().sendCmdPack(map);
+        client_socket.sendCmdPack(map);
     }
 }
 
@@ -1205,8 +1199,6 @@ void MainWindow::deleteLayer(const QString &name)
 
 void MainWindow::closeEvent( QCloseEvent * event )
 {
-    auto& client_socket = Singleton<ClientSocket>::instance();
-
     client_socket.cancelPendings();
     client_socket.stopHeartbeat();
     ui->canvas->pause();
