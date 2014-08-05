@@ -1298,7 +1298,7 @@ void MainWindow::exportToPSD()
                                                                             ui->canvas->layerImages(),
                                                                             ui->canvas->allCanvas()));
     watcher->setFuture(*future);
-    connect(watcher, &QFutureWatcher<QByteArray>::finished, [dialog, future, fileName](){
+    connect(watcher, &QFutureWatcher<QByteArray>::finished, [watcher, dialog, future, fileName](){
         QByteArray data = future->result();
         QFile file(fileName);
         if(!file.open(QIODevice::Truncate|QIODevice::WriteOnly)) {
