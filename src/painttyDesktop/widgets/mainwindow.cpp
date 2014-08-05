@@ -1309,6 +1309,7 @@ void MainWindow::exportToPSD()
         file.close();
         dialog->close();
         dialog->deleteLater();
+        watcher->deleteLater();
     });
 }
 
