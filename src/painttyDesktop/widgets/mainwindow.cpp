@@ -50,6 +50,7 @@
 #include "../misc/psdexport.h"
 
 #define client_socket (Singleton<ClientSocket>::instance())
+#define shortcut_manager (Singleton<ShortcutManager>::instance())
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -1342,16 +1343,14 @@ template<typename T, typename U>
 bool MainWindow::regShortcut(const QString& name, T func, U func2)
 {
     //    auto shortcut_type = (ShT)config["type"].toInt();
-    auto& sm = Singleton<ShortcutManager>::instance();
-    return regShortcut<>(QKeySequence(sm.shortcut(name)["key"].toString()),
+    return regShortcut<>(QKeySequence(shortcut_manager.shortcut(name)["key"].toString()),
             func, func2);
 }
 
 template<typename T>
 bool MainWindow::regShortcut(const QString& name, T func)
 {
-    auto& sm = Singleton<ShortcutManager>::instance();
-    return regShortcut<>(QKeySequence(sm.shortcut(name)["key"].toString()), func);
+    return regShortcut<>(QKeySequence(shortcut_manager.shortcut(name)["key"].toString()), func);
 }
 
 template<typename T, typename U>

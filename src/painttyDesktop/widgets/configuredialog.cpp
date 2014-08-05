@@ -80,8 +80,7 @@ void ConfigureDialog::initLanguageList()
 
 void ConfigureDialog::initShortcutList()
 {
-    const ShortcutManager& manager = Singleton<ShortcutManager>::instance();
-    const QVariantMap& shortcutMap = manager.allShortcutMap();
+    const QVariantMap& shortcutMap = Singleton<ShortcutManager>::instance().allShortcutMap();
     ShortcutDelegate *delegate = new ShortcutDelegate(ui->shortcutList);
     ui->shortcutList->setItemDelegate(delegate);
     QTreeWidgetItem *categoryItem = new QTreeWidgetItem(ui->shortcutList);
@@ -189,8 +188,7 @@ void ConfigureDialog::acceptConfigure()
     }
 
     //save shortcut settings
-    ShortcutManager& manager = Singleton<ShortcutManager>::instance();
-    QVariantMap shortcutMap = manager.allShortcutMap();
+    QVariantMap shortcutMap = Singleton<ShortcutManager>::instance().allShortcutMap();
     for (int i = 0; i < ui->shortcutList->topLevelItemCount(); i++)
     {
         QTreeWidgetItem *categoryItem = ui->shortcutList->topLevelItem(i);
@@ -213,13 +211,14 @@ void ConfigureDialog::acceptConfigure()
                 //to see if we need restart and set new value.
             {
                 needRestart = true;
-                manager.setShortcut(shortcutItem->data(0, Qt::UserRole).toString(),
-                                    newSequence,
-                                    newType);
+                Singleton<ShortcutManager>::instance()
+                        .setShortcut(shortcutItem->data(0, Qt::UserRole).toString(),
+                                     newSequence,
+                                     newType);
             }
         }
     }
-    manager.saveToConfigure();
+    Singleton<ShortcutManager>::instance().saveToConfigure();
 
     //save msg notify settings
     if (ui->msg_notify_checkbox->isChecked() != msg_notify)
@@ -330,10 +329,10 @@ QWidget* ShortcutDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
         return new QKeySequenceEdit(parent);
     else if (index.column() == 2)
     {
-//        QComboBox *comboBox = new QComboBox(parent);
-//        comboBox->addItems(QStringList() << tr("Immediately")
-//                           << tr("When Release"));
-//        return comboBox;
+        //        QComboBox *comboBox = new QComboBox(parent);
+        //        comboBox->addItems(QStringList() << tr("Immediately")
+        //                           << tr("When Release"));
+        //        return comboBox;
         return 0;
     }
     else
