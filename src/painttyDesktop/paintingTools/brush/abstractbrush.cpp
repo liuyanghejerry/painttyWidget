@@ -129,6 +129,10 @@ BrushSettings AbstractBrush::defaultSettings() const
 
 void AbstractBrush::updateCursor(int w)
 {
+    if(w <4) {
+        cursor_ = QCursor(Qt::CrossCursor);
+        return;
+    }
     int frame = w+2+w%2; // +2 for a border padding
     const int half_frame = frame>>1;
     auto p_pixmap = QPixmapCache::find(QString("brush_cursor_%1").arg(frame));
