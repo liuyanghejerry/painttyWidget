@@ -6,12 +6,19 @@
 #include "../misc/layermanager.h"
 #include "canvasbackend.h"
 
+class QScrollBar;
 typedef QSharedPointer<AbstractBrush> BrushPointer;
 
 class Canvas : public QWidget
 {
     Q_OBJECT
 public:
+    enum AntialiasingMode
+    {
+        SmallOn = 0x1, //turn on antialiasing when scale factor < 100
+        LargeOn = 0x2 //turn on antialiasing when scale factor > 100
+    };
+    Q_DECLARE_FLAGS(AntialiasingModes, AntialiasingMode)
     explicit Canvas(QWidget *parent = 0);
     ~Canvas();
     QVariantMap brushSettings() const;
@@ -26,6 +33,16 @@ public:
 
     virtual QSize sizeHint () const;
     virtual QSize minimumSizeHint () const;
+    QSizePolicy sizePolicy() const;
+
+    AntialiasingModes antialiasingMode() const;
+    void setAntialiasingMode(AntialiasingModes mode);
+    QPoint visualAreaPos() const; //return visual area's top left position in content coordinate
+    QRect visualArea() const; //return actual area that can be used to show content(window rect - scrollbars)
+    QRect visualContentArea() const; //return visual area's rect in content coordinate
+    int scaleFactor() const; //return current scale factor
+    QPoint mapToContent(const QPoint& posInVisual) const; //map point in visual area to content coordinate
+    QPoint mapToVisualArea(const QPoint &posInContent) const; //map point in content to visual area coordinate
 
 public slots:
     void setJitterCorrectionEnabled(bool correct);
@@ -57,6 +74,10 @@ public slots:
     void saveLayers();
     QList<QImage> layerImages() const;
     void pause();
+
+    void moveVisualAreaTo(const QPoint &posInContent); //move visual area top left corner to a certain point in content
+    void setScaleFactor(int factor); //scale with current visualAreaTopLeftPos;
+    void setScaleFactor(int factor, const QPoint &originPosInVisual); //scale with originPos
 
 signals:
     void contentMovedBy(const QPoint&);
@@ -94,6 +115,10 @@ private slots:
                         const QString clientid,
                         const qreal pressure=1.0);
     void onMembersSorted(const QList<CanvasBackend::MemberSection> &list);
+private slots:
+    void horizontalScroll(int value); //scroll the horizontal scrollbar
+    void verticalScroll(int value); //scroll the vertical scrollbar
+
 
 private:
     void drawLineTo(const QPoint &endPoint, qreal pressure=1.0);
@@ -135,6 +160,19 @@ private:
     QThread *worker_;
     QList<CanvasBackend::MemberSection> author_list_;
     QVariantList action_buffer_;
+
+    QScrollBar *horizontalScrollBar;
+    QScrollBar *verticalScrollBar;
+    QImage content;
+    QPoint visualAreaTopLeftPos;
+    int m_scaleFactor;
+    AntialiasingModes m_antialiasingMode;
+
+    QPoint mouseDragStartPoint;
+
+    void updateVisualArea(); //update visual area to show new area of content
+    void adjustScrollBar(); //setup scrollbars' range, page step and value
 };
+Q_DECLARE_OPERATORS_FOR_FLAGS(Canvas::AntialiasingModes)
 
 #endif // CANVAS_H

@@ -13,6 +13,9 @@
 #include <QStaticText>
 #include <QDateTime>
 #include <QtCore/qmath.h>
+#include <QGridLayout>
+#include <QScrollBar>
+#include <QResizeEvent>
 
 #include "../../common/common.h"
 #include "../../common/network/clientsocket.h"
@@ -70,8 +73,28 @@ Canvas::Canvas(QWidget *parent) :
     jitterCorrection_(true),
     jitterCorrectionLevel_(10),
     backend_(new CanvasBackend(0)),
-    worker_(new QThread(this))
+    worker_(new QThread(this)),
+    horizontalScrollBar(new QScrollBar(Qt::Horizontal, this)),
+    verticalScrollBar(new QScrollBar(Qt::Vertical, this)),
+    content(image),
+    visualAreaTopLeftPos(0, 0),
+    m_scaleFactor(100),
+    m_antialiasingMode(0)
 {
+    //set scroll bar values
+    horizontalScrollBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    verticalScrollBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    connect(horizontalScrollBar, &QScrollBar::valueChanged, this, &Canvas::horizontalScroll);
+    connect(verticalScrollBar, &QScrollBar::valueChanged, this, &Canvas::verticalScroll);
+
+    //set layout
+    QGridLayout *mainLayout = new QGridLayout(this);
+    mainLayout->setSpacing(0);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->addWidget(horizontalScrollBar, 1, 0, 1, 1, Qt::AlignBottom);
+    mainLayout->addWidget(verticalScrollBar, 0, 1, 1, 1, Qt::AlignRight);
+    setLayout(mainLayout);
+
     setAttribute(Qt::WA_StaticContents);
     brush_ = BrushPointer(new BasicBrush);
     updateCursor();
@@ -1037,48 +1060,48 @@ void Canvas::drawAuthorTips(QPainter& painter,
 void Canvas::paintEvent(QPaintEvent *event)
 {
 
-    QPainter painter(this);
+//    QPainter painter(this);
+//    QPainter painter(&image);
     QRect dirtyRect = event->rect();
     if(dirtyRect.isEmpty())return;
     layers.combineLayers(&image, dirtyRect);
 
-    painter.drawImage(dirtyRect, image, dirtyRect);
-
     // filter outdated names.
     // Considering using another QImage instead of direct draw
-    qint64 longest = find_newest_active(author_list_);
-    for(auto& item: author_list_){
-        QPoint point = std::get<MSI::Footprint>(item);
-        QString name = std::get<MSI::Name>(item);
-        qint64 stamp = std::get<MSI::LastActiveStamp>(item);
-        if(name.isEmpty()){
-            name = std::get<MSI::Id>(item);
-        }
-        if(longest - stamp > 1000*30){
-            continue;
-        }
-        if(point.isNull()){
-            break;
-        }
+//    qint64 longest = find_newest_active(author_list_);
+//    for(auto& item: author_list_){
+//        QPoint point = std::get<MSI::Footprint>(item);
+//        QString name = std::get<MSI::Name>(item);
+//        qint64 stamp = std::get<MSI::LastActiveStamp>(item);
+//        if(name.isEmpty()){
+//            name = std::get<MSI::Id>(item);
+//        }
+//        if(longest - stamp > 1000*30){
+//            continue;
+//        }
+//        if(point.isNull()){
+//            break;
+//        }
 
-        drawAuthorTips(painter, point, name);
-    }
+//        drawAuthorTips(painter, point, name);
+//    }
 
-    if(!isEnabled()){
-        QBrush brush;
-        brush.setStyle(Qt::BDiagPattern);
-        brush.setColor(Qt::lightGray);
-        painter.setBrush(brush);
-        QRect rect = this->rect();
-        rect.setWidth(rect.width());
-        rect.setHeight(rect.height());
-        painter.drawRect(rect);
-    }
+//    if(!isEnabled()){
+//        QBrush brush;
+//        brush.setStyle(Qt::BDiagPattern);
+//        brush.setColor(Qt::lightGray);
+//        painter.setBrush(brush);
+//        QRect rect = this->rect();
+//        rect.setWidth(rect.width());
+//        rect.setHeight(rect.height());
+//        painter.drawRect(rect);
+//    }
 
-    QStyleOption opt;
-    opt.init(this);
-    style()->drawPrimitive(QStyle::PE_Widget,
-                           &opt, &painter, this);
+//    QStyleOption opt;
+//    opt.init(this);
+//    style()->drawPrimitive(QStyle::PE_Widget,
+//                           &opt, &painter, this);
+    updateVisualArea();
 }
 
 void Canvas::resizeEvent(QResizeEvent *event)
@@ -1097,6 +1120,7 @@ void Canvas::resizeEvent(QResizeEvent *event)
 
     update();
     QWidget::resizeEvent(event);
+    adjustScrollBar();
 }
 
 /*!
@@ -1123,4 +1147,124 @@ QSize Canvas::sizeHint() const
 QSize Canvas::minimumSizeHint() const
 {
     return canvasSize;
+}
+
+Canvas::AntialiasingModes Canvas::antialiasingMode() const
+{
+    return m_antialiasingMode;
+}
+
+void Canvas::setAntialiasingMode(Canvas::AntialiasingModes mode)
+{
+    m_antialiasingMode = mode;
+    update();
+}
+
+QPoint Canvas::visualAreaPos() const
+{
+    return visualAreaTopLeftPos;
+}
+
+QRect Canvas::visualArea() const
+{
+    //area occupied by scrollbars be removed
+    return QRect(0, 0,
+                 width() - verticalScrollBar->width(),
+                 height()- horizontalScrollBar->height());
+}
+QRect Canvas::visualContentArea() const
+{
+    //if content is smaller than visual area, restrict it to content size
+    return QRect(visualAreaTopLeftPos.x(), visualAreaTopLeftPos.y(),
+                 qBound(0, visualArea().width() * 100 / m_scaleFactor, content.width()),
+                 qBound(0, visualArea().height() * 100 / m_scaleFactor, content.height()));
+}
+
+int Canvas::scaleFactor() const
+{
+    return m_scaleFactor;
+}
+
+QPoint Canvas::mapToContent(const QPoint &posInVisual) const
+{
+    return visualAreaTopLeftPos + posInVisual /(m_scaleFactor / 100.0);
+}
+
+QPoint Canvas::mapToVisualArea(const QPoint &posInContent) const
+{
+    return (posInContent - visualAreaTopLeftPos) * m_scaleFactor / 100.0;
+}
+
+void Canvas::moveVisualAreaTo(const QPoint &posInContent)
+{
+    //visualAreaTopLeftPos = posInContent;
+    //restrict moving area
+    visualAreaTopLeftPos.setX(qBound(0,
+                                     posInContent.x(),
+                                     content.width() - visualArea().width() * 100 / m_scaleFactor));
+    visualAreaTopLeftPos.setY(qBound(0,
+                                     posInContent.y(),
+                                     content.height() - visualArea().height() * 100 / m_scaleFactor));
+    adjustScrollBar();
+    //update();
+}
+
+void Canvas::setScaleFactor(int factor)
+{
+    m_scaleFactor = factor;
+    moveVisualAreaTo(visualAreaTopLeftPos);
+    //adjustScrollBar();
+    update();
+}
+
+void Canvas::setScaleFactor(int factor, const QPoint &originPosInVisual)
+{
+    //use the formula in mapToContent to calculate a new visualAreaTopLeftPos
+    visualAreaTopLeftPos = visualAreaTopLeftPos +
+            originPosInVisual / (m_scaleFactor / 100.0) - (originPosInVisual) / (factor / 100.0);
+    m_scaleFactor = factor;
+    moveVisualAreaTo(visualAreaTopLeftPos);
+}
+
+void Canvas::horizontalScroll(int value)
+{
+    visualAreaTopLeftPos.setX(value);
+    update();
+    //moveVisualAreaTo(QPoint(value, visualAreaTopLeftPos.y()));
+}
+
+void Canvas::verticalScroll(int value)
+{
+    visualAreaTopLeftPos.setY(value);
+    update();
+    //moveVisualAreaTo(QPoint(visualAreaTopLeftPos.x(), value));
+}
+
+void Canvas::updateVisualArea()
+{
+    content = image;
+    QPainter painter(this);
+    painter.scale(m_scaleFactor / 100.0, m_scaleFactor / 100.0);
+    if ((m_antialiasingMode.testFlag(Canvas::SmallOn) && m_scaleFactor < 100) ||
+            (m_antialiasingMode.testFlag(Canvas::LargeOn) && m_scaleFactor > 100))
+        painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    else
+        painter.setRenderHint(QPainter::SmoothPixmapTransform, false);
+    //QImage temp = content.copy(visualContentArea());
+    //painter.drawImage(0, 0, temp.scaled(temp.size() * (m_scaleFactor / 100.0)));
+    painter.drawImage(QPoint(0, 0), content, visualContentArea());
+}
+
+void Canvas::adjustScrollBar()
+{
+    horizontalScrollBar->setPageStep(visualContentArea().width());
+    horizontalScrollBar->blockSignals(true);
+    horizontalScrollBar->setRange(0, content.width() - visualContentArea().width());
+    horizontalScrollBar->blockSignals(false);
+    horizontalScrollBar->setValue(visualAreaTopLeftPos.x());
+    verticalScrollBar->setPageStep(visualContentArea().height());
+    verticalScrollBar->blockSignals(true);
+    verticalScrollBar->setRange(0, content.height() - visualContentArea().height());
+    verticalScrollBar->blockSignals(false);
+    verticalScrollBar->setValue(visualAreaTopLeftPos.y());
 }

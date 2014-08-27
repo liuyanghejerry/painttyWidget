@@ -17,8 +17,7 @@
    <iconset resource="../resources.qrc">
     <normaloff>:/iconset/icon.png</normaloff>:/iconset/icon.png</iconset>
   </property>
-  <widget class="CanvasContainer" name="centralWidget">
-   <widget class="Canvas" name="canvas" native="true">
+  <widget class="Canvas" name="canvas" native="true">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -28,7 +27,6 @@
      </rect>
     </property>
    </widget>
-  </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="windowTitle">
     <string>Color</string>

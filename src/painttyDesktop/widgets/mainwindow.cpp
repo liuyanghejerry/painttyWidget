@@ -94,22 +94,22 @@ void MainWindow::init()
     setWindowTitle(roomName+tr(" - Mr.Paint"));
     ui->canvas->resize(client_socket.canvasSize());
 
-    ui->centralWidget->setBackgroundRole(QPalette::Dark);
-    ui->centralWidget->setCanvas(ui->canvas);
+//    ui->centralWidget->setBackgroundRole(QPalette::Dark);
+//    ui->centralWidget->setCanvas(ui->canvas);
 
-    connect(ui->canvas, &Canvas::contentMovedBy,
-            [this](const QPoint& p){
-        ui->centralWidget->moveBy(p * ui->centralWidget->currentScaleFactor());
-    });
+//    connect(ui->canvas, &Canvas::contentMovedBy,
+//            [this](const QPoint& p){
+//        ui->centralWidget->moveBy(p * ui->centralWidget->currentScaleFactor());
+//    });
 
-    connect(ui->panorama, &PanoramaWidget::scaled,
-            ui->centralWidget, &CanvasContainer::setScaleFactor);
-    connect(ui->centralWidget, &CanvasContainer::scaled,
-            ui->panorama, &PanoramaWidget::setScaled);
-    connect(ui->panorama, &PanoramaWidget::rotated,
-            ui->centralWidget, &CanvasContainer::setRotation);
-    connect(ui->centralWidget, &CanvasContainer::rotated,
-            ui->panorama, &PanoramaWidget::setRotation);
+//    connect(ui->panorama, &PanoramaWidget::scaled,
+//            ui->centralWidget, &CanvasContainer::setScaleFactor);
+//    connect(ui->centralWidget, &CanvasContainer::scaled,
+//            ui->panorama, &PanoramaWidget::setScaled);
+//    connect(ui->panorama, &PanoramaWidget::rotated,
+//            ui->centralWidget, &CanvasContainer::setRotation);
+//    connect(ui->centralWidget, &CanvasContainer::rotated,
+//            ui->panorama, &PanoramaWidget::setRotation);
 
     connect(ui->lineEdit,&QLineEdit::returnPressed,
             this,&MainWindow::onSendPressed);
@@ -143,14 +143,14 @@ void MainWindow::init()
             this, &MainWindow::onColorGridDroped);
     connect(ui->colorGrid, &ColorGrid::colorPicked,
             this, &MainWindow::onColorGridPicked);
-    connect(ui->panorama, &PanoramaWidget::refresh,
-            this, &MainWindow::onPanoramaRefresh);
-    connect(ui->centralWidget, &CanvasContainer::rectChanged,
-            ui->panorama, &PanoramaWidget::onRectChange);
-    connect(ui->panorama, &PanoramaWidget::moveTo,
-            ui->centralWidget,
-            static_cast<void (CanvasContainer::*)(const QPointF&)>
-            (&CanvasContainer::centerOn));
+//    connect(ui->panorama, &PanoramaWidget::refresh,
+//            this, &MainWindow::onPanoramaRefresh);
+//    connect(ui->centralWidget, &CanvasContainer::rectChanged,
+//            ui->panorama, &PanoramaWidget::onRectChange);
+//    connect(ui->panorama, &PanoramaWidget::moveTo,
+//            ui->centralWidget,
+//            static_cast<void (CanvasContainer::*)(const QPointF&)>
+//            (&CanvasContainer::centerOn));
 
     connect(ui->memberList, &MemberListWidget::memberGetKicked,
             this, &MainWindow::requestKickUser);
@@ -634,22 +634,22 @@ void MainWindow::shortcutInit()
         conf_dialog.exec();
     });
 
-    regShortcut<>("zoomin", [this](){
-        this->ui->centralWidget->scaleBy(1.2);
-    });
-    regShortcut<>("zoomout", [this](){
-        this->ui->centralWidget->scaleBy(0.8);
-    });
-    regShortcut<>("rotateclock", [this](){
-        this->ui->centralWidget->rotateBy(10);
-    });
-    regShortcut<>("rotateanticlock", [this](){
-        this->ui->centralWidget->rotateBy(-10);
-    });
-    regShortcut<>("canvasreset", [this](){
-        this->ui->centralWidget->setRotation(0);
-        this->ui->centralWidget->setScaleFactor(1);
-    });
+//    regShortcut<>("zoomin", [this](){
+//        this->ui->centralWidget->scaleBy(1.2);
+//    });
+//    regShortcut<>("zoomout", [this](){
+//        this->ui->centralWidget->scaleBy(0.8);
+//    });
+//    regShortcut<>("rotateclock", [this](){
+//        this->ui->centralWidget->rotateBy(10);
+//    });
+//    regShortcut<>("rotateanticlock", [this](){
+//        this->ui->centralWidget->rotateBy(-10);
+//    });
+//    regShortcut<>("canvasreset", [this](){
+//        this->ui->centralWidget->setRotation(0);
+//        this->ui->centralWidget->setScaleFactor(1);
+//    });
     regShortcut<>(QKeySequence("F12"),
                   std::bind(&MainWindow::openConsole, this));
 }
@@ -987,8 +987,8 @@ void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
 
 void MainWindow::onPanoramaRefresh()
 {
-    ui->panorama->onImageChange(ui->canvas->grab(),
-                                ui->centralWidget->visualRect().toRect());
+//    ui->panorama->onImageChange(ui->canvas->grab(),
+//                                ui->centralWidget->visualRect().toRect());
 }
 
 void MainWindow::onMoveToolPressed(bool c)
