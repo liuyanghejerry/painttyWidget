@@ -32,7 +32,7 @@ public:
     bool isJitterCorrectionEnabled() const;
 
     virtual QSize sizeHint () const;
-    virtual QSize minimumSizeHint () const;
+    //virtual QSize minimumSizeHint () const;
     QSizePolicy sizePolicy() const;
 
     AntialiasingModes antialiasingMode() const;

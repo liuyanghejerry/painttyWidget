@@ -1066,9 +1066,10 @@ void Canvas::paintEvent(QPaintEvent *event)
 
 //    QPainter painter(this);
 //    QPainter painter(&image);
-    QRect dirtyRect = event->rect();
-    if(dirtyRect.isEmpty())return;
-    layers.combineLayers(&image, dirtyRect);
+    //QRect dirtyRect = event->rect();
+    //if(dirtyRect.isEmpty())return;
+    //layers.combineLayers(&image, dirtyRect);
+    layers.combineLayers(&image, image.rect());
 
     // filter outdated names.
     // Considering using another QImage instead of direct draw
@@ -1148,10 +1149,10 @@ QSize Canvas::sizeHint() const
     \sa sizeHint()
 */
 
-QSize Canvas::minimumSizeHint() const
-{
-    return canvasSize;
-}
+//QSize Canvas::minimumSizeHint() const
+//{
+//    return canvasSize;
+//}
 
 Canvas::AntialiasingModes Canvas::antialiasingMode() const
 {
