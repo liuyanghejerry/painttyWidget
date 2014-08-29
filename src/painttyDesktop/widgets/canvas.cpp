@@ -86,6 +86,8 @@ Canvas::Canvas(QWidget *parent) :
     verticalScrollBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
     connect(horizontalScrollBar, &QScrollBar::valueChanged, this, &Canvas::horizontalScroll);
     connect(verticalScrollBar, &QScrollBar::valueChanged, this, &Canvas::verticalScroll);
+    horizontalScrollBar->setCursor(Qt::ArrowCursor);
+    verticalScrollBar->setCursor(Qt::ArrowCursor);
 
     //set layout
     QGridLayout *mainLayout = new QGridLayout(this);
@@ -942,10 +944,11 @@ void Canvas::focusOutEvent(QFocusEvent *)
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-        lastPoint = event->pos();
+        auto scaled_point = mapToContent(event->pos());
+        lastPoint = scaled_point;
         switch(control_mode_) {
         case PICKING:
-            pickColor(event->pos());
+            pickColor(scaled_point);
             break;
         case MOVING:
             break;
@@ -963,9 +966,10 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 void Canvas::mouseMoveEvent(QMouseEvent *event)
 {
     if ((event->buttons() & Qt::LeftButton)){
+        auto scaled_point = mapToContent(event->pos());
         switch(control_mode_) {
         case PICKING:
-            pickColor(event->pos());
+            pickColor(scaled_point);
             break;
         case MOVING:
         {
@@ -979,7 +983,7 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
         case DRAWING:
             if(jitterCorrection_){
                 if(stackPoints.length() < qBound(3, jitterCorrectionLevel_, 10)){
-                    stackPoints.push_back(event->pos());
+                    stackPoints.push_back(scaled_point);
                 }else{
                     tryJitterCorrection();
                     for(auto &p: stackPoints){
@@ -989,8 +993,8 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
                     stackPoints.clear();
                 }
             }else{
-                drawLineTo(event->pos());
-                lastPoint = event->pos();
+                drawLineTo(scaled_point);
+                lastPoint = scaled_point;
             }
             break;
         default:
@@ -1107,19 +1111,19 @@ void Canvas::paintEvent(QPaintEvent *event)
 void Canvas::resizeEvent(QResizeEvent *event)
 {
     // NOTE: only to stop unexpected resize
-    if(event->size() != canvasSize)
-        return;
-    QSize newSize = event->size();
-    canvasSize = newSize;
-    layers.resizeLayers(newSize);
-    QImage newImage(newSize, QImage::Format_ARGB32_Premultiplied);
-    newImage.fill(Qt::transparent);
-    QPainter painter(&newImage);
-    painter.drawImage(QPoint(0, 0), image);
-    image = newImage;
+//    if(event->size() != canvasSize)
+//        return;
+//    QSize newSize = event->size();
+//    canvasSize = newSize;
+//    layers.resizeLayers(newSize);
+//    QImage newImage(newSize, QImage::Format_ARGB32_Premultiplied);
+//    newImage.fill(Qt::transparent);
+//    QPainter painter(&newImage);
+//    painter.drawImage(QPoint(0, 0), image);
+//    image = newImage;
 
-    update();
-    QWidget::resizeEvent(event);
+//    update();
+//    QWidget::resizeEvent(event);
     adjustScrollBar();
 }
 
