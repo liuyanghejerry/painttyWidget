@@ -1066,10 +1066,10 @@ void Canvas::paintEvent(QPaintEvent *event)
 
 //    QPainter painter(this);
 //    QPainter painter(&image);
-    //QRect dirtyRect = event->rect();
-    //if(dirtyRect.isEmpty())return;
-    //layers.combineLayers(&image, dirtyRect);
-    layers.combineLayers(&image, image.rect());
+    QRect dirtyRect = mapToContent(event->rect());
+    if(dirtyRect.isEmpty())return;
+    layers.combineLayers(&image, dirtyRect);
+    //layers.combineLayers(&image, image.rect());
 
     // filter outdated names.
     // Considering using another QImage instead of direct draw
@@ -1193,6 +1193,12 @@ int Canvas::scaleFactor() const
 QPoint Canvas::mapToContent(const QPoint &posInVisual) const
 {
     return visualAreaTopLeftPos + posInVisual /(m_scaleFactor / 100.0);
+}
+
+QRect Canvas::mapToContent(const QRect &rectInVisual) const
+{
+    return QRect(mapToContent(rectInVisual.topLeft()),
+                 rectInVisual.size() * m_scaleFactor / 100.0);
 }
 
 QPoint Canvas::mapToVisualArea(const QPoint &posInContent) const

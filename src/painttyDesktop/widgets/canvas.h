@@ -42,6 +42,7 @@ public:
     QRect visualContentArea() const; //return visual area's rect in content coordinate
     int scaleFactor() const; //return current scale factor
     QPoint mapToContent(const QPoint& posInVisual) const; //map point in visual area to content coordinate
+    QRect mapToContent(const QRect& rectInVisual) const; //overload for QRect version
     QPoint mapToVisualArea(const QPoint &posInContent) const; //map point in content to visual area coordinate
 
 public slots:
