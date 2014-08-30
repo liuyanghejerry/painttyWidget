@@ -893,29 +893,30 @@ void Canvas::tabletEvent(QTabletEvent *ev)
     qreal pressure = ev->pressure();
     QPoint pos = ev->pos();
     qDebug()<<"pressure:"<<pressure<<"at"<<pos;
-    switch(ev->type()){
-    case QEvent::TabletPress:
-        if(!drawing){
-            lastPoint = pos;
-            drawPoint(pos, pressure);
-            drawing = true;
-        }
-        break;
-    case QEvent::TabletMove:
-        if(drawing && lastPoint != pos){
-            drawLineTo(pos, pressure);
-            lastPoint = pos;
-        }
-        break;
-    case QEvent::TabletRelease:
-        if(drawing){
-            drawing = false;
-            updateCursor();
-        }
-        break;
-    default:
-        break;
-    }
+//    switch(ev->type()){
+//    case QEvent::TabletPress:
+//        if(!drawing){
+//            lastPoint = pos;
+//            drawPoint(pos, pressure);
+//            drawing = true;
+//        }
+//        break;
+//    case QEvent::TabletMove:
+//        if(drawing && lastPoint != pos){
+//            drawLineTo(pos, pressure);
+//            lastPoint = pos;
+//        }
+//        break;
+//    case QEvent::TabletRelease:
+//        if(drawing){
+//            drawing = false;
+//            updateCursor();
+//        }
+//        break;
+//    default:
+//        break;
+//    }
+//    QWidget::tabletEvent(ev);
     ev->accept();
 }
 
@@ -943,7 +944,7 @@ void Canvas::focusOutEvent(QFocusEvent *)
 
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::LeftButton && !event->isAccepted()) {
         auto scaled_point = mapToContent(event->pos());
         lastPoint = scaled_point;
         switch(control_mode_) {
@@ -965,7 +966,7 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 
 void Canvas::mouseMoveEvent(QMouseEvent *event)
 {
-    if ((event->buttons() & Qt::LeftButton)){
+    if ((event->buttons() & Qt::LeftButton) && !event->isAccepted()){
         auto scaled_point = mapToContent(event->pos());
         switch(control_mode_) {
         case PICKING:
@@ -1005,7 +1006,7 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
 
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::LeftButton && !event->isAccepted()) {
         switch(control_mode_) {
         case PICKING:
             break;
