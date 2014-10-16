@@ -14,7 +14,7 @@ public:
     explicit PanoramaWidget(QWidget *parent = 0);
 signals:
     void refresh();
-    void moveTo(const QPointF &p);
+    void moveTo(const QPoint &p);
     void viewportChange(const QRectF &r);
     void scaled(qreal);
     void rotated(int);

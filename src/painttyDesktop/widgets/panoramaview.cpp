@@ -115,16 +115,19 @@ void PanoramaView::resizeEvent(QResizeEvent * event)
 void PanoramaView::navigateTo(const QPoint &p)
 {
     QSize whole = this->size();
-    int left = whole.width() - image_.width();
-    left /= 2;
-    int top = whole.height() - image_.height();
-    top /= 2;
+    int leftOffset = whole.width() - image_.width();
+    leftOffset /= 2;
+    int topOffset = whole.height() - image_.height();
+    topOffset /= 2;
 
     qreal delta = qreal(full_img_.width())/sized_img_.width();
-    QPointF miniPoint(p-QPoint(left, top));
-    QPointF realPoint = miniPoint * delta;
+    QPointF miniPoint(p-QPoint(leftOffset, topOffset));
+    QPointF realPoint = miniPoint * delta; //this is just the center point of the viewport rect
+    QRect rect = viewport_;
+    rect.moveCenter(realPoint.toPoint()); //now we move the rect's center to realPoint
+    rect &= full_img_.rect(); //make sure rect is inside the image
 
-    emit moveTo(realPoint);
+    emit moveTo(rect.topLeft()); //and get its topleft point, which will be used by Canvas::moveVisualAreaTo()
 }
 
 void PanoramaView::mouseMoveEvent(QMouseEvent * event)

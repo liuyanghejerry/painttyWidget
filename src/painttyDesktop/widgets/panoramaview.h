@@ -13,7 +13,7 @@ public:
     QSize minimumSizeHint() const;
 signals:
     void refresh();
-    void moveTo(const QPointF &p);
+    void moveTo(const QPoint &p);
     void viewportChange(const QRectF &r);
 public slots:
     void onImageChange(const QPixmap &p, const QRect &r);
@@ -25,9 +25,9 @@ protected:
     void mousePressEvent(QMouseEvent * event);
 private:
     QSize preferSize_;
-    QPixmap image_;
-    QPixmap full_img_;
-    QPixmap sized_img_;
+    QPixmap image_; //the image finally drawn on widget(with rect on it)
+    QPixmap full_img_; //the full-size image
+    QPixmap sized_img_; //the image resized to adjust the widget
     QTimer timer_;
     QRect viewport_;
     QPixmap drawViewport();

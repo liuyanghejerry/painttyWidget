@@ -143,14 +143,12 @@ void MainWindow::init()
             this, &MainWindow::onColorGridDroped);
     connect(ui->colorGrid, &ColorGrid::colorPicked,
             this, &MainWindow::onColorGridPicked);
-//    connect(ui->panorama, &PanoramaWidget::refresh,
-//            this, &MainWindow::onPanoramaRefresh);
-//    connect(ui->centralWidget, &CanvasContainer::rectChanged,
-//            ui->panorama, &PanoramaWidget::onRectChange);
-//    connect(ui->panorama, &PanoramaWidget::moveTo,
-//            ui->centralWidget,
-//            static_cast<void (CanvasContainer::*)(const QPointF&)>
-//            (&CanvasContainer::centerOn));
+    connect(ui->panorama, &PanoramaWidget::refresh,
+            this, &MainWindow::onPanoramaRefresh);
+    connect(ui->canvas, &Canvas::visualContentAreaChanged,
+            ui->panorama, &PanoramaWidget::onRectChange);
+    connect(ui->panorama, &PanoramaWidget::moveTo,
+            ui->canvas, &Canvas::moveVisualAreaTo);
 
     connect(ui->memberList, &MemberListWidget::memberGetKicked,
             this, &MainWindow::requestKickUser);
@@ -987,8 +985,8 @@ void MainWindow::onBrushSettingsChanged(const QVariantMap &m)
 
 void MainWindow::onPanoramaRefresh()
 {
-//    ui->panorama->onImageChange(ui->canvas->grab(),
-//                                ui->centralWidget->visualRect().toRect());
+    ui->panorama->onImageChange(QPixmap::fromImage(ui->canvas->allCanvas()),
+                                ui->canvas->visualContentArea());
 }
 
 void MainWindow::onMoveToolPressed(bool c)

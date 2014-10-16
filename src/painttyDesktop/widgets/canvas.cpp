@@ -977,7 +977,9 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
             auto p(lastPoint - event->pos());
             // FIXME: if we don't limit move events here, stack may overflow
             if(p.manhattanLength() > 10){
-                emit contentMovedBy(p);
+                //emit contentMovedBy(p);
+                visualAreaTopLeftPos += p;
+                update();
             }
         }
             break;
@@ -1242,6 +1244,7 @@ void Canvas::horizontalScroll(int value)
 {
     visualAreaTopLeftPos.setX(value);
     update();
+    emit visualContentAreaChanged(visualContentArea());
     //moveVisualAreaTo(QPoint(value, visualAreaTopLeftPos.y()));
 }
 
@@ -1249,6 +1252,7 @@ void Canvas::verticalScroll(int value)
 {
     visualAreaTopLeftPos.setY(value);
     update();
+    emit visualContentAreaChanged(visualContentArea());
     //moveVisualAreaTo(QPoint(visualAreaTopLeftPos.x(), value));
 }
 

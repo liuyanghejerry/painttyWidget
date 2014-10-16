@@ -37,6 +37,7 @@ public:
 
     AntialiasingModes antialiasingMode() const;
     void setAntialiasingMode(AntialiasingModes mode);
+    const QImage& canvasContent() const { return image; }
     QPoint visualAreaPos() const; //return visual area's top left position in content coordinate
     QRect visualArea() const; //return actual area that can be used to show content(window rect - scrollbars)
     QRect visualContentArea() const; //return visual area's rect in content coordinate
@@ -81,7 +82,7 @@ public slots:
     void setScaleFactor(int factor, const QPoint &originPosInVisual); //scale with originPos
 
 signals:
-    void contentMovedBy(const QPoint&);
+    //void contentMovedBy(const QPoint&); //we don't need this singal since it's used to update "container"
     void canvasToolComplete();
     void newBrushSettings(const QVariantMap &map);
     void historyComplete();
@@ -91,6 +92,8 @@ signals:
     void requestClearMembers();
     void canvasExported(const QPixmap& pic);
     void parsePaused();
+
+    void visualContentAreaChanged(const QRect&); //when we scroll the scrollbar, moveVisualAreaTo() or drag, we emit this signal
 protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
