@@ -1201,7 +1201,7 @@ QPoint Canvas::mapToContent(const QPoint &posInVisual) const
 QRect Canvas::mapToContent(const QRect &rectInVisual) const
 {
     return QRect(mapToContent(rectInVisual.topLeft()),
-                 rectInVisual.size() * m_scaleFactor / 100.0);
+                 rectInVisual.size() / (m_scaleFactor / 100.0));
 }
 
 QPoint Canvas::mapToVisualArea(const QPoint &posInContent) const
