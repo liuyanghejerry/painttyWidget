@@ -102,8 +102,8 @@ void MainWindow::init()
 //        ui->centralWidget->moveBy(p * ui->centralWidget->currentScaleFactor());
 //    });
 
-//    connect(ui->panorama, &PanoramaWidget::scaled,
-//            ui->centralWidget, &CanvasContainer::setScaleFactor);
+    connect(ui->panorama, &PanoramaWidget::scaled,
+            ui->canvas, static_cast<void (Canvas::*)(int)>(&Canvas::setScaleFactor));
 //    connect(ui->centralWidget, &CanvasContainer::scaled,
 //            ui->panorama, &PanoramaWidget::setScaled);
 //    connect(ui->panorama, &PanoramaWidget::rotated,

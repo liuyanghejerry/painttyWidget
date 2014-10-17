@@ -25,8 +25,8 @@ const static int HOST_MGR_PORT = 7070;
 
 const static QString HOST_ADDR[] = {HOST_ADDR_IPV4, HOST_ADDR_IPV6};
 
-const qreal MAX_SCALE_FACTOR = 5.0;
-const qreal MIN_SCALE_FACTOR = 0.125;
+const int MAX_SCALE_FACTOR = 500;
+const int MIN_SCALE_FACTOR = 25;
 
 template<typename Func>
 void delayJob(Func f, int ms=2000)

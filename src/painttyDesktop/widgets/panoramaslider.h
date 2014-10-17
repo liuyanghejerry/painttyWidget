@@ -13,9 +13,9 @@ class PanoramaSlider : public QWidget
 public:
     explicit PanoramaSlider(QWidget *parent = 0);
 signals:
-    void scaled(qreal scaleFactor);
+    void scaled(int scaleFactor);
 public slots:
-    void setScale(qreal scaleFactor);
+    void setScale(int scaleFactor);
 private:
     QSlider *slider;
     QLineEdit *input;

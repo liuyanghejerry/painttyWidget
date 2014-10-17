@@ -56,7 +56,7 @@ SOURCES += main.cpp\
     widgets/newroomwindow.cpp \
     widgets/aboutdialog.cpp \
     misc/singleshortcut.cpp \
-    widgets/canvascontainer.cpp \
+    #widgets/canvascontainer.cpp \
     widgets/memberlistwidget.cpp \
     misc/errortable.cpp \
     paintingTools/brush/brushmanager.cpp \
@@ -117,7 +117,7 @@ HEADERS  += widgets/mainwindow.h \
     widgets/aboutdialog.h \
     ../common/common.h \
     misc/singleshortcut.h \
-    widgets/canvascontainer.h \
+    #widgets/canvascontainer.h \
     widgets/memberlistwidget.h \
     misc/router.h \
     misc/errortable.h \
