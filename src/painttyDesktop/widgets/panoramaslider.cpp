@@ -46,7 +46,7 @@ PanoramaSlider::PanoramaSlider(QWidget *parent) :
 void PanoramaSlider::setScale(int scaleFactor)
 {
     slider->blockSignals(true);
-    if (scaleFactor >= 10)
+    if (scaleFactor >= 100)
     {
         int newValue = scaleFactor - 100;
         slider->setValue(newValue);
