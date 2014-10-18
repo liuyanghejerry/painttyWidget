@@ -282,19 +282,24 @@ bool CanvasContainer::eventFilter(QObject *object, QEvent *event)
 
 bool CanvasContainer::event(QEvent *event)
 {
-    if (event->type() == QEvent::TabletPress)
+    if (event->type() == QEvent::TabletPress || event->type() == QEvent::TabletMove || event->type() == QEvent::TabletRelease)
     {
-        qDebug() << "CONTAINER TABLET PRESS";
-        return true;
-    }
-    if (event->type() == QEvent::TabletMove)
-    {
-        qDebug() << "CONTAINER TABLET MOVE";
-        return true;
-    }
-    if (event->type() == QEvent::TabletRelease)
-    {
-        qDebug() << "CONTAINER TABLET RELEASE";
+        qDebug() << "CONTAINER TABLET EVENTS";
+        QTabletEvent *e = static_cast<QTabletEvent*>event;
+        QTabletEvent newEvent(e->type(),
+                              proxy->mapFromScene(mapToScene(e->posF())),
+                              e->globalPosF(),
+                              e->device(),
+                              e->pointerType(),
+                              e->pressure(),
+                              e->xTilt(),
+                              e->yTilt(),
+                              e->tangentialPressure(),
+                              e->rotation(),
+                              e->z(),
+                              e->modifiers(),
+                              e->uniqueId());
+        QApplication::sendEvent(proxy->widget(), &newEvent);
         return true;
     }
     return QGraphicsView::event(event);
