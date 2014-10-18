@@ -284,7 +284,6 @@ bool CanvasContainer::event(QEvent *event)
 {
     if (event->type() == QEvent::TabletPress || event->type() == QEvent::TabletMove || event->type() == QEvent::TabletRelease)
     {
-        qDebug() << "CONTAINER TABLET EVENTS";
         QTabletEvent *e = static_cast<QTabletEvent*>(event);
         QTabletEvent newEvent(e->type(),
                               proxy->mapFromScene(mapToScene(e->pos())),
