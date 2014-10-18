@@ -24,8 +24,6 @@ CanvasContainer::CanvasContainer(QWidget *parent) :
     scene = new QGraphicsScene(this);
     setScene(scene);
 
-    scene->installEventFilter(this);
-
     auto rc = [&](){
         emit rectChanged(visualRect().toRect());
     };
@@ -47,7 +45,6 @@ void CanvasContainer::setCanvas(QWidget *canvas)
     }
     proxy = scene->addWidget(canvas);
     canvas->installEventFilter(this);
-    proxy->installEventFilter(this);
 }
 
 void CanvasContainer::setScaleFactor(qreal factor)
@@ -124,7 +121,6 @@ void CanvasContainer::centerOn(qreal x, qreal y)
 
 void CanvasContainer::moveBy(const QPoint &p)
 {
-    qDebug()<<p;
     auto v = qBound(horizontalScrollBar()->minimum(), horizontalScrollBar()->value() + p.x(), horizontalScrollBar()->maximum());
     horizontalScrollBar()->setValue(v);
     v = qBound(verticalScrollBar()->minimum(), verticalScrollBar()->value() + p.y(), verticalScrollBar()->maximum());
@@ -239,44 +235,6 @@ bool CanvasContainer::eventFilter(QObject *object, QEvent *event)
     if (object == proxy->widget()
             && event->type() == QEvent::CursorChange)
         proxy->setCursor(proxy->widget()->cursor());
-    if (object == scene)
-    {
-        if (event->type() == QEvent::TabletPress)
-        {
-            qDebug() << "SCENE TABLET PRESS";
-            return true;
-        }
-        if (event->type() == QEvent::TabletMove)
-        {
-            qDebug() << "SCENE TABLET MOVE";
-            return true;
-        }
-        if (event->type() == QEvent::TabletRelease)
-        {
-            qDebug() << "SCENE TABLET RELEASE";
-            return true;
-        }
-        return QGraphicsView::eventFilter(object, event);
-    }
-    if (object == proxy)
-    {
-        if (event->type() == QEvent::TabletPress)
-        {
-            qDebug() << "PROXY TABLET PRESS";
-            return true;
-        }
-        if (event->type() == QEvent::TabletMove)
-        {
-            qDebug() << "PROXY TABLET MOVE";
-            return true;
-        }
-        if (event->type() == QEvent::TabletRelease)
-        {
-            qDebug() << "PROXY TABLET RELEASE";
-            return true;
-        }
-        return QGraphicsView::eventFilter(object, event);
-    }
     return QGraphicsView::eventFilter(object, event);
 }
 
