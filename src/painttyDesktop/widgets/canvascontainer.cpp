@@ -24,6 +24,8 @@ CanvasContainer::CanvasContainer(QWidget *parent) :
     scene = new QGraphicsScene(this);
     setScene(scene);
 
+    scene->installEventFilter(this);
+
     auto rc = [&](){
         emit rectChanged(visualRect().toRect());
     };
@@ -45,6 +47,7 @@ void CanvasContainer::setCanvas(QWidget *canvas)
     }
     proxy = scene->addWidget(canvas);
     canvas->installEventFilter(this);
+    proxy->installEventFilter(this);
 }
 
 void CanvasContainer::setScaleFactor(qreal factor)
@@ -236,5 +239,63 @@ bool CanvasContainer::eventFilter(QObject *object, QEvent *event)
     if (object == proxy->widget()
             && event->type() == QEvent::CursorChange)
         proxy->setCursor(proxy->widget()->cursor());
-    return false;
+    if (object == scene)
+    {
+        if (event->type() == QEvent::TabletPress)
+        {
+            qDebug() << "SCENE TABLET PRESS";
+            return true;
+        }
+        if (event->type() == QEvent::TabletMove)
+        {
+            qDebug() << "SCENE TABLET MOVE";
+            return true;
+        }
+        if (event->type() == QEvent::TabletRelease)
+        {
+            qDebug() << "SCENE TABLET RELEASE";
+            return true;
+        }
+        return QGraphicsView::eventFilter(object, event);
+    }
+    if (object == proxy)
+    {
+        if (event->type() == QEvent::TabletPress)
+        {
+            qDebug() << "PROXY TABLET PRESS";
+            return true;
+        }
+        if (event->type() == QEvent::TabletMove)
+        {
+            qDebug() << "PROXY TABLET MOVE";
+            return true;
+        }
+        if (event->type() == QEvent::TabletRelease)
+        {
+            qDebug() << "PROXY TABLET RELEASE";
+            return true;
+        }
+        return QGraphicsView::eventFilter(object, event);
+    }
+    return QGraphicsView::eventFilter(object, event);
+}
+
+bool CanvasContainer::event(QEvent *event)
+{
+    if (event->type() == QEvent::TabletPress)
+    {
+        qDebug() << "CONTAINER TABLET PRESS";
+        return true;
+    }
+    if (event->type() == QEvent::TabletMove)
+    {
+        qDebug() << "CONTAINER TABLET MOVE";
+        return true;
+    }
+    if (event->type() == QEvent::TabletRelease)
+    {
+        qDebug() << "CONTAINER TABLET RELEASE";
+        return true;
+    }
+    return QGraphicsView::event(event);
 }
