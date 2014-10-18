@@ -868,29 +868,29 @@ void Canvas::tabletEvent(QTabletEvent *ev)
     qreal pressure = ev->pressure();
     QPoint pos = ev->pos();
     qDebug()<<"pressure:"<<pressure<<"at"<<pos;
-    switch(ev->type()){
-    case QEvent::TabletPress:
-        if(!drawing){
-            lastPoint = pos;
-            drawPoint(pos, pressure);
-            drawing = true;
-        }
-        break;
-    case QEvent::TabletMove:
-        if(drawing && lastPoint != pos){
-            drawLineTo(pos, pressure);
-            lastPoint = pos;
-        }
-        break;
-    case QEvent::TabletRelease:
-        if(drawing){
-            drawing = false;
-            updateCursor();
-        }
-        break;
-    default:
-        break;
-    }
+//    switch(ev->type()){
+//    case QEvent::TabletPress:
+//        if(!drawing){
+//            lastPoint = pos;
+//            drawPoint(pos, pressure);
+//            drawing = true;
+//        }
+//        break;
+//    case QEvent::TabletMove:
+//        if(drawing && lastPoint != pos){
+//            drawLineTo(pos, pressure);
+//            lastPoint = pos;
+//        }
+//        break;
+//    case QEvent::TabletRelease:
+//        if(drawing){
+//            drawing = false;
+//            updateCursor();
+//        }
+//        break;
+//    default:
+//        break;
+//    }
     ev->accept();
 }
 

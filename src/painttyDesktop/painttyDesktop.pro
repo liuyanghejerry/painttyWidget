@@ -9,7 +9,7 @@ QT       += core gui network widgets script concurrent
 
 DEFINES += PAINTTY_DESKTOP
 
-DEFINES += PAINTTY_NO_TABLET
+#DEFINES += PAINTTY_NO_TABLET
 
 win32 {
     RC_FILE = app.rc
