@@ -202,7 +202,7 @@ void CanvasContainer::wheelEvent(QWheelEvent *event)
 {
     if (event->modifiers() & Qt::ControlModifier && proxy) //tablet pinch is ctrl+scrolling
     {
-        setScaleFactorInternal(calculateFactor(proxy->scale(), event->delta() > 0), event->pos());
+        setScaleFactorInternal(calculateFactor(proxy->scale(), event->angleDelta().y() > 0), event->pos());
         return;
     }
     if (qobject_cast<Canvas*>(proxy->widget())->tabletEnabled()) //it seems that tablet pen scrolling is conflict with drawing, we disable it
