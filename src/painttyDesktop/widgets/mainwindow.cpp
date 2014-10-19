@@ -411,6 +411,13 @@ void MainWindow::toolbarInit()
         }
     }
 
+    QToolBar *tabletEnableToolbar = new QToolBar(tr("Tablet"), this);
+    tabletEnableToolbar->setObjectName("TabletEnableToolbar");
+    QAction *tabletAction = tabletEnableToolbar->addAction(QIcon(":/iconset/ui/tablet.png"), tr("Draw with Tablet"));
+    tabletAction->setCheckable(true);
+    connect(tabletAction, &QAction::toggled, ui->canvas, &Canvas::setTabletEnabled);
+    addToolBar(Qt::TopToolBarArea, tabletEnableToolbar);
+
     // for brush width
     QToolBar *brushSettingToolbar = new QToolBar(tr("Brush Settings"), this);
     brushSettingToolbar->setObjectName("BrushSettingToolbar");

@@ -25,5 +25,6 @@
         <file>iconset/ui/brush/colorpicker.png</file>
         <file>iconset/ui/brush/move.png</file>
         <file>iconset/ui/brush/move-cursor.png</file>
+        <file>iconset/ui/tablet.png</file>
     </qresource>
 </RCC>

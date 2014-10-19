@@ -24,12 +24,12 @@ public:
     int jitterCorrectionLevel() const;
     bool isJitterCorrectionEnabled() const;
     bool tabletEnabled() const {return m_tabletEnabled; }
-    void setTabletEnabled(bool enabled) { m_tabletEnabled = enabled; }
 
     virtual QSize sizeHint () const;
     virtual QSize minimumSizeHint () const;
 
 public slots:
+    void setTabletEnabled(bool enabled) { m_tabletEnabled = enabled; }
     void setJitterCorrectionEnabled(bool correct);
     void setJitterCorrectionLevel(int value);
     void setShareColor(bool b);

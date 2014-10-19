@@ -71,7 +71,7 @@ Canvas::Canvas(QWidget *parent) :
     jitterCorrectionLevel_(10),
     backend_(new CanvasBackend(0)),
     worker_(new QThread(this)),
-    m_tabletEnabled(true)
+    m_tabletEnabled(false)
 
 {
     setAttribute(Qt::WA_StaticContents);
