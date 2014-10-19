@@ -1,5 +1,6 @@
 #include <QGraphicsScene>
 #include "canvascontainer.h"
+#include "canvas.h"
 #include <QGraphicsProxyWidget>
 #include <QApplication>
 #include <QScrollBar>
@@ -45,6 +46,7 @@ void CanvasContainer::setCanvas(QWidget *canvas)
     }
     proxy = scene->addWidget(canvas);
     canvas->installEventFilter(this);
+    viewport()->installEventFilter(this); //at this time, viewport is available, so we intall event filter to send tablet event
 }
 
 void CanvasContainer::setScaleFactor(qreal factor)
@@ -198,21 +200,20 @@ void CanvasContainer::setScaleFactorInternal(qreal factor, const QPoint scaleCen
 
 void CanvasContainer::wheelEvent(QWheelEvent *event)
 {
-    if (!event->modifiers().testFlag(Qt::ControlModifier)
-            || !proxy)
+    if (event->modifiers() & Qt::ControlModifier && proxy) //tablet pinch is ctrl+scrolling
     {
-        QGraphicsView::wheelEvent(event);
+        setScaleFactorInternal(calculateFactor(proxy->scale(), event->delta() > 0), event->pos());
         return;
     }
-    //QPointF position = proxy->mapFromScene(mapToScene(event->pos()));
-    //if (!proxy->rect().contains(position))
-    //return;
-    //proxy->setTransformOriginPoint(position);
-    setScaleFactorInternal(calculateFactor(proxy->scale(), event->delta() > 0), event->pos());
+    if (qobject_cast<Canvas*>(proxy->widget())->tabletEnabled()) //it seems that tablet pen scrolling is conflict with drawing, we disable it
+        return;
+    QGraphicsView::wheelEvent(event);
 }
 
 void CanvasContainer::mousePressEvent(QMouseEvent *event)
 {
+    if (qobject_cast<Canvas*>(proxy->widget())->tabletEnabled()) //it seems that tablet pen right click is conflict with drawing, we disable it
+        return;
     if (event->button() == Qt::RightButton)
     {
         moveStartPoint = event->pos();
@@ -222,6 +223,8 @@ void CanvasContainer::mousePressEvent(QMouseEvent *event)
 
 void CanvasContainer::mouseMoveEvent(QMouseEvent *event)
 {
+    if (qobject_cast<Canvas*>(proxy->widget())->tabletEnabled())
+        return;
     if (event->buttons() & Qt::RightButton)
     {
         moveBy(moveStartPoint - event->pos());
@@ -235,29 +238,29 @@ bool CanvasContainer::eventFilter(QObject *object, QEvent *event)
     if (object == proxy->widget()
             && event->type() == QEvent::CursorChange)
         proxy->setCursor(proxy->widget()->cursor());
-    return QGraphicsView::eventFilter(object, event);
-}
-
-bool CanvasContainer::event(QEvent *event)
-{
-    if (event->type() == QEvent::TabletPress || event->type() == QEvent::TabletMove || event->type() == QEvent::TabletRelease)
+    if (object == viewport()) //process tablet event
     {
-        QTabletEvent *e = static_cast<QTabletEvent*>(event);
-        QTabletEvent newEvent(e->type(),
-                              proxy->mapFromScene(mapToScene(e->pos())),
-                              e->globalPosF(),
-                              e->device(),
-                              e->pointerType(),
-                              e->pressure(),
-                              e->xTilt(),
-                              e->yTilt(),
-                              e->tangentialPressure(),
-                              e->rotation(),
-                              e->z(),
-                              e->modifiers(),
-                              e->uniqueId());
-        QApplication::sendEvent(proxy->widget(), &newEvent);
-        return true;
+        if (event->type() == QEvent::TabletPress
+                || event->type() == QEvent::TabletMove
+                || event->type() == QEvent::TabletRelease)
+        {
+            QTabletEvent *e = static_cast<QTabletEvent*>(event);
+            QTabletEvent newEvent(e->type(),
+                                  proxy->mapFromScene(mapToScene(e->pos())),
+                                  e->globalPosF(),
+                                  e->device(),
+                                  e->pointerType(),
+                                  e->pressure(),
+                                  e->xTilt(),
+                                  e->yTilt(),
+                                  e->tangentialPressure(),
+                                  e->rotation(),
+                                  e->z(),
+                                  e->modifiers(),
+                                  e->uniqueId());
+            QApplication::sendEvent(proxy->widget(), &newEvent);
+            return true;
+        }
     }
-    return QGraphicsView::event(event);
+    return QGraphicsView::eventFilter(object, event);
 }

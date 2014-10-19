@@ -70,7 +70,9 @@ Canvas::Canvas(QWidget *parent) :
     jitterCorrection_(true),
     jitterCorrectionLevel_(10),
     backend_(new CanvasBackend(0)),
-    worker_(new QThread(this))
+    worker_(new QThread(this)),
+    m_tabletEnabled(true)
+
 {
     setAttribute(Qt::WA_StaticContents);
     brush_ = BrushPointer(new BasicBrush);
@@ -862,36 +864,86 @@ void Canvas::layerSelected(const QString &name)
 
 #ifndef PAINTTY_NO_TABLET
 
-void Canvas::tabletEvent(QTabletEvent *ev)
+void Canvas::tabletEvent(QTabletEvent *event)
 {
-    //TODO: fully support tablet
-    qreal pressure = ev->pressure();
-    QPoint pos = ev->pos();
-    qDebug()<<"pressure:"<<pressure<<"at"<<pos;
-//    switch(ev->type()){
-//    case QEvent::TabletPress:
-//        if(!drawing){
-//            lastPoint = pos;
-//            drawPoint(pos, pressure);
-//            drawing = true;
-//        }
-//        break;
-//    case QEvent::TabletMove:
-//        if(drawing && lastPoint != pos){
-//            drawLineTo(pos, pressure);
-//            lastPoint = pos;
-//        }
-//        break;
-//    case QEvent::TabletRelease:
-//        if(drawing){
-//            drawing = false;
-//            updateCursor();
-//        }
-//        break;
-//    default:
-//        break;
-//    }
-    ev->accept();
+    if (!m_tabletEnabled)
+        return;
+    switch(event->type()){
+    case QEvent::TabletPress:
+        if (event->pointerType() != QTabletEvent::Pen || qFuzzyCompare(event->pressure(), 0.0)) //sometimes press event will raise when pen is actually not pressed (such as a pen button is pressed), we don't need it.
+            break;
+        lastPoint = event->pos();
+        switch(control_mode_) {
+        case PICKING:
+            pickColor(event->pos());
+            break;
+        case MOVING:
+            break;
+        default:
+            // fall-through
+        case NONE:
+            control_mode_ = DRAWING;
+        case DRAWING:
+            stackPoints.push_back(lastPoint);
+            drawPoint(lastPoint, event->pressure());
+        }
+        break;
+    case QEvent::TabletMove:
+        if (event->pointerType() != QTabletEvent::Pen)
+            break;
+        switch(control_mode_) {
+        case PICKING:
+            pickColor(event->pos());
+            break;
+        case MOVING:
+        {
+            auto p(lastPoint - event->pos());
+            // FIXME: if we don't limit move events here, stack may overflow
+            if(p.manhattanLength() > 10){
+                emit contentMovedBy(p);
+            }
+        }
+            break;
+        case DRAWING:
+            if(jitterCorrection_){
+                if(stackPoints.length() < qBound(3, jitterCorrectionLevel_, 10)){
+                    stackPoints.push_back(event->pos());
+                }else{
+                    tryJitterCorrection();
+                    for(auto &p: stackPoints){
+                        drawLineTo(p, event->pressure());
+                        lastPoint = p;
+                    }
+                    stackPoints.clear();
+                }
+            }else{
+                drawLineTo(event->pos(), event->pressure());
+                lastPoint = event->pos();
+            }
+            break;
+        default:
+            break;
+        }
+        break;
+    case QEvent::TabletRelease:
+        switch(control_mode_) {
+        case PICKING:
+            break;
+        case MOVING:
+            break;
+        default:
+            // fall-through
+        case DRAWING:
+            stackPoints.clear();
+            updateCursor();
+            sendAction();
+            control_mode_ = NONE;
+        }
+        break;
+    default:
+        break;
+    }
+    event->accept();
 }
 
 #endif
@@ -918,7 +970,7 @@ void Canvas::focusOutEvent(QFocusEvent *)
 
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::LeftButton && !m_tabletEnabled) {
         lastPoint = event->pos();
         switch(control_mode_) {
         case PICKING:
@@ -939,7 +991,7 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 
 void Canvas::mouseMoveEvent(QMouseEvent *event)
 {
-    if ((event->buttons() & Qt::LeftButton)){
+    if ((event->buttons() & Qt::LeftButton && !m_tabletEnabled)){
         switch(control_mode_) {
         case PICKING:
             pickColor(event->pos());
@@ -978,7 +1030,7 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
 
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::LeftButton && !m_tabletEnabled) {
         switch(control_mode_) {
         case PICKING:
             break;

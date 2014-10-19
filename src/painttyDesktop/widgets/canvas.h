@@ -23,6 +23,8 @@ public:
     QImage allCanvas();
     int jitterCorrectionLevel() const;
     bool isJitterCorrectionEnabled() const;
+    bool tabletEnabled() const {return m_tabletEnabled; }
+    void setTabletEnabled(bool enabled) { m_tabletEnabled = enabled; }
 
     virtual QSize sizeHint () const;
     virtual QSize minimumSizeHint () const;
@@ -76,7 +78,7 @@ protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *event);
 #ifndef PAINTTY_NO_TABLET
-    void tabletEvent(QTabletEvent *ev);
+    void tabletEvent(QTabletEvent *event);
 #endif
     void focusInEvent(QFocusEvent * event);
     void focusOutEvent(QFocusEvent * event);
@@ -116,6 +118,7 @@ private:
         MOVING
     };
 
+    bool m_tabletEnabled;
     CONTROL_MODE control_mode_;
     QSize canvasSize;
     LayerManager layers;
