@@ -106,6 +106,8 @@ void RoomListDialog::tableInit()
          << QString(tr("Max Member"));
     ui->tableWidget->setHorizontalHeaderLabels(list);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    ui->tableWidget->setSortingEnabled(true);
+    ui->tableWidget->sortByColumn(2, Qt::DescendingOrder);
 }
 
 void RoomListDialog::connectToManager()
