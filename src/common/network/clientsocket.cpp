@@ -4,8 +4,10 @@
 #include "../misc/archivefile.h"
 #include "../misc/singleton.h"
 #include <QJsonDocument>
+#include <QJsonArray>
 #include <QApplication>
 #include <QJsonObject>
+#include <QCryptographicHash>
 #include <QMetaMethod>
 #include <QSettings>
 #include <QTimer>
@@ -38,16 +40,26 @@ ClientSocket::ClientSocket(QObject *parent) :
     no_save_(false),
     remove_after_close_(false),
     canceled_(false),
-    hb_timer_(new QTimer(this))
+    hb_timer_(new QTimer(this)),
+    state_(INIT),
+    roomDelay_(-1)
 {
+    initRouter();
     connect(this, &ClientSocket::newData,
             this, &ClientSocket::onPending);
+    connect(this, &ClientSocket::managerPack,
+            this, &ClientSocket::onManagerPack);
     connect(timer_, &QTimer::timeout,
             this, &ClientSocket::processPending);
     timer_->start(WAIT_TIME);
 
     connect(hb_timer_, &QTimer::timeout,
             this, &ClientSocket::sendHeartbeat);
+}
+
+ClientSocket::State ClientSocket::currentState() const
+{
+    return state_;
 }
 
 void ClientSocket::setPoolEnabled(bool on)
@@ -111,9 +123,408 @@ void ClientSocket::setRoomCloseFlag()
 
 QString ClientSocket::toUrl() const
 {
-    return this->genRoomUrl(this->address().toString(),
-                            this->port(),
-                            this->passwd());
+    return genRoomUrl(address().toString(),
+                            port(),
+                            passwd());
+}
+
+void ClientSocket::connectToManager(const QHostAddress &addr, const int port)
+{
+    disconnect(this, &ClientSocket::connected, this, 0);
+    setPoolEnabled(false);
+    connect(this, &ClientSocket::connected,
+            [this] {
+        state_ = MANAGER_CONNECTED;
+        emit managerConnected();
+    });
+    connect(this, &ClientSocket::disconnected,
+            [this]{
+        // TODO: mannully or suppose to close?
+//        router_.clear();
+    });
+    connectToHost(addr, port);
+    state_ = CONNECTING_MANAGER;
+}
+
+void ClientSocket::requestRoomList()
+{
+    QJsonObject map;
+    map.insert("request", QString("roomlist"));
+    sendManagerPack(map);
+    state_ = REQUESTING_ROOMLIST;
+}
+
+void ClientSocket::requestNewRoom(const QJsonObject &m)
+{
+    QJsonObject map;
+    map["request"] = QString("newroom");
+    map["info"] = m;
+    setRoomName(m["name"].toString());
+    setPasswd(m["password"].toString());
+    sendManagerPack(map);
+    state_ = REQUESTING_NEWROOM;
+}
+
+void ClientSocket::tryJoinRoom(const QString &url)
+{
+    auto decoded_info = decodeRoomUrl(url);
+    setPasswd(decoded_info.passwd);
+    tryJoinRoom(QHostAddress(decoded_info.addr), decoded_info.port);
+}
+
+void ClientSocket::onResponseRoomList(const QJsonObject &obj)
+{
+    if(!obj["result"].toBool())
+        return;
+    QJsonArray list = obj["roomlist"].toArray();
+    QHash<QString, QJsonObject> roomsInfo;
+    for(auto info: list){
+        QJsonObject m = info.toObject();
+        QString name = m["name"].toString();
+        roomsInfo.insert(name, m);
+    }
+    // TODO: emit roomslist
+    emit roomlistFetched(roomsInfo);
+}
+
+void ClientSocket::onResponseNewRoom(const QJsonObject &m)
+{
+    if(m["result"].toBool()){
+        QHostAddress addr(address());
+        int roomPort = 0;
+        if(m.contains("info")){
+            QJsonObject info = m.value("info").toObject();
+            roomPort = info.value("port").toDouble();
+            if(info.value("address").toString("0.0.0.0") != "0.0.0.0") {
+                addr = QHostAddress(info.value("address").toString());
+            }
+            roomKey_ = info.value("key").toString();
+
+            QCryptographicHash hash(QCryptographicHash::Md5);
+            hash.addData(roomName().toUtf8());
+            QString hashed_name = hash.result().toHex();
+            QSettings settings(GlobalDef::SETTINGS_NAME,
+                               QSettings::defaultFormat(),
+                               qApp);
+            settings.setValue("rooms/"+hashed_name, roomKey_);
+            settings.sync();
+        }
+
+        emit roomCreated();
+
+        if(roomPort){
+            // Since full new room info comes later,
+            // we must fake it to join it now
+            tryJoinRoom(addr, roomPort);
+        }
+        return;
+    }
+
+    if(!m.contains("errcode")){
+        return;
+    }else{
+        int errcode = m["errcode"].toDouble();
+        emit clientSocketError(errcode);
+    }
+}
+
+void ClientSocket::onResponseLogin(const QJsonObject &map)
+{
+    setPoolEnabled(true);
+
+    if(!map.contains("result"))
+        return;
+    if(!map["result"].toBool()){
+        int errcode = 300;
+        if(map.contains("errcode")){
+            errcode = map["errcode"].toDouble();
+        }
+        emit clientSocketError(errcode);
+    }else{
+        if(!map.contains("info"))
+            return;
+        QJsonObject info = map["info"].toObject();
+        if(!info.contains("historysize")){
+            return;
+        }
+        setSchedualDataLength(info["historysize"].toDouble());
+        if(info.contains("size")){
+            QJsonObject sizeMap = info["size"].toObject();
+            int width = sizeMap["width"].toDouble();
+            int height = sizeMap["height"].toDouble();
+            setCanvasSize(QSize(width, height));
+        }
+        if(info.contains("clientid")){
+            QString clientid = info["clientid"].toString();
+            setClientId(clientid);
+            qDebug()<<"clientid assign"
+                   <<clientid;
+        }
+        if(info.contains("name")){
+            QString name = info["name"].toString();
+            setRoomName(name);
+            qDebug()<<"room name assign"
+                   <<name;
+        }
+
+        setPoolEnabled(false);
+        requestArchiveSign();
+        // TODO: checkout if own the room
+        if(roomKey().length()) {
+            requestCheckout();
+        }
+        startHeartbeat();
+        state_ = ROOM_JOINED;
+        emit roomJoined();
+    }
+    //
+}
+
+void ClientSocket::tryJoinRoom(const QHostAddress &addr, const int port)
+{
+    qDebug()<<"tryJoinRoom"<<addr<<port;
+    close();
+    disconnect(this, &ClientSocket::connected, this, 0);
+    disconnect(this, &ClientSocket::cmdPack, this, 0);
+    connect(this, &ClientSocket::connected,
+            [this]() {
+        QJsonObject map;
+        map.insert("request", QString("login"));
+        map.insert("name", userName());
+        map.insert("password", passwd());
+
+        qDebug()<<"try auto join room";
+        sendCmdPack(map);
+        state_ = JOINING_ROOM;
+
+//        disconnect(this, &ClientSocket::connected, 0, 0);
+    });
+    connect(this, &ClientSocket::cmdPack,
+            [this](const QJsonObject &map) {
+        qDebug()<<"onCmdData"<<map;
+        router_.onData(map);
+    });
+    connectToHost(addr, port);
+    state_ = CONNECTING_ROOM;
+}
+
+void ClientSocket::requestArchive()
+{
+    QJsonObject obj;
+    obj.insert("request", QString("archive"));
+    obj.insert("start", (int)archiveSize());
+    qDebug()<<"request archive"<<obj;
+    sendCmdPack(obj);
+}
+
+void ClientSocket::requestArchiveSign()
+{
+    QJsonObject obj;
+    obj.insert("request", QString("archivesign"));
+    qDebug()<<"request archive signature";
+    sendCmdPack(obj);
+}
+
+void ClientSocket::onResponseArchiveSign(const QJsonObject &o)
+{
+    qDebug()<<o;
+    if(!o.contains("result") || !o.contains("signature")){
+        return;
+    }
+    int errcode = 800;
+    if(!o.value("result").toBool()){
+        emit clientSocketError(errcode);
+        return;
+    }
+
+    QString signature = o.value("signature").toString();
+
+    setArchiveSignature(signature);
+    requestArchive();
+}
+
+void ClientSocket::onResponseArchive(const QJsonObject &o)
+{
+    if(!o.contains("result")|| !o.contains("datalength")){
+        return;
+    }
+    int errcode = 900;
+    if(!o.value("result").toBool()){
+        emit clientSocketError(errcode);
+        return;
+    }
+
+    quint64 datalength = o.value("datalength").toDouble();
+
+    // TODO: re-match signature and receive archive data
+    setSchedualDataLength(datalength);
+}
+
+void ClientSocket::onCommandActionClose(const QJsonObject &)
+{
+    emit roomAboutToClose();
+    setRoomCloseFlag();
+}
+
+void ClientSocket::onCommandResponseClose(const QJsonObject &m)
+{
+    bool result = m["result"].toBool();
+    if(!result){
+        emit requestUnauthed();
+    }else{
+        // Since server accepted close request, we can
+        // wait for close now.
+        // of course, delete the key. it's useless.
+        QCryptographicHash hash(QCryptographicHash::Md5);
+        auto name = roomName();
+        hash.addData(name.toUtf8());
+        QString hashed_name = hash.result().toHex();
+        QSettings settings(GlobalDef::SETTINGS_NAME,
+                           QSettings::defaultFormat(),
+                           qApp);
+        settings.remove("rooms/"+hashed_name);
+        settings.sync();
+    }
+}
+
+void ClientSocket::onCommandResponseClearAll(const QJsonObject &m)
+{
+    bool result = m["result"].toBool();
+    if(!result){
+        emit requestUnauthed();
+    }
+}
+
+void ClientSocket::onCommandResponseCheckout(const QJsonObject &m)
+{
+    bool result = m["result"].toBool();
+    if(!result){
+        //
+    }else{
+        int hours = m["cycle"].toDouble();
+        if(hours){
+            // prepare next checkout
+            // this rarely happens, but still need
+            QTimer * checkoutTimer = new QTimer(this);
+            checkoutTimer->setSingleShot(true);
+            hours--;
+            checkoutTimer->setInterval(hours * 3600*1000);
+            connect(checkoutTimer, &QTimer::timeout,
+                    this, &ClientSocket::requestCheckout);
+        }
+    }
+}
+
+void ClientSocket::onCommandActionClearAll(const QJsonObject &obj)
+{
+    qDebug()<<"on action clearall"<<obj;
+    if(obj.contains("signature")){
+        auto&& s = obj.value("signature").toString();
+        setArchiveSignature(s);
+    }
+    emit layerAllCleared();
+}
+
+void ClientSocket::onCommandResponseOnlinelist(const QJsonObject &o)
+{
+    QJsonArray list = o.value("onlinelist").toArray();
+    QHash<QString, QVariantList> l;
+    for(int i=0;i<list.count();++i){
+        QJsonObject obj = list[i].toObject();
+        QString id = obj.value("clientid").toString();
+        QString nick = obj.value("name").toString();
+        QVariantList vl;
+        vl.append(nick);
+        l.insert(id, vl);
+    }
+    emit memberListFetched(l);
+}
+
+void ClientSocket::onActionNotify(const QJsonObject &o)
+{
+    QString content = o.value("content").toString();
+    if(content.isEmpty()){
+        return;
+    }
+
+    emit getNotified(content);
+    qDebug()<<"notified with: "<<o;
+}
+
+void ClientSocket::onActionKick(const QJsonObject &)
+{
+    qDebug()<<"Get kicked";
+    emit getKicked();
+}
+
+void ClientSocket::onResponseHeartbeat(const QJsonObject &o)
+{
+    if(!o.contains("timestamp")){
+        return;
+    }
+    qDebug()<<o;
+    int server_time = o.value("timestamp").toInt();
+    int now = QDateTime::currentMSecsSinceEpoch() / 1000;
+    int delta = now - server_time;
+    roomDelay_ = delta;
+}
+
+
+void ClientSocket::exitFromRoom()
+{
+    reset();
+    close();
+}
+
+void ClientSocket::requestOnlinelist()
+{
+    QJsonObject obj;
+    obj.insert("request", QString("onlinelist"));
+    obj.insert("type", QString("command"));
+    obj.insert("clientid", clientId());
+
+    sendCmdPack(obj);
+}
+
+bool ClientSocket::requestCheckout()
+{
+    if(roomKey().length()) {
+        QJsonObject obj;
+        obj.insert("request", QString("checkout"));
+        obj.insert("type", QString("command"));
+        obj.insert("key", roomKey());
+        qDebug()<<"checkout with key: "<<roomKey();
+
+        sendCmdPack(obj);
+    }
+    return roomKey().length();
+}
+
+bool ClientSocket::requestCloseRoom()
+{
+    if(roomKey().length()) {
+        QJsonObject obj;
+        obj.insert("request", QString("checkout"));
+        obj.insert("key", roomKey());
+        qDebug()<<"close with key: "<<roomKey();
+
+        sendCmdPack(obj);
+    }
+    return roomKey().length();
+}
+
+bool ClientSocket::requestKickUser(const QString& id)
+{
+    if(roomKey().length()) {
+        QJsonObject obj;
+        obj.insert("request", QString("kick"));
+        obj.insert("clientid", id);
+        obj.insert("key", roomKey());
+        qDebug()<<"kick with key: "<<roomKey();
+
+        sendCmdPack(obj);
+    }
+    return roomKey().length();
 }
 
 void ClientSocket::startHeartbeat()
@@ -181,7 +592,7 @@ void ClientSocket::sendMessage(const QString &content)
 {
     QJsonObject map;
     map.insert("content", content);
-    this->sendData(assamblePack(true, MESSAGE, jsonToBuffer(map)));
+    sendData(assamblePack(true, MESSAGE, jsonToBuffer(map)));
 }
 
 void ClientSocket::onNewMessage(const QJsonObject &map)
@@ -192,33 +603,38 @@ void ClientSocket::onNewMessage(const QJsonObject &map)
     emit newMessage(string);
 }
 
+void ClientSocket::onManagerPack(const QJsonObject &data)
+{
+    router_.onData(data);
+}
+
 void ClientSocket::sendHeartbeat()
 {
     QJsonObject obj;
     obj.insert("request", QString("heartbeat"));
     int now = QDateTime::currentMSecsSinceEpoch() / 1000;
     obj.insert("timestamp", now);
-    this->sendCmdPack(obj);
+    sendCmdPack(obj);
 }
 
 void ClientSocket::sendDataPack(const QByteArray &content)
 {
-    this->sendData(assamblePack(true, DATA, content));
+    sendData(assamblePack(true, DATA, content));
 }
 
 void ClientSocket::sendDataPack(const QJsonObject &content)
 {
-    this->sendData(assamblePack(true, DATA, jsonToBuffer(content)));
+    sendData(assamblePack(true, DATA, jsonToBuffer(content)));
 }
 
 void ClientSocket::sendCmdPack(const QJsonObject &content)
 {
-    this->sendData(assamblePack(true, COMMAND, jsonToBuffer(content)));
+    sendData(assamblePack(true, COMMAND, jsonToBuffer(content)));
 }
 
 void ClientSocket::sendManagerPack(const QJsonObject &content)
 {
-    this->sendData(assamblePack(true, MANAGER, jsonToBuffer(content)));
+    sendData(assamblePack(true, MANAGER, jsonToBuffer(content)));
 }
 
 void ClientSocket::cancelPendings()
@@ -234,6 +650,85 @@ void ClientSocket::close()
         archive_.remove();
     }
     Socket::close();
+}
+
+void ClientSocket::initRouter()
+{
+    router_.clear();
+    router_.regHandler("response",
+                       "roomlist",
+                       std::bind(&ClientSocket::onResponseRoomList,
+                                 this,
+                                 std::placeholders::_1));
+    router_.regHandler("response",
+                       "newroom",
+                       std::bind(&ClientSocket::onResponseNewRoom,
+                                 this,
+                                 std::placeholders::_1));
+    router_.regHandler("response",
+                       "login",
+                       std::bind(&ClientSocket::onResponseLogin,
+                                 this,
+                                 std::placeholders::_1));
+    router_.regHandler("action",
+                       "close",
+                       std::bind(&ClientSocket::onCommandActionClose,
+                                 this,
+                                 std::placeholders::_1));
+    router_.regHandler("response",
+                       "close",
+                       std::bind(&ClientSocket::onCommandResponseClose,
+                                 this,
+                                 std::placeholders::_1));
+    router_.regHandler("action",
+                       "clearall",
+                       std::bind(&ClientSocket::onCommandActionClearAll,
+                                 this,
+                                 std::placeholders::_1));
+    router_.regHandler("response",
+                       "clearall",
+                       std::bind(&ClientSocket::onCommandResponseClearAll,
+                                 this,
+                                 std::placeholders::_1));
+    router_.regHandler("response",
+                       "onlinelist",
+                       std::bind(&ClientSocket::onCommandResponseOnlinelist,
+                                 this,
+                                 std::placeholders::_1));
+    router_.regHandler("response",
+                       "checkout",
+                       std::bind(&ClientSocket::onCommandResponseCheckout,
+                                 this,
+                                 std::placeholders::_1));
+    router_.regHandler("action",
+                       "notify",
+                       std::bind(&ClientSocket::onActionNotify,
+                                 this,
+                                 std::placeholders::_1));
+    router_.regHandler("action",
+                       "kick",
+                       std::bind(&ClientSocket::onActionKick,
+                                 this,
+                                 std::placeholders::_1));
+    router_.regHandler("response",
+                       "archivesign",
+                       std::bind(&ClientSocket::onResponseArchiveSign,
+                                 this,
+                                 std::placeholders::_1));
+    router_.regHandler("response",
+                       "archive",
+                       std::bind(&ClientSocket::onResponseArchive,
+                                 this,
+                                 std::placeholders::_1));
+    router_.regHandler("response",
+                       "heartbeat",
+                       std::bind(&ClientSocket::onResponseHeartbeat,
+                                 this,
+                                 std::placeholders::_1));
+}
+QString ClientSocket::roomKey() const
+{
+    return roomKey_;
 }
 
 ClientSocket::ParserResult ClientSocket::parserPack(const QByteArray &data)

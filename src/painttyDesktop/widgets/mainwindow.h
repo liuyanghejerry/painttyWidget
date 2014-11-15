@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 
-#include "../misc/router.h"
 #include "../misc/shortcutmanager.h"
 
 class QToolButton;
@@ -13,7 +12,6 @@ class QScriptEngine;
 class DeveloperConsole;
 class NetworkIndicator;
 
-typedef Router<> RegularRouter;
 typedef ShortcutManager::ShortcutType ShT;
 
 namespace Ui {
@@ -76,17 +74,13 @@ private:
     void toolbarInit();
     void shortcutInit();
     void socketInit();
-    void cmdRouterInit();
+    void routerInit();
     void scriptInit();
     void setNickName();
     void setRoomName();
     void setHistorySize();
     void setCanvasSize();
     QString getRoomKey();
-    void requestOnlinelist();
-    void requestCheckout();
-    void requestArchiveSign();
-    void requestArchive();
     void requestCloseRoom();
     void requestKickUser(const QString& id);
 
@@ -94,7 +88,6 @@ private:
 
     QByteArray defaultView;
     QAction *lastBrushAction;
-    RegularRouter cmdRouter_;
     BrushSettingsWidget *brushSettingControl_;
     QToolBar *toolbar_;
     QActionGroup *brushActionGroup_;
@@ -115,19 +108,15 @@ private slots:
     void onBrushSettingsChanged(const QVariantMap &m);
     void onColorPickerPressed(bool c);
     void onMoveToolPressed(bool c);
-    void onCmdData(const QJsonObject &data);
     void onPanoramaRefresh();
-    void onCommandActionClose(const QJsonObject &);
-    void onCommandResponseClose(const QJsonObject &m);
-    void onCommandResponseClearAll(const QJsonObject &m);
-    void onCommandResponseCheckout(const QJsonObject &m);
-    void onCommandActionClearAll(const QJsonObject &);
-    void onCommandResponseOnlinelist(const QJsonObject &o);
-    void onActionNotify(const QJsonObject &o);
-    void onActionKick(const QJsonObject &o);
-    void onResponseArchiveSign(const QJsonObject &o);
-    void onResponseArchive(const QJsonObject &o);
-    void onResponseHeartbeat(const QJsonObject &o);
+
+    void onAboutToClose();
+    void onAllLayerCleared();
+    void onMemberlistFetched(const QHash<QString, QVariantList> &list);
+    void onNotify(const QString &content);
+    void onKicked();
+//    void onResponseHeartbeat(const QJsonObject &o);
+    void onClientSocketError(const int code);
 };
 
 #endif // MAINWINDOW_H

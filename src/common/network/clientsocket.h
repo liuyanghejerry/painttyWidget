@@ -21,7 +21,6 @@ class ClientSocket : public Socket
         MESSAGE = binL<11>::value
     };
 
-//    typedef std::tuple<PACK_TYPE, QByteArray> ParserResult;
     struct ParserResult
     {
         ParserResult(PACK_TYPE t, const QByteArray& d):
@@ -36,18 +35,31 @@ class ClientSocket : public Socket
     };
 public:
 
+    enum State {
+        INIT,
+        CONNECTING_MANAGER,
+        MANAGER_CONNECTED,
+        MANAGER_EXITED,
+        MANAGER_DISCONNECTED,
+        REQUESTING_ROOMLIST,
+        REQUESTING_NEWROOM,
+        CONNECTING_ROOM,
+        JOINING_ROOM,
+        ROOM_JOINED,
+        ROOM_EXITED,
+        ROOM_DISCONNECTED,
+        ROOM_KICKED
+    };
+
     explicit ClientSocket(QObject *parent = 0);
-    void setClientId(const QString &id);
+    State currentState() const;
     QString clientId() const;
     void setUserName(const QString &name);
     QString userName() const;
-    void setRoomName(const QString &name);
     QString roomName() const;
-    void setCanvasSize(const QSize &size);
     QSize canvasSize() const;
     QString passwd() const;
     void setPasswd(const QString &passwd);
-    void setPoolEnabled(bool on);
     bool isPoolEnabled();
     void setSchedualDataLength(quint64 length);
     quint64 schedualDataLength();
@@ -56,8 +68,39 @@ public:
     void setArchiveSignature(const QString &as);
     quint64 archiveSize() const;
     void setRoomCloseFlag();
+    QString roomKey() const;
     QString toUrl() const;
 
+    void connectToManager(const QHostAddress& addr,
+                          const int port);
+    void requestRoomList();
+    void requestNewRoom(const QJsonObject &m);
+    void tryJoinRoom(const QHostAddress &addr,
+                     const int port);
+    void tryJoinRoom(const QString& url);
+    void onResponseRoomList(const QJsonObject &);
+    void onResponseNewRoom(const QJsonObject &);
+    void onResponseLogin(const QJsonObject &);
+    void requestArchive();
+    void requestArchiveSign();
+    void exitFromRoom();
+
+    void requestOnlinelist();
+    bool requestCheckout();
+    bool requestCloseRoom();
+    bool requestKickUser(const QString &id);
+
+    void onCommandActionClose(const QJsonObject &);
+    void onCommandResponseClose(const QJsonObject &m);
+    void onCommandResponseClearAll(const QJsonObject &m);
+    void onCommandResponseCheckout(const QJsonObject &m);
+    void onCommandActionClearAll(const QJsonObject &);
+    void onCommandResponseOnlinelist(const QJsonObject &o);
+    void onActionNotify(const QJsonObject &o);
+    void onActionKick(const QJsonObject &o);
+    void onResponseArchiveSign(const QJsonObject &o);
+    void onResponseArchive(const QJsonObject &o);
+    void onResponseHeartbeat(const QJsonObject &o);
 
     static QString genRoomUrl(const QString& addr,
                               const quint16 port,
@@ -74,8 +117,20 @@ public:
     static RoomUrl decodeRoomUrl(const QString& url);
 
 
-
 signals:
+    void clientSocketError(int);
+    void requestUnauthed();
+    void managerConnected();
+    void roomlistFetched(QHash<QString, QJsonObject>);
+    void roomCreated();
+    void roomJoined();
+
+    void roomAboutToClose();
+    void layerAllCleared();
+    void memberListFetched(const QHash<QString, QVariantList> &list);
+    void getNotified(const QString &content);
+    void getKicked();
+
     void dataPack(const QJsonObject&);
     void msgPack(const QJsonObject&);
     void cmdPack(const QJsonObject&);
@@ -104,6 +159,7 @@ private:
     QString roomname_;
     QSize canvassize_;
     QString passwd_;
+    QString roomKey_;
     quint64 schedualDataLength_;
     quint64 leftDataLength_;
     Router<> router_;
@@ -117,13 +173,21 @@ private:
     const static int WAIT_TIME = 1000;
     const static int HEARTBEAT_RATE = 30; // sends 30 heartbeat packs per min
     QTimer *hb_timer_;
+    State state_;
+    int roomDelay_;
 private slots:
+    void initRouter();
+    void setClientId(const QString &id);
+    void setRoomName(const QString &name);
+    void setCanvasSize(const QSize &size);
+    void setPoolEnabled(bool on);
     ParserResult parserPack(const QByteArray& data);
     QByteArray assamblePack(bool compress, PACK_TYPE pt, const QByteArray& bytes);
     void onPending(const QByteArray& bytes);
     void processPending();
     bool dispatch(const QByteArray& bytes);
     void onNewMessage(const QJsonObject &map);
+    void onManagerPack(const QJsonObject &data);
 };
 
 #endif // CLIENTSOCKET_H

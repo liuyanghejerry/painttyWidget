@@ -55,9 +55,9 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
     connect(ui->pushButton_3,&QPushButton::clicked,
             this, &RoomListDialog::requestRoomList);
     connect(ui->pushButton_2,&QPushButton::clicked,
-            this, &RoomListDialog::requestJoin);
+            this, &RoomListDialog::tryJoinRoomManually);
     connect(ui->tableWidget,&QTableWidget::cellDoubleClicked,
-            this, &RoomListDialog::requestJoin);
+            this, &RoomListDialog::tryJoinRoomManually);
     connect(ui->checkBox, &QCheckBox::clicked,
             this, &RoomListDialog::filterRoomList);
     connect(ui->search_box, &QLineEdit::textChanged,
@@ -73,26 +73,29 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
     connect(timer,&QTimer::timeout,
             this,&RoomListDialog::requestRoomList);
 
+    connect(&client_socket, &ClientSocket::managerConnected,
+            [this](){
+        state_ = ManagerConnected;
+    });
+    connect(&client_socket, &ClientSocket::managerConnected,
+            this, &RoomListDialog::requestRoomList);
+    connect(&client_socket, &ClientSocket::roomCreated,
+            this, &RoomListDialog::onNewRoomCreated);
+    connect(&client_socket, &ClientSocket::roomlistFetched,
+            this, &RoomListDialog::onManagerResponseRoomlist);
+    connect(&client_socket, &ClientSocket::roomJoined,
+            this, &RoomListDialog::accept);
+
     ui->counter_label->setText(tr("Rooms: %1, Members: %2")
                                .arg("?")
                                .arg("?"));
     tableInit();
     state_ = Ready;
-    routerInit();
     loadNick();
-    clientId_ = loadClientId();
-
 }
 
 RoomListDialog::~RoomListDialog()
 {
-    disconnect(&client_socket, &ClientSocket::connected,
-               this, &RoomListDialog::onManagerServerConnected);
-    disconnect(&client_socket, &ClientSocket::disconnected,
-               this, &RoomListDialog::onManagerServerClosed);
-    disconnect(&client_socket, &ClientSocket::managerPack,
-               this, &RoomListDialog::onManagerData);
-    client_socket.close();
     delete ui;
 }
 
@@ -114,21 +117,6 @@ void RoomListDialog::connectToManager()
 {
     state_ = ManagerConnecting;
     ui->progressBar->setRange(0,0);
-
-    disconnect(&client_socket, &ClientSocket::managerPack,
-            0, 0);
-    disconnect(&client_socket, &ClientSocket::connected,
-            0, 0);
-    disconnect(&client_socket, &ClientSocket::disconnected,
-            0, 0);
-
-    connect(&client_socket, &ClientSocket::managerPack,
-            this, &RoomListDialog::onManagerData);
-    connect(&client_socket, &ClientSocket::connected,
-            this, &RoomListDialog::onManagerServerConnected);
-    connect(&client_socket, &ClientSocket::disconnected,
-            this, &RoomListDialog::onManagerServerClosed);
-    client_socket.setPoolEnabled(false);
 
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
@@ -153,37 +141,13 @@ void RoomListDialog::connectToManager()
         port = GlobalDef::HOST_MGR_PORT;
     }
 
-//    auto f = [this](){
-//        if(!Singleton<ClientSocket>::instance().isConnected()){
-//            state_ = ConnectFailed;
-//        }
-//    };
-
     if(LocalNetworkInterface::supportIpv6()){
         qDebug()<<"using ipv6 address to connect server";
-        client_socket.connectToHost(addr[1], port);
+        client_socket.connectToManager(addr[1], port);
     }else{
         qDebug()<<"using ipv4 address to connect server";
-        client_socket.connectToHost(addr[0], port);
+        client_socket.connectToManager(addr[0], port);
     }
-
-    // wait 10 seconds to test if we're connected
-//    GlobalDef::deferJob(f, 10*1000);
-
-}
-
-void RoomListDialog::routerInit()
-{
-    managerSocketRouter_.regHandler("response",
-                                    "roomlist",
-                                    std::bind(&RoomListDialog::onManagerResponseRoomlist,
-                                              this,
-                                              std::placeholders::_1));
-    managerSocketRouter_.regHandler("response",
-                                    "newroom",
-                                    std::bind(&RoomListDialog::onNewRoomRespnse,
-                                              this,
-                                              std::placeholders::_1));
 }
 
 bool RoomListDialog::collectUserInfo()
@@ -200,37 +164,6 @@ bool RoomListDialog::collectUserInfo()
     return true;
 }
 
-void RoomListDialog::requestJoin()
-{
-    if(state_ < 1){
-        return;
-    }
-    state_ = RoomConnecting;
-    wantedRoomName_.clear();
-    wantedPassword_.clear();
-    if(!collectUserInfo()){
-        return;
-    }
-    QList<QTableWidgetItem *> list = ui->tableWidget->selectedItems();
-    if(list.isEmpty()){
-        QMessageBox::warning( this,
-                              tr("Warning"),
-                              tr("You didn't choose any room."),
-                              QMessageBox::Close);
-        return;
-    }
-
-    roomName_ = ui->tableWidget->item(list.at(0)->row(), 0)->text();
-    if(!roomsInfo.contains(roomName_)){
-        return;
-    }
-    //    QHostAddress address(
-    //                roomsInfo[roomName].value("serverAddress").toString());
-    //    QHostAddress address = Singleton<ClientSocket>::instance().address();
-    int port = roomsInfo[roomName_].value("port").toDouble();
-    connectRoomByPort(port);
-}
-
 void RoomListDialog::requestRoomList()
 {
     if(state_ < 1){
@@ -245,10 +178,7 @@ void RoomListDialog::requestRoomList()
         return;
     }else if(state_ == ManagerConnected){
         state_ = RequestingList;
-        QJsonObject map;
-        map.insert("request", QString("roomlist"));
-
-        client_socket.sendManagerPack(map);
+        client_socket.requestRoomList();
         ui->progressBar->setRange(0,0);
     }else{
         qDebug()<<"Unexpected State in requestRoomList"<<state_;
@@ -271,46 +201,32 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
         return;
     }else if(state_ == ManagerConnected){
         state_ = RequestingNewRoom;
-        QJsonObject map;
-        map["request"] = QString("newroom");
-        map["info"] = m;
-
-        client_socket.sendManagerPack(map);
-
+        client_socket.requestNewRoom(m);
         ui->progressBar->setRange(0,0);
-        wantedRoomName_ = m["name"].toString();
-        wantedPassword_ = m["password"].toString();
     }else{
         qDebug()<<"Unexpected State in requestNewRoom"<<state_;
     }
 }
 
-void RoomListDialog::connectRoomByPort(const int &p)
-{
-    state_ = RoomConnecting;
-    QHostAddress address = client_socket.address();
-
-    disconnect(&client_socket, &ClientSocket::connected,
-               this, &RoomListDialog::onManagerServerConnected);
-    disconnect(&client_socket, &ClientSocket::disconnected,
-               this, &RoomListDialog::onManagerServerClosed);
-    disconnect(&client_socket, &ClientSocket::managerPack,
-               this, &RoomListDialog::onManagerData);
-    client_socket.close();
-
-    connect(&client_socket, &ClientSocket::connected,
-            this, &RoomListDialog::onCmdServerConnected,
-            Qt::ConnectionType(Qt::AutoConnection | Qt::UniqueConnection));
-    connect(&client_socket, &ClientSocket::cmdPack,
-            this, &RoomListDialog::onCmdData);
-
-    qDebug()<<"start connecting room";
-    client_socket.connectToHost(address, p);
-}
-
 void RoomListDialog::tryJoinRoomManually()
 {
+    if(state_ < 1 || !collectUserInfo()){
+        return;
+    }
     state_ = RoomConnecting;
+    QList<QTableWidgetItem *> list = ui->tableWidget->selectedItems();
+    if(list.isEmpty()){
+        QMessageBox::warning( this,
+                              tr("Warning"),
+                              tr("You didn't choose any room."),
+                              QMessageBox::Close);
+        return;
+    }
+
+    roomName_ = ui->tableWidget->item(list.at(0)->row(), 0)->text();
+    if(!roomsInfo.contains(roomName_)){
+        return;
+    }
     int current = roomsInfo[roomName_].value("currentload").toDouble();
     int max = roomsInfo[roomName_].value("maxload").toDouble();
 
@@ -332,111 +248,36 @@ void RoomListDialog::tryJoinRoomManually()
                                        QString(),
                                        &isOk);
         if(!isOk) {
-            client_socket.close();
-            client_socket.reset();
             connectToManager();
             return;
         }
         passwd.truncate(16);
-        wantedPassword_ = passwd;
     }
 
-
-    QJsonObject map;
-    map.insert("request", QString("login"));
-    map.insert("name", nickName_);
-    map.insert("password", passwd);
-    map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
-
-    client_socket.sendCmdPack(map);
-    ui->progressBar->setRange(0, 0);
-}
-
-void RoomListDialog::tryJoinRoomAutomated()
-{
-    if(!collectUserInfo()){
-        return;
+    client_socket.setPasswd(passwd);
+    client_socket.setUserName(nickName_);
+    QHostAddress addr(client_socket.address());
+    if(roomsInfo[roomName_].value("serveraddress").toString("0.0.0.0") != "0.0.0.0") {
+        addr = roomsInfo[roomName_].value("serveraddress").toString();
     }
-    state_ = RoomConnecting;
-    QJsonObject map;
-    map.insert("request", QString("login"));
-    map.insert("name", nickName_);
-    map.insert("password", wantedPassword_);
-    map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
-
-    qDebug()<<"try auto join room";
-    client_socket.sendCmdPack(map);
-    ui->progressBar->setRange(0, 0);
-}
-
-void RoomListDialog::tryJoinRoomByUrl(const ClientSocket::RoomUrl& url)
-{
-    if(!collectUserInfo()){
-        return;
-    }
-    state_ = RoomConnecting;
-    QJsonObject map;
-    map.insert("request", QString("login"));
-    map.insert("name", nickName_);
-    map.insert("password", url.passwd);
-    map.insert("clientid", QString::fromUtf8(clientId_.toHex()));
-
-    qDebug()<<"try auto join room via url";
-    client_socket.sendCmdPack(map);
+    client_socket.tryJoinRoom(addr,
+                              roomsInfo[roomName_].value("port").toInt());
     ui->progressBar->setRange(0, 0);
 }
 
 void RoomListDialog::connectRoomByUrl(const QString& url)
 {
     state_ = RoomConnecting;
-    auto decoded_addr = client_socket.decodeRoomUrl(url);
-
-    disconnect(&client_socket, &ClientSocket::connected,
-               this, &RoomListDialog::onManagerServerConnected);
-    disconnect(&client_socket, &ClientSocket::disconnected,
-               this, &RoomListDialog::onManagerServerClosed);
-    disconnect(&client_socket, &ClientSocket::managerPack,
-               this, &RoomListDialog::onManagerData);
-    client_socket.close();
-
-    connect(&client_socket, &ClientSocket::connected,
-            [this, decoded_addr](){
-        disconnect(&client_socket, &ClientSocket::connected,
-                   0, 0);
-        qDebug()<<"Room connected";
-        state_ = RoomConnected;
-        timer->stop();
-        tryJoinRoomByUrl(decoded_addr);
-    });
-    connect(&client_socket, &ClientSocket::cmdPack,
-            this, &RoomListDialog::onCmdData);
-
-    qDebug()<<"start connecting room via url";
-    client_socket.connectToHost(QHostAddress(decoded_addr.addr),
-                                decoded_addr.port);
+    client_socket.setUserName(nickName_);
+    client_socket.tryJoinRoom(url);
 }
 
-void RoomListDialog::onManagerData(const QJsonObject &array)
-{
-    managerSocketRouter_.onData(array);
-}
-
-void RoomListDialog::onManagerResponseRoomlist(const QJsonObject &obj)
+void RoomListDialog::onManagerResponseRoomlist(const QHash<QString, QJsonObject> &obj)
 {
     state_ = ManagerConnected;
-    if(!obj["result"].toBool())
-        return;
-    QJsonArray list = obj["roomlist"].toArray();
-    QHash<QString, QJsonObject> tmpRoomsInfo;
-    for(auto info: list){
-        QJsonObject m = info.toObject();
-        QString name = m["name"].toString();
-        tmpRoomsInfo.insert(name, m);
-    }
-    roomsInfo = tmpRoomsInfo;
+    roomsInfo = obj;
     filterRoomList();
     ui->progressBar->setValue(100);
-
 }
 
 void RoomListDialog::onManagerServerConnected()
@@ -463,128 +304,16 @@ void RoomListDialog::onCmdServerConnected()
     qDebug()<<"Room connected";
     state_ = RoomConnected;
     timer->stop();
-    if(wantedRoomName_.isEmpty()){
-        tryJoinRoomManually();
-    }else{
-        tryJoinRoomAutomated();
-    }
 }
 
-void RoomListDialog::onCmdData(const QJsonObject &map)
-{
-    qDebug()<<"onCmdData"<<map;
-    client_socket.setPoolEnabled(true);
-    QString response = map["response"].toString();
-
-    if(response == "login"){
-        if(!map.contains("result"))
-            return;
-        bool res = map["result"].toBool();
-        if(!res){
-            int errcode = 300;
-            if(map.contains("errcode")){
-                errcode = map["errcode"].toDouble();
-            }
-            QMessageBox::critical(this,
-                                  tr("Error"),
-                                  tr("Sorry, an error occurred.\n"
-                                     "Error: %1, %2").arg(errcode)
-                                  .arg(ErrorTable::toString(errcode)));
-        }else{
-            if(!map.contains("info"))
-                return;
-            QJsonObject info = map["info"].toObject();
-            if(!info.contains("historysize")){
-                return;
-            }
-            client_socket.setSchedualDataLength(info["historysize"].toDouble());
-            if(info.contains("size")){
-                QJsonObject sizeMap = info["size"].toObject();
-                int width = sizeMap["width"].toDouble();
-                int height = sizeMap["height"].toDouble();
-                client_socket.setCanvasSize(QSize(width, height));
-            }
-            if(info.contains("clientid")){
-                QString clientid = info["clientid"].toString();
-                client_socket.setClientId(clientid);
-                qDebug()<<"clientid assign"
-                       <<clientid;
-            }
-            if(info.contains("name")){
-                QString name = info["name"].toString();
-                client_socket.setRoomName(name);
-                qDebug()<<"room name assign"
-                       <<name;
-            }
-            state_ = RoomJoined;
-            client_socket.setPasswd(wantedPassword_);
-
-            disconnect(&client_socket, &ClientSocket::connected,
-                       this, &RoomListDialog::onCmdServerConnected);
-            disconnect(&client_socket, &ClientSocket::cmdPack,
-                       this, &RoomListDialog::onCmdData);
-            accept();
-            return;
-        }
-        state_ = ManagerConnected;
-        ui->progressBar->setValue(100);
-    }
-}
-
-void RoomListDialog::onNewRoomRespnse(const QJsonObject &m)
+void RoomListDialog::onNewRoomCreated()
 {
     state_ = ManagerConnected;
-    if(m["result"].toBool()){
-        newRoomWindow->complete();
-        QString msg = tr("Succeed!");
-        QMessageBox::information(newRoomWindow, tr("Go get your room!"),
-                                 msg,
-                                 QMessageBox::Ok);
-        int port = 0;
-        if(m.contains("info")){
-            QJsonObject info = m.value("info").toObject();
-            port = info.value("port").toDouble();
-            QString key = info.value("key").toString();
-
-            QCryptographicHash hash(QCryptographicHash::Md5);
-            hash.addData(newRoomWindow->roomName().toUtf8());
-            QString hashed_name = hash.result().toHex();
-            QSettings settings(GlobalDef::SETTINGS_NAME,
-                               QSettings::defaultFormat(),
-                               qApp);
-            settings.setValue("rooms/"+hashed_name, key);
-            settings.sync();
-        }
-        newRoomWindow->accept();
-
-        if(port){
-            // Since full new room info comes later,
-            // we must fake it to join it now
-            roomName_ = wantedRoomName_;
-            connectRoomByPort(port);
-        }
-        return;
-    }
-    newRoomWindow->failed();
-
-    if(!m.contains("errcode")){
-        return;
-    }else{
-        int errcode = m["errcode"].toDouble();
-        QString errmsg = tr("Error: %1, %2\n"
-                            "Do you want to retry?")
-                .arg(errcode).arg(ErrorTable::toString(errcode));
-        QMessageBox::StandardButton reply;
-        reply = QMessageBox::critical(newRoomWindow, tr("Error!"),
-                                      errmsg,
-                                      QMessageBox::Retry|
-                                      QMessageBox::Abort);
-        if(reply == QMessageBox::Retry){
-            newRoomWindow->onOk();
-        }else{
-            return;
-        }
-    }
+    newRoomWindow->complete();
+    QString msg = tr("Succeed!");
+    QMessageBox::information(newRoomWindow, tr("Go get your room!"),
+                             msg,
+                             QMessageBox::Ok);
 }
 
 void RoomListDialog::filterRoomList()

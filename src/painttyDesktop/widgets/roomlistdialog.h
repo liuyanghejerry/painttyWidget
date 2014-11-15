@@ -23,19 +23,16 @@ public:
     ~RoomListDialog();
 
 public slots:
-    void requestJoin();
     void requestNewRoom(const QJsonObject &m);
     void requestRoomList();
     void filterRoomList();
     void connectRoomByUrl(const QString& url);
 private slots:
     void onManagerServerConnected();
-    void onManagerResponseRoomlist(const QJsonObject &obj);
-    void onManagerData(const QJsonObject &array);
+    void onManagerResponseRoomlist(const QHash<QString, QJsonObject> &obj);
     void onManagerServerClosed();
     void onCmdServerConnected();
-    void onCmdData(const QJsonObject &map);
-    void onNewRoomRespnse(const QJsonObject &m);
+    void onNewRoomCreated();
     void loadNick();
     void saveNick();
     void openConfigure();
@@ -45,10 +42,7 @@ protected:
     void closeEvent(QCloseEvent *e);
     
     bool collectUserInfo();
-    void connectRoomByPort(const int &p);
     void tryJoinRoomManually();
-    void tryJoinRoomAutomated();
-    void tryJoinRoomByUrl(const ClientSocket::RoomUrl& url);
 private:
     enum State{
         Error = -999,
@@ -67,18 +61,13 @@ private:
     Ui::RoomListDialog *ui;
     static const int REFRESH_TIME = 10000;
     QString roomName_;
-    QString wantedRoomName_;
-    QString wantedPassword_;
     QString nickName_;
     QTimer *timer;
     NewRoomWindow *newRoomWindow;
     QHash<QString, QJsonObject> roomsInfo;
-    Router<> managerSocketRouter_;
-    QByteArray clientId_;
     State state_;
     void tableInit();
     void connectToManager();
-    void routerInit();
     QByteArray loadClientId();
 };
 

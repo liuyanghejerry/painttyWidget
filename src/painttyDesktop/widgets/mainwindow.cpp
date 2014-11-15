@@ -72,8 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    client_socket.reset();
-    client_socket.close();
+    client_socket.exitFromRoom();
     delete ui;
 }
 
@@ -167,63 +166,9 @@ void MainWindow::init()
 
 }
 
-void MainWindow::cmdRouterInit()
+void MainWindow::routerInit()
 {
-    cmdRouter_.regHandler("action",
-                          "close",
-                          std::bind(&MainWindow::onCommandActionClose,
-                                    this,
-                                    std::placeholders::_1));
-    cmdRouter_.regHandler("response",
-                          "close",
-                          std::bind(&MainWindow::onCommandResponseClose,
-                                    this,
-                                    std::placeholders::_1));
-    cmdRouter_.regHandler("action",
-                          "clearall",
-                          std::bind(&MainWindow::onCommandActionClearAll,
-                                    this,
-                                    std::placeholders::_1));
-    cmdRouter_.regHandler("response",
-                          "clearall",
-                          std::bind(&MainWindow::onCommandResponseClearAll,
-                                    this,
-                                    std::placeholders::_1));
-    cmdRouter_.regHandler("response",
-                          "onlinelist",
-                          std::bind(&MainWindow::onCommandResponseOnlinelist,
-                                    this,
-                                    std::placeholders::_1));
-    cmdRouter_.regHandler("response",
-                          "checkout",
-                          std::bind(&MainWindow::onCommandResponseCheckout,
-                                    this,
-                                    std::placeholders::_1));
-    cmdRouter_.regHandler("action",
-                          "notify",
-                          std::bind(&MainWindow::onActionNotify,
-                                    this,
-                                    std::placeholders::_1));
-    cmdRouter_.regHandler("action",
-                          "kick",
-                          std::bind(&MainWindow::onActionKick,
-                                    this,
-                                    std::placeholders::_1));
-    cmdRouter_.regHandler("response",
-                          "archivesign",
-                          std::bind(&MainWindow::onResponseArchiveSign,
-                                    this,
-                                    std::placeholders::_1));
-    cmdRouter_.regHandler("response",
-                          "archive",
-                          std::bind(&MainWindow::onResponseArchive,
-                                    this,
-                                    std::placeholders::_1));
-    cmdRouter_.regHandler("response",
-                          "heartbeat",
-                          std::bind(&MainWindow::onResponseHeartbeat,
-                                    this,
-                                    std::placeholders::_1));
+
 }
 
 void MainWindow::scriptInit()
@@ -526,82 +471,26 @@ QString MainWindow::getRoomKey()
     return key.toString();
 }
 
-void MainWindow::requestOnlinelist()
-{
-    QJsonObject obj;
-    obj.insert("request", QString("onlinelist"));
-    obj.insert("type", QString("command"));
-    obj.insert("clientid", client_socket.clientId());
-    //    qDebug()<<"clientid: "<<Singleton<ClientSocket>::instance().clientId();
-
-    client_socket.sendCmdPack(obj);
-}
-
-void MainWindow::requestCheckout()
-{
-    QJsonObject obj;
-    obj.insert("request", QString("checkout"));
-    obj.insert("type", QString("command"));
-    obj.insert("key", getRoomKey());
-    qDebug()<<"checkout with key: "<<getRoomKey();
-
-    client_socket.sendCmdPack(obj);
-}
-
 void MainWindow::requestCloseRoom()
 {
-    QJsonObject obj;
-    QString r_key = getRoomKey();
-    obj.insert("request", QString("close"));
-    if(r_key.isEmpty()){
+    if(!client_socket.requestCloseRoom()){
         QMessageBox::warning(this,
                              tr("Sorry"),
                              tr("Only room owner is authorized "
                                 "to close the room.\n"
                                 "It seems you're not room manager."));
-        return;
     }
-    obj.insert("key", r_key);
-    client_socket.sendCmdPack(obj);
-}
-
-void MainWindow::requestArchiveSign()
-{
-    QJsonObject obj;
-    obj.insert("request", QString("archivesign"));
-    qDebug()<<"request archive signature";
-
-    client_socket.sendCmdPack(obj);
-}
-
-void MainWindow::requestArchive()
-{
-    QJsonObject obj;
-    obj.insert("request", QString("archive"));
-    obj.insert("start", (int)client_socket.archiveSize());
-    qDebug()<<"request archive"<<obj;
-
-    client_socket.sendCmdPack(obj);
 }
 
 void MainWindow::requestKickUser(const QString& id)
 {
-    QJsonObject obj;
-    QString r_key = getRoomKey();
-    obj.insert("request", QString("kick"));
-    obj.insert("clientid", id);
-    if(r_key.isEmpty()){
+    if(!client_socket.requestKickUser(id)){
         QMessageBox::warning(this,
                              tr("Sorry"),
                              tr("Only room owner is authorized "
                                 "to kick members.\n"
                                 "It seems you're not room manager."));
-        return;
     }
-    obj.insert("key", r_key);
-    qDebug()<<"request kick"<<obj;
-
-    client_socket.sendCmdPack(obj);
 }
 
 void MainWindow::shortcutInit()
@@ -660,30 +549,26 @@ void MainWindow::socketInit()
             this, &MainWindow::onNewMessage);
     connect(this, &MainWindow::sendMessage,
             &client_socket, &ClientSocket::sendMessage);
+//    connect(&client_socket, &ClientSocket::disconnected,
+//            this, &MainWindow::onServerDisconnected);
+    connect(&client_socket, &ClientSocket::clientSocketError,
+            this, &MainWindow::onClientSocketError);
 
-    connect(&client_socket, &ClientSocket::cmdPack,
-            this, &MainWindow::onCmdData);
-    connect(&client_socket, &ClientSocket::disconnected,
-            this, &MainWindow::onServerDisconnected);
-    cmdRouterInit();
+    connect(&client_socket, &ClientSocket::roomAboutToClose,
+            this, &MainWindow::onAboutToClose);
+    connect(&client_socket, &ClientSocket::layerAllCleared,
+            this, &MainWindow::onAllLayerCleared);
+    connect(&client_socket, &ClientSocket::memberListFetched,
+            this, &MainWindow::onMemberlistFetched);
+    connect(&client_socket, &ClientSocket::getNotified,
+            this, &MainWindow::onNotify);
+    connect(&client_socket, &ClientSocket::getKicked,
+            this, &MainWindow::onKicked);
 
-    GlobalDef::delayJob([this](){
-        client_socket.setPoolEnabled(false);
-        requestArchiveSign();
-
-        // checkout if client is room owner
-        if(!getRoomKey().isNull()){
-            requestCheckout();
-        }
-    });
-
-    // starts heartbeat
-    client_socket.startHeartbeat();
-
-    QTimer *t = new QTimer(this);
-    connect(t, &QTimer::timeout,
-            this, &MainWindow::requestOnlinelist);
-    t->start(5000);
+//    QTimer *t = new QTimer(this);
+//    connect(t, &QTimer::timeout,
+//            this, &MainWindow::requestOnlinelist);
+//    t->start(5000);
 }
 
 void MainWindow::onServerDisconnected()
@@ -694,12 +579,7 @@ void MainWindow::onServerDisconnected()
     // TODO: reconnect to room and request login
 }
 
-void MainWindow::onCmdData(const QJsonObject &data)
-{
-    cmdRouter_.onData(data);
-}
-
-void MainWindow::onCommandActionClose(const QJsonObject &)
+void MainWindow::onAboutToClose()
 {
     QMessageBox::warning(this,
                          tr("Closing"),
@@ -707,103 +587,22 @@ void MainWindow::onCommandActionClose(const QJsonObject &)
                             "closed the room. This room will close"
                             " when everyone leaves.\n"
                             "Save your work if you like it!"));
-    client_socket.setRoomCloseFlag();
 }
 
-void MainWindow::onCommandResponseClose(const QJsonObject &m)
+void MainWindow::onAllLayerCleared()
 {
-    bool result = m["result"].toBool();
-    if(!result){
-        QMessageBox::critical(this,
-                              tr("Sorry"),
-                              tr("Sorry, it seems you're not"
-                                 "room owner."));
-    }else{
-        // Since server accepted close request, we can
-        // wait for close now.
-        // of course, delete the key. it's useless.
-        QCryptographicHash hash(QCryptographicHash::Md5);
-        auto&& roomName = client_socket.roomName();
-        hash.addData(roomName.toUtf8());
-        QString hashed_name = hash.result().toHex();
-        QSettings settings(GlobalDef::SETTINGS_NAME,
-                           QSettings::defaultFormat(),
-                           qApp);
-        settings.remove("rooms/"+hashed_name);
-        settings.sync();
-        ui->statusBar->showMessage(tr("Close Request Completed."),
-                                   5000);
-    }
-}
-
-void MainWindow::onCommandResponseClearAll(const QJsonObject &m)
-{
-    bool result = m["result"].toBool();
-    if(!result){
-        QMessageBox::critical(this,
-                              tr("Sorry"),
-                              tr("Sorry, it seems you're not"
-                                 "room owner."));
-    }
-    ui->statusBar->showMessage(tr("Clear Request Completed."),
-                               5000);
-}
-
-void MainWindow::onCommandResponseCheckout(const QJsonObject &m)
-{
-    bool result = m["result"].toBool();
-    if(!result){
-        //        QMessageBox::critical(this,
-        //                              tr("Sorry"),
-        //                              tr("Sorry, it seems you're not"
-        //                                 "room owner."));
-    }else{
-        int hours = m["cycle"].toDouble();
-        if(hours){
-            // prepare next checkout
-            // this rarely happens, but still need
-            QTimer * checkoutTimer = new QTimer(this);
-            checkoutTimer->setSingleShot(true);
-            hours--;
-            checkoutTimer->setInterval(hours * 3600*1000);
-            connect(checkoutTimer, &QTimer::timeout,
-                    this, &MainWindow::requestCheckout);
-        }
-        ui->statusBar->showMessage(tr("Checkout Completed."),
-                                   5000);
-    }
-}
-
-void MainWindow::onCommandActionClearAll(const QJsonObject &obj)
-{
-    qDebug()<<"on action clearall"<<obj;
-    if(obj.contains("signature")){
-        auto&& s = obj.value("signature").toString();
-        client_socket.setArchiveSignature(s);
-    }
     ui->canvas->clearAllLayer();
 }
 
-void MainWindow::onCommandResponseOnlinelist(const QJsonObject &o)
+void MainWindow::onMemberlistFetched(const QHash<QString, QVariantList> &list)
 {
-    QJsonArray list = o.value("onlinelist").toArray();
-    MemberList l;
-    for(int i=0;i<list.count();++i){
-        QJsonObject obj = list[i].toObject();
-        QString id = obj.value("clientid").toString();
-        QString nick = obj.value("name").toString();
-        QVariantList vl;
-        vl.append(nick);
-        l.insert(id, vl);
-    }
-    ui->memberList->setMemberList(l);
-    ui->statusBar->showMessage(tr("Online List Refreshed."),
-                               2000);
+    ui->memberList->setMemberList(list);
+//    ui->statusBar->showMessage(tr("Online List Refreshed."),
+//                               2000);
 }
 
-void MainWindow::onActionNotify(const QJsonObject &o)
+void MainWindow::onNotify(const QString &content)
 {
-    QString content = o.value("content").toString();
     if(content.isEmpty()){
         return;
     }
@@ -816,91 +615,53 @@ void MainWindow::onActionNotify(const QJsonObject &o)
             ->setValue(ui->textEdit->verticalScrollBar()
                        ->maximum());
     ui->textEdit->insertPlainText("\n");
-
-    qDebug()<<"notified with: "<<o;
 }
 
-void MainWindow::onActionKick(const QJsonObject &)
+void MainWindow::onKicked()
 {
-    qDebug()<<"Get kicked";
     GradualBox::showText(tr("You've been kicked by room owner."), true, 3000);
 }
 
-void MainWindow::onResponseArchiveSign(const QJsonObject &o)
+//void MainWindow::onResponseHeartbeat(const QJsonObject &o)
+//{
+//    if(!o.contains("timestamp") || !networkIndicator_){
+//        return;
+//    }
+//    qDebug()<<o;
+//    int server_time = o.value("timestamp").toInt();
+//    int now = QDateTime::currentMSecsSinceEpoch() / 1000;
+//    int delta = now - server_time;
+//    typedef NetworkIndicator::LEVEL NL;
+//    if(delta < 0){
+//        qDebug()<<now<<server_time;
+//        networkIndicator_->setLevel(NL::UNKNOWN);
+//        return;
+//    }
+//    if(delta > 60){
+//        networkIndicator_->setLevel(NL::NONE);
+//        return;
+//    }
+//    if(delta > 20){
+//        networkIndicator_->setLevel(NL::LOW);
+//        return;
+//    }
+//    if(delta > 10){
+//        networkIndicator_->setLevel(NL::MEDIUM);
+//        return;
+//    }
+//    if(delta < 10){
+//        networkIndicator_->setLevel(NL::GOOD);
+//        return;
+//    }
+//}
+
+void MainWindow::onClientSocketError(const int code)
 {
-    if(!o.contains("result") || !o.contains("signature")){
-        return;
-    }
-    int errcode = 800;
-    if(!o.value("result").toBool()){
-        errcode = o.value("errcode").toDouble();
-        QMessageBox::critical(this,
-                              tr("Error"),
-                              tr("Sorry, an error occurred.\n"
-                                 "Error: %1, %2").arg(errcode)
-                              .arg(ErrorTable::toString(errcode)));
-        return;
-    }
-
-    QString signature = o.value("signature").toString();
-
-    client_socket.setArchiveSignature(signature);
-    requestArchive();
-}
-
-void MainWindow::onResponseArchive(const QJsonObject &o)
-{
-    if(!o.contains("result")|| !o.contains("datalength")){
-        return;
-    }
-    int errcode = 900;
-    if(!o.value("result").toBool()){
-        errcode = o.value("errcode").toDouble();
-        QMessageBox::critical(this,
-                              tr("Error"),
-                              tr("Sorry, an error occurred.\n"
-                                 "Error: %1, %2").arg(errcode)
-                              .arg(ErrorTable::toString(errcode)));
-        return;
-    }
-
-    quint64 datalength = o.value("datalength").toDouble();
-
-    // TODO: re-match signature and receive archive data
-    client_socket.setSchedualDataLength(datalength);
-}
-
-void MainWindow::onResponseHeartbeat(const QJsonObject &o)
-{
-    if(!o.contains("timestamp") || !networkIndicator_){
-        return;
-    }
-    qDebug()<<o;
-    int server_time = o.value("timestamp").toInt();
-    int now = QDateTime::currentMSecsSinceEpoch() / 1000;
-    int delta = now - server_time;
-    typedef NetworkIndicator::LEVEL NL;
-    if(delta < 0){
-        qDebug()<<now<<server_time;
-        networkIndicator_->setLevel(NL::UNKNOWN);
-        return;
-    }
-    if(delta > 60){
-        networkIndicator_->setLevel(NL::NONE);
-        return;
-    }
-    if(delta > 20){
-        networkIndicator_->setLevel(NL::LOW);
-        return;
-    }
-    if(delta > 10){
-        networkIndicator_->setLevel(NL::MEDIUM);
-        return;
-    }
-    if(delta < 10){
-        networkIndicator_->setLevel(NL::GOOD);
-        return;
-    }
+    QMessageBox::critical(this,
+                          tr("Error"),
+                          tr("Sorry, an error occurred.\n"
+                             "Error: %1, %2").arg(code)
+                          .arg(ErrorTable::toString(code)));
 }
 
 void MainWindow::onNewMessage(const QString &content)
