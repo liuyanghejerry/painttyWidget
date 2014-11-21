@@ -67,6 +67,7 @@ public:
     QString archiveSignature() const;
     void setArchiveSignature(const QString &as);
     quint64 archiveSize() const;
+    void setPoolEnabled(bool on);
     void setRoomCloseFlag();
     QString roomKey() const;
     QString toUrl() const;
@@ -180,7 +181,6 @@ private slots:
     void setClientId(const QString &id);
     void setRoomName(const QString &name);
     void setCanvasSize(const QSize &size);
-    void setPoolEnabled(bool on);
     ParserResult parserPack(const QByteArray& data);
     QByteArray assamblePack(bool compress, PACK_TYPE pt, const QByteArray& bytes);
     void onPending(const QByteArray& bytes);

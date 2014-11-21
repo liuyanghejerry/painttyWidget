@@ -267,7 +267,8 @@ void ClientSocket::onResponseLogin(const QJsonObject &map)
                    <<name;
         }
 
-        setPoolEnabled(false);
+        // NOTE: to wait mainwindow, we have to set pool on
+        setPoolEnabled(true);
         requestArchiveSign();
         // TODO: checkout if own the room
         if(roomKey().length()) {

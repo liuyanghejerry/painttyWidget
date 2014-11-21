@@ -163,7 +163,8 @@ void MainWindow::init()
     //    stylize();
     socketInit();
     scriptInit();
-
+    // NOTE: turn off the pool once we are ready
+    client_socket.setPoolEnabled(false);
 }
 
 void MainWindow::routerInit()
