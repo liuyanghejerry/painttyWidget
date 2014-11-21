@@ -29,7 +29,7 @@ public slots:
     void connectRoomByUrl(const QString& url);
 private slots:
     void onManagerServerConnected();
-    void onManagerResponseRoomlist(const QHash<QString, QJsonObject> &obj);
+    void onRoomlist(const QHash<QString, QJsonObject> &obj);
     void onManagerServerClosed();
     void onCmdServerConnected();
     void onNewRoomCreated();

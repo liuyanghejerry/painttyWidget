@@ -871,7 +871,6 @@ void ClientSocket::reset()
     clientid_.clear();
     roomname_.clear();
     canvassize_ = QSize();
-    router_.clear();
     timer_->start(WAIT_TIME);
     pool_.clear();
 //    mutex_.unlock();

@@ -82,7 +82,7 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
     connect(&client_socket, &ClientSocket::roomCreated,
             this, &RoomListDialog::onNewRoomCreated);
     connect(&client_socket, &ClientSocket::roomlistFetched,
-            this, &RoomListDialog::onManagerResponseRoomlist);
+            this, &RoomListDialog::onRoomlist);
     connect(&client_socket, &ClientSocket::roomJoined,
             this, &RoomListDialog::accept);
 
@@ -272,8 +272,9 @@ void RoomListDialog::connectRoomByUrl(const QString& url)
     client_socket.tryJoinRoom(url);
 }
 
-void RoomListDialog::onManagerResponseRoomlist(const QHash<QString, QJsonObject> &obj)
+void RoomListDialog::onRoomlist(const QHash<QString, QJsonObject> &obj)
 {
+    qDebug()<<"onRoomlist";
     state_ = ManagerConnected;
     roomsInfo = obj;
     filterRoomList();
