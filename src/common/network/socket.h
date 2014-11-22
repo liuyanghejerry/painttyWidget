@@ -37,8 +37,8 @@ protected:
     QByteArray pack(const QByteArray &content);
     void unpack(const QByteArray &content);
     quint32 dataSize;
-    bool commandStarted;
     QTcpSocket *socket;
+    bool commandStarted;
 private:
     Q_DISABLE_COPY(Socket)
 };

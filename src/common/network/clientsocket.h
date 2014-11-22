@@ -3,7 +3,6 @@
 
 #include "socket.h"
 #include "../../common/binary.h"
-//#include "../../common/network/packparser.h"
 #include "../misc/router.h"
 #include <QSize>
 #include <QMutex>
@@ -62,11 +61,9 @@ public:
     QString passwd() const;
     void setPasswd(const QString &passwd);
     bool isPoolEnabled();
-    void setSchedualDataLength(quint64 length);
     quint64 schedualDataLength();
     void reset();
     QString archiveSignature() const;
-    void setArchiveSignature(const QString &as);
     quint64 archiveSize() const;
     void setPoolEnabled(bool on);
     void setRoomCloseFlag();
@@ -157,7 +154,6 @@ public slots:
     void close() Q_DECL_OVERRIDE;
 private:
     Q_DISABLE_COPY(ClientSocket)
-//    PackParser parser_;
     QString clientid_;
     QString username_;
     QString roomname_;
@@ -168,22 +164,24 @@ private:
     quint64 leftDataLength_;
     Router<> router_;
     QList<QByteArray> pool_;
-    bool poolEnabled_;
-    QTimer *timer_;
+    State state_;
+    QAtomicInt roomDelay_;
+    QTimer *loopTimer_;
+    QTimer *heartBeatTimer_;
     ArchiveFile& archive_;
+    bool poolEnabled_;
     bool no_save_;
     bool remove_after_close_;
     bool canceled_;
     const static int WAIT_TIME = 1000;
     const static int HEARTBEAT_RATE = 30; // sends 30 heartbeat packs per min
-    QTimer *hb_timer_;
-    State state_;
-    QAtomicInt roomDelay_;
 private slots:
     void initRouter();
     void setClientId(const QString &id);
     void setRoomName(const QString &name);
     void setCanvasSize(const QSize &size);
+    void setArchiveSignature(const QString &as);
+    void setSchedualDataLength(quint64 length);
     ParserResult parserPack(const QByteArray& data);
     QByteArray assamblePack(bool compress, PACK_TYPE pt, const QByteArray& bytes);
     void onPending(const QByteArray& bytes);

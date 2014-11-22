@@ -6,9 +6,9 @@
 Socket::Socket(QObject *parent) :
     QObject(parent),
     dataSize(0),
+    socket(new QTcpSocket(this)),
     commandStarted(false)
 {
-    socket = new QTcpSocket(this);
     socket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
     socket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
     connect(socket,&QTcpSocket::readyRead,

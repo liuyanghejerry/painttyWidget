@@ -34,28 +34,28 @@ ClientSocket::ClientSocket(QObject *parent) :
     Socket(parent),
     schedualDataLength_(0),
     leftDataLength_(0),
-    poolEnabled_(false),
-    timer_(new QTimer(this)),
+    state_(INIT),
+    roomDelay_(-1),
+    loopTimer_(new QTimer(this)),
+    heartBeatTimer_(new QTimer(this)),
     archive_(Singleton<ArchiveFile>::instance()),
+    poolEnabled_(false),
     no_save_(false),
     remove_after_close_(false),
-    canceled_(false),
-    hb_timer_(new QTimer(this)),
-    state_(INIT),
-    roomDelay_(-1)
+    canceled_(false)
 {
     initRouter();
     connect(this, &ClientSocket::newData,
             this, &ClientSocket::onPending);
     connect(this, &ClientSocket::managerPack,
             this, &ClientSocket::onManagerPack);
-    connect(timer_, &QTimer::timeout,
+    connect(loopTimer_, &QTimer::timeout,
             this, &ClientSocket::processPending);
-    timer_->start(WAIT_TIME);
+    loopTimer_->start(WAIT_TIME);
 
-    connect(hb_timer_, &QTimer::timeout,
+    connect(heartBeatTimer_, &QTimer::timeout,
             this, &ClientSocket::sendHeartbeat);
-    connect(hb_timer_, &QTimer::timeout,
+    connect(heartBeatTimer_, &QTimer::timeout,
             this, &ClientSocket::requestOnlinelist);
 }
 
@@ -68,10 +68,10 @@ void ClientSocket::setPoolEnabled(bool on)
 {
     poolEnabled_ = on;
     if(!poolEnabled_){
-        timer_->start(WAIT_TIME);
+        loopTimer_->start(WAIT_TIME);
         processPending();
     }else{
-        timer_->stop();
+        loopTimer_->stop();
     }
 }
 
@@ -147,7 +147,6 @@ void ClientSocket::connectToManager(const QHostAddress &addr, const int port)
     connect(this, &ClientSocket::disconnected,
             [this]{
         // TODO: mannully or suppose to close?
-//        router_.clear();
     });
     connectToHost(addr, port);
     state_ = CONNECTING_MANAGER;
@@ -277,7 +276,7 @@ void ClientSocket::onResponseLogin(const QJsonObject &map)
         // NOTE: to wait mainwindow, we have to set pool on
         setPoolEnabled(true);
         requestArchiveSign();
-        // TODO: checkout if own the room
+        // checkout if own the room
         if(roomKey().length()) {
             requestCheckout();
         }
@@ -304,8 +303,6 @@ void ClientSocket::tryJoinRoom(const QHostAddress &addr, const int port)
         qDebug()<<"try auto join room";
         sendCmdPack(map);
         state_ = JOINING_ROOM;
-
-//        disconnect(this, &ClientSocket::connected, 0, 0);
     });
     connect(this, &ClientSocket::cmdPack,
             [this](const QJsonObject &map) {
@@ -540,12 +537,12 @@ bool ClientSocket::requestKickUser(const QString& id)
 
 void ClientSocket::startHeartbeat()
 {
-    hb_timer_->start(1000 * 60 / HEARTBEAT_RATE);
+    heartBeatTimer_->start(1000 * 60 / HEARTBEAT_RATE);
 }
 
 void ClientSocket::stopHeartbeat()
 {
-    hb_timer_->stop();
+    heartBeatTimer_->stop();
 }
 
 void ClientSocket::setClientId(const QString &id)
@@ -881,7 +878,7 @@ void ClientSocket::reset()
     clientid_.clear();
     roomname_.clear();
     canvassize_ = QSize();
-    timer_->start(WAIT_TIME);
+    loopTimer_->start(WAIT_TIME);
     pool_.clear();
 //    mutex_.unlock();
 }
