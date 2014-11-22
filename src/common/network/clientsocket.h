@@ -47,7 +47,7 @@ public:
         JOINING_ROOM,
         ROOM_JOINED,
         ROOM_EXITED,
-        ROOM_DISCONNECTED,
+        ROOM_OFFLINE,
         ROOM_KICKED
     };
 
@@ -124,6 +124,7 @@ signals:
     void roomListFetched(QHash<QString, QJsonObject>);
     void roomCreated();
     void roomJoined();
+    void roomOfflined();
 
     void roomAboutToClose();
     void layerAllCleared();
@@ -131,6 +132,8 @@ signals:
     void getNotified(const QString &content);
     void getKicked();
     void delayGet(int);
+
+    void newClientId(const QString&);
 
     void dataPack(const QJsonObject&);
     void msgPack(const QJsonObject&);
@@ -163,7 +166,8 @@ private:
     quint64 schedualDataLength_;
     quint64 leftDataLength_;
     Router<> router_;
-    QList<QByteArray> pool_;
+    QList<QByteArray> inputPool_;
+    QList<QByteArray> outputPool_;
     State state_;
     QAtomicInt roomDelay_;
     QTimer *loopTimer_;
@@ -184,11 +188,15 @@ private slots:
     void setSchedualDataLength(quint64 length);
     ParserResult parserPack(const QByteArray& data);
     QByteArray assamblePack(bool compress, PACK_TYPE pt, const QByteArray& bytes);
-    void onPending(const QByteArray& bytes);
-    void processPending();
+    void onInputPending(const QByteArray& bytes);
+    void processInputPending();
     bool dispatch(const QByteArray& bytes);
     void onNewMessage(const QJsonObject &map);
     void onManagerPack(const QJsonObject &data);
+    void trySendData(const QByteArray &content);
+    void processOutputPending();
+    void onServerDisconnected();
+    void tryRejoinRoom();
 };
 
 #endif // CLIENTSOCKET_H

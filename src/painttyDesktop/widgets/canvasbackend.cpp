@@ -29,7 +29,11 @@ CanvasBackend::CanvasBackend(QObject *parent)
 
     fullspeed_replay = settings.value("canvas/fullspeed_replay",
                                        true).toBool();
-
+    // when re-join one room, clientId should be refreshed
+    connect(&client_socket, &ClientSocket::newClientId,
+            [this] (const QString& clientId){
+        cached_clientid_ = clientId;
+    });
     connect(&client_socket, &ClientSocket::dataPack,
             this, &CanvasBackend::onIncomingData);
     connect(this, &CanvasBackend::newDataGroup,

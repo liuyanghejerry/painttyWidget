@@ -46,11 +46,18 @@ ClientSocket::ClientSocket(QObject *parent) :
 {
     initRouter();
     connect(this, &ClientSocket::newData,
-            this, &ClientSocket::onPending);
+            this, &ClientSocket::onInputPending);
     connect(this, &ClientSocket::managerPack,
             this, &ClientSocket::onManagerPack);
+    connect(this, &ClientSocket::disconnected,
+            this, &ClientSocket::onServerDisconnected);
+    connect(this, &ClientSocket::cmdPack,
+            [this](const QJsonObject &map) {
+        qDebug()<<"onCmdData"<<map;
+        router_.onData(map);
+    });
     connect(loopTimer_, &QTimer::timeout,
-            this, &ClientSocket::processPending);
+            this, &ClientSocket::processInputPending);
     loopTimer_->start(WAIT_TIME);
 
     connect(heartBeatTimer_, &QTimer::timeout,
@@ -69,7 +76,7 @@ void ClientSocket::setPoolEnabled(bool on)
     poolEnabled_ = on;
     if(!poolEnabled_){
         loopTimer_->start(WAIT_TIME);
-        processPending();
+        processInputPending();
     }else{
         loopTimer_->stop();
     }
@@ -169,13 +176,6 @@ void ClientSocket::requestNewRoom(const QJsonObject &m)
     setPasswd(m["password"].toString());
     sendManagerPack(map);
     state_ = REQUESTING_NEWROOM;
-}
-
-void ClientSocket::tryJoinRoom(const QString &url)
-{
-    auto decoded_info = decodeRoomUrl(url);
-    setPasswd(decoded_info.passwd);
-    tryJoinRoom(QHostAddress(decoded_info.addr), decoded_info.port);
 }
 
 void ClientSocket::onResponseRoomList(const QJsonObject &obj)
@@ -287,27 +287,26 @@ void ClientSocket::onResponseLogin(const QJsonObject &map)
     //
 }
 
+void ClientSocket::tryJoinRoom(const QString &url)
+{
+    auto decoded_info = decodeRoomUrl(url);
+    setPasswd(decoded_info.passwd);
+    tryJoinRoom(QHostAddress(decoded_info.addr), decoded_info.port);
+}
+
 void ClientSocket::tryJoinRoom(const QHostAddress &addr, const int port)
 {
     qDebug()<<"tryJoinRoom"<<addr<<port;
     close();
     disconnect(this, &ClientSocket::connected, this, 0);
-    disconnect(this, &ClientSocket::cmdPack, this, 0);
     connect(this, &ClientSocket::connected,
             [this]() {
+        state_ = JOINING_ROOM;
         QJsonObject map;
         map.insert("request", QString("login"));
         map.insert("name", userName());
         map.insert("password", passwd());
-
-        qDebug()<<"try auto join room";
         sendCmdPack(map);
-        state_ = JOINING_ROOM;
-    });
-    connect(this, &ClientSocket::cmdPack,
-            [this](const QJsonObject &map) {
-        qDebug()<<"onCmdData"<<map;
-        router_.onData(map);
     });
     connectToHost(addr, port);
     state_ = CONNECTING_ROOM;
@@ -616,6 +615,61 @@ void ClientSocket::onManagerPack(const QJsonObject &data)
     router_.onData(data);
 }
 
+void ClientSocket::trySendData(const QByteArray &content)
+{
+    if(state_ == ROOM_OFFLINE) {
+        outputPool_.push_back(content);
+    } else {
+        if(outputPool_.count()){
+            outputPool_.push_back(content);
+            processOutputPending();
+        }else{
+            sendData(content);
+        }
+    }
+}
+
+void ClientSocket::processOutputPending()
+{
+    while(!outputPool_.isEmpty() && state_ == ROOM_JOINED){
+        sendData(outputPool_.takeFirst());
+//        QApplication::processEvents();
+    }
+}
+
+void ClientSocket::onServerDisconnected()
+{
+    qDebug()<<"server disconnected"<<state_;
+    switch(state_) {
+    case MANAGER_CONNECTED:
+    case REQUESTING_ROOMLIST:
+    case REQUESTING_NEWROOM:
+        state_ = MANAGER_DISCONNECTED;
+        break;
+    case ROOM_JOINED:
+        // TODO: what if user is kicked?
+        state_ = ROOM_OFFLINE;
+        emit roomOfflined();
+        tryRejoinRoom();
+        break;
+    default:
+        break;
+    }
+}
+
+void ClientSocket::tryRejoinRoom()
+{
+    qDebug()<<"try to re-joining room...";
+    tryJoinRoom(address(), port());
+    // FIXME: what if we exit this room and go into another one?
+    connect(this, &ClientSocket::roomJoined,
+            [this](){
+        emit newClientId(clientId());
+        setPoolEnabled(false);
+        processOutputPending();
+    });
+}
+
 void ClientSocket::sendHeartbeat()
 {
     QJsonObject obj;
@@ -627,28 +681,28 @@ void ClientSocket::sendHeartbeat()
 
 void ClientSocket::sendDataPack(const QByteArray &content)
 {
-    sendData(assamblePack(true, DATA, content));
+    trySendData(assamblePack(true, DATA, content));
 }
 
 void ClientSocket::sendDataPack(const QJsonObject &content)
 {
-    sendData(assamblePack(true, DATA, jsonToBuffer(content)));
+    trySendData(assamblePack(true, DATA, jsonToBuffer(content)));
 }
 
 void ClientSocket::sendCmdPack(const QJsonObject &content)
 {
-    sendData(assamblePack(true, COMMAND, jsonToBuffer(content)));
+    trySendData(assamblePack(true, COMMAND, jsonToBuffer(content)));
 }
 
 void ClientSocket::sendManagerPack(const QJsonObject &content)
 {
-    sendData(assamblePack(true, MANAGER, jsonToBuffer(content)));
+    trySendData(assamblePack(true, MANAGER, jsonToBuffer(content)));
 }
 
 void ClientSocket::cancelPendings()
 {
     canceled_ = true;
-    pool_.clear();
+    inputPool_.clear();
 }
 
 void ClientSocket::close()
@@ -768,30 +822,30 @@ QByteArray ClientSocket::assamblePack(bool compress, PACK_TYPE pt, const QByteAr
     return result;
 }
 
-void ClientSocket::onPending(const QByteArray& bytes)
+void ClientSocket::onInputPending(const QByteArray& bytes)
 {
     if(canceled_){
         return;
     }
 
     if(poolEnabled_){
-        pool_.append(bytes);
+        inputPool_.append(bytes);
     }else{
-        if(pool_.count()){
-            pool_.append(bytes);
-            processPending();
+        if(inputPool_.count()){
+            inputPool_.append(bytes);
+            processInputPending();
         }else{
             dispatch(bytes);
         }
     }
 }
 
-void ClientSocket::processPending()
+void ClientSocket::processInputPending()
 {
     //    qDebug()<<"process pending";
-    while(!pool_.isEmpty() && !canceled_){
-        if(dispatch(pool_.first())){
-            pool_.pop_front();
+    while(!inputPool_.isEmpty() && !canceled_){
+        if(dispatch(inputPool_.first())){
+            inputPool_.pop_front();
         }else{
             break;
         }
@@ -879,7 +933,7 @@ void ClientSocket::reset()
     roomname_.clear();
     canvassize_ = QSize();
     loopTimer_->start(WAIT_TIME);
-    pool_.clear();
+    inputPool_.clear();
 //    mutex_.unlock();
 }
 
