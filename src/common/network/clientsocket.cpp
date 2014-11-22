@@ -55,6 +55,8 @@ ClientSocket::ClientSocket(QObject *parent) :
 
     connect(hb_timer_, &QTimer::timeout,
             this, &ClientSocket::sendHeartbeat);
+    connect(hb_timer_, &QTimer::timeout,
+            this, &ClientSocket::requestOnlinelist);
 }
 
 ClientSocket::State ClientSocket::currentState() const
@@ -121,6 +123,11 @@ void ClientSocket::setRoomCloseFlag()
     remove_after_close_ = true;
 }
 
+int ClientSocket::getDelay() const
+{
+    return roomDelay_.load();
+}
+
 QString ClientSocket::toUrl() const
 {
     return genRoomUrl(address().toString(),
@@ -184,7 +191,7 @@ void ClientSocket::onResponseRoomList(const QJsonObject &obj)
         roomsInfo.insert(name, m);
     }
     // TODO: emit roomslist
-    emit roomlistFetched(roomsInfo);
+    emit roomListFetched(roomsInfo);
 }
 
 void ClientSocket::onResponseNewRoom(const QJsonObject &m)
@@ -364,6 +371,8 @@ void ClientSocket::onResponseArchive(const QJsonObject &o)
 void ClientSocket::onCommandActionClose(const QJsonObject &)
 {
     emit roomAboutToClose();
+    cancelPendings();
+    stopHeartbeat();
     setRoomCloseFlag();
 }
 
@@ -467,7 +476,8 @@ void ClientSocket::onResponseHeartbeat(const QJsonObject &o)
     int server_time = o.value("timestamp").toInt();
     int now = QDateTime::currentMSecsSinceEpoch() / 1000;
     int delta = now - server_time;
-    roomDelay_ = delta;
+    roomDelay_.store(delta);
+    emit delayGet(getDelay());
 }
 
 

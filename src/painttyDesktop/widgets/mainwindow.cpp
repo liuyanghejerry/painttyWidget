@@ -565,11 +565,8 @@ void MainWindow::socketInit()
             this, &MainWindow::onNotify);
     connect(&client_socket, &ClientSocket::getKicked,
             this, &MainWindow::onKicked);
-
-//    QTimer *t = new QTimer(this);
-//    connect(t, &QTimer::timeout,
-//            this, &MainWindow::requestOnlinelist);
-//    t->start(5000);
+    connect(&client_socket, &ClientSocket::delayGet,
+            this, &MainWindow::onDelayGet);
 }
 
 void MainWindow::onServerDisconnected()
@@ -623,38 +620,30 @@ void MainWindow::onKicked()
     GradualBox::showText(tr("You've been kicked by room owner."), true, 3000);
 }
 
-//void MainWindow::onResponseHeartbeat(const QJsonObject &o)
-//{
-//    if(!o.contains("timestamp") || !networkIndicator_){
-//        return;
-//    }
-//    qDebug()<<o;
-//    int server_time = o.value("timestamp").toInt();
-//    int now = QDateTime::currentMSecsSinceEpoch() / 1000;
-//    int delta = now - server_time;
-//    typedef NetworkIndicator::LEVEL NL;
-//    if(delta < 0){
-//        qDebug()<<now<<server_time;
-//        networkIndicator_->setLevel(NL::UNKNOWN);
-//        return;
-//    }
-//    if(delta > 60){
-//        networkIndicator_->setLevel(NL::NONE);
-//        return;
-//    }
-//    if(delta > 20){
-//        networkIndicator_->setLevel(NL::LOW);
-//        return;
-//    }
-//    if(delta > 10){
-//        networkIndicator_->setLevel(NL::MEDIUM);
-//        return;
-//    }
-//    if(delta < 10){
-//        networkIndicator_->setLevel(NL::GOOD);
-//        return;
-//    }
-//}
+void MainWindow::onDelayGet(const int delay)
+{
+    typedef NetworkIndicator::LEVEL NL;
+    if(delay < 0){
+        networkIndicator_->setLevel(NL::UNKNOWN);
+        return;
+    }
+    if(delay > 60){
+        networkIndicator_->setLevel(NL::NONE);
+        return;
+    }
+    if(delay > 20){
+        networkIndicator_->setLevel(NL::LOW);
+        return;
+    }
+    if(delay > 10){
+        networkIndicator_->setLevel(NL::MEDIUM);
+        return;
+    }
+    if(delay < 10){
+        networkIndicator_->setLevel(NL::GOOD);
+        return;
+    }
+}
 
 void MainWindow::onClientSocketError(const int code)
 {
@@ -962,8 +951,6 @@ void MainWindow::deleteLayer(const QString &name)
 
 void MainWindow::closeEvent( QCloseEvent * event )
 {
-    client_socket.cancelPendings();
-    client_socket.stopHeartbeat();
     ui->canvas->pause();
 
     QProgressDialog dialog(tr("Waiting for sync, please do not close.\n"\

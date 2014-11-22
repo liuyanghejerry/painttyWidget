@@ -7,6 +7,7 @@
 #include "../misc/router.h"
 #include <QSize>
 #include <QMutex>
+#include <QAtomicInt>
 class QTimer;
 class ArchiveFile;
 
@@ -69,6 +70,7 @@ public:
     quint64 archiveSize() const;
     void setPoolEnabled(bool on);
     void setRoomCloseFlag();
+    int getDelay() const;
     QString roomKey() const;
     QString toUrl() const;
 
@@ -122,7 +124,7 @@ signals:
     void clientSocketError(int);
     void requestUnauthed();
     void managerConnected();
-    void roomlistFetched(QHash<QString, QJsonObject>);
+    void roomListFetched(QHash<QString, QJsonObject>);
     void roomCreated();
     void roomJoined();
 
@@ -131,6 +133,7 @@ signals:
     void memberListFetched(const QHash<QString, QVariantList> &list);
     void getNotified(const QString &content);
     void getKicked();
+    void delayGet(int);
 
     void dataPack(const QJsonObject&);
     void msgPack(const QJsonObject&);
@@ -175,7 +178,7 @@ private:
     const static int HEARTBEAT_RATE = 30; // sends 30 heartbeat packs per min
     QTimer *hb_timer_;
     State state_;
-    int roomDelay_;
+    QAtomicInt roomDelay_;
 private slots:
     void initRouter();
     void setClientId(const QString &id);

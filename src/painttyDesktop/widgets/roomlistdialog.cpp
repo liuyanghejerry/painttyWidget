@@ -81,7 +81,7 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
             this, &RoomListDialog::requestRoomList);
     connect(&client_socket, &ClientSocket::roomCreated,
             this, &RoomListDialog::onNewRoomCreated);
-    connect(&client_socket, &ClientSocket::roomlistFetched,
+    connect(&client_socket, &ClientSocket::roomListFetched,
             this, &RoomListDialog::onRoomlist);
     connect(&client_socket, &ClientSocket::roomJoined,
             this, &RoomListDialog::accept);

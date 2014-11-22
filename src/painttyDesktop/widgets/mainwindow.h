@@ -115,6 +115,7 @@ private slots:
     void onMemberlistFetched(const QHash<QString, QVariantList> &list);
     void onNotify(const QString &content);
     void onKicked();
+    void onDelayGet(const int delay);
 //    void onResponseHeartbeat(const QJsonObject &o);
     void onClientSocketError(const int code);
 };
