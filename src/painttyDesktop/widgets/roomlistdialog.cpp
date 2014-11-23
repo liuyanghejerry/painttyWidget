@@ -339,7 +339,7 @@ void RoomListDialog::filterRoomList()
             }
         }
 
-        if(!name.contains(searchText)){
+        if(!name.contains(searchText, Qt::CaseInsensitive)){
             continue;
         }
 

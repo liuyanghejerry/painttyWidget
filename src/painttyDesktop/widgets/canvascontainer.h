@@ -45,7 +45,6 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     bool eventFilter(QObject *object, QEvent *event);
-    bool event(QEvent *event);
 };
 
 #endif // CANVASCONTAINER_H
