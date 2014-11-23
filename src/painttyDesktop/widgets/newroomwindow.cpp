@@ -46,6 +46,7 @@ QString NewRoomWindow::roomName() const
 void NewRoomWindow::complete()
 {
     ui->progressBar->setValue(100);
+    this->accept();
 }
 
 void NewRoomWindow::failed()

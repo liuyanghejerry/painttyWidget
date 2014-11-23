@@ -200,7 +200,11 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
         state_ = Error;
         return;
     }else if(state_ == ManagerConnected){
+        if(!collectUserInfo()) {
+            return;
+        }
         state_ = RequestingNewRoom;
+        client_socket.setUserName(nickName_);
         client_socket.requestNewRoom(m);
         ui->progressBar->setRange(0,0);
     }else{
@@ -268,6 +272,9 @@ void RoomListDialog::tryJoinRoomManually()
 void RoomListDialog::connectRoomByUrl(const QString& url)
 {
     state_ = RoomConnecting;
+    if(!collectUserInfo()) {
+        return;
+    }
     client_socket.setUserName(nickName_);
     client_socket.tryJoinRoom(url);
 }
@@ -300,21 +307,14 @@ void RoomListDialog::onManagerServerClosed()
     ui->tableWidget->setRowCount(0);
 }
 
-void RoomListDialog::onCmdServerConnected()
-{
-    qDebug()<<"Room connected";
-    state_ = RoomConnected;
-    timer->stop();
-}
-
 void RoomListDialog::onNewRoomCreated()
 {
     state_ = ManagerConnected;
     newRoomWindow->complete();
-    QString msg = tr("Succeed!");
-    QMessageBox::information(newRoomWindow, tr("Go get your room!"),
-                             msg,
-                             QMessageBox::Ok);
+//    QString msg = tr("Succeed!");
+//    QMessageBox::information(newRoomWindow, tr("Go get your room!"),
+//                             msg,
+//                             QMessageBox::Ok);
 }
 
 void RoomListDialog::filterRoomList()
@@ -421,17 +421,16 @@ void RoomListDialog::loadNick()
 
 void RoomListDialog::saveNick()
 {
-    QString name = ui->lineEdit->text();
-    if(name.length() > 16){
+    collectUserInfo();
+    if(nickName_.length() > 16){
         return;
     }
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
                        qApp);
     settings.setValue("global/personal/nick",
-                      name.toUtf8());
+                      nickName_.toUtf8());
     settings.sync();
-    client_socket.setUserName(nickName_);
 }
 
 void RoomListDialog::openConfigure()

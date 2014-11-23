@@ -31,7 +31,6 @@ private slots:
     void onManagerServerConnected();
     void onRoomlist(const QHash<QString, QJsonObject> &obj);
     void onManagerServerClosed();
-    void onCmdServerConnected();
     void onNewRoomCreated();
     void loadNick();
     void saveNick();

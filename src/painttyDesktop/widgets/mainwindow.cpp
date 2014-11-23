@@ -550,8 +550,6 @@ void MainWindow::socketInit()
             this, &MainWindow::onNewMessage);
     connect(this, &MainWindow::sendMessage,
             &client_socket, &ClientSocket::sendMessage);
-//    connect(&client_socket, &ClientSocket::disconnected,
-//            this, &MainWindow::onServerDisconnected);
     connect(&client_socket, &ClientSocket::clientSocketError,
             this, &MainWindow::onClientSocketError);
 

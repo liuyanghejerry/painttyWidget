@@ -205,6 +205,7 @@ void ClientSocket::onResponseNewRoom(const QJsonObject &m)
                 addr = QHostAddress(info.value("address").toString());
             }
             roomKey_ = info.value("key").toString();
+            setPasswd(info.value("password").toString());
 
             QCryptographicHash hash(QCryptographicHash::Md5);
             hash.addData(roomName().toUtf8());
@@ -296,7 +297,7 @@ void ClientSocket::tryJoinRoom(const QString &url)
 
 void ClientSocket::tryJoinRoom(const QHostAddress &addr, const int port)
 {
-    qDebug()<<"tryJoinRoom"<<addr<<port;
+    qDebug()<<"tryJoinRoom"<<addr<<port<<passwd()<<userName();
     close();
     disconnect(this, &ClientSocket::connected, this, 0);
     connect(this, &ClientSocket::connected,
@@ -592,6 +593,7 @@ QString ClientSocket::passwd() const
 
 void ClientSocket::setPasswd(const QString &passwd)
 {
+    qDebug()<<"passwd set to"<<passwd;
     passwd_ = passwd;
 }
 
