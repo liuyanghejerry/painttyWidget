@@ -480,8 +480,9 @@ void ClientSocket::onResponseHeartbeat(const QJsonObject &o)
 
 void ClientSocket::exitFromRoom()
 {
-    reset();
+    state_ = ROOM_EXITED;
     close();
+    reset();
 }
 
 void ClientSocket::requestOnlinelist()

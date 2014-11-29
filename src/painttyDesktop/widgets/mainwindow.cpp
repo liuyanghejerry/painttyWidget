@@ -72,7 +72,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    client_socket.exitFromRoom();
     delete ui;
 }
 
@@ -956,7 +955,10 @@ void MainWindow::deleteLayer(const QString &name)
 
 void MainWindow::closeEvent( QCloseEvent * event )
 {
+    disconnect(&client_socket, &ClientSocket::disconnected,
+               this, &MainWindow::onServerDisconnected);
     ui->canvas->pause();
+    client_socket.exitFromRoom();
 
     QProgressDialog dialog(tr("Waiting for sync, please do not close.\n"\
                               "This will cost you 1 minute at most."),
@@ -982,11 +984,6 @@ void MainWindow::closeEvent( QCloseEvent * event )
     }
     settings.sync();
 
-    disconnect(&client_socket, &ClientSocket::disconnected,
-               this, &MainWindow::onServerDisconnected);
-
-    client_socket.close();
-    client_socket.reset();
     dialog.close();
 
     event->accept();
