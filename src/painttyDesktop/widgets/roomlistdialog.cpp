@@ -217,7 +217,6 @@ void RoomListDialog::tryJoinRoomManually()
     if(state_ < 1 || !collectUserInfo()){
         return;
     }
-    state_ = RoomConnecting;
     QList<QTableWidgetItem *> list = ui->tableWidget->selectedItems();
     if(list.isEmpty()){
         QMessageBox::warning( this,
@@ -252,12 +251,12 @@ void RoomListDialog::tryJoinRoomManually()
                                        QString(),
                                        &isOk);
         if(!isOk) {
-            connectToManager();
             return;
         }
         passwd.truncate(16);
     }
 
+    state_ = RoomConnecting;
     client_socket.setPasswd(passwd);
     client_socket.setUserName(nickName_);
     QHostAddress addr(client_socket.address());
