@@ -35,7 +35,7 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
     state_(Init)
 {
     ui->setupUi(this);
-    //resize(width()*logicalDpiX()/96, height()*logicalDpiY()/96);
+    resize(width() * logicalDpiX() / 96, height() * logicalDpiY() / 96);
     connect(ui->pushButton_6, &QPushButton::clicked,
             [this](){
         bool ok;
