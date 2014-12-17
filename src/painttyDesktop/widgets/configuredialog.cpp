@@ -13,7 +13,6 @@
 #include "../../common/common.h"
 #include "../misc/shortcutmanager.h"
 #include "../misc/singleton.h"
-#include <QDebug>
 
 ConfigureDialog::ConfigureDialog(QWidget *parent) :
     QDialog(parent),
@@ -28,7 +27,6 @@ ConfigureDialog::ConfigureDialog(QWidget *parent) :
     server_port(0)
 {
     ui->setupUi(this);
-    qDebug() << devicePixelRatio();
     resize(width() * logicalDpiX() / 96, height() * logicalDpiY() / 96);
     readSettings();
     initLanguageList();
