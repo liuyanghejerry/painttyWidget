@@ -117,8 +117,7 @@ void RoomListDialog::tableInit()
 
 void RoomListDialog::connectToManager()
 {
-    state_ = ManagerConnecting;
-    ui->progressBar->setRange(0,0);
+    changeState(ManagerConnecting);
 
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
@@ -171,17 +170,16 @@ void RoomListDialog::requestRoomList()
     if(state_ < 1){
         return;
     }else if(state_ == ManagerConnecting){
-        QMessageBox::critical(newRoomWindow, tr("Error!"),
+        QMessageBox::critical(this, tr("Error!"),
                               tr("Cannot connect to server.\n" \
                                  "If this situation continues," \
                                  " you should consider <a href='http://mrspaint.com'>update</a> manually."),
                               QMessageBox::Ok);
-        state_ = Error;
+        changeState(Error);
         return;
     }else if(state_ == ManagerConnected){
-        state_ = RequestingList;
         client_socket.requestRoomList();
-        ui->progressBar->setRange(0,0);
+        changeState(RequestingList);
     }else{
         qDebug()<<"Unexpected State in requestRoomList"<<state_;
 //        state_ = ConnectFailed;
@@ -197,16 +195,15 @@ void RoomListDialog::requestNewRoom(const QJsonObject &m)
                                  "If this situation continues," \
                                  " you should consider <a href='http://mrspaint.com'>update</a> manually."),
                               QMessageBox::Ok);
-        state_ = Error;
+        changeState(Error);
         return;
     }else if(state_ == ManagerConnected){
         if(!collectUserInfo()) {
             return;
         }
-        state_ = RequestingNewRoom;
+        changeState(RequestingNewRoom);
         client_socket.setUserName(nickName_);
         client_socket.requestNewRoom(m);
-        ui->progressBar->setRange(0,0);
     }else{
         qDebug()<<"Unexpected State in requestNewRoom"<<state_;
     }
@@ -256,7 +253,7 @@ void RoomListDialog::tryJoinRoomManually()
         passwd.truncate(16);
     }
 
-    state_ = RoomConnecting;
+    changeState(RoomConnecting);
     client_socket.setPasswd(passwd);
     client_socket.setUserName(nickName_);
     QHostAddress addr(client_socket.address());
@@ -265,12 +262,11 @@ void RoomListDialog::tryJoinRoomManually()
     }
     client_socket.tryJoinRoom(addr,
                               roomsInfo[roomName_].value("port").toInt());
-    ui->progressBar->setRange(0, 0);
 }
 
 void RoomListDialog::connectRoomByUrl(const QString& url)
 {
-    state_ = RoomConnecting;
+    changeState(RoomConnecting);
     if(!collectUserInfo()) {
         return;
     }
@@ -281,24 +277,22 @@ void RoomListDialog::connectRoomByUrl(const QString& url)
 void RoomListDialog::onRoomlist(const QHash<QString, QJsonObject> &obj)
 {
     qDebug()<<"onRoomlist";
-    state_ = ManagerConnected;
+    changeState(ManagerConnected);
     roomsInfo = obj;
     filterRoomList();
-    ui->progressBar->setValue(100);
 }
 
 void RoomListDialog::onManagerServerConnected()
 {
     qDebug()<<"Manager connected";
-    state_ = ManagerConnected;
-    ui->progressBar->setValue(100);
+    changeState(ManagerConnected);
     requestRoomList();
     timer->start(REFRESH_TIME);
 }
 
 void RoomListDialog::onManagerServerClosed()
 {
-    state_ = Error;
+    changeState(Error);
     QMessageBox::critical(this,
                           tr("Connection"),
                           tr("Sorry, server has closed.") );
@@ -308,21 +302,16 @@ void RoomListDialog::onManagerServerClosed()
 
 void RoomListDialog::onNewRoomCreated()
 {
-    state_ = ManagerConnected;
+    changeState(ManagerConnected);
     newRoomWindow->complete();
-//    QString msg = tr("Succeed!");
-//    QMessageBox::information(newRoomWindow, tr("Go get your room!"),
-//                             msg,
-    //                             QMessageBox::Ok);
 }
 
 void RoomListDialog::onClientSocketError(int errcode)
 {
     if(!this->isHidden()) {
         if(state_ == RequestingNewRoom) {
-            state_ = ManagerConnected;
-            ui->progressBar->setRange(0, 100);
-            ui->progressBar->setValue(100);
+            newRoomWindow->failed();
+            changeState(ManagerConnected);
         }
         QMessageBox::critical(this,
                               tr("Error"),
@@ -411,6 +400,39 @@ QByteArray RoomListDialog::loadClientId()
                       data);
     settings.sync();
     return data;
+}
+
+void RoomListDialog::changeState(RoomListDialog::State state)
+{
+    switch(state) {
+    case ManagerConnecting:
+        ui->progressBar->setRange(0,0);
+        break;
+    case ManagerConnected:
+        ui->progressBar->setRange(0, 100);
+        ui->progressBar->setValue(100);
+        break;
+    case RequestingList:
+        ui->progressBar->setRange(0,0);
+        break;
+    case RequestingNewRoom:
+        ui->progressBar->setRange(0,0);
+        break;
+    case RoomConnecting:
+        ui->progressBar->setRange(0,0);
+        break;
+    case RoomConnected:
+        ui->progressBar->setRange(0, 100);
+        ui->progressBar->setValue(100);
+        break;
+    case RoomJoined:
+        ui->progressBar->setRange(0, 100);
+        ui->progressBar->setValue(100);
+        break;
+    default:
+        break;
+    }
+    state_ = state;
 }
 
 void RoomListDialog::loadNick()

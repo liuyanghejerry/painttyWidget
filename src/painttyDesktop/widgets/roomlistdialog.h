@@ -69,6 +69,7 @@ private:
     void tableInit();
     void connectToManager();
     QByteArray loadClientId();
+    void changeState(State state);
 };
 
 #endif // ROOMLISTDIALOG_H
