@@ -32,6 +32,7 @@ private slots:
     void onRoomlist(const QHash<QString, QJsonObject> &obj);
     void onManagerServerClosed();
     void onNewRoomCreated();
+    void onClientSocketError(int errcode);
     void loadNick();
     void saveNick();
     void openConfigure();

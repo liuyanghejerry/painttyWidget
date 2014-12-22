@@ -85,6 +85,8 @@ RoomListDialog::RoomListDialog(QWidget *parent) :
             this, &RoomListDialog::onRoomlist);
     connect(&client_socket, &ClientSocket::roomJoined,
             this, &RoomListDialog::accept);
+    connect(&client_socket, &ClientSocket::clientSocketError,
+            this, &RoomListDialog::onClientSocketError);
 
     ui->counter_label->setText(tr("Rooms: %1, Members: %2")
                                .arg("?")
@@ -189,9 +191,7 @@ void RoomListDialog::requestRoomList()
 
 void RoomListDialog::requestNewRoom(const QJsonObject &m)
 {
-    if(state_ < 1){
-        return;
-    }else if(state_ == ManagerConnecting){
+    if(state_ < 1) {
         QMessageBox::critical(newRoomWindow, tr("Error!"),
                               tr("Cannot connect to server.\n" \
                                  "If this situation continues," \
@@ -313,7 +313,23 @@ void RoomListDialog::onNewRoomCreated()
 //    QString msg = tr("Succeed!");
 //    QMessageBox::information(newRoomWindow, tr("Go get your room!"),
 //                             msg,
-//                             QMessageBox::Ok);
+    //                             QMessageBox::Ok);
+}
+
+void RoomListDialog::onClientSocketError(int errcode)
+{
+    if(!this->isHidden()) {
+        if(state_ == RequestingNewRoom) {
+            state_ = ManagerConnected;
+            ui->progressBar->setRange(0, 100);
+            ui->progressBar->setValue(100);
+        }
+        QMessageBox::critical(this,
+                              tr("Error"),
+                              tr("Sorry, an error occurred.\n"
+                                 "Error: %1, %2").arg(errcode)
+                              .arg(ErrorTable::toString(errcode)));
+    }
 }
 
 void RoomListDialog::filterRoomList()
