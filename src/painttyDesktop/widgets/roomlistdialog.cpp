@@ -365,7 +365,7 @@ void RoomListDialog::filterRoomList()
         item->setTextAlignment(Qt::AlignCenter);
         // if current > max, there must be people joining via url
         if(currentLoad > maxLoad) {
-            item->setData(Qt::DisplayRole, QString("%1+%1").arg(maxLoad).arg(currentLoad - maxLoad));
+            item->setData(Qt::DisplayRole, QString("%1+%2").arg(maxLoad).arg(currentLoad - maxLoad));
         } else {
             item->setData(Qt::DisplayRole, currentLoad);
         }
