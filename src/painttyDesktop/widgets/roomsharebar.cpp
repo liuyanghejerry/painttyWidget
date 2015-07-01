@@ -13,6 +13,7 @@ RoomShareBar::RoomShareBar(QWidget *parent) :
     layout_(new QHBoxLayout(this))
 {
     this->setLayout(layout_);
+    layout_->setMargin(0);
 
     roomAddrLE_->setReadOnly(true);
     roomAddrLE_->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding,

@@ -23,6 +23,7 @@
 #include <QTimer>
 #include <QScriptEngine>
 #include <QDateTime>
+#include <QProcessEnvironment>
 
 #include "../misc/singleshortcut.h"
 #include "layerwidget.h"
@@ -44,6 +45,7 @@
 #include "../misc/shortcutmanager.h"
 #include "../misc/errortable.h"
 #include "../misc/archivefile.h"
+#include "../misc/psdexport.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -591,7 +593,7 @@ void MainWindow::requestKickUser(const QString& id)
         QMessageBox::warning(this,
                              tr("Sorry"),
                              tr("Only room owner is authorized "
-                                "to close the room.\n"
+                                "to kick members.\n"
                                 "It seems you're not room manager."));
         return;
     }
@@ -917,7 +919,7 @@ void MainWindow::onNewMessage(const QString &content)
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
                        qApp);
-    bool msg_notify = settings.value("chat/msg_notify").toBool();
+    bool msg_notify = settings.value("chat/msg_notify", true).toBool();
     if(!this->isActiveWindow() && msg_notify)
         PlatformExtend::notify(this);
 }
@@ -998,6 +1000,9 @@ void MainWindow::onMoveToolPressed(bool c)
     if(brushActionGroup_){
         brushActionGroup_->setDisabled(c);
     }
+    if(colorPickerButton_){
+        colorPickerButton_->setDisabled(c);
+    }
 }
 
 void MainWindow::onColorPickerPressed(bool c)
@@ -1005,6 +1010,9 @@ void MainWindow::onColorPickerPressed(bool c)
     ui->canvas->onColorPicker(c);
     if(brushActionGroup_){
         brushActionGroup_->setDisabled(c);
+    }
+    if(moveToolButton_){
+        moveToolButton_->setDisabled(c);
     }
 }
 
@@ -1220,7 +1228,7 @@ void MainWindow::closeEvent( QCloseEvent * event )
                       ui->colorGrid->dataExport());
     settings.setValue("mainwindow/view",
                       saveState());
-    bool skip_replay = settings.value("canvas/skip_replay", false).toBool();
+    bool skip_replay = settings.value("canvas/skip_replay", true).toBool();
     if(skip_replay){
         qDebug()<<"skip replay detected, save layers";
         ui->canvas->saveLayers();
@@ -1242,7 +1250,7 @@ void MainWindow::exportAllToFile()
     QString fileName =
             QFileDialog::getSaveFileName(this,
                                          tr("Export all to file"),
-                                         QDir::currentPath(),
+                                         this->windowTitle(),
                                          tr("Images (*.png)"));
     fileName = fileName.trimmed();
     if(fileName.isEmpty()){
@@ -1260,7 +1268,7 @@ void MainWindow::exportVisibleToFile()
     QString fileName =
             QFileDialog::getSaveFileName(this,
                                          tr("Export visible part to file"),
-                                         QDir::currentPath(),
+                                         this->windowTitle(),
                                          tr("Images (*.png)"));
     fileName = fileName.trimmed();
     if(fileName.isEmpty()){
@@ -1278,7 +1286,7 @@ void MainWindow::exportToPSD()
     QString fileName =
             QFileDialog::getSaveFileName(this,
                                          tr("Export contents to psd file"),
-                                         QDir::currentPath(),
+                                         this->windowTitle(),
                                          tr("Photoshop Images (*.psd)"));
     fileName = fileName.trimmed();
     if(fileName.isEmpty()){
@@ -1288,41 +1296,14 @@ void MainWindow::exportToPSD()
         fileName = fileName + ".psd";
     }
 
-    // save all layers into png
-    ui->canvas->saveLayers();
-    // get all png files from cache dir
-    QString dir_name = Singleton<ArchiveFile>::instance().dirName();
-    QDir dir(dir_name);
-    QStringList filters("*.png");
-    QStringList file_list = dir.entryList(filters, QDir::Files, QDir::Name);
-
-    if(!file_list.length()){
-        // no any png files found
+    // save all layers into psd
+    QByteArray data = imagesToPSD(ui->canvas->layerImages(), ui->canvas->allCanvas());
+    QFile file(fileName);
+    if(!file.open(QIODevice::Truncate|QIODevice::WriteOnly)) {
         return;
     }
-
-    // prepare args for ImageMagick convert
-    const static QString single_pattern("( -page +0+0 %1[0] -background transparent -mosaic -set colorspace Transparent )");
-    const static QString multi_pattern("( -clone 0--1 -background transparent -mosaic ) -alpha On -reverse %1");
-
-    const static QStringList single_pattern_list = single_pattern.split(" ", QString::SkipEmptyParts);
-    const static QStringList multi_pattern_list = multi_pattern.split(" ", QString::SkipEmptyParts);
-
-    QStringList result_args;
-
-    for(const auto& file_name: file_list){
-        auto dup_single_list = single_pattern_list;
-        QString p = QDir::currentPath()+"/"+dir_name+"/"+file_name;
-        result_args += dup_single_list.replaceInStrings("%1", QDir::toNativeSeparators(p));
-    }
-
-    auto dup_multi_list = multi_pattern_list;
-    result_args += dup_multi_list.replaceInStrings("%1", QDir::toNativeSeparators(fileName));
-
-    QProcess *process = new QProcess(this);
-
-    process->setWorkingDirectory(QDir::current().absolutePath());
-    process->start("convert", result_args);
+    file.write(data);
+    file.close();
 }
 
 void MainWindow::exportAllToClipboard()

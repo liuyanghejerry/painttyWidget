@@ -60,6 +60,25 @@
       <widget class="ColorGrid" name="colorGrid" native="true"/>
      </item>
      <item>
+      <widget class="SponsorLabel" name="label">
+       <property name="maximumSize">
+        <size>
+         <width>500</width>
+         <height>500</height>
+        </size>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::RichText</enum>
+       </property>
+       <property name="margin">
+        <number>10</number>
+       </property>
+       <property name="openExternalLinks">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="verticalSpacer_2">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -396,6 +415,11 @@
    <class>IRCLineEdit</class>
    <extends>QLineEdit</extends>
    <header>irclineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SponsorLabel</class>
+   <extends>QLabel</extends>
+   <header>sponsorlabel.h</header>
   </customwidget>
  </customwidgets>
  <resources>

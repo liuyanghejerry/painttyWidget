@@ -442,6 +442,18 @@ void Canvas::saveLayers()
     }
 }
 
+QList<QImage> Canvas::layerImages() const
+{
+    QList<QImage> lists;
+    for(int i=0;i<layers.count();++i){
+        if(!layers.layerFrom(i)->isTouched()){
+            continue;
+        }
+        lists.append(*(layers.layerFrom(i)->imageConstPtr()));
+    }
+    return lists;
+}
+
 void Canvas::pause()
 {
     emit parsePaused();
@@ -889,7 +901,7 @@ void Canvas::focusInEvent(QFocusEvent *)
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
                        qApp);
-    bool disable_ime = settings.value("canvas/auto_disable_ime").toBool();
+    bool disable_ime = settings.value("canvas/auto_disable_ime", true).toBool();
     if(disable_ime)
         PlatformExtend::setIMEState(this, false);
 }
@@ -899,7 +911,7 @@ void Canvas::focusOutEvent(QFocusEvent *)
     QSettings settings(GlobalDef::SETTINGS_NAME,
                        QSettings::defaultFormat(),
                        qApp);
-    bool disable_ime = settings.value("canvas/auto_disable_ime").toBool();
+    bool disable_ime = settings.value("canvas/auto_disable_ime", true).toBool();
     if(disable_ime)
         PlatformExtend::setIMEState(this, true);
 }

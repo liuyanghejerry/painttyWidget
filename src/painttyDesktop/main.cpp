@@ -27,6 +27,8 @@ QPalette& rePalette(QPalette &p)
     p.setColor(QPalette::HighlightedText, QColor::fromRgb(249, 249, 249));
     p.setColor(QPalette::Window, QColor::fromRgb(249, 249, 249));
     p.setColor(QPalette::Base, QColor::fromRgb(249, 249, 249));
+    p.setColor(QPalette::Link, QColor::fromRgb(255, 68, 0));
+    p.setColor(QPalette::LinkVisited, QColor::fromRgb(255, 68, 0));
     return p;
 }
 
@@ -102,16 +104,6 @@ void initFonts()
 
 bool runUpdater()
 {
-    // TODO:  support auto-update on Mac
-#ifdef Q_OS_MACX
-    qDebug()<<"Skip update check on Mac OSX";
-    QMessageBox::warning(0, QObject::tr("Update Disabled"),
-                         QObject::tr("Sorry, we do not support auto-update on Mac OSX.<br/>"\
-                                     "You may want to check <a href=\"http://mrspaint.com\">our site</a>"\
-                                     "for new versions manually."),
-                         QMessageBox::Ok,
-                         QMessageBox::Ok);
-#else
     QStringList args;
     args<<"-v"<< QString::number(GlobalDef::CLIENT_VER, 10)
        <<"-p"<< QString::number(qApp->applicationPid(), 10);
@@ -138,7 +130,6 @@ bool runUpdater()
                                dialog, &WaitUpdaterDialog::close);
     dialog->exec();
     dialog->deleteLater();
-#endif
     return true;
 }
 
