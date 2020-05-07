@@ -82,7 +82,7 @@ QColor ColorWheel::posColor(const QPoint &point)
         // NOTICE: if width is 98px, then we only have 0~97px as range. That's why we decrase w by 1.
         return QColor::fromHsv(current.hue(),
                                qBound(0, p.x() * 255 / (w-1), 255),
-                               qBound(0, 255 - p.y() * 255 / (w-1), 255));
+                               qBound(0, p.y() * 255 / (w-1), 255));
     }
     return QColor();
 }
@@ -228,7 +228,7 @@ void ColorWheel::drawSquareImage(const int &hue)
     QRgb vv;
     for(int i=0;i<255;++i){
         for(int j=0;j<255;++j){
-            color = QColor::fromHsv(hue,i,j);
+            color = QColor::fromHsv(hue,i,254-j);
             vv = qRgb(color.red(), color.green(), color.blue());
             square.setPixel(i, j, vv);
         }
@@ -276,7 +276,7 @@ void ColorWheel::drawPicker(const QColor &color)
     painter.translate(m-5, m-5);
     qreal SquareWidth = 2*ir/qSqrt(2);
     qreal S = color.saturationF()*SquareWidth;
-    qreal V = color.valueF()*SquareWidth;
+    qreal V = (1.0-color.valueF())*SquareWidth;
 
     if(color.saturation() > 30 ||color.value() < 50){
         pen.setColor(Qt::white);
