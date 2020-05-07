@@ -23,6 +23,10 @@ win32 {
     HEADERS +=
 }
 
+linux {
+    QMAKE_LFLAGS += -no-pie
+}
+
 mac {
     macx-clang: warning("if you encounter \"fatal error: \'initializer_list\' file not found\", try using makespecs \"macx-clang-libc++\"")
     ICON = iconset/icon.icns
@@ -32,7 +36,14 @@ include(../../commonconfigure.pri)
 
 CONFIG += c++11
 
-TARGET = MrPaint
+linux{
+    TARGET = mrpaint
+}
+
+!linux{
+    TARGET = MrPaint
+}
+
 TEMPLATE = app
 
 SOURCES += main.cpp\
