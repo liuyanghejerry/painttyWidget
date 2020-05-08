@@ -1,6 +1,7 @@
 Package: mrpaint
 Version: 0.54
-Maintainer: hathlife
-Architecture: amd64
+Maintainer: hathlife <cjjmpgjjl.113@gmail.com>
+Homepage: http://mrspaint.com/
+Architecture: ARCH
 Description: Mr.Paint is a free collaborative drawing program.
-Depends: libqt5core5a (>= 5.12.8~), libqt5gui5(>= 5.12.8~), libqt5script5(>= 5.12.8~), libqt5concurrent5(>= 5.12.8~), libqt5network5(>= 5.12.8~)
+Depends: libqt5core5a (>= QTVER~), libqt5gui5(>= QTVER~), libqt5script5(>= QTVER~), libqt5concurrent5(>= QTVER~), libqt5network5(>= QTVER~)
