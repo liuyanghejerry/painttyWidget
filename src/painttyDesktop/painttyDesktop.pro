@@ -187,3 +187,8 @@ TRANSLATIONS += translation/paintty_zh_CN.ts \ #Simplified Chinese
     translation/paintty_ja.ts #Japanese
 
 RESOURCES += resources.qrc
+
+linux{
+      DESTDIR = ./deb_package/usr/bin
+      QMAKE_POST_LINK = ./package_deb.sh
+}
