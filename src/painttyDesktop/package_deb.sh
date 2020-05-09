@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VER=0.$(cat ../common/common.h | grep CLIENT_VER | awk '{print $6}'| head -c-2 )
+VER=$(printf "%.2f" `echo "scale=2; $(cat ../common/common.h | grep CLIENT_VER | awk '{print $6}'| head -c-2 )/100" | bc`)
 
 ARCH=$(dpkg -l apt | grep 'apt' | awk '{print $4}')
 
