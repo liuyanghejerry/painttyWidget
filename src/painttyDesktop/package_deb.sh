@@ -24,7 +24,7 @@ sed -i "s/ARCH/${ARCH}/g" /tmp/deb_package_temp/DEBIAN/control
 
 sed -i "s/QTVER/${QTVER}/g" /tmp/deb_package_temp/DEBIAN/control 
 
-sed -i "1 a Version: ${VER}-${COMMIT}" /tmp/deb_package_temp/DEBIAN/control
+sed -i "1 a Version: ${VER}-${COMMIT}-${DIST}" /tmp/deb_package_temp/DEBIAN/control
   
 sed -i "4 a Installed-Size: ${INSTALLSIZE}" /tmp/deb_package_temp/DEBIAN/control
 
