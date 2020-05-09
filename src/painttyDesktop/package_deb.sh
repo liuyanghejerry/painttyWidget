@@ -8,6 +8,8 @@ QTVER=$(qmake -v | grep "Qt version" | awk '{print $4}')
 
 COMMIT=$(git log | head -1 | awk '{print $2}' | cut -c1-7)
 
+DIST=$(lsb_release -sc)
+
 #Package in /tmp in WSL envioronment.
 
 rm -rf /tmp/deb_package_temp
@@ -30,7 +32,7 @@ cat /tmp/deb_package_temp/DEBIAN/control
 
 chmod -R 0755 /tmp/deb_package_temp
 
-dpkg-deb --build /tmp/deb_package_temp ../../build/painttyDesktop/mrpaint_${VER}_${COMMIT}_${ARCH}.deb
+dpkg-deb --build /tmp/deb_package_temp ../../build/painttyDesktop/mrpaint_${VER}_${COMMIT}_${DIST}_${ARCH}.deb
 
 rm -rf /tmp/deb_package_temp
 
