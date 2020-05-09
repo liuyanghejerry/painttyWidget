@@ -1,37 +1,37 @@
 #!/bin/bash
 
-#Package in /tmp in WSL envioronment.
+VER=0.$(cat ../common/common.h | grep CLIENT_VER | awk '{print $6}'| head -c-2 )
 
-VER=$(cat deb_package/DEBIAN/control | grep "Version" | awk '{print $2}')
+ARCH=$(dpkg -l apt | grep 'apt' | awk '{print $4}')
 
-ARCH=$(dpkg -l apt | sed -n '6p' | awk '{print $4}')
-
-QTVER=$(qmake -v | sed -n '2p' | awk '{print $4}')
+QTVER=$(qmake -v | grep "Qt version" | awk '{print $4}')
 
 COMMIT=$(git log | head -1 | awk '{print $2}' | cut -c1-7)
 
-rm -rf /tmp/deb_package
+#Package in /tmp in WSL envioronment.
 
-cp -r deb_package /tmp
+rm -rf /tmp/deb_package_temp
 
-cp ./iconset/painttyWidget.ico /tmp/deb_package/usr/share/pixmap/painttyWidget.ico
+cp -r deb_package /tmp/deb_package_temp
 
-INSTALLSIZE=$(du -sk /tmp/deb_package/usr | awk '{print $1}')
+cp ./iconset/painttyWidget.ico /tmp/deb_package_temp/usr/share/pixmap/painttyWidget.ico
 
-sed -i "s/ARCH/${ARCH}/g" /tmp/deb_package/DEBIAN/control 
+INSTALLSIZE=$(du -sk /tmp/deb_package_temp/usr | awk '{print $1}')
 
-sed -i "s/QTVER/${QTVER}/g" /tmp/deb_package/DEBIAN/control 
+sed -i "s/ARCH/${ARCH}/g" /tmp/deb_package_temp/DEBIAN/control 
 
-sed -i "/Version/ s/$/-${COMMIT}/" /tmp/deb_package/DEBIAN/control
+sed -i "s/QTVER/${QTVER}/g" /tmp/deb_package_temp/DEBIAN/control 
+
+sed -i "1 a Version: ${VER}-${COMMIT}" /tmp/deb_package_temp/DEBIAN/control
   
-sed -i "4 a Installed-Size: ${INSTALLSIZE}" /tmp/deb_package/DEBIAN/control
+sed -i "4 a Installed-Size: ${INSTALLSIZE}" /tmp/deb_package_temp/DEBIAN/control
 
-cat /tmp/deb_package/DEBIAN/control
+cat /tmp/deb_package_temp/DEBIAN/control
 
-chmod -R 0755 /tmp/deb_package
+chmod -R 0755 /tmp/deb_package_temp
 
-dpkg-deb --build /tmp/deb_package ../../build/painttyDesktop/mrpaint_${VER}_${ARCH}_${COMMIT}.deb
+dpkg-deb --build /tmp/deb_package_temp ../../build/painttyDesktop/mrpaint_${VER}_${COMMIT}_${ARCH}.deb
 
-rm -rf /tmp/deb_package
+rm -rf /tmp/deb_package_temp
 
 exit 0;
