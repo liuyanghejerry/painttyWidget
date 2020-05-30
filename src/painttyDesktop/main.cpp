@@ -164,7 +164,9 @@ int main(int argc, char *argv[])
 #ifndef Q_OS_MACX
     dialog->show();
 #endif
+#ifndef Q_OS_LINUX
     mainOnly::runUpdater();
+#endif
     while( !exitCode && dialog->exec() ) {
         dialog->hide();
         MainWindow w;

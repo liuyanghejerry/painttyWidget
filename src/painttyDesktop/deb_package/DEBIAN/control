@@ -1,0 +1,6 @@
+Package: mrpaint
+Maintainer: hathlife <cjjmpgjjl.113@gmail.com>
+Homepage: http://mrspaint.com/
+Architecture: ARCH
+Description: Mr.Paint is a free collaborative drawing program.
+Depends: libqt5core5a (>= QTVER~), libqt5gui5(>= QTVER~), libqt5script5(>= QTVER~), libqt5concurrent5(>= QTVER~), libqt5network5(>= QTVER~)
